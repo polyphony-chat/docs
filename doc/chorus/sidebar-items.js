@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["URLBundle","A URLBundle is a struct which bundles together the API-, Gateway- and CDN-URLs of a Spacebar instance."]]};
