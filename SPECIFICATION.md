@@ -1,9 +1,9 @@
-# Polyphony Specification
+# Polyproto Specification
 
 **v0.0.0** - Treat this as an unfinished draft.
 
-- [Polyphony Specification](#polyphony-specification)
-  - [1. Polyphony APIs](#1-polyphony-apis)
+- [Polyproto Specification](#polyproto-specification)
+  - [1. polyproto APIs](#1-polyproto-apis)
     - [1.1. Client-Server API](#11-client-server-api)
       - [1.1.1. Initial authentication](#111-initial-authentication)
     - [1.2. Server-Server API](#12-server-server-api)
@@ -30,22 +30,22 @@
     - [6.2. User identity](#62-user-identity)
 
 
-This document defines a set of protocols and APIs for a chat service primarily focused on communities. The document is intended to be used as a reference for developers who want to implement a client or server for the Polyphony chat service. Uses of this protocol, hereafter referred to as "the Polyphony protocol", include Instant Messaging, Voice over IP, and Video over IP, where your identity is federated between multiple servers.
+This document defines a set of protocols and APIs for a chat service primarily focused on communities. The document is intended to be used as a reference for developers who want to implement a client or server for the Polyphony chat service. Uses of this protocol, hereafter referred to as "polyproto", include Instant Messaging, Voice over IP, and Video over IP, where your identity is federated between multiple servers.
 
-The information provided to you via this document only fully covers the Polyphony Protocol itself. To correctly implement the Polyphony protocol, you must read the MLS specification (RFC9420). It is imperative that implementations of this protocol respect all aspects of this specification. 
+The information provided to you via this document only fully covers polyproto itself. To correctly implement the polyproto, you must read the MLS specification (RFC9420). It is imperative that implementations of this protocol respect all aspects of this specification. 
 
 The structure of this reference document is heavily inspired by the really well written [Matrix specification](https://spec.matrix.org/latest).
 
-## 1. Polyphony APIs
+## 1. polyproto APIs
 
-The specification defines a set of APIs that are used to implement the Polyphony protocol. These APIs are:
+The specification defines a set of APIs that are used to implement polyproto. These APIs are:
 
 - Client-Server API
 - Server-Server API
 
 ### 1.1. Client-Server API
 
-The Client-Server API is a RESTful API that is used by clients to communicate with the server. It is a modification of the Discord v9 API and is completely backwards compatible with it, even if not all endpoints are supported. An example of an unsupported endpoint would be the "Super-reactions" endpoint, which are treated as regular reactions by Polyphony.
+The Client-Server API is a RESTful API that is used by clients to communicate with the server. It is a modification of the Discord v9 API and is completely backwards compatible with it, even if not all endpoints are supported. An example of an unsupported endpoint would be the "Super-reactions" endpoint, which are treated as regular reactions by polyproto clients and servers.
 
 #### 1.1.1. Initial authentication
 
@@ -57,7 +57,7 @@ See [6.1. KeyPackages](#61-keypackages) for an outline on what a `KeyPackage` is
 
 ### 1.2. Server-Server API
 
-The Server-Server APIs are used to enable federation between multiple Polyphony servers (federated identity).
+The Server-Server APIs are used to enable federation between multiple polyproto servers (federated identity).
 TODO
 
 ## 2. Federated Identity
@@ -159,7 +159,7 @@ The following regex can be used to validate user IDs: `\b([A-Z0-9._%+-]+)@([A-Z0
 
 ## 5. Encryption
 
-The Polyphony protocol offers end-to-end encryption for messages via Message Layer Security (MLS). Polyphony protocol compliant servers take on the role of both an Authentication Service and a Delivery Service in context of MLS.
+Polyproto offers end-to-end encryption for messages via Message Layer Security (MLS). polyproto compliant servers take on the role of both an Authentication Service and a Delivery Service in context of MLS.
 
 Message Layer Security (MLS) is a cryptographic protocol that provides confidentiality, integrity, and authenticity guarantees for group messaging applications. MLS builds on top of the [Double Ratchet Algorithm](https://signal.org/docs/specifications/doubleratchet/) and [X3DH](https://signal.org/docs/specifications/x3dh/) to provide these security guarantees.
 
@@ -305,8 +305,8 @@ Fig. 4: Sequence diagram of a successful encrypted group creation with 3 members
 
 ### 5.4 Multi-device support
 
-Polyphony servers and clients must implement multi-device support, as defined in the MLS specification (RFC9420).
-In addition to the MLS specification, Polyphony servers and clients must also implement the X3DH key agreement protocol to securely sync message history. Clients must not use the same keys on multiple devices. Instead, the MLS protocol considers each login on a new device a new client.
+polyproto servers and clients must implement multi-device support, as defined in the MLS specification (RFC9420).
+In addition to the MLS specification, polyproto servers and clients must also implement the X3DH key agreement protocol to securely sync message history. Clients must not use the same keys on multiple devices. Instead, the MLS protocol considers each login on a new device a new client.
 
 TODO: Can two clients safely negotiate keys with each other when the server is hijacked? If not, scrap message history sync.
 
@@ -324,7 +324,7 @@ TODO: Specifics?
 
 ### 6.1. KeyPackages
 
-A Polyphony server must store KeyPackages for all users that are registered on the server. The `KeyPackage` is a JSON object that contains the following information:
+A polyproto compliant server must store KeyPackages for all users that are registered on the server. The `KeyPackage` is a JSON object that contains the following information:
 
 ```json
 {
