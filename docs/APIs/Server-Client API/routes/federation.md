@@ -4,20 +4,22 @@
 
 Routes concerning the creation, deletion and management of federation tokens.
 
-### <p class="request-h"><span class="request request-get">GET</span> Generate Federation Token</p>
+---
+
+### <p class="request-h"><span class="request request-get">GET</span> Generate Federation Token [:material-pail-outline:](../../rate-limits.md "Bucket: federation-token-generation") [:material-lock-outline:](#authorization "Authorization required") </p> 
 
 `http://localhost:3001/api/federation/token`
 
-Ask your home server to generate a federation token for you. You can use this token to authenticate on another server.
+Ask your home server to generate a federation token for you. You can use this token to identify yourself on another server.
 
-The token is signed using the home server's public signing key, so that other servers can verify its authenticity.
+Federation tokens are signed using the home server's public signing key, so that other servers can verify its authenticity.
 
 #### Body
 
 ```json
 {
     "server": "https://server.example.com"
-}
+
 ```
 
 #### Response
@@ -41,7 +43,9 @@ The token is signed using the home server's public signing key, so that other se
     }
     ```
 
-### <p class="request-h"><span class="request request-get">GET</span> Get token generation status</p>
+---
+
+### <p class="request-h"><span class="request request-get">GET</span> Get token generation status [:material-pail-outline:](../../rate-limits.md "Bucket: ip") [:material-lock-open-outline:](#authorization "Authorization not required")</p>
 
 `http://localhost:3001/api/federation/generation`
 
