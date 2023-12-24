@@ -16,16 +16,20 @@ theme:
     - toc.follow
     - navigation.top
     - search.suggest
+    - content.tooltips
+    - navigation.indexes 
   palette:
     # Palette toggle for automatic mode
     - media: "(prefers-color-scheme)"
       primary: deep purple
+      accent: indigo
       toggle:
         icon: material/brightness-auto
         name: Switch to light mode
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
       primary: deep purple
+      accent: indigo
       scheme: default 
       toggle:
         icon: material/brightness-7
@@ -33,6 +37,7 @@ theme:
     # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       primary: deep purple
+      accent: indigo
       scheme: slate
       toggle:
         icon: material/brightness-4
@@ -61,3 +66,6 @@ markdown_extensions:
   - toc:
       permalink: true
       toc_depth: 3
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
