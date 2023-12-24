@@ -2,6 +2,8 @@
 site_name: polyproto
 repo_url: https://github.com/polyphony-chat/polyproto
 edit_uri: edit/main/docs/
+extra_css:
+  - stylesheets/extra.css
 theme:
   name: material
   features:
@@ -53,3 +55,9 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.inlinehilite
   - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+      combine_header_slug: true
+  - toc:
+      permalink: true
+      toc_depth: 3

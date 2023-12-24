@@ -1,0 +1,28 @@
+.request-h {
+    font-size: 1em; 
+    font-weight: bold;
+}
+
+.request {
+    margin-right: 10px;
+}
+
+.request-get {
+    color: #00BA00;
+}
+
+.request-post {
+    color: #00b7ba;
+}
+
+.request-put {
+    color: #0088ba;
+}
+
+.request-patch {
+    color: #9500ba;
+}
+
+.request-delete {
+    color: #ba0000;
+}
