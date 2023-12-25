@@ -123,9 +123,10 @@ A client may choose to rotate their signing key at any time. When this happens, 
 Signing messages prevents a malicious server from impersonating a user.
 
 TODO: Note about signing keys and how they are generated
-TODO: What if a home server is compromised/malicious? How can we prevent a malicious server from impersonating a user?
 
-- Technically, nothing prevents a malicious server from impersonating a user within the domain of that malicious server. However, I don't think that this is a problem. A malicious admin can always access the servers' database and impersonate users by directly manipulating database entries. The admin being able to potentially do this is entirely within our threat model. Secure communication should always be done via end-to-end encryption.
+> TODO: What if a home server is compromised/malicious? How can we prevent a malicious server from impersonating a user?
+
+> - Technically, nothing prevents a malicious server from impersonating a user within the domain of that malicious server. However, I don't think that this is a problem. A malicious admin can always access the servers' database and impersonate users by directly manipulating database entries. The admin being able to potentially do this is entirely within our threat model. Secure communication should always be done via end-to-end encryption.
 
 TODO: What about impersonating a user on another server? 
 
@@ -135,7 +136,9 @@ TODO: What about impersonating a user on another server?
 
 If Bob receives a message from Alice, he will ask Server B to provide the public identity key of Alice at the time the message was sent. Server B will then ask Server A for this key. Server A will then send the appropriate key to Server B. Server B will then store this key in its database and forward it to Bob. Bobs' client should then ask Server A for its signing key, cache this key and verify that Server B has stored/provided the correct public identity key for Alice at the time the message was sent. Should Bob want to re-verify the signature of Alice's message in the future, or should another User of Server B want to verify the signature of Alice's message, Server B will already have the public identity key cached.
 
-TODO: What if server B is malicious and provides a different public identity key for Alice? Bob would then succeed in verifying the signature of Alice's message, but the message would not have been signed by Alice.
+> TODO: What if server B is malicious and provides a different public identity key for Alice? Bob would then succeed in verifying the signature of Alice's message, but the message would not have been signed by Alice.
+
+> - Consider removing this chapter (2.3) if no solution can be found.
 
 Bob's client could always ask Server A for the public identity key of Alice, but this would put unnecessary strain on the network. This is why Server B should cache the public identity keys of users from other instances.
 
