@@ -1,3 +1,6 @@
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-core - The core federation protocol and APIs of polyproto.\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-chat - The chat-API used by polyproto.\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto - The combination of the polyproto-core and polyproto-chat protocols and APIs.\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qquestion \"What if server B is malicious and provides a different public identity key for Alice?\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qquestion \"What if a home server is compromised/malicious?\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qquestion \"What if a server requests a federation token on behalf of a user?\\E$"}
