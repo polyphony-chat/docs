@@ -23,12 +23,13 @@
     - [5.1 Encrypted guild channels](#51-encrypted-guild-channels)
     - [5.2 Encrypted direct messages](#52-encrypted-direct-messages)
     - [5.3 Encrypted group messages](#53-encrypted-group-messages)
-    - [5.4 Multi-device support](#54-multi-device-support)
+    - [5.4 Joining new devices from existing users](#54-joining-new-devices-from-existing-users)
     - [5.5 Best practices](#55-best-practices)
   - [6. Keys and signatures](#6-keys-and-signatures)
     - [6.1. KeyPackages](#61-keypackages)
       - [6.1.1 Last resort KeyPackages](#611-last-resort-keypackages)
     - [6.2. User identity](#62-user-identity)
+    - [6.3 Multi-device support](#63-multi-device-support)
 
 
 This document defines a set of protocols and APIs for a chat service primarily focused on communities. The document is intended to be used as a reference for developers who want to implement a client or server for the Polyphony chat service. Uses of this protocol, hereafter referred to as "polyproto", include Instant Messaging, Voice over IP, and Video over IP, where your identity is federated between multiple servers.
@@ -318,12 +319,7 @@ Alice (gatekeeper)                                 Server                       
 ```
 Fig. 4: Sequence diagram of a successful encrypted group creation with 3 members.
 
-### 5.4 Multi-device support
-
-polyproto servers and clients must implement multi-device support, as defined in the MLS specification (RFC9420).
-In addition to the MLS specification, polyproto servers and clients must also implement the X3DH key agreement protocol to securely sync message history. Clients must not use the same keys on multiple devices. Instead, the MLS protocol considers each login on a new device a new client.
-
-TODO: Can two clients safely negotiate keys with each other when the server is hijacked? If not, scrap message history sync.
+### 5.4 Joining new devices from existing users
 
 Regardless of channel or group permissions, a user join request from a new device should be accepted by default.
 
@@ -374,3 +370,12 @@ Once a server has given out a "last resort" `KeyPackage` to a client, the server
 
 Even though section 6.1 defines that a `KeyPackage` should be deleted by the server after it has been given out once, servers must keep track of the identity keys of all users that are registered on the server, and must be able to provide a users' identity key (or keys, in the case of multi-device users) for a given timestamp, when requested. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of a user may change over time and users must sign all messages they send to other servers.
 
+### 6.3 Multi-device support
+
+polyproto servers and clients must implement multi-device support, as defined in the MLS specification (RFC9420).
+In addition to the MLS specification, polyproto servers and clients must also implement the X3DH key agreement protocol to securely sync message history. Clients must not use the same keys on multiple devices. Instead, the MLS protocol assigns a new `LeafNode` to each device.
+
+TODO: Can two clients safely negotiate keys with each other when the server is hijacked? If not, scrap message history sync.
+
+Each device provides its own `KeyPackages` as well as an own set of unique identity and signature keys. 
+Polyproto home servers must guarantee this uniqueness amongst all users of the server.
