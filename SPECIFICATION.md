@@ -14,7 +14,7 @@
     - [2.4 Best practices](#24-best-practices)
       - [2.4.1 Signing keys](#241-signing-keys)
       - [2.4.2 Home server operation and design](#242-home-server-operation-and-design)
-    - [2.5 FAQ](#25-faq)
+    - [2.5 Security considerations](#25-security-considerations)
   - [3. Federating direct/group messages](#3-federating-directgroup-messages)
     - [3.1 Direct messages](#31-direct-messages)
     - [3.2 Group messages](#32-group-messages)
@@ -74,30 +74,41 @@ Say that Alice is on server A, and Bob is on server B. Alice wants to send a mes
 Alice's client will send a message to her home server (Server A), asking it to generate a one-time use federation token for registering on server B. Alice takes this token and sends it to server B. Server B will then ask server A if the token is valid. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B using this token, and send the message to server B. Server B will then send the message to Bob's client.
 
 ```
-Alice's Client              Server A            Server B            Bob's Client
-|                           |                   |                   |
-|-Federation token request->|                   |                   |
-|                           |                   |                   |
-|<-----Federation token-----|                   |                   |
-|                    [Federation handshake start]                   |
-|                           |                   |                   |
-|---------Federation token+Profile------------->|                   |
-|                           |                   |                   |
-|                           |<--Verification?---|                   |
-|                           |                   |                   |
-|                           |-----Yes, valid--->|                   |
-|                           |                   |                   |
-|<----------------Session Token-----------------|                   |
-|                           |                   |                   |
-|                   [Federation handshake complete]                 |
-|                           |                   |                   |
-|---------Session Token+Signed message--------->|                   |
-|                           |                   |                   |
-|                           |                   |--Signed message-->|
-|                           |                   |                   |
+Alice's Client              Server A            Server B              Bob's Client
+|                           |                   |                     |
+| Federation token request  |                   |                     |
+|-------------------------->|                   |                     |
+|                           |                   |                     |
+|          Federation token |                   |                     |
+|<--------------------------|                   |                     |
+|                      [Federation handshake start]                   |
+|                           |                   |                     |
+| Federation token + Public Profile             |                     |
+|---------------------------------------------->|                     |
+|                           |                   |                     |
+|                           |        Get pubkey |                     |
+|                           |<------------------|                     |
+|                           |                   |                     |
+|                           | Server A Pubkey   |                     |
+|                           |------------------>|                     |
+|                           |                   |                     |
+|                           |                   | Verify fedi-token   |
+|                           |                   |-------------------  |
+|                           |                   |                  |  |
+|                           |                   |<------------------  |
+|                           |                   |                     |
+|                           |     Session Token |                     |
+|<----------------------------------------------|                     |
+|                           |                   |                     |
+|                     [Federation handshake complete]                 |
+|                           |                   |                     |
+| Session Token + Signed message                |                     |
+|---------------------------------------------->|                     |
+|                           |                   |                     |
+|                           |                   | Signed message      |
+|                           |                   |-------------------->|
+|                           |                   |                     |
 ```
-
-TODO: Server B does not have to ask Server A if the token is valid, no? :thinking:
  
 Fig. 1: Sequence diagram of a successful federation handshake.
 
@@ -143,19 +154,17 @@ Bob's client could always ask Server A for the public identity key of Alice, but
 
 - Employ a caching layer to handle the potentially large amount of requests for public keys without putting unnecessary strain on the database.
 
-### 2.5 FAQ
+### 2.5 Security considerations
 
-!!! question "What if a home server is compromised/malicious? How can we prevent a malicious server from impersonating a user?"
+- Technically, nothing prevents a malicious home server from impersonating a user within the domain of that malicious server. However, we don't think that this is a problem. A malicious admin can always access the servers' database and impersonate users by directly manipulating database entries. The admin being able to potentially do this is entirely within our threat model. Secure communication should always be done via end-to-end encryption, which prevents something like this from happening altogether.
+- A malicious home server can potentially request a federation token on behalf of a user and use it to generate a session token on the user's behalf. This is a problem, as the malicious server can then impersonate the user on another server, as well as read unencrypted text messages sent on the other server.
 
-    Technically, nothing prevents a malicious server from impersonating a user within the domain of that malicious server. However, we don't think that this is a problem. A malicious admin can always access the servers' database and impersonate users by directly manipulating database entries. The admin being able to potentially do this is entirely within our threat model. Secure communication should always be done via end-to-end encryption, which prevents something like this from happening.
+TODO: Perhaps user clients should periodically ask all the servers they are on for their session tokens
+and verify that all those sessions actually belong to them. Users could then notice
 
 !!! question "What if server B is malicious and provides a different public identity key for Alice? Bob would then succeed in verifying the signature of Alice's message, but the message would not have been signed by Alice."
 
     TODO: Consider removing chapter 2.3 if no solution can be found.
-
-!!! question "What if a server requests a federation token on behalf of a user? This server would then hold the federation token, and could use it to request a session token on the user's behalf, as well generate a signing key which is supposed to represent the impersonated user. The server would then hold all the information it needs to impersonate a user on another server."
-
-    TODO: uhhhhhhhhhh
 
 ## 3. Federating direct/group messages
 
