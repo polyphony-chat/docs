@@ -4,17 +4,18 @@
 
 - [Polyproto Specification](#polyproto-specification)
   - [1. polyproto APIs](#1-polyproto-apis)
-    - [1.1. Client-Server API](#11-client-server-api)
-      - [1.1.1. Initial authentication](#111-initial-authentication)
-    - [1.2. Server-Server API](#12-server-server-api)
+    - [1.1 Client-Server API](#11-client-server-api)
+      - [1.1.1 Initial authentication](#111-initial-authentication)
+    - [1.2 Server-Server API](#12-server-server-api)
   - [2. Federated Identity](#2-federated-identity)
     - [2.1 Federation tokens](#21-federation-tokens)
     - [2.2 Signing keys and message signing](#22-signing-keys-and-message-signing)
     - [2.3 Reducing network strain when verifying signatures](#23-reducing-network-strain-when-verifying-signatures)
-    - [2.4 Best practices](#24-best-practices)
-      - [2.4.1 Signing keys](#241-signing-keys)
-      - [2.4.2 Home server operation and design](#242-home-server-operation-and-design)
-    - [2.5 Security considerations](#25-security-considerations)
+    - [2.4 Abuse prevention](#24-abuse-prevention)
+    - [2.5 Best practices](#25-best-practices)
+      - [2.5.1 Signing keys](#251-signing-keys)
+      - [2.5.2 Home server operation and design](#252-home-server-operation-and-design)
+    - [2.6 Security considerations](#26-security-considerations)
   - [3. Federating direct/group messages](#3-federating-directgroup-messages)
     - [3.1 Direct messages](#31-direct-messages)
     - [3.2 Group messages](#32-group-messages)
@@ -28,7 +29,7 @@
   - [6. Keys and signatures](#6-keys-and-signatures)
     - [6.1. KeyPackages](#61-keypackages)
       - [6.1.1 Last resort KeyPackages](#611-last-resort-keypackages)
-    - [6.2. User identity](#62-user-identity)
+    - [6.2 User identity](#62-user-identity)
     - [6.3 Multi-device support](#63-multi-device-support)
 
 
@@ -45,11 +46,11 @@ The specification defines a set of APIs that are used to implement polyproto. Th
 - Client-Server API
 - Server-Server API
 
-### 1.1. Client-Server API
+### 1.1 Client-Server API
 
 The Client-Server API is a RESTful API that is used by clients to communicate with the server. It is a modification of the Discord v9 API and is completely backwards compatible with it, even if not all endpoints are supported. An example of an unsupported endpoint would be the "Super-reactions" endpoint, which are treated as regular reactions by polyproto clients and servers.
 
-#### 1.1.1. Initial authentication
+#### 1.1.1 Initial authentication
 
 During the initial authentication (registration) process, a client must provide at least one `KeyPackage`, as well as one "last resort" `KeyPackage` (see [6.1.1 Last resort KeyPackages](#611-last-resort-keypackages)) in addition to the required registration information.
 
@@ -57,7 +58,7 @@ The identity key inside the `LeafNode` of this `KeyPackage` is signed using the 
 
 See [6.1. KeyPackages](#61-keypackages) for an outline on what a `KeyPackage` is, and consult the MLS specification (RFC9420) for more implementation details.
 
-### 1.2. Server-Server API
+### 1.2 Server-Server API
 
 The Server-Server APIs are used to enable federation between multiple polyproto servers (federated identity).
 TODO
@@ -143,18 +144,20 @@ If Bob receives a message from Alice, he will ask Server B to provide the public
 
 Bob's client could always ask Server A for the public identity key of Alice, but this would put unnecessary strain on the network. This is why Server B should cache the public identity keys of users from other instances.
 
-### 2.4 Best practices
+### 2.4 Abuse prevention
 
-#### 2.4.1 Signing keys
+### 2.5 Best practices
+
+#### 2.5.1 Signing keys
 
 - Instance/user signing keys should be rotated at least every 30 days. This is to ensure that a compromised key can only be used for a limited amount of time.
 - If Bobs client fails to verify the signature of Alice's message with the public key provided by Server B, it should ask Server A for the public key of Alice at the time the message was sent. If the verification fails again, the message should be treated with extreme caution.
 
-#### 2.4.2 Home server operation and design
+#### 2.5.2 Home server operation and design
 
 - Employ a caching layer to handle the potentially large amount of requests for public keys without putting unnecessary strain on the database.
 
-### 2.5 Security considerations
+### 2.6 Security considerations
 
 - Technically, nothing prevents a malicious home server from impersonating a user within the domain of that malicious server. However, we don't think that this is a problem. A malicious admin can always access the servers' database and impersonate users by directly manipulating database entries. The admin being able to potentially do this is entirely within our threat model. Secure communication should always be done via end-to-end encryption, which prevents something like this from happening altogether.
 - A malicious home server can potentially request a federation token on behalf of a user and use it to generate a session token on the user's behalf. This is a problem, as the malicious server can then impersonate the user on another server, as well as read unencrypted text messages sent on the other server.
@@ -375,7 +378,7 @@ A "last resort" `KeyPackage` is a `KeyPackage` which can be used multiple times.
 
 Once a server has given out a "last resort" `KeyPackage` to a client, the server should request a new "last resort" `KeyPackage` from the client from the user, once they connect to the server again. The old "last resort" `KeyPackage` should then be deleted.
 
-### 6.2. User identity
+### 6.2 User identity
 
 Even though section 6.1 defines that a `KeyPackage` should be deleted by the server after it has been given out once, servers must keep track of the identity keys of all users that are registered on the server, and must be able to provide a users' identity key (or keys, in the case of multi-device users) for a given timestamp, when requested. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of a user may change over time and users must sign all messages they send to other servers.
 
