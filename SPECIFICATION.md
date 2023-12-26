@@ -146,6 +146,28 @@ Bob's client could always ask Server A for the public identity key of Alice, but
 
 ### 2.4 Abuse prevention
 
+To protect users from malicious home servers secretly acting on the behalf of non-consenting users,
+a mechanism is needed to prevent home servers from generating federation tokens for users without
+their consent.
+
+!!! example "Potential abuse scenario"
+
+    A malicious home server can potentially request a federation token on behalf of one of its
+    users, and use it to generate a session token on the user's behalf. This is a problem, as the
+    malicious server can then impersonate the user on another server, as well as read unencrypted
+    text messages sent on the other server.
+
+The above scenario is not unique to polyproto-core, and rather a problem other federated services/
+protocols, like ActivityPub, have as well. There is no real solution to this problem, but it can be
+mitigated a bit by making it more difficult for malicious home servers to do something like this
+without the user noticing.
+
+Polyproto servers should notify users (even guest users), when a new session token is generated for
+them. This would make the malicious server's actions more noticeable to the user. However, this does
+not address the issue of the malicious server being able to generate a federation token for a server
+which you are not yet connected to. Clients who re-connect to a server after being offline should be
+notified of any new session tokens that were generated for them while they were offline.
+
 ### 2.5 Best practices
 
 #### 2.5.1 Signing keys
@@ -160,7 +182,7 @@ Bob's client could always ask Server A for the public identity key of Alice, but
 ### 2.6 Security considerations
 
 - Technically, nothing prevents a malicious home server from impersonating a user within the domain of that malicious server. However, we don't think that this is a problem. A malicious admin can always access the servers' database and impersonate users by directly manipulating database entries. The admin being able to potentially do this is entirely within our threat model. Secure communication should always be done via end-to-end encryption, which prevents something like this from happening altogether.
-- A malicious home server can potentially request a federation token on behalf of a user and use it to generate a session token on the user's behalf. This is a problem, as the malicious server can then impersonate the user on another server, as well as read unencrypted text messages sent on the other server.
+- 
 
 TODO: Perhaps user clients should periodically ask all the servers they are on for their session tokens
 and verify that all those sessions actually belong to them. Users could then notice
