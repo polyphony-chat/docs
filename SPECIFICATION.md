@@ -181,8 +181,14 @@ notified of any new session tokens that were generated for them while they were 
 
 ### 2.6 Security considerations
 
-- Technically, nothing prevents a malicious home server from impersonating a user within the domain of that malicious server. However, we don't think that this is a problem. A malicious admin can always access the servers' database and impersonate users by directly manipulating database entries. The admin being able to potentially do this is entirely within our threat model. Secure communication should always be done via end-to-end encryption, which prevents something like this from happening altogether.
-- 
+TODO: This chapter is to be removed and absorbed by [2.4 Abuse prevention](#24-abuse-prevention)
+
+- Technically, nothing prevents a malicious home server from impersonating a user within the domain
+of that malicious server. However, we don't think that this is a problem. A malicious admin can
+always access the servers' database and impersonate users by directly manipulating database entries.
+The admin being able to potentially do this is entirely within our threat model. Secure
+communication should always be done via end-to-end encryption, which prevents something like this
+from happening altogether.
 
 TODO: Perhaps user clients should periodically ask all the servers they are on for their session tokens
 and verify that all those sessions actually belong to them. Users could then notice
