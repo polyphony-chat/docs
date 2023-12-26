@@ -385,9 +385,7 @@ Even though section 6.1 defines that a `KeyPackage` should be deleted by the ser
 ### 6.3 Multi-device support
 
 polyproto servers and clients must implement multi-device support, as defined in the MLS specification (RFC9420).
-In addition to the MLS specification, polyproto servers and clients must also implement the X3DH key agreement protocol to securely sync message history. Clients must not use the same keys on multiple devices. Instead, the MLS protocol assigns a new `LeafNode` to each device.
-
-TODO: Rewrite the above section; Use an "outside" key agreement protocol for a secure, one time message sync.
+Clients must not use the same keys on multiple devices. Instead, the MLS protocol assigns a new `LeafNode` to each device.
 
 Each device provides its own `KeyPackages` as well as an own set of unique identity and signature keys. 
 Polyproto home servers must guarantee this uniqueness amongst all users of the server.
