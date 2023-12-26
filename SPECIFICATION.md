@@ -190,9 +190,6 @@ The admin being able to potentially do this is entirely within our threat model.
 communication should always be done via end-to-end encryption, which prevents something like this
 from happening altogether.
 
-TODO: Perhaps user clients should periodically ask all the servers they are on for their session tokens
-and verify that all those sessions actually belong to them. Users could then notice
-
 !!! question "What if server B is malicious and provides a different public identity key for Alice? Bob would then succeed in verifying the signature of Alice's message, but the message would not have been signed by Alice."
 
     TODO: Consider removing chapter 2.3 if no solution can be found.
