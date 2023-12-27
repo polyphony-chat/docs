@@ -3,3 +3,5 @@ polyproto-core
 polyproto-chat
 Polyproto
 ActivityPub
+TODO
+WebSockets
