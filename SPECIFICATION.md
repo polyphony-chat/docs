@@ -15,7 +15,6 @@
     - [2.4 Best practices](#24-best-practices)
       - [2.4.1 Signing keys](#241-signing-keys)
       - [2.4.2 Home server operation and design](#242-home-server-operation-and-design)
-    - [2.5 Security considerations](#25-security-considerations)
   - [3. Federating direct/group messages](#3-federating-directgroup-messages)
     - [3.1 Direct messages](#31-direct-messages)
     - [3.2 Group messages](#32-group-messages)
@@ -196,26 +195,11 @@ This `NEW_SESSION` message should be sent to all sessions, except for the new se
 #### 2.4.1 Signing keys
 
 - Instance/user signing keys should be rotated at least every 30 days. This is to ensure that a compromised key can only be used for a limited amount of time.
-- If Bobs client fails to verify the signature of Alice's message with the public key provided by Server B, it should ask Server A for the public key of Alice at the time the message was sent. If the verification fails again, the message should be treated with extreme caution.
+- If Bobs client fails to verify the signature of Alice's message with the public key/certificate pair received from Server B, it should ask Server A for the public key of Alice at the time the message was sent. If the verification fails again, the message should be treated with extreme caution.
 
 #### 2.4.2 Home server operation and design
 
-- Employ a caching layer to handle the potentially large amount of requests for public keys without putting unnecessary strain on the database.
-
-!!! bug "TODO"
-
-    Is this still necessary?
-
-### 2.5 Security considerations
-
-!!! bug "TODO"
-
-    TODO: This chapter is to be removed and absorbed by [2.4 Abuse prevention](#24-abuse-prevention)
-
-!!! bug "TODO"
-
-    "What if server B is malicious and provides a different public identity key for Alice? Bob would then succeed in verifying the signature of Alice's message, but the message would not have been signed by Alice."
-    TODO: Consider removing chapter 2.3 if no solution can be found.
+- Employ a caching layer to handle the potentially large amount of requests for public key certificates without putting unnecessary strain on the database.
 
 ## 3. Federating direct/group messages
 

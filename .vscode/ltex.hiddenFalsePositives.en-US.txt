@@ -9,3 +9,5 @@
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-core Specification\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-core Specification\n1.\\E$"}
 {"rule":"ENGLISH_WORD_REPEAT_RULE","sentence":"^\\QGET Get token generation status :material-pail-outline: :material-lock-open-outline:\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qnote\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qexample \"Potential abuse scenario\"\\E$"}
