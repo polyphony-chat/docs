@@ -3,10 +3,11 @@
 **v0.0.0** - Treat this as an unfinished draft.
 
 - [Polyproto Specification](#polyproto-specification)
-  - [1. polyproto APIs](#1-polyproto-apis)
+  - [1. APIs and communication protocols](#1-apis-and-communication-protocols)
     - [1.1 Client-Server API](#11-client-server-api)
       - [1.1.1 Initial authentication](#111-initial-authentication)
     - [1.2 Server-Server API](#12-server-server-api)
+    - [1.3 WebSockets](#13-websockets)
   - [2. Federated Identity](#2-federated-identity)
     - [2.1 Federation tokens](#21-federation-tokens)
     - [2.2 Signing keys and message signing](#22-signing-keys-and-message-signing)
@@ -39,12 +40,14 @@ The information provided to you via this document only fully covers polyproto it
 
 The structure of this reference document is heavily inspired by the really well written [Matrix specification](https://spec.matrix.org/latest).
 
-## 1. polyproto APIs
+## 1. APIs and communication protocols
 
-The specification defines a set of APIs that are used to implement polyproto. These APIs are:
+The polyproto-core specification defines a set of APIs that are used to implement polyproto-core. These APIs are:
 
 - Client-Server API
 - Server-Server API
+
+Aside from these REST APIs, polyproto-core also uses WebSockets for real-time communication between clients and servers.
 
 ### 1.1 Client-Server API
 
@@ -66,6 +69,13 @@ See [6.1. KeyPackages](#61-keypackages) for an outline on what a `KeyPackage` is
 ### 1.2 Server-Server API
 
 The Server-Server APIs are used to enable federation between multiple polyproto servers (federated identity).
+
+### 1.3 WebSockets
+
+!!! bug "TODO"
+
+    TODO: Describe how WebSocket connections are established, maintained, and terminated, as well
+    as what exactly WebSocket connections are used for.
 
 ## 2. Federated Identity
 
