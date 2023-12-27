@@ -53,11 +53,6 @@ Aside from these REST APIs, polyproto-core also uses WebSockets for real-time co
 
 The Client-Server API is a RESTful API that is used by clients to communicate with the server. It is a modification of the Discord v9 API and is completely backwards compatible with it, even if not all endpoints are supported. An example of an unsupported endpoint would be the "Super-reactions" endpoint, which are treated as regular reactions by polyproto clients and servers.
 
-!!! bug "TODO"
-
-    TODO: In the API directory, we should differentiate between polyproto-core and polyproto-chat
-    endpoints.
-
 #### 1.1.1 Initial authentication
 
 During the initial authentication (registration) process, a client must provide at least one `KeyPackage`, as well as one "last resort" `KeyPackage` (see [6.1.1 Last resort KeyPackages](#611-last-resort-keypackages)) in addition to the required registration information.
