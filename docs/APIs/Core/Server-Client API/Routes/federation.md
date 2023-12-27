@@ -6,7 +6,7 @@ Routes concerning the creation, deletion and management of federation tokens.
 
 ---
 
-### <p class="request-h"><span class="request request-get">GET</span> Generate Federation Token [:material-pail-outline:](../rate-limits.md "Bucket: federation-token-generation") [:material-lock-outline:](#authorization "Authorization required") </p> 
+### <p class="request-h"><span class="request request-get">GET</span> Generate Federation Token [:material-pail-outline:](../../rate-limits.md "Bucket: federation-token-generation") [:material-lock-outline:](#authorization "Authorization required") </p> 
 
 `http://localhost:3001/api/federation/token`
 
@@ -14,7 +14,13 @@ Ask your home server to generate a federation token for you. You can use this to
 
 Federation tokens are signed using the home server's public signing key, so that other servers can verify its authenticity.
 
-#### Body
+#### Request
+
+##### Body
+
+| Name     | Type     | Description                                             |
+| -------- | -------- | ------------------------------------------------------- |
+| `server` | `String` | The URL of the server the token should be generated for |
 
 ```json
 {
@@ -28,6 +34,10 @@ Federation tokens are signed using the home server's public signing key, so that
 
     ##### Body
 
+    | Name      | Type | Description                                             |
+    | --------- | ---- | ------------------------------------------------------- |
+    | `enabled` | bool | `true` if the server currently allows token generation. |
+
     ```json
     "exampletoken"
     ```
@@ -40,7 +50,7 @@ Federation tokens are signed using the home server's public signing key, so that
 
 ---
 
-### <p class="request-h"><span class="request request-get">GET</span> Get token generation status [:material-pail-outline:](../rate-limits.md "Bucket: ip") [:material-lock-open-outline:](#authorization "Authorization not required")</p>
+### <p class="request-h"><span class="request request-get">GET</span> Get token generation status [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-open-outline:](#authorization "Authorization not required")</p>
 
 `http://localhost:3001/api/federation/generation`
 
@@ -60,8 +70,103 @@ curl --request GET \
 
     ##### Body
 
+    A key-value pair indicating whether token generation is enabled using a boolean.
+
     ```json
     {
         "enabled": true
     }
+    ```
+
+---
+
+### <p class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens for self [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required")</p>
+
+`http://localhost:3001/api/federation/token/@me`
+
+Ask your home server to invalidate all federation tokens which have been created for you and are still valid (unused). Doing this manually is not usually required.
+
+#### Request
+
+```bash
+curl --request DELETE \
+     --url http://localhost:3001/api/federation/token/@me \
+     --header 'Authorization: Bearer exampletoken'
+```
+
+#### Response
+
+=== "200 OK"
+
+    ##### Body
+
+    A JSON array of all the tokens that have been deleted.
+
+    ```json
+    [
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmF0aW9uIjoxMjM0NTY3ODkwLCJmb3JfZmVkZXJhdGlvbl9pZCI6ImV4YW1wbGVAc2VydmVyLmV4YW1wbGUuY29tIiwiZm9yX2F1dGhlbnRpY2F0aW9uX29uIjoib3RoZXJzZXJ2ZXIuZXhhbXBsZS5jb20iLCJub25jZSI6ImV4YW1wbGVub25jZSJ9.3NBVGBU65PzoeZXHtaN-HDxXUxhdkJTXtTjnxL_5tgw",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmF0aW9uIjoxMjM0NTY3ODkwLCJmb3JfZmVkZXJhdGlvbl9pZCI6ImV4YW1wbGVAc2VydmVyLmV4YW1wbGUuY29tIiwiZm9yX2F1dGhlbnRpY2F0aW9uX29uIjoieWV0YW5vdGhlcnNlcnZlci5leGFtcGxlLmNvbSIsIm5vbmNlIjoiYW5vdGhlcmV4YW1wbGVub25jZSJ9.yGx6abxh_fTWQmx0KrWlTz9GviaF_F34ADR9z06i2eM"
+    ]
+    ```
+
+---
+
+### <p class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens for user [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</p>
+
+`http://localhost:3001/api/federation/token/:user_id/@all`
+
+Revoke all valid federation tokens for a specific user.
+
+#### Path Variables
+
+| Name      | Type        | Description                                        |
+| --------- | ----------- | -------------------------------------------------- |
+| `user_id` | [`Snowflake`](../../types.md#snowflake) | The ID of the user whose tokens should be revoked. |
+
+#### Request
+
+```bash
+curl --request DELETE \
+     --url http://localhost:3001/api/federation/token/:user_id/@all \
+     --header 'Authorization: Bearer exampletoken'
+```
+
+#### Response
+
+=== "200 OK"
+
+    ##### Body
+
+    An unsigned integer indicating the number of tokens that have been deleted.
+
+    ```json
+    12
+    ```
+
+---
+
+### <p class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</p>
+
+`http://localhost:3001/api/federation/token/@all`
+
+Revoke all valid federation tokens.
+
+#### Request
+
+```bash
+curl --request DELETE \
+     --url http://localhost:3001/api/federation/token/@all \
+     --header 'Authorization: Bearer exampletoken'
+```
+
+#### Response
+
+=== "200 OK"
+
+    ##### Body
+
+    An unsigned integer indicating the number of tokens that have been deleted.
+
+    ```json
+    421
     ```
