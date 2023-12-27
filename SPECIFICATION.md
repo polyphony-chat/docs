@@ -1,8 +1,8 @@
-# Polyproto Specification
+# polyproto-core Specification
 
 **v0.0.0** - Treat this as an unfinished draft.
 
-- [Polyproto Specification](#polyproto-specification)
+- [polyproto-core Specification](#polyproto-core-specification)
   - [1. APIs and communication protocols](#1-apis-and-communication-protocols)
     - [1.1 Client-Server API](#11-client-server-api)
       - [1.1.1 Initial authentication](#111-initial-authentication)
