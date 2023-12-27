@@ -50,6 +50,11 @@ The specification defines a set of APIs that are used to implement polyproto. Th
 
 The Client-Server API is a RESTful API that is used by clients to communicate with the server. It is a modification of the Discord v9 API and is completely backwards compatible with it, even if not all endpoints are supported. An example of an unsupported endpoint would be the "Super-reactions" endpoint, which are treated as regular reactions by polyproto clients and servers.
 
+!!! bug "TODO"
+
+    TODO: In the API directory, we should differentiate between polyproto-core and polyproto-chat
+    endpoints.
+
 #### 1.1.1 Initial authentication
 
 During the initial authentication (registration) process, a client must provide at least one `KeyPackage`, as well as one "last resort" `KeyPackage` (see [6.1.1 Last resort KeyPackages](#611-last-resort-keypackages)) in addition to the required registration information.
@@ -61,7 +66,6 @@ See [6.1. KeyPackages](#61-keypackages) for an outline on what a `KeyPackage` is
 ### 1.2 Server-Server API
 
 The Server-Server APIs are used to enable federation between multiple polyproto servers (federated identity).
-TODO
 
 ## 2. Federated Identity
 
@@ -136,7 +140,9 @@ A client may choose to rotate their signing key at any time. When this happens, 
 
 Signing messages prevents a malicious server from impersonating a user.
 
-TODO: Note about signing keys and how they are generated 
+!!! bug "TODO"
+
+    TODO: Note about signing keys and how they are generated 
 
 ### 2.3 Reducing network strain when verifying signatures
 
@@ -167,6 +173,25 @@ them. This would make the malicious server's actions more noticeable to the user
 not address the issue of the malicious server being able to generate a federation token for a server
 which you are not yet connected to. Clients who re-connect to a server after being offline should be
 notified of any new session tokens that were generated for them while they were offline.
+This `NEW_SESSION` message should be sent to all sessions, except for the new session. The
+`NEW_SESSION` gateway event should contain the following information:
+
+```json
+{
+  "ip": "<IP address of the session>",
+  "user_agent": "<User agent of the session>",
+  "timestamp": "<Timestamp of when the session was created>",
+  "session_pubkey": "<Public key of the session>",
+}
+```
+
+!!! note
+
+    It is impossible for a malicious server to listen in on securely encrypted messages sent in
+    direct messages, encrypted guild channels, and encrypted group messages, without all users
+    noticing. MLS's forward secrecy guarantees, that messages sent before a malicious session joins
+    the encrypted channel cannot be decrypted by that session. If secrecy/confidentiality are of
+    concern, users should host their own home server and use end-to-end encryption.
 
 ### 2.5 Best practices
 
@@ -181,17 +206,13 @@ notified of any new session tokens that were generated for them while they were 
 
 ### 2.6 Security considerations
 
-TODO: This chapter is to be removed and absorbed by [2.4 Abuse prevention](#24-abuse-prevention)
+!!! bug "TODO"
 
-- Technically, nothing prevents a malicious home server from impersonating a user within the domain
-of that malicious server. However, we don't think that this is a problem. A malicious admin can
-always access the servers' database and impersonate users by directly manipulating database entries.
-The admin being able to potentially do this is entirely within our threat model. Secure
-communication should always be done via end-to-end encryption, which prevents something like this
-from happening altogether.
+    TODO: This chapter is to be removed and absorbed by [2.4 Abuse prevention](#24-abuse-prevention)
 
-!!! question "What if server B is malicious and provides a different public identity key for Alice? Bob would then succeed in verifying the signature of Alice's message, but the message would not have been signed by Alice."
+!!! bug "TODO"
 
+    "What if server B is malicious and provides a different public identity key for Alice? Bob would then succeed in verifying the signature of Alice's message, but the message would not have been signed by Alice."
     TODO: Consider removing chapter 2.3 if no solution can be found.
 
 ## 3. Federating direct/group messages
@@ -366,7 +387,10 @@ Regardless of channel or group permissions, a user join request from a new devic
 ## 6. Keys and signatures
 
 All keys must be generated using the `EdDSA` signature scheme.
-TODO: Specifics?
+
+!!! bug "TODO"
+
+    TODO: Specifics?
 
 ### 6.1. KeyPackages
 
