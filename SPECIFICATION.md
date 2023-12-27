@@ -30,6 +30,7 @@
       - [6.1.1 Last resort KeyPackages](#611-last-resort-keypackages)
     - [6.2 User identity](#62-user-identity)
     - [6.3 Multi-device support](#63-multi-device-support)
+  - [7. Account migration](#7-account-migration)
 
 
 This document defines a set of protocols and APIs for a chat service primarily focused on communities. The document is intended to be used as a reference for developers who want to implement a client or server for the Polyphony chat service. Uses of this protocol, hereafter referred to as "polyproto", include Instant Messaging, Voice over IP, and Video over IP, where your identity is federated between multiple servers.
@@ -422,3 +423,20 @@ Clients must not use the same keys on multiple devices. Instead, the MLS protoco
 
 Each device provides its own `KeyPackages` as well as an own set of unique identity and signature keys. 
 Polyproto home servers must guarantee this uniqueness amongst all users of the server.
+
+## 7. Account migration
+
+!!! bug "TODO"
+
+    TODO: Describe how account migration works.
+    Requirements/assumptions for account migration:
+
+    - The old home server must be online and reachable.
+    - The old home server is playing nice and is not trying to prevent the user from migrating.
+    - The user has access to their old home server and can authenticate with it.
+    - The user has access to their new home server and can authenticate with it.
+
+Polyproto-core provides the feature of account migration. This allows users to move their accounts
+and all data associated with it to another home server. This is useful in many cases, for example
+when a home server is set to shut down in the future, or when a user wants to move their account to
+a different home server for security/trust reasons.
