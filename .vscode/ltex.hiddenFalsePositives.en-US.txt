@@ -5,3 +5,4 @@
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qquestion \"What if a home server is compromised/malicious?\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qquestion \"What if a server requests a federation token on behalf of a user?\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qbug \"TODO\"\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qv0.0.0 - Treat this as an unfinished draft.\\E$"}
