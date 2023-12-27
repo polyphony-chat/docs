@@ -34,19 +34,17 @@ Federation tokens are signed using the home server's public signing key, so that
 
     ##### Body
 
-    | Name      | Type | Description                                             |
-    | --------- | ---- | ------------------------------------------------------- |
-    | `enabled` | bool | `true` if the server currently allows token generation. |
+    | Name | Type                                 | Description                    |
+    | ---- | ------------------------------------ | ------------------------------ |
+    | -    | [`Federation Token`](../../types.md#federation-token) | The generated federation token |
 
     ```json
     "exampletoken"
     ```
 
-=== "404 Not Found"
-    
-    ##### Body
+--8<-- "snippets/errors/401-unauthorized.md"
 
-    --8<-- "snippets/errors/404-not_federated.md"
+--8<-- "snippets/errors/404-not_federated.md"
 
 ---
 
@@ -109,6 +107,8 @@ curl --request DELETE \
     ]
     ```
 
+--8<-- "snippets/errors/401-unauthorized.md"
+
 ---
 
 ### <p class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens for user [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</p>
@@ -143,6 +143,11 @@ curl --request DELETE \
     12
     ```
 
+--8<-- "snippets/errors/401-unauthorized.md"
+
+--8<-- "snippets/errors/403-not_administrator.md"
+
+
 ---
 
 ### <p class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</p>
@@ -170,3 +175,39 @@ curl --request DELETE \
     ```json
     421
     ```
+
+--8<-- "snippets/errors/401-unauthorized.md"
+
+--8<-- "snippets/errors/403-not_administrator.md"
+
+---
+
+### <p class="request-h"><span class="request request-put">PUT</span> Manage token generation [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</p>
+
+`http://localhost:3001/api/federation/token/generation`
+
+Enable or disable token generation. When disabled, the server will not allow the creation of new federation tokens.
+
+#### Request
+
+##### Body
+
+| Name      | Type | Description                                               |
+| --------- | ---- | --------------------------------------------------------- |
+| `enabled` | bool | `true` to enable token generation, `false` to disable it. |
+
+```json
+{
+    "enabled": true
+}
+```
+
+#### Response
+
+=== "204 No Content"
+
+    No response body.
+
+--8<-- "snippets/errors/401-unauthorized.md"
+
+--8<-- "snippets/errors/403-not_administrator.md"
