@@ -8,3 +8,4 @@
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qv0.0.0 - Treat this as an unfinished draft.\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-core Specification\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-core Specification\n1.\\E$"}
+{"rule":"ENGLISH_WORD_REPEAT_RULE","sentence":"^\\QGET Get token generation status :material-pail-outline: :material-lock-open-outline:\\E$"}

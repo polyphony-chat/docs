@@ -6,7 +6,7 @@ Routes concerning the creation, deletion and management of federation tokens.
 
 ---
 
-### <p class="request-h"><span class="request request-get">GET</span> Generate Federation Token [:material-pail-outline:](../../rate-limits.md "Bucket: federation-token-generation") [:material-lock-outline:](#authorization "Authorization required") </p> 
+### <p class="request-h"><span class="request request-get">GET</span> Generate Federation Token [:material-pail-outline:](../rate-limits.md "Bucket: federation-token-generation") [:material-lock-outline:](#authorization "Authorization required") </p> 
 
 `http://localhost:3001/api/federation/token`
 
@@ -45,7 +45,7 @@ Federation tokens are signed using the home server's public signing key, so that
 
 ---
 
-### <p class="request-h"><span class="request request-get">GET</span> Get token generation status [:material-pail-outline:](../../rate-limits.md "Bucket: ip") [:material-lock-open-outline:](#authorization "Authorization not required")</p>
+### <p class="request-h"><span class="request request-get">GET</span> Get token generation status [:material-pail-outline:](../rate-limits.md "Bucket: ip") [:material-lock-open-outline:](#authorization "Authorization not required")</p>
 
 `http://localhost:3001/api/federation/generation`
 
