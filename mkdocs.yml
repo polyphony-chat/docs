@@ -6,6 +6,8 @@ extra_css:
   - stylesheets/extra.css
 theme:
   name: material
+  logo: assets/lines.png
+  favicon: assets/lines-shadow.png
   features:
     - navigation.instant
     - navigation.instant.progress
