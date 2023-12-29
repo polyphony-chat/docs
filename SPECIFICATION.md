@@ -75,12 +75,12 @@ The Server-Server APIs are used to enable federation between multiple polyproto 
 
 Federating user identities means that users can fully participate on other instances. This means that users can, for example, DM users from another server or join external Guilds. 
 
-The identity key defined in [6.1. KeyPackages](#61-keypackages) is used to sign messages that the user sends to other servers.
+The identity key defined in [6. Keys and signatures](#6-keys-and-signatures) is used to sign messages that the user sends to other servers.
 
 **Example:**
 Say that Alice is on server A, and Bob is on server B. Alice wants to send a message to Bob.
 
-Alice's client will send a message to her home server (Server A), asking it to generate a one-time use federation token for registering on server B. Alice takes this token and sends it to server B. Server B will then ask server A if the token is valid. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B using this token, and send the message to server B. Server B will then send the message to Bob's client.
+Alice's client will send a message to their home server (Server A), asking it to generate a one-time use federation token for registering on server B. Alice takes this token and sends it to server B. Server B will then ask server A if the token is valid. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B using this token, and send the message to server B. Server B will then send the message to Bob's client.
 
 ```
 Alice's Client              Server A            Server B              Bob's Client
