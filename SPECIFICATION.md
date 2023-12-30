@@ -32,7 +32,7 @@
     - [6.3 Multi-device support](#63-multi-device-support)
   - [7. Account migration](#7-account-migration)
     - [7.1 Migrating a user account](#71-migrating-a-user-account)
-    - [7.2 Resigning messages](#72-resigning-messages)
+    - [7.2 Re-signing messages](#72-re-signing-messages)
 
 
 This document defines a set of protocols and APIs for a chat service primarily focused on communities. The document is intended to be used as a reference for developers who want to implement a client or server for the Polyphony chat service. Uses of this protocol, hereafter referred to as "polyproto", include Instant Messaging, Voice over IP, and Video over IP, where your identity is federated between multiple servers.
@@ -542,9 +542,16 @@ Fig. 5: Sequence diagram depicting a successful migration of Alice_A's account t
     more seamless for other users. The "non-cooperative homeserver migration method" is only a last
     resort.
 
-### 7.2 Resigning messages
+### 7.2 Re-signing messages
 
-Resigning messages is the process of transferring ownership of messages from an old account to the
-new, migrated account.
+Re-signing messages is the process of transferring ownership of messages from an old account to the
+new, migrated account. The process requires some coordination between the new and old accounts, 
+and can only be initiated by the old account. 
 
-TODO
+To initiate the process, the old account must send an API request to the server where messages
+should be re-signed. The request must contain the federation ID of the new account. The server will 
+then respond with a list of all keys that were used to sign messages sent by the old account. The
+old account will then need to prove that it is in possession of the private keys that were used to
+sign the messages. This is done by signing a challenge string with the private keys. The server will
+then verify the signature, and, if the verification is successful, grant the new account the ability
+to re-sign all messages sent by the old account which were signed with the provided keys.
