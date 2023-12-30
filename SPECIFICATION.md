@@ -235,7 +235,7 @@ Encrypting a guild channel is done by a client with the `MANAGE_CHANNEL` permiss
 
 !!! bug "TODO"
 
-    Remove "gatekeeper" role from the below sequence diagrams.
+    TODO: Remove "gatekeeper" role from the below sequence diagrams.
 
 ```
      Charlie                                        Server                                            Alice                         Bob
@@ -555,7 +555,7 @@ be created, which contains the new signature.
 
 !!! bug "TODO"
 
-    How does this look API wise? E.g., How will it be handled if there are multiple variants for a
+    TODO: How does this look API wise? E.g., How will it be handled if there are multiple variants for a
     single message?
 
 ```
