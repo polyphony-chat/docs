@@ -426,17 +426,27 @@ Polyproto home servers must guarantee this uniqueness amongst all users of the s
 
 ## 7. Account migration
 
-!!! bug "TODO"
-
-    TODO: Describe how account migration works.
-    Requirements/assumptions for account migration:
-
-    - The old home server must be online and reachable.
-    - The old home server is playing nice and is not trying to prevent the user from migrating.
-    - The user has access to their old home server and can authenticate with it.
-    - The user has access to their new home server and can authenticate with it.
-
 Polyproto-core provides the feature of account migration. This allows users to move their accounts
 and all data associated with it to another home server. This is useful in many cases, for example
 when a home server is set to shut down in the future, or when a user wants to move their account to
 a different home server for security/trust reasons.
+
+Migrating an account is done with the following steps:
+
+1. The user creates a new account on a new home server.
+2. The user requests the migration from the new home server, specifying the old account's
+   federation ID.
+3. The old user account confirms the migration request by sending a signed message to the new home
+   server. The confirmation contains the federation ID of the new account.
+4. The new server sends this information to the old server, which then sends the new server all
+   information associated with the old account. 
+   The old server now forward requests regarding the old account to the new server.
+   Alternatively, if the old server is shut down, the new server can request the information
+   from the old user directly.
+5. The old account can now request the resigning of its messages, transferring ownership of the
+   messages to the new account. To have all messages from a server re-signed, a user must
+   prove that they are the owner of the private keys used to sign the messages.
+
+!!! bug "TODO"
+
+    Check this procedure for potential security issues.
