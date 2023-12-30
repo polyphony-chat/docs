@@ -120,7 +120,6 @@ Alice's Client              Server A            Server B              Bob's Clie
 |                           |                   |-------------------->|
 |                           |                   |                     |
 ```
- 
 Fig. 1: Sequence diagram of a successful federation handshake.
 
 If Alice's session token expires, or if Alice would like to sign in on another device, she can repeat this process of generating a federation token and exchanging it for a session token.
