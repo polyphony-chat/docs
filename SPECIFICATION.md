@@ -232,6 +232,10 @@ Note, that in the below sequence diagrams, the MLS Welcome message and the MLS G
 
 Encrypting a guild channel is done by a client with the `MANAGE_CHANNEL` permission. Upon successfully requesting enabling encryption of a channel, all future messages in it will be encrypted. Joining an encrypted channel is done by sending a join request to the server. The server will then notify the channels' members of the join request. The members will then decide whether to accept or reject the join request. If the join request is accepted by any member, that member will initiate the MLS welcoming process. If the member finds that the join request is invalid (perhaps due to an invalid `KeyPackage`), the join request must be denied. It is imperative that join requests are verified correctly by the server.
 
+!!! bug "TODO"
+
+    Remove "gatekeeper" role from the below sequence diagrams.
+
 ```
      Charlie                                        Server                                            Alice                         Bob
      |                                              |                                                 |                             |
@@ -426,10 +430,8 @@ Polyproto home servers must guarantee this uniqueness amongst all users of the s
 
 ## 7. Account migration
 
-Polyproto-core provides the feature of account migration. This allows users to move their accounts
-and all data associated with it to another home server. This is useful in many cases, for example
-when a home server is set to shut down in the future, or when a user wants to move their account to
-a different home server for security/trust reasons.
+Account migration allows users to move their account and associated data to another identity.
+This allows users to switch home servers while not losing ownership of messages sent by them.
 
 Migrating an account is done with the following steps:
 
@@ -447,6 +449,91 @@ Migrating an account is done with the following steps:
    messages to the new account. To have all messages from a server re-signed, a user must
    prove that they are the owner of the private keys used to sign the messages.
 
-!!! bug "TODO"
+```
+Server_A                               Alice_A                                                Server_B                                            Alice_B 
+|                                      |                                                      |                                                   |
+|                                      |                                                      |      Migration Request (Signed, Alice_A->Alice_B) |
+|                                      |                                                      |<--------------------------------------------------|
+|                                      |                                                      |                                                   |
+|                                      | Migration Request (Signed, Alice_A->Alice_B)         |                                                   |
+|                                      |----------------------------------------------------->|                                                   |
+|                                      |                                                      |                                                   |
+|       Fetch full profile of Alice_A (Attached: Migration Request, Signed, Alice_A->Alice_B) |                                                   |
+|<--------------------------------------------------------------------------------------------|                                                   |
+|                                      |                                                      |                                                   |
+| Verify Signed Migration Request      |                                                      |                                                   |
+|--------------------------------      |                                                      |                                                   |
+|                               |      |                                                      |                                                   |
+|<-------------------------------      |                                                      |                                                   |
+|                                      |                                                      |                                                   |
+| Full profile of Alice_A              |                                                      |                                                   |
+|-------------------------------------------------------------------------------------------->|                                                   |
+|                                      |                                                      |                                                   |
+|                                      |                                                      | Verify, replace Alice_B profile with Alice_A      |
+|                                      |                                                      |---------------------------------------------      |
+|                                      |                                                      |                                            |      |
+|                                      |                                                      |<--------------------------------------------      |
+|                                      |                                                      |                                                   |
+|                                      |                                                      | New account data                                  |
+|                                      |                                                      |-------------------------------------------------->|
+|                                      |                                                      |                                                   |
+| Deactivate Alice_A's account         |                                                      |                                                   |
+|-----------------------------         |                                                      |                                                   |
+|                            |         |                                                      |                                                   |
+|<----------------------------         |                                                      |                                                   |
+|                                      |                                                      |                                                   |
+| Set up redirect from Alice_A to Alice_B                                                     |                                                   |
+|-------------------------------------------------------------------------------------------->|                                                   |
+|                                      |                                                      |                                                   |
+```
+Fig. 5: Sequence diagram depicting a successful migration of Alice_A's account to Alice_B's account, where Server A is reachable and cooperative.
 
-    Check this procedure for potential security issues.
+Alternatively, if Server A is offline or deemed uncooperative, the following sequence diagram depicts how the migration can be done without Server A's cooperation:
+
+```
+Server_A     Alice_A                                                                          Server_B                                            Alice_B 
+|            |                                                                                |                                                   |
+|            |                                                                                |      Migration Request (Signed, Alice_A->Alice_B) |
+|            |                                                                                |<--------------------------------------------------|
+|            |                                                                                |                                                   |
+|            | Migration Request (Signed, Alice_A->Alice_B)                                   |                                                   |
+|            |------------------------------------------------------------------------------->|                                                   |
+|            |                                                                                |                                                   |
+|       Fetch full profile of Alice_A (Attached: Migration Request, Signed, Alice_A->Alice_B) |                                                   |
+|<--------------------------------------------------------------------------------------------|                                                   |
+|            |                                                                                |                                                   |
+|            |                                                                                | Wait for response...                              |
+|            |                                                                                |---------------------                              |
+|            |                                                                                |                    |                              |
+|            |                                                                                |<--------------------                              |
+|            |                                                                                |                                                   |
+|            |                                                                                | Wait for response...                              |
+|            |                                                                                |---------------------                              |
+|            |                                                                                |                    |                              |
+|            |                                                                                |<--------------------                              |
+|            |                                                                                |                                                   |
+|            |                       Server_A offline/not cooperative, send profile or abort? |                                                   |
+|            |<-------------------------------------------------------------------------------|                                                   |
+|            |                                                                                |                                                   |
+|            | Full profile of Self                                                           |                                                   |
+|            |------------------------------------------------------------------------------->|                                                   |
+|            |                                                                                |                                                   |
+|            |                                                                                | Verify, replace Alice_B profile with Alice_A      |
+|            |                                                                                |---------------------------------------------      |
+|            |                                                                                |                                            |      |
+|            |                                                                                |<--------------------------------------------      |
+|            |                                                                                |                                                   |
+|            |                                                                                | New account data                                  |
+|            |                                                                                |-------------------------------------------------->|
+|            |                                                                                |                                                   |
+```
+Fig. 5: Sequence diagram depicting a successful migration of Alice_A's account to Alice_B's account, where Server A is unreachable or uncooperative.
+
+!!! question "If the old home server is not needed for the migration, why try to contact it in the first place?"
+
+    It is generally preferrable to have the old home server cooperate with the migration, as it
+    allows for a more seamless migration. A cooperative homeserver will be able to provide the new
+    home server with all information and data (like uploads) associated with the old account. It can
+    also forward requests regarding the old account to the new server, which makes the process
+    more seamless for other users. The "non-cooperative homeserver migration method" is only a last
+    resort.
