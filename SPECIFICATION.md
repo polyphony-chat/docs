@@ -31,6 +31,8 @@
     - [6.2 User identity](#62-user-identity)
     - [6.3 Multi-device support](#63-multi-device-support)
   - [7. Account migration](#7-account-migration)
+    - [7.1 Migrating a user account](#71-migrating-a-user-account)
+    - [7.2 Resigning messages](#72-resigning-messages)
 
 
 This document defines a set of protocols and APIs for a chat service primarily focused on communities. The document is intended to be used as a reference for developers who want to implement a client or server for the Polyphony chat service. Uses of this protocol, hereafter referred to as "polyproto", include Instant Messaging, Voice over IP, and Video over IP, where your identity is federated between multiple servers.
@@ -449,6 +451,8 @@ Migrating an account is done with the following steps:
    messages to the new account. To have all messages from a server re-signed, a user must
    prove that they are the owner of the private keys used to sign the messages.
 
+### 7.1 Migrating a user account
+
 ```
 Server_A                               Alice_A                                                Server_B                                            Alice_B 
 |                                      |                                                      |                                                   |
@@ -537,3 +541,10 @@ Fig. 5: Sequence diagram depicting a successful migration of Alice_A's account t
     also forward requests regarding the old account to the new server, which makes the process
     more seamless for other users. The "non-cooperative homeserver migration method" is only a last
     resort.
+
+### 7.2 Resigning messages
+
+Resigning messages is the process of transferring ownership of messages from an old account to the
+new, migrated account.
+
+TODO
