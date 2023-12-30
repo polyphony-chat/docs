@@ -526,7 +526,7 @@ Server_A     Alice_A                                                            
 |            |                                                                                |-------------------------------------------------->|
 |            |                                                                                |                                                   |
 ```
-Fig. 5: Sequence diagram depicting a successful migration of Alice_A's account to Alice_B's account, where Server A is unreachable or uncooperative.
+Fig. 6: Sequence diagram depicting a successful migration of Alice_A's account to Alice_B's account, where Server A is unreachable or uncooperative.
 
 !!! question "If the old home server is not needed for the migration, why try to contact it in the first place?"
 
@@ -550,3 +550,55 @@ old account will then need to prove that it is in possession of the private keys
 sign the messages. This is done by signing a challenge string with the private keys. The server will
 then verify the signature, and, if the verification is successful, grant the new account the ability
 to re-sign all messages sent by the old account which were signed with the provided keys.
+
+Re-signing messages mustn't overwrite the old signature. Instead, a new variant of the message must
+be created, which contains the new signature.
+
+!!! bug "TODO"
+
+    How does this look API wise? E.g., How will it be handled if there are multiple variants for a
+    single message?
+
+```
+Alice_A                                              Server_C                                                              Alice_B                                                 
+|                                                    |                                                                     |                                                     
+| Request allow message re-signing for Alice_B       |                                                                     |                                                     
+|--------------------------------------------------->|                                                                     |                                                     
+|                                                    |                                                                     |                                                     
+|          List of keys to verify + challenge string |                                                                     |                                                     
+|<---------------------------------------------------|                                                                     |                                                     
+|                                                    |                                                                     |                                                     
+| Completed challenge for each key on the list       |                                                                     |                                                     
+|--------------------------------------------------->|                                                                     |                                                     
+|                                                    |                                                                     |                                                     
+|                                                    | Verify challenge, unlock re-signing for Alice_B                     |                                                     
+|                                                    |------------------------------------------------                     |                                                     
+|                                                    |                                               |                     |                                                     
+|                                                    |<-----------------------------------------------                     |                                                     
+|                                                    |                                                                     |                                                     
+|                                                    |                   Request message re-signing for Alice_A's messages |                                                     
+|                                                    |<--------------------------------------------------------------------|                                                     
+|                                                    |                                                                     |                                                     
+|                                                    | List of old messages (including old signatures + certificates)      |                                                     
+|                                                    |-------------------------------------------------------------------->|                                                     
+|                                                    |                                                                     |                                                     
+|                                                    |                                                                     | Verify that Server_C has not tampered with messages 
+|                                                    |                                                                     |---------------------------------------------------- 
+|                                                    |                                                                     |                                                   | 
+|                                                    |                                                                     |<--------------------------------------------------- 
+|                                                    |                                                                     |                                                     
+|                                                    |                                                                     | Re-sign messages with own keys                      
+|                                                    |                                                                     |-------------------------------                      
+|                                                    |                                                                     |                              |                      
+|                                                    |                                                                     |<------------------------------                      
+|                                                    |                                                                     |                                                     
+|                                                    |                                                        New messages |                                                     
+|                                                    |<--------------------------------------------------------------------|                                                     
+|                                                    |                                                                     |                                                     
+|                                                    | Verify that only FID and signature related fields have changed      |                                                     
+|                                                    |---------------------------------------------------------------      |                                                     
+|                                                    |                                                              |      |                                                     
+|                                                    |<--------------------------------------------------------------      |                                                     
+|                                                    |                                                                     |                                                     
+```
+Fig. 7: Sequence diagram depicting re-signing procedure.
