@@ -1,3 +1,7 @@
+---
+title: Protocol Specification
+---
+
 # polyproto-core Specification
 
 **v0.0.0** - Treat this as an unfinished draft.
@@ -601,3 +605,5 @@ Alice_A                                              Server_C                   
 |                                                    |                                                                     |                                                     
 ```
 Fig. 7: Sequence diagram depicting re-signing procedure.
+
+--8<-- "snippets/glossary.md"
