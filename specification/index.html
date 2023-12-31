@@ -1,0 +1,2037 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../APIs/">
+      
+      
+      <link rel="icon" href="../assets/lines.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.3">
+    
+    
+      
+        <title>Protocol Specification - polyproto</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.50c56a3b.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="../assets/external/fonts.googleapis.com/css.49ea35f2.css">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/timeago.css">
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#polyproto-core-specification" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="polyproto" class="md-header__button md-logo" aria-label="polyproto" data-md-component="logo">
+      
+  <img src="../assets/lines.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            polyproto
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Protocol Specification
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9h-1.9M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69m-9.15 3.96h2.3L12 9l-1.15 3.65Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/polyphony-chat/polyproto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+    
+  
+  Protocol Specification
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../APIs/" class="md-tabs__link">
+          
+  
+    
+  
+  APIs
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="polyproto" class="md-nav__button md-logo" aria-label="polyproto" data-md-component="logo">
+      
+  <img src="../assets/lines.png" alt="logo">
+
+    </a>
+    polyproto
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/polyphony-chat/polyproto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Protocol Specification
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Protocol Specification
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-apis-and-communication-protocols" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. APIs and communication protocols
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. APIs and communication protocols">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-client-server-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1 Client-Server API
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-server-server-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2 Server-Server API
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-websockets" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.3 WebSockets
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-federated-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Federated Identity
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Federated Identity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-federation-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 Federation tokens
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-signing-keys-and-message-signing" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 Signing keys and message signing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-abuse-prevention" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3 Abuse prevention
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.4 Best practices
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-federating-directgroup-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Federating direct/group messages
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Federating direct/group messages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-direct-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 Direct messages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-group-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 Group messages
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Users
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Encryption
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Encryption">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-encrypted-guild-channels" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 Encrypted guild channels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-encrypted-direct-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 Encrypted direct messages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-encrypted-group-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3 Encrypted group messages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-joining-new-devices-from-existing-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4 Joining new devices from existing users
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.5 Best practices
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-keys-and-signatures" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Keys and signatures
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Keys and signatures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-keypackages" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1. KeyPackages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-user-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.2 User identity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-multi-device-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.3 Multi-device support
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-account-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Account migration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Account migration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-migrating-a-user-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1 Migrating a user account
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-re-signing-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.2 Re-signing messages
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Glossary
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../APIs/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    APIs
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            APIs
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../APIs/Core/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Core
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Core
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../APIs/Core/errors/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Errors
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../APIs/Core/rate-limits/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rate limits
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../APIs/Core/types/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Types
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2_5" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../APIs/Core/Server-Client%20API/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Server Client API
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_2_5" id="__nav_3_2_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            Server Client API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2_5_2" id="__nav_3_2_5_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Routes
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_2_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Routes
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../APIs/Core/Server-Client%20API/Routes/federation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Federation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2_6" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../APIs/Core/Server-Server%20API/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Server Server API
+  </span>
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            Server Server API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-apis-and-communication-protocols" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. APIs and communication protocols
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. APIs and communication protocols">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-client-server-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1 Client-Server API
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-server-server-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2 Server-Server API
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-websockets" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.3 WebSockets
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-federated-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Federated Identity
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Federated Identity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-federation-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 Federation tokens
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-signing-keys-and-message-signing" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 Signing keys and message signing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-abuse-prevention" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3 Abuse prevention
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.4 Best practices
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-federating-directgroup-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Federating direct/group messages
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Federating direct/group messages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-direct-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 Direct messages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-group-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 Group messages
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Users
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Encryption
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Encryption">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-encrypted-guild-channels" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 Encrypted guild channels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-encrypted-direct-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 Encrypted direct messages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-encrypted-group-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3 Encrypted group messages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-joining-new-devices-from-existing-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4 Joining new devices from existing users
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.5 Best practices
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-keys-and-signatures" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Keys and signatures
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Keys and signatures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-keypackages" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1. KeyPackages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-user-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.2 User identity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-multi-device-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.3 Multi-device support
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-account-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Account migration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Account migration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-migrating-a-user-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1 Migrating a user account
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-re-signing-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.2 Re-signing messages
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Glossary
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="polyproto-core-specification">polyproto-core Specification<a class="headerlink" href="#polyproto-core-specification" title="Permanent link">&para;</a></h1>
+<p><strong>v0.0.0</strong> - Treat this as an unfinished draft.</p>
+<ul>
+<li><a href="#polyproto-core-specification">polyproto-core Specification</a></li>
+<li><a href="#1-apis-and-communication-protocols">1. APIs and communication protocols</a><ul>
+<li><a href="#11-client-server-api">1.1 Client-Server API</a></li>
+<li><a href="#111-initial-authentication">1.1.1 Initial authentication</a></li>
+<li><a href="#12-server-server-api">1.2 Server-Server API</a></li>
+<li><a href="#13-websockets">1.3 WebSockets</a></li>
+</ul>
+</li>
+<li><a href="#2-federated-identity">2. Federated Identity</a><ul>
+<li><a href="#21-federation-tokens">2.1 Federation tokens</a></li>
+<li><a href="#22-signing-keys-and-message-signing">2.2 Signing keys and message signing</a></li>
+<li><a href="#23-abuse-prevention">2.3 Abuse prevention</a></li>
+<li><a href="#24-best-practices">2.4 Best practices</a></li>
+<li><a href="#241-signing-keys">2.4.1 Signing keys</a></li>
+<li><a href="#242-home-server-operation-and-design">2.4.2 Home server operation and design</a></li>
+</ul>
+</li>
+<li><a href="#3-federating-directgroup-messages">3. Federating direct/group messages</a><ul>
+<li><a href="#31-direct-messages">3.1 Direct messages</a></li>
+<li><a href="#32-group-messages">3.2 Group messages</a></li>
+</ul>
+</li>
+<li><a href="#4-users">4. Users</a></li>
+<li><a href="#5-encryption">5. Encryption</a><ul>
+<li><a href="#51-encrypted-guild-channels">5.1 Encrypted guild channels</a></li>
+<li><a href="#52-encrypted-direct-messages">5.2 Encrypted direct messages</a></li>
+<li><a href="#53-encrypted-group-messages">5.3 Encrypted group messages</a></li>
+<li><a href="#54-joining-new-devices-from-existing-users">5.4 Joining new devices from existing users</a></li>
+<li><a href="#55-best-practices">5.5 Best practices</a></li>
+</ul>
+</li>
+<li><a href="#6-keys-and-signatures">6. Keys and signatures</a><ul>
+<li><a href="#61-keypackages">6.1. KeyPackages</a></li>
+<li><a href="#611-last-resort-keypackages">6.1.1 Last resort KeyPackages</a></li>
+<li><a href="#62-user-identity">6.2 User identity</a></li>
+<li><a href="#63-multi-device-support">6.3 Multi-device support</a></li>
+</ul>
+</li>
+<li><a href="#7-account-migration">7. Account migration</a><ul>
+<li><a href="#71-migrating-a-user-account">7.1 Migrating a user account</a></li>
+<li><a href="#72-re-signing-messages">7.2 Re-signing messages</a></li>
+</ul>
+</li>
+</ul>
+<p>This document defines a set of protocols and APIs for a chat service primarily focused on communities. The document is intended to be used as a reference for developers who want to implement a client or server for the Polyphony chat service. Uses of this protocol, hereafter referred to as "polyproto", include Instant Messaging, Voice over IP, and Video over IP, where your identity is federated between multiple servers.</p>
+<p>The information provided to you via this document only fully covers polyproto itself. To correctly implement the polyproto, you must read the MLS specification (RFC9420). It is imperative that implementations of this protocol respect all aspects of this specification. </p>
+<p>The structure of this reference document is heavily inspired by the really well written <a href="https://spec.matrix.org/latest">Matrix specification</a>.</p>
+<h2 id="1-apis-and-communication-protocols">1. APIs and communication protocols<a class="headerlink" href="#1-apis-and-communication-protocols" title="Permanent link">&para;</a></h2>
+<p>The polyproto-core specification defines a set of APIs that are used to implement polyproto-core. These APIs are:</p>
+<ul>
+<li>Client-Server API</li>
+<li>Server-Server API</li>
+</ul>
+<p>Aside from these REST APIs, polyproto-core also uses WebSockets for real-time communication between clients and servers.</p>
+<h3 id="11-client-server-api">1.1 Client-Server API<a class="headerlink" href="#11-client-server-api" title="Permanent link">&para;</a></h3>
+<p>The Client-Server API is a RESTful API that is used by clients to communicate with the server. It is a modification of the Discord v9 API and is completely backwards compatible with it, even if not all endpoints are supported. An example of an unsupported endpoint would be the "Super-reactions" endpoint, which are treated as regular reactions by polyproto clients and servers.</p>
+<h4 id="111-initial-authentication">1.1.1 Initial authentication<a class="headerlink" href="#111-initial-authentication" title="Permanent link">&para;</a></h4>
+<p>During the initial authentication (registration) process, a client must provide at least one <code>KeyPackage</code>, as well as one "last resort" <code>KeyPackage</code> (see <a href="#611-last-resort-keypackages">6.1.1 Last resort KeyPackages</a>) in addition to the required registration information.</p>
+<p>The identity key inside the <code>LeafNode</code> of this <code>KeyPackage</code> is signed using the home servers' private key, so that home servers act as a certificate authority for their users' keys.</p>
+<p>See <a href="#61-keypackages">6.1. KeyPackages</a> for an outline on what a <code>KeyPackage</code> is, and consult the MLS specification (RFC9420) for more implementation details.</p>
+<h3 id="12-server-server-api">1.2 Server-Server API<a class="headerlink" href="#12-server-server-api" title="Permanent link">&para;</a></h3>
+<p>The Server-Server APIs are used to enable federation between multiple polyproto servers (federated identity).</p>
+<h3 id="13-websockets">1.3 WebSockets<a class="headerlink" href="#13-websockets" title="Permanent link">&para;</a></h3>
+<div class="admonition bug">
+<p class="admonition-title">TODO</p>
+<p>TODO: Describe how WebSocket connections are established, maintained, and terminated, as well
+as what exactly WebSocket connections are used for.</p>
+</div>
+<h2 id="2-federated-identity">2. Federated Identity<a class="headerlink" href="#2-federated-identity" title="Permanent link">&para;</a></h2>
+<p>Federating user identities means that users can fully participate on other instances. This means that users can, for example, DM users from another server or join external Guilds. </p>
+<p>The identity key defined in <a href="#6-keys-and-signatures">6. Keys and signatures</a> is used to sign messages that the user sends to other servers.</p>
+<p><strong>Example:</strong>
+Say that Alice is on server A, and Bob is on server B. Alice wants to send a message to Bob.</p>
+<p>Alice's client will send a message to their home server (Server A), asking it to generate a one-time use federation token for registering on server B. Alice takes this token and sends it to server B. Server B will then ask server A if the token is valid. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B using this token, and send the message to server B. Server B will then send the message to Bob's client.</p>
+<p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Alice&#39;s Client              Server A            Server B              Bob&#39;s Client
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|                           |                   |                     |
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| Federation token request  |                   |                     |
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|--------------------------&gt;|                   |                     |
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>|                           |                   |                     |
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>|          Federation token |                   |                     |
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>|&lt;--------------------------|                   |                     |
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>|                      [Federation handshake start]                   |
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>|                           |                   |                     |
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| Federation token + Public Profile             |                     |
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>|----------------------------------------------&gt;|                     |
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>|                           |                   |                     |
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>|                           |        Get pubkey |                     |
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>|                           |&lt;------------------|                     |
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>|                           |                   |                     |
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>|                           | Server A Pubkey   |                     |
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>|                           |------------------&gt;|                     |
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>|                           |                   |                     |
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>|                           |                   | Verify fedi-token   |
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>|                           |                   |-------------------  |
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>|                           |                   |                  |  |
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>|                           |                   |&lt;------------------  |
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>|                           |                   |                     |
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>|                           |     Session Token |                     |
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>|&lt;----------------------------------------------|                     |
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>|                           |                   |                     |
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>|                     [Federation handshake complete]                 |
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>|                           |                   |                     |
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>| Session Token + Signed message                |                     |
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>|----------------------------------------------&gt;|                     |
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>|                           |                   |                     |
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>|                           |                   | Signed message      |
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>|                           |                   |--------------------&gt;|
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>|                           |                   |                     |
+</code></pre></div>
+Fig. 1: Sequence diagram of a successful federation handshake.</p>
+<p>If Alice's session token expires, or if Alice would like to sign in on another device, she can repeat this process of generating a federation token and exchanging it for a session token.</p>
+<p>The usage of a federation token prevents a malicious user from generating an external session token on behalf of another user.</p>
+<h3 id="21-federation-tokens">2.1 Federation tokens<a class="headerlink" href="#21-federation-tokens" title="Permanent link">&para;</a></h3>
+<p>Federation tokens are generated by the user's home server. The token is a JSON object that contains the following information:</p>
+<ul>
+<li>The time at which the token expires.</li>
+<li>The user's federation ID.</li>
+<li>The domain of the server that the token is intended for.</li>
+<li>The domain of the user's home server.</li>
+<li>A securely-randomly generated nonce</li>
+</ul>
+<h3 id="22-signing-keys-and-message-signing">2.2 Signing keys and message signing<a class="headerlink" href="#22-signing-keys-and-message-signing" title="Permanent link">&para;</a></h3>
+<p>As mentioned in the previous section, users must hold on to a private key at all times. This key is used to sign all messages that the user sends to other instances. The key is generated by the user's home server, and is sent to the user's client when the user first registers on the server. The key is stored in the client's local storage. The signing key must not be used for encryption purposes.</p>
+<p>A client may choose to rotate their signing key at any time. This is done by generating a new signing key pair, and sending the new public signing key to their home server. The home server will then send a new certificate that contains the clients' public signing key and the corresponding users' federation ID, to the client. This certificate is proof that the home server attests to the clients key. The client then attaches this certificate to any message it sends to other servers, alongside the actual signature of the message, generated using the clients' private signing key. The home server has to keep track of the old public signing key and its own certificates, and use them to verify messages that were signed with the old key.</p>
+<p>Signing messages prevents a malicious server from impersonating a user.</p>
+<div class="admonition bug">
+<p class="admonition-title">TODO</p>
+<p>TODO: Note about signing keys and how they are generated </p>
+</div>
+<h3 id="23-abuse-prevention">2.3 Abuse prevention<a class="headerlink" href="#23-abuse-prevention" title="Permanent link">&para;</a></h3>
+<p>To protect users from malicious home servers secretly acting on the behalf of non-consenting users,
+a mechanism is needed to prevent home servers from generating federation tokens for users without
+their consent.</p>
+<div class="admonition example">
+<p class="admonition-title">Potential abuse scenario</p>
+<p>A malicious home server can potentially request a federation token on behalf of one of its
+users, and use it to generate a session token on the user's behalf. This is a problem, as the
+malicious server can then impersonate the user on another server, as well as read unencrypted
+text messages sent on the other server.</p>
+</div>
+<p>The above scenario is not unique to polyproto-core, and rather a problem other federated services/
+protocols, like ActivityPub, have as well. There is no real solution to this problem, but it can be
+mitigated a bit by making it more difficult for malicious home servers to do something like this
+without the user noticing.</p>
+<p>Polyproto servers should notify users (even guest users), when a new session token is generated for
+them. This would make the malicious server's actions more noticeable to the user. However, this does
+not address the issue of the malicious server being able to generate a federation token for a server
+which you are not yet connected to. Clients who re-connect to a server after being offline should be
+notified of any new session tokens that were generated for them while they were offline.
+This <code>NEW_SESSION</code> message should be sent to all sessions, except for the new session. The
+<code>NEW_SESSION</code> gateway event should contain the following information:</p>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;ip&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;IP address of the session&gt;&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;user_agent&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;User agent of the session&gt;&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;Timestamp of when the session was created&gt;&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">&quot;session_pubkey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;Public key of the session&gt;&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">}</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is impossible for a malicious server to listen in on securely encrypted messages sent in
+direct messages, encrypted guild channels, and encrypted group messages, without all users
+noticing. MLS's forward secrecy guarantees, that messages sent before a malicious session joins
+the encrypted channel cannot be decrypted by that session. If secrecy/confidentiality are of
+concern, users should host their own home server and use end-to-end encryption.</p>
+</div>
+<h3 id="24-best-practices">2.4 Best practices<a class="headerlink" href="#24-best-practices" title="Permanent link">&para;</a></h3>
+<h4 id="241-signing-keys">2.4.1 Signing keys<a class="headerlink" href="#241-signing-keys" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Instance/user signing keys should be rotated at least every 30 days. This is to ensure that a compromised key can only be used for a limited amount of time.</li>
+<li>If Bobs client fails to verify the signature of Alice's message with the public key/certificate pair received from Server B, it should ask Server A for the public key of Alice at the time the message was sent. If the verification fails again, the message should be treated with extreme caution.</li>
+</ul>
+<h4 id="242-home-server-operation-and-design">2.4.2 Home server operation and design<a class="headerlink" href="#242-home-server-operation-and-design" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Employ a caching layer to handle the potentially large amount of requests for public key certificates without putting unnecessary strain on the database.</li>
+</ul>
+<h2 id="3-federating-directgroup-messages">3. Federating direct/group messages<a class="headerlink" href="#3-federating-directgroup-messages" title="Permanent link">&para;</a></h2>
+<h3 id="31-direct-messages">3.1 Direct messages<a class="headerlink" href="#31-direct-messages" title="Permanent link">&para;</a></h3>
+<p>Federating direct messages is relatively simple. When Alice sends a message to Bob, her client will send the message to her home server via an API request. Her home server will then send the message to Bob's client via an established WebSocket connection, and vice versa.</p>
+<h3 id="32-group-messages">3.2 Group messages<a class="headerlink" href="#32-group-messages" title="Permanent link">&para;</a></h3>
+<p>Group messages work just like guilds. The data is stored by the home server of the group's creator, meaning that all group members will have to communicate with the group creator's home server. If the group creator leaves the group, the ownership of the group is transferred to another member. The group chat stays on the group creator's home server, unless a migration is initiated by the group owner.</p>
+<h2 id="4-users">4. Users<a class="headerlink" href="#4-users" title="Permanent link">&para;</a></h2>
+<p>Each client must have a user associated with it. A user is identified by a unique federation ID (FID), which consists of the user's username (which must be unique on the instance) and the instance's root domain. A FID is formatted as follows: <code>user@domain.tld</code>, which makes for a globally unique user ID. Federation IDs are case-insensitive.</p>
+<p>The following regex can be used to validate user IDs: <code>\b([A-Z0-9._%+-]+)@([A-Z0-9.-]+\.[A-Z]{2,})\b</code>.</p>
+<h2 id="5-encryption">5. Encryption<a class="headerlink" href="#5-encryption" title="Permanent link">&para;</a></h2>
+<p>Polyproto offers end-to-end encryption for messages via Message Layer Security (MLS). Polyproto compliant servers take on the role of both an Authentication Service and a Delivery Service in context of MLS.</p>
+<p>Message Layer Security (MLS) is a cryptographic protocol that provides confidentiality, integrity, and authenticity guarantees for group messaging applications. MLS builds on top of the <a href="https://signal.org/docs/specifications/doubleratchet/">Double Ratchet Algorithm</a> and <a href="https://signal.org/docs/specifications/x3dh/">X3DH</a> to provide these security guarantees.</p>
+<p>Clients and servers must support encryption, but whether to encrypt a message channel is up to the users.</p>
+<p>Note, that in the below sequence diagrams, the MLS Welcome message and the MLS Group notify message are all encrypted using the public key of the recipient. The public key in this context is not to be confused with the public signing key.</p>
+<h3 id="51-encrypted-guild-channels">5.1 Encrypted guild channels<a class="headerlink" href="#51-encrypted-guild-channels" title="Permanent link">&para;</a></h3>
+<p>Encrypting a guild channel is done by a client with the <code>MANAGE_CHANNEL</code> permission. Upon successfully requesting enabling encryption of a channel, all future messages in it will be encrypted. Joining an encrypted channel is done by sending a join request to the server. The server will then notify the channels' members of the join request. The members will then decide whether to accept or reject the join request. If the join request is accepted by any member, that member will initiate the MLS welcoming process. If the member finds that the join request is invalid (perhaps due to an invalid <code>KeyPackage</code>), the join request must be denied. It is imperative that join requests are verified correctly by the server.</p>
+<div class="admonition bug">
+<p class="admonition-title">TODO</p>
+<p>TODO: Remove "gatekeeper" role from the below sequence diagrams.</p>
+</div>
+<p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>     Charlie                                        Server                                            Alice                         Bob
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>     |                                              |                                                 |                             |
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>     | Channel join request + KeyPackage            |                                                 |                             |
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>     |---------------------------------------------&gt;|                                                 |                             |
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>     |                                              |                                                 |                             |
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>     |                                              | Notify gatekeepers of join request              |                             |
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>     |                                              |-----------------------------------              |                             |
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>     |                                              |                                  |              |                             |
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>     |                                              |&lt;----------------------------------              |                             |
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>     |                                              |                                                 |                             |
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>     |                                              | Channel join request + Charlie&#39;s KeyPackage     |                             |
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>     |                                              |------------------------------------------------&gt;|                             |
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>     |                                              |                                                 |                             |
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>     |                                              |                                                 | Verify Charlie&#39;s KeyPackage |
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>     |                                              |                                                 |------------------------     |
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>     |                                              |                                                 |                       |     |
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>     |                                              |                                                 |&lt;-----------------------     |
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>     |                                              |                                                 |                             |
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>     |                                              |             Notify group of new member: Charlie |                             |
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>     |                                              |&lt;------------------------------------------------|                             |
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>     |                                              |                                                 |                             |
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>     |                                              |                           Encrypted MLS Welcome |                             |
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>     |                                              |&lt;------------------------------------------------|                             |
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>     |                                              |                                                 |                             |
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>     |                                              | Forward: Notify group of new member: Charlie    |                             |
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>     |                                              |------------------------------------------------------------------------------&gt;|
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>     |                                              |                                                 |                             |
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>     | Forward: Notify group of new member: Charlie |                                                 |                             |
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>     |&lt;---------------------------------------------|                                                 |                             |
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>     |                                              |                                                 |                             |
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>     |               Forward: encrypted MLS Welcome |                                                 |                             |
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>     |&lt;---------------------------------------------|                                                 |                             |
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>     |                                              |                                                 |                             |
+</code></pre></div>
+Fig. 2: Sequence diagram of a successful encrypted channel join in which Alice acts as a gatekeeper. The sequence diagram assumes that Alice can verify Charlies' public key to indeed belong to Charlie, and that Alice accepts the join request.</p>
+<h3 id="52-encrypted-direct-messages">5.2 Encrypted direct messages<a class="headerlink" href="#52-encrypted-direct-messages" title="Permanent link">&para;</a></h3>
+<p>Adding another person to a direct message is not possible, and would not make much sense, as the new person cannot see any messages that were sent before they joined the group. If Alice wants to add Charlie to a direct message with Bob, she will have to create a new direct message with Bob and Charlie.</p>
+<p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Alice                                          Server                             Bob
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>|                                              |                                  |
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>| Request Bob&#39;s KeyPackages                    |                                  |
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>|---------------------------------------------&gt;|                                  |
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>|                                              |                                  |
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>|                            Bob&#39;s KeyPackages |                                  |
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>|&lt;---------------------------------------------|                                  |
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>|                                              |                                  |
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>| Verify Bob&#39;s KeyPackages                     |                                  |
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>| -----------------------                      |                                  |
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>|                       |                      |                                  |
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>|&lt;-----------------------                      |                                  |
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>|                                              |                                  |
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>| Notify group of new member: Bob              |                                  |
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>|---------------------------------------------&gt;|                                  |
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>|                                              |                                  |
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>| Encrypted MLS Welcome                        |                                  |
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>|---------------------------------------------&gt;|                                  |
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>|                                              |                                  |
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>|                                              | Forward: New group member: Bob   |
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>|                                              |---------------------------------&gt;|
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>|                                              |                                  |
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>|                                              | Forward encrypted MLS Welcome    |
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>|                                              |---------------------------------&gt;|
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>|                                              |                                  |
+</code></pre></div>
+Fig. 3: Sequence diagram of a successful encrypted direct message creation. </p>
+<h3 id="53-encrypted-group-messages">5.3 Encrypted group messages<a class="headerlink" href="#53-encrypted-group-messages" title="Permanent link">&para;</a></h3>
+<p>Encrypted group messages work by using the traditional MLS protocol, with the additional concept of group owners. Only group owners can add new members to the group and forcibly remove others from the group. The Group owner is determined by the Client-Server API.</p>
+<p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Alice (gatekeeper)                                 Server                                  Bob       Charlie
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>|                                                  |                                       |         |
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>| Request Bob&#39;s KeyPackages                        |                                       |         |
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>|-------------------------------------------------&gt;|                                       |         |
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>|                                                  |                                       |         |
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>|                                Bob&#39;s KeyPackages |                                       |         |
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>|&lt;-------------------------------------------------|                                       |         |
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>|                                                  |                                       |         |
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>| Verify Bob&#39;s KeyPackages                         |                                       |         |
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>|------------------------                          |                                       |         |
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>|                       |                          |                                       |         |
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>|&lt;-----------------------                          |                                       |         |
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>|                                                  |                                       |         |
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>| Notify group of new member: Bob                  |                                       |         |
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>|-------------------------------------------------&gt;|                                       |         |
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>|                                                  |                                       |         |
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>| Encrypted MLS Welcome                            |                                       |         |
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>|-------------------------------------------------&gt;|                                       |         |
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>|                                                  |                                       |         |
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>|                                                  | Forward: New group member: Bob        |         |
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>|                                                  |--------------------------------------&gt;|         |
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>|                                                  |                                       |         |
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>|                                                  | Forward encrypted MLS Welcome         |         |
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>|                                                  |--------------------------------------&gt;|         |
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>|                                                  |                                       |         |
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>| Request Charlie&#39;s KeyPackages                    |                                       |         |
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>|-------------------------------------------------&gt;|                                       |         |
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>|                                                  |                                       |         |
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>|                            Charlie&#39;s KeyPackages |                                       |         |
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>|&lt;-------------------------------------------------|                                       |         |
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>|                                                  |                                       |         |
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>| Verify Charlie&#39;s KeyPackages                     |                                       |         |
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>|----------------------------                      |                                       |         |
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>|                           |                      |                                       |         |
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>|&lt;---------------------------                      |                                       |         |
+<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>|                                                  |                                       |         |
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>| Notify group of new member: Charlie              |                                       |         |
+<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a>|-------------------------------------------------&gt;|                                       |         |
+<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a>|                                                  |                                       |         |
+<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a>| Encrypted MLS Welcome                            |                                       |         |
+<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a>|-------------------------------------------------&gt;|                                       |         |
+<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a>|                                                  |                                       |         |
+<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a>|                                                  | Forward: New group member: Charlie    |         |
+<a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a>|                                                  |--------------------------------------&gt;|         |
+<a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a>|                                                  |                                       |         |
+<a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a>|                                                  | Forward: New group member: Charlie    |         |
+<a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a>|                                                  |------------------------------------------------&gt;|
+<a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a>|                                                  |                                       |         |
+<a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a>|                                                  | Forward encrypted MLS Welcome         |         |
+<a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a>|                                                  |------------------------------------------------&gt;|
+<a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a>|                                                  |                                       |         |
+</code></pre></div>
+Fig. 4: Sequence diagram of a successful encrypted group creation with 3 members.</p>
+<h3 id="54-joining-new-devices-from-existing-users">5.4 Joining new devices from existing users<a class="headerlink" href="#54-joining-new-devices-from-existing-users" title="Permanent link">&para;</a></h3>
+<p>Regardless of channel or group permissions, a user join request from a new device should be accepted by default.</p>
+<h3 id="55-best-practices">5.5 Best practices<a class="headerlink" href="#55-best-practices" title="Permanent link">&para;</a></h3>
+<ul>
+<li>In case of encrypted guild channel join requests, it may be a good idea to treat multiple join requests from the same user with different clients as a single join request.</li>
+<li>Joining an encrypted channel, even from an already established member with a new device, should be an event clearly visible to all members of the channel. This is to prevent a malicious user from joining a channel without the other members noticing.</li>
+</ul>
+<h2 id="6-keys-and-signatures">6. Keys and signatures<a class="headerlink" href="#6-keys-and-signatures" title="Permanent link">&para;</a></h2>
+<p>All keys must be generated using the <code>EdDSA</code> signature scheme.</p>
+<div class="admonition bug">
+<p class="admonition-title">TODO</p>
+<p>TODO: Specifics?</p>
+</div>
+<h3 id="61-keypackages">6.1. KeyPackages<a class="headerlink" href="#61-keypackages" title="Permanent link">&para;</a></h3>
+<p>A polyproto compliant server must store KeyPackages for all users that are registered on the server. The <code>KeyPackage</code> is a JSON object that contains the following information:</p>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&quot;protocol_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;Version&gt;&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&quot;cipher_suite&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;CipherSuite&gt;&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">&quot;init_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;HPKEPublicKey&gt;&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nt">&quot;leaf_node&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;LeafNode&gt;&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="nt">&quot;extensions&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;Extensions&gt;&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="p">}</span>
+</code></pre></div>
+<ul>
+<li><code>protocol_version</code> is the version of the MLS protocol the <code>KeyPackage</code> is using.</li>
+<li><code>cipher_suite</code> is the cipher suite that this KeyPackage is using. Note that a client may store multiple KeyPackages for a single user, to support multiple cipher suites.</li>
+<li><code>init_key</code> is a public key that is used to encrypt the group's initial secrets.</li>
+<li><code>leaf_node</code> is a signed <code>LeafNodeTBS</code> struct as defined in section <code>7.2. Leaf Node Contents</code> in RFC9420. Generally, a <code>LeafNode</code> contains information to verify a user's identity. The <code>LeafNodeTBS</code> is signed using the user's private signing key.</li>
+<li><code>extensions</code> can be used to add additional information to the protocol, as defined in section <code>13. Extensibility</code> in RFC9420.</li>
+</ul>
+<p>A <code>KeyPackage</code> is supposed to be used only once. Servers must ensure the following things:
+-  That any <code>KeyPackage</code> is not given out to clients more than once.
+-  That the <code>init_key</code> values of all <code>KeyPackages</code> are unique, as the <code>init_key</code> is what makes the <code>KeyPackage</code> one-time use.
+-  That the contents of the <code>LeafNode</code> as well as the <code>init_key</code> were signed by the user who submitted the <code>KeyPackage</code>.</p>
+<p>Because <code>KeyPackages</code> are supposed to be used only once, it is recommended that servers store multiple valid <code>KeyPackages</code> for each user. A server must notify a client when it is running low on <code>KeyPackages</code> for a user. Consult the Client-Server-API for more information on how servers should request new <code>KeyPackages</code> from clients. Servers should delete a <code>KeyPackage</code> when it is no longer valid.</p>
+<h4 id="611-last-resort-keypackages">6.1.1 Last resort KeyPackages<a class="headerlink" href="#611-last-resort-keypackages" title="Permanent link">&para;</a></h4>
+<p>A "last resort" <code>KeyPackage</code> is a <code>KeyPackage</code> which can be used multiple times. Such <code>KeyPackages</code> are only to be given out to clients when a server has no more valid, regular <code>KeyPackages</code> available for a user. This is to prevent DoS attacks, where a malicious client could request a large amount of <code>KeyPackages</code> for a user, causing other users not being able to adding the attacked user to an encrypted group or guild channel.</p>
+<p>Once a server has given out a "last resort" <code>KeyPackage</code> to a client, the server should request a new "last resort" <code>KeyPackage</code> from the client from the user, once they connect to the server again. The old "last resort" <code>KeyPackage</code> should then be deleted.</p>
+<h3 id="62-user-identity">6.2 User identity<a class="headerlink" href="#62-user-identity" title="Permanent link">&para;</a></h3>
+<p>Even though section 6.1 defines that a <code>KeyPackage</code> should be deleted by the server after it has been given out once, servers must keep track of the identity keys of all users that are registered on the server, and must be able to provide a users' identity key (or keys, in the case of multi-device users) for a given timestamp, when requested. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of a user may change over time and users must sign all messages they send to other servers.</p>
+<h3 id="63-multi-device-support">6.3 Multi-device support<a class="headerlink" href="#63-multi-device-support" title="Permanent link">&para;</a></h3>
+<p>Polyproto servers and clients must implement multi-device support, as defined in the MLS specification (RFC9420).
+Clients must not use the same keys on multiple devices. Instead, the MLS protocol assigns a new <code>LeafNode</code> to each device.</p>
+<p>Each device provides its own <code>KeyPackages</code> as well as an own set of unique identity and signature keys. 
+Polyproto home servers must guarantee this uniqueness amongst all users of the server.</p>
+<h2 id="7-account-migration">7. Account migration<a class="headerlink" href="#7-account-migration" title="Permanent link">&para;</a></h2>
+<p>Account migration allows users to move their account and associated data to another identity.
+This allows users to switch home servers while not losing ownership of messages sent by them.</p>
+<p>Migrating an account is done with the following steps:</p>
+<ol>
+<li>The user creates a new account on a new home server.</li>
+<li>The user requests the migration from the new home server, specifying the old account's
+   federation ID.</li>
+<li>The old user account confirms the migration request by sending a signed message to the new home
+   server. The confirmation contains the federation ID of the new account.</li>
+<li>The new server sends this information to the old server, which then sends the new server all
+   information associated with the old account. 
+   The old server now forward requests regarding the old account to the new server.
+   Alternatively, if the old server is shut down, the new server can request the information
+   from the old user directly.</li>
+<li>The old account can now request the resigning of its messages, transferring ownership of the
+   messages to the new account. To have all messages from a server re-signed, a user must
+   prove that they are the owner of the private keys used to sign the messages.</li>
+</ol>
+<h3 id="71-migrating-a-user-account">7.1 Migrating a user account<a class="headerlink" href="#71-migrating-a-user-account" title="Permanent link">&para;</a></h3>
+<p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Server_A                               Alice_A                                                Server_B                                            Alice_B 
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>|                                      |                                                      |                                                   |
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>|                                      |                                                      |      Migration Request (Signed, Alice_A-&gt;Alice_B) |
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>|                                      |                                                      |&lt;--------------------------------------------------|
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>|                                      |                                                      |                                                   |
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>|                                      | Migration Request (Signed, Alice_A-&gt;Alice_B)         |                                                   |
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>|                                      |-----------------------------------------------------&gt;|                                                   |
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>|                                      |                                                      |                                                   |
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>|       Fetch full profile of Alice_A (Attached: Migration Request, Signed, Alice_A-&gt;Alice_B) |                                                   |
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>|&lt;--------------------------------------------------------------------------------------------|                                                   |
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>|                                      |                                                      |                                                   |
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>| Verify Signed Migration Request      |                                                      |                                                   |
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>|--------------------------------      |                                                      |                                                   |
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>|                               |      |                                                      |                                                   |
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>|&lt;-------------------------------      |                                                      |                                                   |
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>|                                      |                                                      |                                                   |
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>| Full profile of Alice_A              |                                                      |                                                   |
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>|--------------------------------------------------------------------------------------------&gt;|                                                   |
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>|                                      |                                                      |                                                   |
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>|                                      |                                                      | Verify, replace Alice_B profile with Alice_A      |
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>|                                      |                                                      |---------------------------------------------      |
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>|                                      |                                                      |                                            |      |
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>|                                      |                                                      |&lt;--------------------------------------------      |
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>|                                      |                                                      |                                                   |
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>|                                      |                                                      | New account data                                  |
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>|                                      |                                                      |--------------------------------------------------&gt;|
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>|                                      |                                                      |                                                   |
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>| Deactivate Alice_A&#39;s account         |                                                      |                                                   |
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>|-----------------------------         |                                                      |                                                   |
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>|                            |         |                                                      |                                                   |
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>|&lt;----------------------------         |                                                      |                                                   |
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>|                                      |                                                      |                                                   |
+<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a>| Set up redirect from Alice_A to Alice_B                                                     |                                                   |
+<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a>|--------------------------------------------------------------------------------------------&gt;|                                                   |
+<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a>|                                      |                                                      |                                                   |
+</code></pre></div>
+Fig. 5: Sequence diagram depicting a successful migration of Alice_A's account to Alice_B's account, where Server A is reachable and cooperative.</p>
+<p>Alternatively, if Server A is offline or deemed uncooperative, the following sequence diagram depicts how the migration can be done without Server A's cooperation:</p>
+<p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Server_A     Alice_A                                                                          Server_B                                            Alice_B 
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>|            |                                                                                |                                                   |
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>|            |                                                                                |      Migration Request (Signed, Alice_A-&gt;Alice_B) |
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>|            |                                                                                |&lt;--------------------------------------------------|
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>|            |                                                                                |                                                   |
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>|            | Migration Request (Signed, Alice_A-&gt;Alice_B)                                   |                                                   |
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>|            |-------------------------------------------------------------------------------&gt;|                                                   |
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>|            |                                                                                |                                                   |
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>|       Fetch full profile of Alice_A (Attached: Migration Request, Signed, Alice_A-&gt;Alice_B) |                                                   |
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>|&lt;--------------------------------------------------------------------------------------------|                                                   |
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>|            |                                                                                |                                                   |
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>|            |                                                                                | Wait for response...                              |
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>|            |                                                                                |---------------------                              |
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>|            |                                                                                |                    |                              |
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>|            |                                                                                |&lt;--------------------                              |
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>|            |                                                                                |                                                   |
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>|            |                       Server_A offline/not cooperative, send profile or abort? |                                                   |
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>|            |&lt;-------------------------------------------------------------------------------|                                                   |
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>|            |                                                                                |                                                   |
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>|            | Full profile of Self                                                           |                                                   |
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>|            |-------------------------------------------------------------------------------&gt;|                                                   |
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>|            |                                                                                |                                                   |
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>|            |                                                                                | Verify, replace Alice_B profile with Alice_A      |
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>|            |                                                                                |---------------------------------------------      |
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>|            |                                                                                |                                            |      |
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>|            |                                                                                |&lt;--------------------------------------------      |
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>|            |                                                                                |                                                   |
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>|            |                                                                                | New account data                                  |
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>|            |                                                                                |--------------------------------------------------&gt;|
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>|            |                                                                                |                                                   |
+</code></pre></div>
+Fig. 6: Sequence diagram depicting a successful migration of Alice_A's account to Alice_B's account, where Server A is unreachable or uncooperative.</p>
+<div class="admonition question">
+<p class="admonition-title">If the old home server is not needed for the migration, why try to contact it in the first place?</p>
+<p>It is generally preferrable to have the old home server cooperate with the migration, as it
+allows for a more seamless migration. A cooperative homeserver will be able to provide the new
+home server with all information and data (like uploads) associated with the old account. It can
+also forward requests regarding the old account to the new server, which makes the process
+more seamless for other users. The "non-cooperative homeserver migration method" is only a last
+resort.</p>
+</div>
+<h3 id="72-re-signing-messages">7.2 Re-signing messages<a class="headerlink" href="#72-re-signing-messages" title="Permanent link">&para;</a></h3>
+<p>Re-signing messages is the process of transferring ownership of messages from an old account to the
+new, migrated account. The process requires some coordination between the new and old accounts, 
+and can only be initiated by the old account. </p>
+<p>To initiate the process, the old account must send an API request to the server where messages
+should be re-signed. The request must contain the federation ID of the new account. The server will 
+then respond with a list of all keys that were used to sign messages sent by the old account. The
+old account will then need to prove that it is in possession of the private keys that were used to
+sign the messages. This is done by signing a challenge string with the private keys. The server will
+then verify the signature, and, if the verification is successful, grant the new account the ability
+to re-sign all messages sent by the old account which were signed with the provided keys.</p>
+<p>Re-signing messages mustn't overwrite the old signature. Instead, a new variant of the message must
+be created, which contains the new signature.</p>
+<div class="admonition bug">
+<p class="admonition-title">TODO</p>
+<p>TODO: How does this look API wise? E.g., How will it be handled if there are multiple variants for a
+single message?</p>
+</div>
+<p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Alice_A                                              Server_C                                                              Alice_B                                                 
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>|                                                    |                                                                     |                                                     
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>| Request allow message re-signing for Alice_B       |                                                                     |                                                     
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>|---------------------------------------------------&gt;|                                                                     |                                                     
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>|                                                    |                                                                     |                                                     
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>|          List of keys to verify + challenge string |                                                                     |                                                     
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>|&lt;---------------------------------------------------|                                                                     |                                                     
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>|                                                    |                                                                     |                                                     
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>| Completed challenge for each key on the list       |                                                                     |                                                     
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>|---------------------------------------------------&gt;|                                                                     |                                                     
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>|                                                    |                                                                     |                                                     
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>|                                                    | Verify challenge, unlock re-signing for Alice_B                     |                                                     
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>|                                                    |------------------------------------------------                     |                                                     
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>|                                                    |                                               |                     |                                                     
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>|                                                    |&lt;-----------------------------------------------                     |                                                     
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>|                                                    |                                                                     |                                                     
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>|                                                    |                   Request message re-signing for Alice_A&#39;s messages |                                                     
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>|                                                    |&lt;--------------------------------------------------------------------|                                                     
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>|                                                    |                                                                     |                                                     
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>|                                                    | List of old messages (including old signatures + certificates)      |                                                     
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>|                                                    |--------------------------------------------------------------------&gt;|                                                     
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>|                                                    |                                                                     |                                                     
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>|                                                    |                                                                     | Verify that Server_C has not tampered with messages 
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>|                                                    |                                                                     |---------------------------------------------------- 
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>|                                                    |                                                                     |                                                   | 
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>|                                                    |                                                                     |&lt;--------------------------------------------------- 
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>|                                                    |                                                                     |                                                     
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>|                                                    |                                                                     | Re-sign messages with own keys                      
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>|                                                    |                                                                     |-------------------------------                      
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>|                                                    |                                                                     |                              |                      
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>|                                                    |                                                                     |&lt;------------------------------                      
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>|                                                    |                                                                     |                                                     
+<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a>|                                                    |                                                        New messages |                                                     
+<a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a>|                                                    |&lt;--------------------------------------------------------------------|                                                     
+<a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a>|                                                    |                                                                     |                                                     
+<a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a>|                                                    | Verify that only FID and signature related fields have changed      |                                                     
+<a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a>|                                                    |---------------------------------------------------------------      |                                                     
+<a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a>|                                                    |                                                              |      |                                                     
+<a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a>|                                                    |&lt;--------------------------------------------------------------      |                                                     
+<a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a>|                                                    |                                                                     |                                                     
+</code></pre></div>
+Fig. 7: Sequence diagram depicting re-signing procedure.</p>
+<h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>polyproto-core</strong> - The core federation protocol and APIs of polyproto, enabling identification and authorization on 'foreign' servers. It is independent of the chat-API used.</li>
+<li><strong>polyproto-chat</strong> - The chat-API used by polyproto. It defines the routes and capabilities of the chat-API used by polyproto.</li>
+<li><strong>polyproto</strong> - The combination of the polyproto-core and polyproto-chat protocols and APIs.</li>
+<li><strong>Home server</strong> - The server that a user is registered on.</li>
+<li><strong>User</strong> - An individual person that is registered on a server.</li>
+<li><strong>Client</strong> - A device that is used by a user to connect to a server.</li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2023-12-31T14:49:56+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2023-12-31</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Created">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3h-2Z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2023-12-31T14:49:56+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2023-12-31</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.expand", "toc.follow", "navigation.top", "search.suggest", "content.tooltips", "navigation.indexes"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      
+        <script src="../js/timeago.min.js"></script>
+      
+        <script src="../js/timeago_mkdocs_material.js"></script>
+      
+        <script src="../assets/external/unpkg.com/mermaid@10.6.1/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>
