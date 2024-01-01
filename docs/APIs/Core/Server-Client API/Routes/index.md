@@ -1,3 +1,7 @@
+---
+title: Server-Client API Routes
+---
+
 --8<-- "snippets/api.md"
 
 ## Federation tokens
