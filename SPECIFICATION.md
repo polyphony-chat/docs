@@ -536,6 +536,10 @@ Fig. 6: Sequence diagram depicting a successful migration of Alice_A's account t
     more seamless for other users. The "non-cooperative homeserver migration method" is only a last
     resort.
 
+!!! bug "TODO"
+
+    TODO: The previous section mentions "migrating account uploads". This needs clarification
+
 ### 7.2 Re-signing messages
 
 Re-signing messages is the process of transferring ownership of messages from an old account to the
