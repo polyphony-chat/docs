@@ -386,6 +386,10 @@ All keys must be generated using the `EdDSA` signature scheme.
 
 ### 6.1. KeyPackages
 
+!!! bug "TODO"
+
+    TODO: Consider cutting this section by a lot, as it is mostly just a copy of the MLS spec.
+
 A polyproto compliant server must store KeyPackages for all users that are registered on the server. The `KeyPackage` is a JSON object that contains the following information:
 
 ```json
