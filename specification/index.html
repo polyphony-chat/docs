@@ -1585,16 +1585,12 @@ concern, users should host their own home server and use end-to-end encryption.<
 <p>Note, that in the below sequence diagrams, the MLS Welcome message and the MLS Group notify message are all encrypted using the public key of the recipient. The public key in this context is not to be confused with the public signing key.</p>
 <h3 id="51-encrypted-guild-channels">5.1 Encrypted guild channels<a class="headerlink" href="#51-encrypted-guild-channels" title="Permanent link">&para;</a></h3>
 <p>Encrypting a guild channel is done by a client with the <code>MANAGE_CHANNEL</code> permission. Upon successfully requesting enabling encryption of a channel, all future messages in it will be encrypted. Joining an encrypted channel is done by sending a join request to the server. The server will then notify the channels' members of the join request. The members will then decide whether to accept or reject the join request. If the join request is accepted by any member, that member will initiate the MLS welcoming process. If the member finds that the join request is invalid (perhaps due to an invalid <code>KeyPackage</code>), the join request must be denied. It is imperative that join requests are verified correctly by the server.</p>
-<div class="admonition bug">
-<p class="admonition-title">TODO</p>
-<p>TODO: Remove "gatekeeper" role from the below sequence diagrams.</p>
-</div>
 <p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>     Charlie                                        Server                                            Alice                         Bob
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>     |                                              |                                                 |                             |
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>     | Channel join request + KeyPackage            |                                                 |                             |
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>     |---------------------------------------------&gt;|                                                 |                             |
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>     |                                              |                                                 |                             |
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>     |                                              | Notify gatekeepers of join request              |                             |
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>     |                                              | Notify group of join request                    |                             |
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>     |                                              |-----------------------------------              |                             |
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>     |                                              |                                  |              |                             |
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>     |                                              |&lt;----------------------------------              |                             |
@@ -1722,11 +1718,12 @@ Fig. 4: Sequence diagram of a successful encrypted group creation with 3 members
 <p>TODO: Specifics?</p>
 </div>
 <h3 id="61-keypackages">6.1. KeyPackages<a class="headerlink" href="#61-keypackages" title="Permanent link">&para;</a></h3>
-<div class="admonition bug">
-<p class="admonition-title">TODO</p>
-<p>TODO: Consider cutting this section by a lot, as it is mostly just a copy of the MLS spec.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This section is not exhaustive and does not cover all aspects of MLS and KeyPackages, and is just there to give a general overview of how KeyPackages are used in polyproto-core.
+Please read and understand the MLS specification (RFC9420) to implement polyproto-core correctly.</p>
 </div>
-<p>A polyproto compliant server must store KeyPackages for all users that are registered on the server. The <code>KeyPackage</code> is a JSON object that contains the following information:</p>
+<p>A polyproto-core compliant server must store KeyPackages for all users that are registered on the server. The <code>KeyPackage</code> is a JSON object that contains the following information:</p>
 <div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&quot;protocol_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;Version&gt;&quot;</span><span class="p">,</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&quot;cipher_suite&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;CipherSuite&gt;&quot;</span><span class="p">,</span>
@@ -1752,6 +1749,7 @@ Fig. 4: Sequence diagram of a successful encrypted group creation with 3 members
 <p>Once a server has given out a "last resort" <code>KeyPackage</code> to a client, the server should request a new "last resort" <code>KeyPackage</code> from the client from the user, once they connect to the server again. The old "last resort" <code>KeyPackage</code> should then be deleted.</p>
 <h3 id="62-user-identity">6.2 User identity<a class="headerlink" href="#62-user-identity" title="Permanent link">&para;</a></h3>
 <p>Even though section 6.1 defines that a <code>KeyPackage</code> should be deleted by the server after it has been given out once, servers must keep track of the identity keys of all users that are registered on the server, and must be able to provide a users' identity key (or keys, in the case of multi-device users) for a given timestamp, when requested. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of a user may change over time and users must sign all messages they send to other servers.</p>
+<p>Likewise, a client should also keep track of all of its own identity keys, to potentially verify their identity in case of a migration.</p>
 <h3 id="63-multi-device-support">6.3 Multi-device support<a class="headerlink" href="#63-multi-device-support" title="Permanent link">&para;</a></h3>
 <p>Polyproto servers and clients must implement multi-device support, as defined in the MLS specification (RFC9420).
 Clients must not use the same keys on multiple devices. Instead, the MLS protocol assigns a new <code>LeafNode</code> to each device.</p>
@@ -1851,14 +1849,9 @@ Fig. 6: Sequence diagram depicting a successful migration of Alice_A's account t
 <p class="admonition-title">If the old home server is not needed for the migration, why try to contact it in the first place?</p>
 <p>It is generally preferrable to have the old home server cooperate with the migration, as it
 allows for a more seamless migration. A cooperative homeserver will be able to provide the new
-home server with all information and data (like uploads) associated with the old account. It can
-also forward requests regarding the old account to the new server, which makes the process
-more seamless for other users. The "non-cooperative homeserver migration method" is only a last
-resort.</p>
-</div>
-<div class="admonition bug">
-<p class="admonition-title">TODO</p>
-<p>TODO: The previous section mentions "migrating account uploads". This needs clarification</p>
+home server with all information associated with the old account. It can also forward requests
+regarding the old account to the new server, which makes the process more seamless for other
+users. The "non-cooperative homeserver migration method" is only a last resort.</p>
 </div>
 <h3 id="72-re-signing-messages">7.2 Re-signing messages<a class="headerlink" href="#72-re-signing-messages" title="Permanent link">&para;</a></h3>
 <p>Re-signing messages is the process of transferring ownership of messages from an old account to the
@@ -1919,7 +1912,7 @@ single message?</p>
 <a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a>|                                                    |&lt;--------------------------------------------------------------      |                                                     
 <a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a>|                                                    |                                                                     |                                                     
 </code></pre></div>
-Fig. 7: Sequence diagram depicting re-signing procedure.</p>
+Fig. 7: Sequence diagram depicting the re-signing procedure.</p>
 <h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>polyproto-core</strong> - The core federation protocol and APIs of polyproto, enabling identification and authorization on 'foreign' servers. It is independent of the chat-API used.</li>
