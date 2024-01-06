@@ -8,31 +8,32 @@
       - [1.1.1 Initial authentication](#111-initial-authentication)
     - [1.2 Server-Server API](#12-server-server-api)
     - [1.3 WebSockets](#13-websockets)
-  - [2. Federated Identity](#2-federated-identity)
-    - [2.1 Federation tokens](#21-federation-tokens)
-    - [2.2 Signing keys and message signing](#22-signing-keys-and-message-signing)
-    - [2.3 Abuse prevention](#23-abuse-prevention)
-    - [2.4 Best practices](#24-best-practices)
-      - [2.4.1 Signing keys](#241-signing-keys)
-      - [2.4.2 Home server operation and design](#242-home-server-operation-and-design)
-  - [3. Federating direct/group messages](#3-federating-directgroup-messages)
-    - [3.1 Direct messages](#31-direct-messages)
-    - [3.2 Group messages](#32-group-messages)
-  - [4. Users](#4-users)
-  - [5. Encryption](#5-encryption)
-    - [5.1 Encrypted guild channels](#51-encrypted-guild-channels)
-    - [5.2 Encrypted direct messages](#52-encrypted-direct-messages)
-    - [5.3 Encrypted group messages](#53-encrypted-group-messages)
-    - [5.4 Joining new devices from existing users](#54-joining-new-devices-from-existing-users)
-    - [5.5 Best practices](#55-best-practices)
-  - [6. Keys and signatures](#6-keys-and-signatures)
-    - [6.1. KeyPackages](#61-keypackages)
-      - [6.1.1 Last resort KeyPackages](#611-last-resort-keypackages)
-    - [6.2 User identity](#62-user-identity)
-    - [6.3 Multi-device support](#63-multi-device-support)
-  - [7. Account migration](#7-account-migration)
-    - [7.1 Migrating a user account](#71-migrating-a-user-account)
-    - [7.2 Re-signing messages](#72-re-signing-messages)
+  - [2. Trust model](#2-trust-model)
+  - [3. Federated Identity](#3-federated-identity)
+    - [3.1 Federation tokens](#31-federation-tokens)
+    - [3.2 Signing keys and message signing](#32-signing-keys-and-message-signing)
+    - [3.3 Abuse prevention](#33-abuse-prevention)
+    - [3.4 Best practices](#34-best-practices)
+      - [3.4.1 Signing keys](#341-signing-keys)
+      - [3.4.2 Home server operation and design](#342-home-server-operation-and-design)
+  - [4. Federating direct/group messages](#4-federating-directgroup-messages)
+    - [4.1 Direct messages](#41-direct-messages)
+    - [4.2 Group messages](#42-group-messages)
+  - [5. Users](#5-users)
+  - [6. Encryption](#6-encryption)
+    - [6.1 Encrypted guild channels](#61-encrypted-guild-channels)
+    - [6.2 Encrypted direct messages](#62-encrypted-direct-messages)
+    - [6.3 Encrypted group messages](#63-encrypted-group-messages)
+    - [6.4 Joining new devices from existing users](#64-joining-new-devices-from-existing-users)
+    - [6.5 Best practices](#65-best-practices)
+  - [7. Keys and signatures](#7-keys-and-signatures)
+    - [7.1. KeyPackages](#71-keypackages)
+      - [7.1.1 Last resort KeyPackages](#711-last-resort-keypackages)
+    - [7.2 User identity](#72-user-identity)
+    - [7.3 Multi-device support](#73-multi-device-support)
+  - [8. Account migration](#8-account-migration)
+    - [8.1 Migrating a user account](#81-migrating-a-user-account)
+    - [8.2 Re-signing messages](#82-re-signing-messages)
 
 
 This document defines a set of protocols and APIs for a chat service primarily focused on communities. The document is intended to be used as a reference for developers who want to implement a client or server for the Polyphony chat service. Uses of this protocol, hereafter referred to as "polyproto", include Instant Messaging, Voice over IP, and Video over IP, where your identity is federated between multiple servers.
@@ -73,7 +74,18 @@ The Server-Server APIs are used to enable federation between multiple polyproto 
     TODO: Describe how WebSocket connections are established, maintained, and terminated, as well
     as what exactly WebSocket connections are used for.
 
-## 2. Federated Identity
+## 2. Trust model
+
+The trust model of polyproto-core assumes the following:
+
+1.  A user trusts their home server and its admins to keep their data safe, and to not act on their behalf without their consent.
+2.  For a user to distrust their home server, something irregular must have happened. There have to be ways for users to detect such irregularities.
+3.  Users trust servers hosting communication channels to keep their data safe from unauthorized access.
+4.  When joining a guild from another server in the context of federation, a user trusts this server and its admins with a copy of their public profile, as well as unencrypted data sent to the server.
+5.  Users trust the other members in encrypted guild channels, encrypted direct messages, and encrypted group messages with the content of their messages.
+6.  Users do not have to trust that non-home servers won't act on their behalf without their consent, as non-home servers can not act on a foreign user's behalf without making it obvious to all users involved.
+
+## 3. Federated Identity
 
 Federating user identities means that users can fully participate on other instances. This means that users can, for example, DM users from another server or join external Guilds. 
 
@@ -126,7 +138,7 @@ If Alice's session token expires, or if Alice would like to sign in on another d
 
 The usage of a federation token prevents a malicious user from generating an external session token on behalf of another user.
 
-### 2.1 Federation tokens
+### 3.1 Federation tokens
 
 Federation tokens are generated by the user's home server. The token is a JSON object that contains the following information:
 
@@ -137,7 +149,7 @@ Federation tokens are generated by the user's home server. The token is a JSON o
 - A securely-randomly generated nonce
 
 
-### 2.2 Signing keys and message signing
+### 3.2 Signing keys and message signing
 
 As mentioned in the previous section, users must hold on to a private key at all times. This key is used to sign all messages that the user sends to other instances. The key is generated by the user's home server, and is sent to the user's client when the user first registers on the server. The key is stored in the client's local storage. The signing key must not be used for encryption purposes.
 
@@ -149,7 +161,7 @@ Signing messages prevents a malicious server from impersonating a user.
 
     TODO: Note about signing keys and how they are generated 
 
-### 2.3 Abuse prevention
+### 3.3 Abuse prevention
 
 To protect users from malicious home servers secretly acting on the behalf of non-consenting users,
 a mechanism is needed to prevent home servers from generating federation tokens for users without
@@ -192,34 +204,34 @@ This `NEW_SESSION` message should be sent to all sessions, except for the new se
     the encrypted channel cannot be decrypted by that session. If secrecy/confidentiality are of
     concern, users should host their own home server and use end-to-end encryption.
 
-### 2.4 Best practices
+### 3.4 Best practices
 
-#### 2.4.1 Signing keys
+#### 3.4.1 Signing keys
 
 - Instance/user signing keys should be rotated at least every 30 days. This is to ensure that a compromised key can only be used for a limited amount of time.
 - If Bobs client fails to verify the signature of Alice's message with the public key/certificate pair received from Server B, it should ask Server A for the public key of Alice at the time the message was sent. If the verification fails again, the message should be treated with extreme caution.
 
-#### 2.4.2 Home server operation and design
+#### 3.4.2 Home server operation and design
 
 - Employ a caching layer to handle the potentially large amount of requests for public key certificates without putting unnecessary strain on the database.
 
-## 3. Federating direct/group messages
+## 4. Federating direct/group messages
 
-### 3.1 Direct messages
+### 4.1 Direct messages
 
 Federating direct messages is relatively simple. When Alice sends a message to Bob, her client will send the message to her home server via an API request. Her home server will then send the message to Bob's client via an established WebSocket connection, and vice versa.
 
-### 3.2 Group messages
+### 4.2 Group messages
 
 Group messages work just like guilds. The data is stored by the home server of the group's creator, meaning that all group members will have to communicate with the group creator's home server. If the group creator leaves the group, the ownership of the group is transferred to another member. The group chat stays on the group creator's home server, unless a migration is initiated by the group owner.
 
-## 4. Users
+## 5. Users
 
 Each client must have a user associated with it. A user is identified by a unique federation ID (FID), which consists of the user's username (which must be unique on the instance) and the instance's root domain. A FID is formatted as follows: `user@domain.tld`, which makes for a globally unique user ID. Federation IDs are case-insensitive.
 
 The following regex can be used to validate user IDs: `\b([A-Z0-9._%+-]+)@([A-Z0-9.-]+\.[A-Z]{2,})\b`.
 
-## 5. Encryption
+## 6. Encryption
 
 Polyproto offers end-to-end encryption for messages via Message Layer Security (MLS). Polyproto compliant servers take on the role of both an Authentication Service and a Delivery Service in context of MLS.
 
@@ -229,7 +241,7 @@ Clients and servers must support encryption, but whether to encrypt a message ch
 
 Note, that in the below sequence diagrams, the MLS Welcome message and the MLS Group notify message are all encrypted using the public key of the recipient. The public key in this context is not to be confused with the public signing key.
 
-### 5.1 Encrypted guild channels
+### 6.1 Encrypted guild channels
 
 Encrypting a guild channel is done by a client with the `MANAGE_CHANNEL` permission. Upon successfully requesting enabling encryption of a channel, all future messages in it will be encrypted. Joining an encrypted channel is done by sending a join request to the server. The server will then notify the channels' members of the join request. The members will then decide whether to accept or reject the join request. If the join request is accepted by any member, that member will initiate the MLS welcoming process. If the member finds that the join request is invalid (perhaps due to an invalid `KeyPackage`), the join request must be denied. It is imperative that join requests are verified correctly by the server.
 
@@ -270,7 +282,7 @@ Encrypting a guild channel is done by a client with the `MANAGE_CHANNEL` permiss
 ```
 Fig. 2: Sequence diagram of a successful encrypted channel join in which Alice acts as a gatekeeper. The sequence diagram assumes that Alice can verify Charlies' public key to indeed belong to Charlie, and that Alice accepts the join request.
 
-### 5.2 Encrypted direct messages
+### 6.2 Encrypted direct messages
 
 Adding another person to a direct message is not possible, and would not make much sense, as the new person cannot see any messages that were sent before they joined the group. If Alice wants to add Charlie to a direct message with Bob, she will have to create a new direct message with Bob and Charlie.
 
@@ -304,7 +316,7 @@ Alice                                          Server                           
 Fig. 3: Sequence diagram of a successful encrypted direct message creation. 
 
 
-### 5.3 Encrypted group messages
+### 6.3 Encrypted group messages
 
 Encrypted group messages work by using the traditional MLS protocol, with the additional concept of group owners. Only group owners can add new members to the group and forcibly remove others from the group. The Group owner is determined by the Client-Server API.
 
@@ -363,16 +375,16 @@ Alice (gatekeeper)                                 Server                       
 ```
 Fig. 4: Sequence diagram of a successful encrypted group creation with 3 members.
 
-### 5.4 Joining new devices from existing users
+### 6.4 Joining new devices from existing users
 
 Regardless of channel or group permissions, a user join request from a new device should be accepted by default.
 
-### 5.5 Best practices
+### 6.5 Best practices
 
 - In case of encrypted guild channel join requests, it may be a good idea to treat multiple join requests from the same user with different clients as a single join request.
 - Joining an encrypted channel, even from an already established member with a new device, should be an event clearly visible to all members of the channel. This is to prevent a malicious user from joining a channel without the other members noticing.
 
-## 6. Keys and signatures
+## 7. Keys and signatures
 
 All keys must be generated using the `EdDSA` signature scheme.
 
@@ -380,7 +392,7 @@ All keys must be generated using the `EdDSA` signature scheme.
 
     TODO: Specifics?
 
-### 6.1. KeyPackages
+### 7.1. KeyPackages
 
 !!! warning
 
@@ -412,19 +424,19 @@ A `KeyPackage` is supposed to be used only once. Servers must ensure the followi
 
 Because `KeyPackages` are supposed to be used only once, it is recommended that servers store multiple valid `KeyPackages` for each user. A server must notify a client when it is running low on `KeyPackages` for a user. Consult the Client-Server-API for more information on how servers should request new `KeyPackages` from clients. Servers should delete a `KeyPackage` when it is no longer valid.
 
-#### 6.1.1 Last resort KeyPackages
+#### 7.1.1 Last resort KeyPackages
 
 A "last resort" `KeyPackage` is a `KeyPackage` which can be used multiple times. Such `KeyPackages` are only to be given out to clients when a server has no more valid, regular `KeyPackages` available for a user. This is to prevent DoS attacks, where a malicious client could request a large amount of `KeyPackages` for a user, causing other users not being able to adding the attacked user to an encrypted group or guild channel.
 
 Once a server has given out a "last resort" `KeyPackage` to a client, the server should request a new "last resort" `KeyPackage` from the client from the user, once they connect to the server again. The old "last resort" `KeyPackage` should then be deleted.
 
-### 6.2 User identity
+### 7.2 User identity
 
 Even though section 6.1 defines that a `KeyPackage` should be deleted by the server after it has been given out once, servers must keep track of the identity keys of all users that are registered on the server, and must be able to provide a users' identity key (or keys, in the case of multi-device users) for a given timestamp, when requested. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of a user may change over time and users must sign all messages they send to other servers.
 
 Likewise, a client should also keep track of all of its own identity keys, to potentially verify their identity in case of a migration.
 
-### 6.3 Multi-device support
+### 7.3 Multi-device support
 
 Polyproto servers and clients must implement multi-device support, as defined in the MLS specification (RFC9420).
 Clients must not use the same keys on multiple devices. Instead, the MLS protocol assigns a new `LeafNode` to each device.
@@ -432,7 +444,7 @@ Clients must not use the same keys on multiple devices. Instead, the MLS protoco
 Each device provides its own `KeyPackages` as well as an own set of unique identity and signature keys. 
 Polyproto home servers must guarantee this uniqueness amongst all users of the server.
 
-## 7. Account migration
+## 8. Account migration
 
 Account migration allows users to move their account and associated data to another identity.
 This allows users to switch home servers while not losing ownership of messages sent by them.
@@ -453,7 +465,7 @@ Migrating an account is done with the following steps:
    messages to the new account. To have all messages from a server re-signed, a user must
    prove that they are the owner of the private keys used to sign the messages.
 
-### 7.1 Migrating a user account
+### 8.1 Migrating a user account
 
 ```
 Server_A                               Alice_A                                                Server_B                                            Alice_B 
@@ -538,7 +550,7 @@ Fig. 6: Sequence diagram depicting a successful migration of Alice_A's account t
     regarding the old account to the new server, which makes the process more seamless for other
     users. The "non-cooperative homeserver migration method" is only a last resort.
 
-### 7.2 Re-signing messages
+### 8.2 Re-signing messages
 
 Re-signing messages is the process of transferring ownership of messages from an old account to the
 new, migrated account. The process requires some coordination between the new and old accounts, 
