@@ -53,11 +53,11 @@ Aside from these REST APIs, polyproto-core also uses WebSockets for real-time co
 
 ### 1.1 Client-Server API
 
-The Client-Server API is a RESTful API that is used by clients to communicate with the server. It is a modification of the Discord v9 API and is completely backwards compatible with it, even if not all endpoints are supported. An example of an unsupported endpoint would be the "Super-reactions" endpoint, which are treated as regular reactions by polyproto clients and servers.
+The Client-Server API is a RESTful API that is used by clients to communicate with the server. The Client-Server API of polyproto-core is not to be confused with the Client-Server API of polyproto-chat, which is a separate API that is used by users for chat functionality, whereas the Client-Server API of polyproto-core is used for authentication, federation and other administrative tasks.
 
 #### 1.1.1 Initial authentication
 
-During the initial authentication (registration) process, a client must provide at least one `KeyPackage`, as well as one "last resort" `KeyPackage` (see [6.1.1 Last resort KeyPackages](#611-last-resort-keypackages)) in addition to the required registration information.
+During the initial authentication (registration) process, a client must provide at least one [`KeyPackage`](#61-keypackages), as well as one ["last resort" `KeyPackage`](#611-last-resort-keypackages) in addition to the required registration information.
 
 The identity key inside the `LeafNode` of this `KeyPackage` is signed using the home servers' private key, so that home servers act as a certificate authority for their users' keys.
 
@@ -65,14 +65,11 @@ See [6.1. KeyPackages](#61-keypackages) for an outline on what a `KeyPackage` is
 
 ### 1.2 Server-Server API
 
-The Server-Server APIs are used to enable federation between multiple polyproto servers (federated identity).
+The Server-Server APIs which are used to enable federation between multiple polyproto servers (federated identity).
 
 ### 1.3 WebSockets
 
-!!! bug "TODO"
-
-    TODO: Describe how WebSocket connections are established, maintained, and terminated, as well
-    as what exactly WebSocket connections are used for.
+WebSockets in polyproto-core are used for real-time communication between clients and servers. WebSockets are only used in a Client-Server context, and not in a Server-Server context.
 
 ## 2. Trust model
 
@@ -159,7 +156,7 @@ Signing messages prevents a malicious server from impersonating a user.
 
 !!! bug "TODO"
 
-    TODO: Note about signing keys and how they are generated 
+    TODO: Note about signing keys and how they are generated and stored locally.
 
 ### 3.3 Abuse prevention
 
@@ -386,11 +383,8 @@ Regardless of channel or group permissions, a user join request from a new devic
 
 ## 7. Keys and signatures
 
-All keys must be generated using the `EdDSA` signature scheme.
-
-!!! bug "TODO"
-
-    TODO: Specifics?
+It is recommended that keys are to be generated using the `EdDSA` signature scheme, however, other signature schemes may be used as well.
+The MLS protocol used by polyproto-core has a built-in ability to negotiate protocol versions, cipher suites, extensions, credential types, and additional proposal types. For two implementations of polyproto-core to be compatible with each other, they must have overlapping capabilities in these areas.
 
 ### 7.1. KeyPackages
 
@@ -566,11 +560,6 @@ to re-sign all messages sent by the old account which were signed with the provi
 
 Re-signing messages mustn't overwrite the old signature. Instead, a new variant of the message must
 be created, which contains the new signature.
-
-!!! bug "TODO"
-
-    TODO: How does this look API wise? E.g., How will it be handled if there are multiple variants for a
-    single message?
 
 ```
 Alice_A                                              Server_C                                                              Alice_B                                                 
