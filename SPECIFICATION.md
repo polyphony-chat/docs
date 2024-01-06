@@ -233,17 +233,13 @@ Note, that in the below sequence diagrams, the MLS Welcome message and the MLS G
 
 Encrypting a guild channel is done by a client with the `MANAGE_CHANNEL` permission. Upon successfully requesting enabling encryption of a channel, all future messages in it will be encrypted. Joining an encrypted channel is done by sending a join request to the server. The server will then notify the channels' members of the join request. The members will then decide whether to accept or reject the join request. If the join request is accepted by any member, that member will initiate the MLS welcoming process. If the member finds that the join request is invalid (perhaps due to an invalid `KeyPackage`), the join request must be denied. It is imperative that join requests are verified correctly by the server.
 
-!!! bug "TODO"
-
-    TODO: Remove "gatekeeper" role from the below sequence diagrams.
-
 ```
      Charlie                                        Server                                            Alice                         Bob
      |                                              |                                                 |                             |
      | Channel join request + KeyPackage            |                                                 |                             |
      |--------------------------------------------->|                                                 |                             |
      |                                              |                                                 |                             |
-     |                                              | Notify gatekeepers of join request              |                             |
+     |                                              | Notify group of join request                    |                             |
      |                                              |-----------------------------------              |                             |
      |                                              |                                  |              |                             |
      |                                              |<----------------------------------              |                             |
@@ -386,11 +382,12 @@ All keys must be generated using the `EdDSA` signature scheme.
 
 ### 6.1. KeyPackages
 
-!!! bug "TODO"
+!!! warning
 
-    TODO: Consider cutting this section by a lot, as it is mostly just a copy of the MLS spec.
+    This section is not exhaustive and does not cover all aspects of MLS and KeyPackages, and is just there to give a general overview of how KeyPackages are used in polyproto-core.
+    Please read and understand the MLS specification (RFC9420) to implement polyproto-core correctly.
 
-A polyproto compliant server must store KeyPackages for all users that are registered on the server. The `KeyPackage` is a JSON object that contains the following information:
+A polyproto-core compliant server must store KeyPackages for all users that are registered on the server. The `KeyPackage` is a JSON object that contains the following information:
 
 ```json
 {
@@ -424,6 +421,8 @@ Once a server has given out a "last resort" `KeyPackage` to a client, the server
 ### 6.2 User identity
 
 Even though section 6.1 defines that a `KeyPackage` should be deleted by the server after it has been given out once, servers must keep track of the identity keys of all users that are registered on the server, and must be able to provide a users' identity key (or keys, in the case of multi-device users) for a given timestamp, when requested. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of a user may change over time and users must sign all messages they send to other servers.
+
+Likewise, a client should also keep track of all of its own identity keys, to potentially verify their identity in case of a migration.
 
 ### 6.3 Multi-device support
 
@@ -535,14 +534,9 @@ Fig. 6: Sequence diagram depicting a successful migration of Alice_A's account t
 
     It is generally preferrable to have the old home server cooperate with the migration, as it
     allows for a more seamless migration. A cooperative homeserver will be able to provide the new
-    home server with all information and data (like uploads) associated with the old account. It can
-    also forward requests regarding the old account to the new server, which makes the process
-    more seamless for other users. The "non-cooperative homeserver migration method" is only a last
-    resort.
-
-!!! bug "TODO"
-
-    TODO: The previous section mentions "migrating account uploads". This needs clarification
+    home server with all information associated with the old account. It can also forward requests
+    regarding the old account to the new server, which makes the process more seamless for other
+    users. The "non-cooperative homeserver migration method" is only a last resort.
 
 ### 7.2 Re-signing messages
 
@@ -608,4 +602,4 @@ Alice_A                                              Server_C                   
 |                                                    |<--------------------------------------------------------------      |                                                     
 |                                                    |                                                                     |                                                     
 ```
-Fig. 7: Sequence diagram depicting re-signing procedure.
+Fig. 7: Sequence diagram depicting the re-signing procedure.
