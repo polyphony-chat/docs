@@ -228,6 +228,11 @@ Each client must have a user associated with it. A user is identified by a uniqu
 
 The following regex can be used to validate user IDs: `\b([A-Z0-9._%+-]+)@([A-Z0-9.-]+\.[A-Z]{2,})\b`.
 
+!!! note
+
+    Validating a federation ID with the above regex does not guarantee that the ID is valid. It only
+    guarantees that the federation ID is formatted correctly.
+
 ## 6. Encryption
 
 Polyproto offers end-to-end encryption for messages via Message Layer Security (MLS). Polyproto compliant servers take on the role of both an Authentication Service and a Delivery Service in context of MLS.
