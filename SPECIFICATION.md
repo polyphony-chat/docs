@@ -71,6 +71,65 @@ The Server-Server APIs which are used to enable federation between multiple poly
 
 WebSockets in polyproto-core are used for real-time communication between clients and servers. WebSockets are only used in a Client-Server context, and not in a Server-Server context.
 
+WebSocket connections to polyproto-core servers consist of the following cycle:
+
+```
+    +------------------+       1. Establish Connection        +-----------+
+    |      Client      |------------------------------------> |  Gateway  |
+    +------------------+                                      +-----------+
+                                                              
+    +------------------+        2. Receive Hello Event        +-----------+
+    |      Client      |<------------------------------------ |  Gateway  |
+    +------------------+                                      +-----------+
+                                        
+                      3. Start Heartbeat Interval (continually)
+
+ +------------------------------------------------------------------------->-+
+ |  +------------------+       3.1 Send Heartbeat Event       +-----------+  |
+ ^  |      Client      |------------------------------------> |  Gateway  |  |
+ |  +------------------+                                      +-----------+  |
+ |                                                            |              |
+ |  +------------------+    3.2 Receive Heartbeat ACK Event   +-----------+  |
+ |  |      Client      |<------------------------------------ |  Gateway  |  v
+ |  +------------------+                                      +-----------+  |
+ +-<-------------------------------------------------------------------------+
+
+    +------------------+          4. Send Identify            +-----------+
+    |      Client      |------------------------------------> |  Gateway  |
+    +------------------+                                      +-----------+
+                                                              
+    +------------------+        5. Receive Ready Event        +-----------+
+    |      Client      |<------------------------------------ |  Gateway  |
+    +------------------+                                      +-----------+
+
+    +------------------+    6. Disconnect (for any reason)    +-----------+
+    |      Client      |<------------------------------------ |  Gateway  |
+    +------------------+                                      +-----------+
+
+                          7. Resume connection, if eligible
+                           (otherwise: repeat from step 1)
+
+    +------------------+       7.1 Open new connection        +-----------+
+    |      Client      |------------------------------------> |  Gateway  |
+    +------------------+                                      +-----------+
+
+    +------------------+        7.2 Send Resume Event         +-----------+
+    |      Client      |------------------------------------> |  Gateway  |
+    +------------------+                                      +-----------+
+                                                              
+    +------------------+      7.3 Receive Missed Events       +-----------+
+    |      Client      |<------------------------------------ |  Gateway  |
+    +------------------+                                      +-----------+
+                      
+    +------------------+      7.4 Receive Resumed Event       +-----------+
+    |      Client      |<------------------------------------ |  Gateway  |
+    +------------------+                                      +-----------+
+```
+
+Fig. 1: Sequence diagram of a WebSocket connection to a polyproto-core server.
+
+To learn more about the Gateway and Gateway Events, consult the [WebSockets API documentation](/docs/APIs/Core/Server-Client%20API/WebSockets/index.md).
+
 ## 2. Trust model
 
 polyproto-core operates under the following trust assumptions:
@@ -129,7 +188,7 @@ Alice's Client              Server A            Server B              Bob's Clie
 |                           |                   |-------------------->|
 |                           |                   |                     |
 ```
-Fig. 1: Sequence diagram of a successful federation handshake.
+Fig. 3: Sequence diagram of a successful federation handshake.
 
 If Alice's session token expires, or if Alice would like to sign in on another device, she can repeat this process of generating a federation token and exchanging it for a session token.
 
@@ -284,7 +343,7 @@ Encrypting a guild channel is done by a client with the `MANAGE_CHANNEL` permiss
      |<---------------------------------------------|                                                 |                             |
      |                                              |                                                 |                             |
 ```
-Fig. 2: Sequence diagram of a successful encrypted channel join in which Alice acts as a gatekeeper. The sequence diagram assumes that Alice can verify Charlies' public key to indeed belong to Charlie, and that Alice accepts the join request.
+Fig. 3: Sequence diagram of a successful encrypted channel join in which Alice acts as a gatekeeper. The sequence diagram assumes that Alice can verify Charlies' public key to indeed belong to Charlie, and that Alice accepts the join request.
 
 ### 6.2 Encrypted direct messages
 
@@ -317,7 +376,7 @@ Alice                                          Server                           
 |                                              |--------------------------------->|
 |                                              |                                  |
 ```
-Fig. 3: Sequence diagram of a successful encrypted direct message creation. 
+Fig. 4: Sequence diagram of a successful encrypted direct message creation. 
 
 
 ### 6.3 Encrypted group messages
@@ -377,7 +436,7 @@ Alice (gatekeeper)                                 Server                       
 |                                                  |------------------------------------------------>|
 |                                                  |                                       |         |
 ```
-Fig. 4: Sequence diagram of a successful encrypted group creation with 3 members.
+Fig. 5: Sequence diagram of a successful encrypted group creation with 3 members.
 
 ### 6.4 Joining new devices from existing users
 
@@ -505,7 +564,7 @@ Server_A                               Alice_A                                  
 |-------------------------------------------------------------------------------------------->|                                                   |
 |                                      |                                                      |                                                   |
 ```
-Fig. 5: Sequence diagram depicting a successful migration of Alice_A's account to Alice_B's account, where Server A is reachable and cooperative.
+Fig. 6: Sequence diagram depicting a successful migration of Alice_A's account to Alice_B's account, where Server A is reachable and cooperative.
 
 Alternatively, if Server A is offline or deemed uncooperative, the following sequence diagram depicts how the migration can be done without Server A's cooperation:
 
@@ -541,7 +600,7 @@ Server_A     Alice_A                                                            
 |            |                                                                                |-------------------------------------------------->|
 |            |                                                                                |                                                   |
 ```
-Fig. 6: Sequence diagram depicting a successful migration of Alice_A's account to Alice_B's account, where Server A is unreachable or uncooperative.
+Fig. 7: Sequence diagram depicting a successful migration of Alice_A's account to Alice_B's account, where Server A is unreachable or uncooperative.
 
 !!! question "If the old home server is not needed for the migration, why try to contact it in the first place?"
 
@@ -610,4 +669,4 @@ Alice_A                                              Server_C                   
 |                                                    |<--------------------------------------------------------------      |                                                     
 |                                                    |                                                                     |                                                     
 ```
-Fig. 7: Sequence diagram depicting the re-signing procedure.
+Fig. 8: Sequence diagram depicting the re-signing procedure.
