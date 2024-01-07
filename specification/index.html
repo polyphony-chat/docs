@@ -1609,8 +1609,11 @@ concern, users should host their own home server and use end-to-end encryption.<
 guarantees that the federation ID is formatted correctly.</p>
 </div>
 <h2 id="6-encryption">6. Encryption<a class="headerlink" href="#6-encryption" title="Permanent link">&para;</a></h2>
-<p>Polyproto offers end-to-end encryption for messages via Message Layer Security (MLS). Polyproto compliant servers take on the role of both an Authentication Service and a Delivery Service in context of MLS.</p>
-<p>Message Layer Security (MLS) is a cryptographic protocol that provides confidentiality, integrity, and authenticity guarantees for group messaging applications. MLS builds on top of the <a href="https://signal.org/docs/specifications/doubleratchet/">Double Ratchet Algorithm</a> and <a href="https://signal.org/docs/specifications/x3dh/">X3DH</a> to provide these security guarantees.</p>
+<div class="admonition abstract">
+<p class="admonition-title">About MLS</p>
+<p>Polyproto offers end-to-end encryption for messages via <a href="https://messaginglayersecurity.rocks/">Message Layer Security (MLS)</a>. Polyproto compliant servers take on the role of both an Authentication Service and a Delivery Service in the context of MLS.</p>
+<p>MLS is a cryptographic protocol that provides confidentiality, integrity, and authenticity guarantees for group messaging applications. It builds on top of the <a href="https://signal.org/docs/specifications/doubleratchet/">Double Ratchet Algorithm</a> and <a href="https://signal.org/docs/specifications/x3dh/">X3DH</a> to provide these security guarantees.</p>
+</div>
 <p>Clients and servers must support encryption, but whether to encrypt a message channel is up to the users.</p>
 <p>Note, that in the below sequence diagrams, the MLS Welcome message and the MLS Group notify message are all encrypted using the public key of the recipient. The public key in this context is not to be confused with the public signing key.</p>
 <h3 id="61-encrypted-guild-channels">6.1 Encrypted guild channels<a class="headerlink" href="#61-encrypted-guild-channels" title="Permanent link">&para;</a></h3>
