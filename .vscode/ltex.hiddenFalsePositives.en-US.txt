@@ -12,3 +12,6 @@
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qnote\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qexample \"Potential abuse scenario\"\\E$"}
 {"rule":"ENGLISH_WORD_REPEAT_RULE","sentence":"^\\QDELETE Delete all Federation Tokens for self :material-pail-outline: :material-lock-outline:\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qabstract \"About MLS\"\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qwarning\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qquestion \"If the old home server is not needed for the migration, why try to contact it in the first place?\"\\E$"}
