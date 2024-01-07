@@ -397,7 +397,7 @@ The MLS protocol used by polyproto-core has a built-in ability to negotiate prot
 
 !!! warning
 
-    This section is not exhaustive and does not cover all aspects of MLS and KeyPackages, and is just there to give a general overview of how KeyPackages are used in polyproto-core.
+    This section is not exhaustive and does not cover all aspects of MLS and KeyPackages. It exists solely to give a general overview of how KeyPackages are used in polyproto-core.
     Please read and understand the MLS specification (RFC9420) to implement polyproto-core correctly.
 
 A polyproto-core compliant server must store KeyPackages for all users that are registered on the server. The `KeyPackage` is a JSON object that contains the following information:
@@ -415,7 +415,7 @@ A polyproto-core compliant server must store KeyPackages for all users that are 
 - `protocol_version` is the version of the MLS protocol the `KeyPackage` is using.
 - `cipher_suite` is the cipher suite that this KeyPackage is using. Note that a client may store multiple KeyPackages for a single user, to support multiple cipher suites.
 - `init_key` is a public key that is used to encrypt the group's initial secrets.
-- `leaf_node` is a signed `LeafNodeTBS` struct as defined in section `7.2. Leaf Node Contents` in RFC9420. Generally, a `LeafNode` contains information to verify a user's identity. The `LeafNodeTBS` is signed using the user's private signing key.
+- `leaf_node` is a signed `LeafNodeTBS` struct as defined in section `7.2. Leaf Node Contents` in RFC9420. A `LeafNode` contains information representing a users' identity, such as the users' **public identity key** for a given session/client. The `LeafNodeTBS` is signed using the user's private signing key.
 - `extensions` can be used to add additional information to the protocol, as defined in section `13. Extensibility` in RFC9420.
 
 A `KeyPackage` is supposed to be used only once. Servers must ensure the following things:
