@@ -73,14 +73,14 @@ WebSockets in polyproto-core are used for real-time communication between client
 
 ## 2. Trust model
 
-The trust model of polyproto-core assumes the following:
+polyproto-core operates under the following trust assumptions:
 
-1.  A user trusts their home server and its admins to keep their data safe, and to not act on their behalf without their consent.
-2.  For a user to distrust their home server, something irregular must have happened. There have to be ways for users to detect such irregularities.
-3.  Users trust servers hosting communication channels to keep their data safe from unauthorized access.
-4.  When joining a guild from another server in the context of federation, a user trusts this server and its admins with a copy of their public profile, as well as unencrypted data sent to the server.
-5.  Users trust the other members in encrypted guild channels, encrypted direct messages, and encrypted group messages with the content of their messages.
-6.  Users do not have to trust that non-home servers won't act on their behalf without their consent, as non-home servers can not act on a foreign user's behalf without making it obvious to all users involved.
+1.  A user trusts their home server and its admins to keep their data safe from unauthorized access, and to not perform actions which a third party would observe to be performed by the user, without the user's consent.
+2.  For a user to distrust their home server, something irregular must have happened, or conflicting information must have been presented to the user.
+3.  When joining a guild on another server in the context of federation, a user trusts this server and its admins with a copy of their public profile and with all other unencrypted data sent to the server.
+4.  Users trust the other members of an encrypted communications channel with the content of their messages, as well as with the metadata attached to the messages.
+5.  Non-home servers can not perform actions like sending messages without a foreign users' explicit consent, without immediately being exposed.
+6.  A user trusts their home server to be a certificate authority for their identity keys, without the home server owning the identity itself.
 
 ## 3. Federated Identity
 
