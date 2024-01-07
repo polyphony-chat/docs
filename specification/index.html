@@ -1750,7 +1750,7 @@ The MLS protocol used by polyproto-core has a built-in ability to negotiate prot
 <h3 id="71-keypackages">7.1. KeyPackages<a class="headerlink" href="#71-keypackages" title="Permanent link">&para;</a></h3>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>This section is not exhaustive and does not cover all aspects of MLS and KeyPackages, and is just there to give a general overview of how KeyPackages are used in polyproto-core.
+<p>This section is not exhaustive and does not cover all aspects of MLS and KeyPackages. It exists solely to give a general overview of how KeyPackages are used in polyproto-core.
 Please read and understand the MLS specification (RFC9420) to implement polyproto-core correctly.</p>
 </div>
 <p>A polyproto-core compliant server must store KeyPackages for all users that are registered on the server. The <code>KeyPackage</code> is a JSON object that contains the following information:</p>
@@ -1766,7 +1766,7 @@ Please read and understand the MLS specification (RFC9420) to implement polyprot
 <li><code>protocol_version</code> is the version of the MLS protocol the <code>KeyPackage</code> is using.</li>
 <li><code>cipher_suite</code> is the cipher suite that this KeyPackage is using. Note that a client may store multiple KeyPackages for a single user, to support multiple cipher suites.</li>
 <li><code>init_key</code> is a public key that is used to encrypt the group's initial secrets.</li>
-<li><code>leaf_node</code> is a signed <code>LeafNodeTBS</code> struct as defined in section <code>7.2. Leaf Node Contents</code> in RFC9420. Generally, a <code>LeafNode</code> contains information to verify a user's identity. The <code>LeafNodeTBS</code> is signed using the user's private signing key.</li>
+<li><code>leaf_node</code> is a signed <code>LeafNodeTBS</code> struct as defined in section <code>7.2. Leaf Node Contents</code> in RFC9420. A <code>LeafNode</code> contains information representing a users' identity, such as the users' <strong>public identity key</strong> for a given session/client. The <code>LeafNodeTBS</code> is signed using the user's private signing key.</li>
 <li><code>extensions</code> can be used to add additional information to the protocol, as defined in section <code>13. Extensibility</code> in RFC9420.</li>
 </ul>
 <p>A <code>KeyPackage</code> is supposed to be used only once. Servers must ensure the following things:
