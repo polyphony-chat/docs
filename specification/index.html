@@ -1478,14 +1478,14 @@
 <h3 id="13-websockets">1.3 WebSockets<a class="headerlink" href="#13-websockets" title="Permanent link">&para;</a></h3>
 <p>WebSockets in polyproto-core are used for real-time communication between clients and servers. WebSockets are only used in a Client-Server context, and not in a Server-Server context.</p>
 <h2 id="2-trust-model">2. Trust model<a class="headerlink" href="#2-trust-model" title="Permanent link">&para;</a></h2>
-<p>The trust model of polyproto-core assumes the following:</p>
+<p>polyproto-core operates under the following trust assumptions:</p>
 <ol>
-<li>A user trusts their home server and its admins to keep their data safe, and to not act on their behalf without their consent.</li>
-<li>For a user to distrust their home server, something irregular must have happened. There have to be ways for users to detect such irregularities.</li>
-<li>Users trust servers hosting communication channels to keep their data safe from unauthorized access.</li>
-<li>When joining a guild from another server in the context of federation, a user trusts this server and its admins with a copy of their public profile, as well as unencrypted data sent to the server.</li>
-<li>Users trust the other members in encrypted guild channels, encrypted direct messages, and encrypted group messages with the content of their messages.</li>
-<li>Users do not have to trust that non-home servers won't act on their behalf without their consent, as non-home servers can not act on a foreign user's behalf without making it obvious to all users involved.</li>
+<li>A user trusts their home server and its admins to keep their data safe from unauthorized access, and to not perform actions which a third party would observe to be performed by the user, without the user's consent.</li>
+<li>For a user to distrust their home server, something irregular must have happened, or conflicting information must have been presented to the user.</li>
+<li>When joining a guild on another server in the context of federation, a user trusts this server and its admins with a copy of their public profile and with all other unencrypted data sent to the server.</li>
+<li>Users trust the other members of an encrypted communications channel with the content of their messages, as well as with the metadata attached to the messages.</li>
+<li>Non-home servers can not perform actions like sending messages without a foreign users' explicit consent, without immediately being exposed.</li>
+<li>A user trusts their home server to be a certificate authority for their identity keys, without the home server owning the identity itself.</li>
 </ol>
 <h2 id="3-federated-identity">3. Federated Identity<a class="headerlink" href="#3-federated-identity" title="Permanent link">&para;</a></h2>
 <p>Federating user identities means that users can fully participate on other instances. This means that users can, for example, DM users from another server or join external Guilds. </p>
