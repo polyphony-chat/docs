@@ -235,9 +235,11 @@ The following regex can be used to validate user IDs: `\b([A-Z0-9._%+-]+)@([A-Z0
 
 ## 6. Encryption
 
-Polyproto offers end-to-end encryption for messages via Message Layer Security (MLS). Polyproto compliant servers take on the role of both an Authentication Service and a Delivery Service in context of MLS.
+!!! abstract "About MLS"
 
-Message Layer Security (MLS) is a cryptographic protocol that provides confidentiality, integrity, and authenticity guarantees for group messaging applications. MLS builds on top of the [Double Ratchet Algorithm](https://signal.org/docs/specifications/doubleratchet/) and [X3DH](https://signal.org/docs/specifications/x3dh/) to provide these security guarantees.
+    Polyproto offers end-to-end encryption for messages via [Message Layer Security (MLS)](https://messaginglayersecurity.rocks/). Polyproto compliant servers take on the role of both an Authentication Service and a Delivery Service in the context of MLS.
+
+    MLS is a cryptographic protocol that provides confidentiality, integrity, and authenticity guarantees for group messaging applications. It builds on top of the [Double Ratchet Algorithm](https://signal.org/docs/specifications/doubleratchet/) and [X3DH](https://signal.org/docs/specifications/x3dh/) to provide these security guarantees.
 
 Clients and servers must support encryption, but whether to encrypt a message channel is up to the users.
 
