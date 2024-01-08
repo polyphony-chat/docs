@@ -4,19 +4,17 @@
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 
 - [polyproto-core Specification](#polyproto-core-specification)
-  - [1. APIs and communication protocols](#1-apis-and-communication-protocols)
-    - [1.1 Client-Server API](#11-client-server-api)
-      - [1.1.1 Initial authentication](#111-initial-authentication)
-    - [1.2 Server-Server API](#12-server-server-api)
-    - [1.3 WebSockets](#13-websockets)
-  - [2. Trust model](#2-trust-model)
+  - [1. Trust model](#1-trust-model)
+  - [2. APIs and communication protocols](#2-apis-and-communication-protocols)
+    - [2.1 Client-Home server API](#21-client-home-server-api)
+      - [2.1.1 Initial authentication](#211-initial-authentication)
+    - [2.2 Client-foreign server API](#22-client-foreign-server-api)
+    - [2.3 WebSockets](#23-websockets)
   - [3. Federated Identity](#3-federated-identity)
     - [3.1 Federation tokens](#31-federation-tokens)
-    - [3.2 Signing keys and message signing](#32-signing-keys-and-message-signing)
-    - [3.3 Abuse prevention](#33-abuse-prevention)
-    - [3.4 Best practices](#34-best-practices)
-      - [3.4.1 Signing keys](#341-signing-keys)
-      - [3.4.2 Home server operation and design](#342-home-server-operation-and-design)
+    - [3.2 Abuse prevention](#32-abuse-prevention)
+    - [3.3 Best practices](#33-best-practices)
+      - [3.3.1 Home server operation and design](#331-home-server-operation-and-design)
   - [4. Federating direct/group messages](#4-federating-directgroup-messages)
     - [4.1 Direct messages](#41-direct-messages)
     - [4.2 Group messages](#42-group-messages)
@@ -30,47 +28,62 @@
   - [7. Keys and signatures](#7-keys-and-signatures)
     - [7.1. KeyPackages](#71-keypackages)
       - [7.1.1 Last resort KeyPackages](#711-last-resort-keypackages)
-    - [7.2 User identity](#72-user-identity)
-    - [7.3 Multi-device support](#73-multi-device-support)
+    - [7.2 User identity keys and message signing](#72-user-identity-keys-and-message-signing)
+      - [7.2.1 Message verification](#721-message-verification)
+      - [7.2.2 Multi-device support](#722-multi-device-support)
+    - [7.3 Best practices](#73-best-practices)
+      - [7.3.1 Signing keys](#731-signing-keys)
   - [8. Account migration](#8-account-migration)
     - [8.1 Migrating a user account](#81-migrating-a-user-account)
     - [8.2 Re-signing messages](#82-re-signing-messages)
 
 
-This document defines a set of protocols and APIs for a chat service primarily focused on communities. The document is intended to be used as a reference for developers who want to implement a client or server for the Polyphony chat service. Uses of this protocol, hereafter referred to as "polyproto", include Instant Messaging, Voice over IP, and Video over IP, where your identity is federated between multiple servers.
+The polyproto-core protocol is a home-server-based federation protocol specification centered around the [Messaging Layer Security (MLS) protocol as defined by RFC9420 of the IETF](https://datatracker.ietf.org/doc/html/rfc9420), intended for use in community-centered chat service applications/application implementations. This document is intended to be used as a starting point for developers wanting to develop software which can interoperate with other polyproto-core implementations. Uses of this protocol include Guild-Based, Group-Based and one on one Instant Messaging, Voice over IP, and Video over IP, where your identity is federated between multiple servers.
 
-The information provided to you via this document only fully covers polyproto itself. To correctly implement the polyproto, you must read the MLS specification (RFC9420). It is imperative that implementations of this protocol respect all aspects of this specification.
+To correctly implement polyproto-core, you must read and understand the MLS protocol specification (RFC9420).
 
 The structure of this reference document is heavily inspired by the really well written [Matrix specification](https://spec.matrix.org/latest).
 
-## 1. APIs and communication protocols
+## 1. Trust model
 
-The polyproto-core specification defines a set of APIs that are used to implement polyproto-core. These APIs are:
+polyproto-core operates under the following trust assumptions:
 
-- Client-Server API
-- Server-Server API
+1.  A user trusts their home server and its admins to keep their data safe from unauthorized access, and to not perform actions which a third party would observe to be performed by the user, without the user's consent.
+2.  For a user to distrust their home server, something irregular must have happened, or conflicting information must have been presented to the user.
+3.  When joining a guild on another server in the context of federation, a user trusts this server and its admins with a copy of their public profile and with all other unencrypted data sent to the server.
+4.  Users trust the other members of an encrypted communications channel with the content of their messages, as well as with the metadata attached to the messages.
+5.  Non-home servers can not perform actions like sending messages without a foreign users' explicit consent, without immediately being exposed.
+6.  A user trusts their home server to be a certificate authority for their identity keys, without the home server owning the identity itself.
+
+## 2. APIs and communication protocols
+
+The polyproto-core specification defines a set of APIs. These APIs are the Client-Server- and Server-Server APIs.
 
 Aside from these REST APIs, polyproto-core also uses WebSockets for real-time communication between clients and servers.
 
-### 1.1 Client-Server API
+### 2.1 Client-Home server API
 
-The Client-Server API is a RESTful API that is used by clients to communicate with the server. The Client-Server API of polyproto-core is not to be confused with the Client-Server API of polyproto-chat, which is a separate API that is used by users for chat functionality, whereas the Client-Server API of polyproto-core is used for authentication, federation and other administrative tasks.
+The *Client-Home server* API of polyproto-core is used for authentication- and federation-related tasks.
+A client in this context is expected to be a user/bot session.
 
-#### 1.1.1 Initial authentication
+#### 2.1.1 Initial authentication
 
-During the initial authentication (registration) process, a client must provide at least one [`KeyPackage`](#61-keypackages), as well as one ["last resort" `KeyPackage`](#611-last-resort-keypackages) in addition to the required registration information.
+During the initial authentication (registration) process, a client must provide at least one [`KeyPackage`](#61-keypackages), as well as one ["last resort" `KeyPackage`](#611-last-resort-keypackages) to the server, in addition to the required registration information.
 
-The identity key inside the `LeafNode` of this `KeyPackage` is signed using the home servers' private key, so that home servers act as a certificate authority for their users' keys.
+The public identity key inside the `LeafNode` of this `KeyPackage` is signed using the home servers' private key, so that home servers act as a certificate authority for their users' keys.
 
-See [6.1. KeyPackages](#61-keypackages) for an outline on what a `KeyPackage` is, and consult the MLS specification (RFC9420) for more implementation details.
+!!! info
 
-### 1.2 Server-Server API
+    See [6.1. KeyPackages](#61-keypackages) for an outline on what a `KeyPackage` is, and consult the MLS specification (RFC9420) for more implementation details.
 
-The Server-Server APIs which are used to enable federation between multiple polyproto servers (federated identity).
+### 2.2 Client-foreign server API
 
-### 1.3 WebSockets
+The *Client-foreign server* API of polyproto-core is used for tasks such as requesting the server's or a user's public key(s) or migrating a user account.
+The definition of "client" in this context is broader, since it includes both users/bots and other home servers.
 
-WebSockets in polyproto-core are used for real-time communication between clients and servers. WebSockets are only used in a Client-Server context, and not in a Server-Server context.
+### 2.3 WebSockets
+
+WebSockets in polyproto-core are used for real-time communication between clients and servers. WebSockets are used both in *Client-Home server* and *Client-foreign server* communication.
 
 WebSocket connections to polyproto-core servers consist of the following cycle:
 
@@ -95,7 +108,7 @@ WebSocket connections to polyproto-core servers consist of the following cycle:
  |  +------------------+                                      +-----------+  |
  +-<-------------------------------------------------------------------------+
 
-    +------------------+          4. Send Identify            +-----------+
+    +------------------+      4. Send Identify payload        +-----------+
     |      Client      |------------------------------------> |  Gateway  |
     +------------------+                                      +-----------+
                                                               
@@ -131,20 +144,10 @@ Fig. 1: Sequence diagram of a WebSocket connection to a polyproto-core server.
 
 To learn more about the Gateway and Gateway Events, consult the [WebSockets API documentation](/docs/APIs/Core/Server-Client%20API/WebSockets/index.md).
 
-## 2. Trust model
-
-polyproto-core operates under the following trust assumptions:
-
-1.  A user trusts their home server and its admins to keep their data safe from unauthorized access, and to not perform actions which a third party would observe to be performed by the user, without the user's consent.
-2.  For a user to distrust their home server, something irregular must have happened, or conflicting information must have been presented to the user.
-3.  When joining a guild on another server in the context of federation, a user trusts this server and its admins with a copy of their public profile and with all other unencrypted data sent to the server.
-4.  Users trust the other members of an encrypted communications channel with the content of their messages, as well as with the metadata attached to the messages.
-5.  Non-home servers can not perform actions like sending messages without a foreign users' explicit consent, without immediately being exposed.
-6.  A user trusts their home server to be a certificate authority for their identity keys, without the home server owning the identity itself.
-
 ## 3. Federated Identity
 
-Federating user identities means that users can fully participate on other instances. This means that users can, for example, DM users from another server or join external Guilds. 
+Federating user identities means that users can fully participate on other instances' guilds and talk to other instances' users.
+This means that users can, for example, DM users from another server or join another servers' Guilds. 
 
 The identity key defined in [6. Keys and signatures](#6-keys-and-signatures) is used to sign messages that the user sends to other servers.
 
@@ -205,20 +208,7 @@ Federation tokens are generated by the user's home server. The token is a JSON o
 - The domain of the user's home server.
 - A securely-randomly generated nonce
 
-
-### 3.2 Signing keys and message signing
-
-As mentioned in the previous section, users must hold on to a private key at all times. This key is used to sign all messages that the user sends to other instances. The key is generated by the user's home server, and is sent to the user's client when the user first registers on the server. The key is stored in the client's local storage. The signing key must not be used for encryption purposes.
-
-A client may choose to rotate their signing key at any time. This is done by generating a new signing key pair, and sending the new public signing key to their home server. The home server will then send a new certificate that contains the clients' public signing key and the corresponding users' federation ID, to the client. This certificate is proof that the home server attests to the clients key. The client then attaches this certificate to any message it sends to other servers, alongside the actual signature of the message, generated using the clients' private signing key. The home server has to keep track of the old public signing key and its own certificates, and use them to verify messages that were signed with the old key.
-
-Signing messages prevents a malicious server from impersonating a user.
-
-!!! bug "TODO"
-
-    TODO: Note about signing keys and how they are generated and stored locally.
-
-### 3.3 Abuse prevention
+### 3.2 Abuse prevention
 
 To protect users from malicious home servers secretly acting on the behalf of non-consenting users,
 a mechanism is needed to prevent home servers from generating federation tokens for users without
@@ -236,9 +226,9 @@ protocols, like ActivityPub, have as well. There is no real solution to this pro
 mitigated a bit by making it more difficult for malicious home servers to do something like this
 without the user noticing.
 
-Polyproto servers should notify users (even guest users), when a new session token is generated for
-them. This would make the malicious server's actions more noticeable to the user. However, this does
-not address the issue of the malicious server being able to generate a federation token for a server
+Polyproto servers should notify users (even foreign users), when a new session token is generated for
+them. This would make the malicious home server's actions more noticeable to the user. However, this does
+not address the issue of the malicious home server being able to generate a federation token for a server
 which you are not yet connected to. Clients who re-connect to a server after being offline should be
 notified of any new session tokens that were generated for them while they were offline.
 This `NEW_SESSION` message should be sent to all sessions, except for the new session. The
@@ -261,14 +251,9 @@ This `NEW_SESSION` message should be sent to all sessions, except for the new se
     the encrypted channel cannot be decrypted by that session. If secrecy/confidentiality are of
     concern, users should host their own home server and use end-to-end encryption.
 
-### 3.4 Best practices
+### 3.3 Best practices
 
-#### 3.4.1 Signing keys
-
-- Instance/user signing keys should be rotated at least every 30 days. This is to ensure that a compromised key can only be used for a limited amount of time.
-- If Bobs client fails to verify the signature of Alice's message with the public key/certificate pair received from Server B, it should ask Server A for the public key of Alice at the time the message was sent. If the verification fails again, the message should be treated with extreme caution.
-
-#### 3.4.2 Home server operation and design
+#### 3.3.1 Home server operation and design
 
 - Employ a caching layer to handle the potentially large amount of requests for public key certificates without putting unnecessary strain on the database.
 
@@ -303,7 +288,7 @@ The following regex can be used to validate user IDs: `\b([A-Z0-9._%+-]+)@([A-Z0
 
 Clients and servers must support encryption, but whether to encrypt a message channel is up to the users.
 
-Note, that in the below sequence diagrams, the MLS Welcome message and the MLS Group notify message are all encrypted using the public key of the recipient. The public key in this context is not to be confused with the public signing key.
+Note, that in the below sequence diagrams, the MLS Welcome message and the MLS Group notify message are all encrypted using the identity key of the recipient.
 
 ### 6.1 Encrypted guild channels
 
@@ -475,7 +460,7 @@ A polyproto-core compliant server must store KeyPackages for all users that are 
 - `protocol_version` is the version of the MLS protocol the `KeyPackage` is using.
 - `cipher_suite` is the cipher suite that this KeyPackage is using. Note that a client may store multiple KeyPackages for a single user, to support multiple cipher suites.
 - `init_key` is a public key that is used to encrypt the group's initial secrets.
-- `leaf_node` is a signed `LeafNodeTBS` struct as defined in section `7.2. Leaf Node Contents` in RFC9420. A `LeafNode` contains information representing a users' identity, such as the users' **public identity key** for a given session/client. The `LeafNodeTBS` is signed using the user's private signing key.
+- `leaf_node` is a signed `LeafNodeTBS` struct as defined in section `7.2. Leaf Node Contents` in RFC9420. A `LeafNode` contains information representing a users' identity, such as the users' **public identity key** for a given session/client. The `LeafNodeTBS` is signed using the user's private identity key.
 - `extensions` can be used to add additional information to the protocol, as defined in section `13. Extensibility` in RFC9420.
 
 A `KeyPackage` is supposed to be used only once. Servers must ensure the following things:
@@ -491,19 +476,38 @@ A "last resort" `KeyPackage` is a `KeyPackage` which can be used multiple times.
 
 Once a server has given out a "last resort" `KeyPackage` to a client, the server should request a new "last resort" `KeyPackage` from the client from the user, once they connect to the server again. The old "last resort" `KeyPackage` should then be deleted.
 
-### 7.2 User identity
+### 7.2 User identity keys and message signing
 
-Even though section 6.1 defines that a `KeyPackage` should be deleted by the server after it has been given out once, servers must keep track of the identity keys of all users that are registered on the server, and must be able to provide a users' identity key (or keys, in the case of multi-device users) for a given timestamp, when requested. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of a user may change over time and users must sign all messages they send to other servers.
+As mentioned section #3, users must hold on to an identity key pair at all times. This key pair is used to represent a user's identity and to verify message integrity, by having a user sign all messages they send with their private identity key. The key pair is generated by the user, and the respective public key is sent to the user's home server when first registering on the server, or when rotating keys. The key is stored in the client's local storage. Upon receiving a new identity key pair, a home server will generate a new certificate containing the clients' public identity key and the corresponding users' federation ID, and send it to the client. This certificate is proof that the home server attests to the clients key. The client then attaches this certificate to any message it sends, alongside the actual signature of the message.
 
-Likewise, a client should also keep track of all of its own identity keys, to potentially verify their identity in case of a migration.
+A client may choose to rotate their identity key at any time. This is done by generating a new identity key pair, and sending the new public identity key to their home server. 
 
-### 7.3 Multi-device support
+Even though section 7.1 defines that a `KeyPackage` should be deleted by the server after it has been given out once, servers must keep track of the identity keys of all users that are registered on the server, and must be able to provide a users' identity key (or keys, in the case of multi-device users) for a given timestamp, when requested. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of a user may change over time and users must sign all messages they send to other servers. Likewise, a client should also keep track of all of its own identity keys, to potentially verify their identity in case of a migration.
+
+Signing messages prevents a malicious foreign server from impersonating a user.
+
+#### 7.2.1 Message verification
+
+Of course, in order for message signing to actually verify message integrity, clients **must** verify the signatures of all messages they receive. This is done by verifying the signature of the message with the public key and certificate of the sender, which both can be obtained from the home server the message was sent on. Clients must also verify that the certificate attached to the message is valid and that the public key in the certificate matches the public key of the sender. If the verification fails, the message should be treated with extreme caution.
+
+!!! bug "TODO"
+
+    TODO: We currently say that the certificate generated by a users home server has to be attached to every message they send. This is not the case, as the certificate is only needed when the user's public identity key changes. This should be fixed throughout the document.
+
+#### 7.2.2 Multi-device support
 
 Polyproto servers and clients must implement multi-device support, as defined in the MLS specification (RFC9420).
 Clients must not use the same keys on multiple devices. Instead, the MLS protocol assigns a new `LeafNode` to each device.
 
 Each device provides its own `KeyPackages` as well as an own set of unique identity and signature keys. 
 Polyproto home servers must guarantee this uniqueness amongst all users of the server.
+
+### 7.3 Best practices
+
+#### 7.3.1 Signing keys
+
+- Instance/user signing keys should be rotated at least every 30 days. This is to ensure that a compromised key can only be used for a limited amount of time.
+- If Bobs client fails to verify the signature of Alice's message with the public key/certificate pair received from Server B, it should ask Server A for the public key of Alice at the time the message was sent. If the verification fails again, the message should be treated with extreme caution.
 
 ## 8. Account migration
 

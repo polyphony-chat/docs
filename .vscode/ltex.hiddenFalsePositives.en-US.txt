@@ -15,3 +15,4 @@
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qabstract \"About MLS\"\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qwarning\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qquestion \"If the old home server is not needed for the migration, why try to contact it in the first place?\"\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qinfo\\E$"}
