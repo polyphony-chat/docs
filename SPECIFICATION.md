@@ -13,8 +13,6 @@
   - [3. Federated Identity](#3-federated-identity)
     - [3.1 Federation tokens](#31-federation-tokens)
     - [3.2 Abuse prevention](#32-abuse-prevention)
-    - [3.3 Best practices](#33-best-practices)
-      - [3.3.1 Home server operation and design](#331-home-server-operation-and-design)
   - [4. Federating direct/group messages](#4-federating-directgroup-messages)
     - [4.1 Direct messages](#41-direct-messages)
     - [4.2 Group messages](#42-group-messages)
@@ -31,8 +29,10 @@
     - [7.2 User identity keys and message signing](#72-user-identity-keys-and-message-signing)
       - [7.2.1 Message verification](#721-message-verification)
       - [7.2.2 Multi-device support](#722-multi-device-support)
-    - [7.3 Best practices](#73-best-practices)
-      - [7.3.1 Signing keys](#731-signing-keys)
+    - [7.3 Home server generated certificates for public client identity keys (ID-CERT)](#73-home-server-generated-certificates-for-public-client-identity-keys-id-cert)
+    - [7.4 Best practices](#74-best-practices)
+      - [7.4.1 Signing keys](#741-signing-keys)
+      - [7.4.2 Home server operation and design](#742-home-server-operation-and-design)
   - [8. Account migration](#8-account-migration)
     - [8.1 Migrating a user account](#81-migrating-a-user-account)
     - [8.2 Re-signing messages](#82-re-signing-messages)
@@ -149,7 +149,7 @@ To learn more about the Gateway and Gateway Events, consult the [WebSockets API 
 Federating user identities means that users can fully participate on other instances' guilds and talk to other instances' users.
 This means that users can, for example, DM users from another server or join another servers' Guilds. 
 
-The identity key defined in [6. Keys and signatures](#6-keys-and-signatures) is used to sign messages that the user sends to other servers.
+An identity key defined in [6. Keys and signatures](#6-keys-and-signatures) is used to sign messages that the user sends to other servers.
 
 **Example:**
 Say that Alice is on server A, and Bob is on server B. Alice wants to send a message to Bob.
@@ -157,46 +157,50 @@ Say that Alice is on server A, and Bob is on server B. Alice wants to send a mes
 Alice's client will send a message to their home server (Server A), asking it to generate a one-time use federation token for registering on server B. Alice takes this token and sends it to server B. Server B will then ask server A if the token is valid. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B using this token, and send the message to server B. Server B will then send the message to Bob's client.
 
 ```
-Alice's Client              Server A            Server B              Bob's Client
-|                           |                   |                     |
-| Federation token request  |                   |                     |
-|-------------------------->|                   |                     |
-|                           |                   |                     |
-|          Federation token |                   |                     |
-|<--------------------------|                   |                     |
-|                      [Federation handshake start]                   |
-|                           |                   |                     |
-| Federation token + Public Profile             |                     |
-|---------------------------------------------->|                     |
-|                           |                   |                     |
-|                           |        Get pubkey |                     |
-|                           |<------------------|                     |
-|                           |                   |                     |
-|                           | Server A Pubkey   |                     |
-|                           |------------------>|                     |
-|                           |                   |                     |
-|                           |                   | Verify fedi-token   |
-|                           |                   |-------------------  |
-|                           |                   |                  |  |
-|                           |                   |<------------------  |
-|                           |                   |                     |
-|                           |     Session Token |                     |
-|<----------------------------------------------|                     |
-|                           |                   |                     |
-|                     [Federation handshake complete]                 |
-|                           |                   |                     |
-| Session Token + Signed message                |                     |
-|---------------------------------------------->|                     |
-|                           |                   |                     |
-|                           |                   | Signed message      |
-|                           |                   |-------------------->|
-|                           |                   |                     |
+Alice's Client                                  Server A              Server B              Bob's Client
+|                                               |                     |                     |
+| Federation token request                      |                     |                     |
+|---------------------------------------------->|                     |                     |
+|                                               |                     |                     |
+|                              Federation token |                     |                     |
+|<----------------------------------------------|                     |                     |
+|                              [Federation handshake start]                                 |
+|                                               |                     |                     |
+| Federation token, Public Profile, Identity Pubkey + Certificate     |                     |
+|-------------------------------------------------------------------->|                     |
+|                                               |                     |                     |
+|                                               |        Get pubkey   |                     |
+|                                               |<--------------------|                     |
+|                                               |                     |                     |
+|                                               | Server A Pubkey     |                     |
+|                                               |-------------------->|                     |
+|                                               |                     |                     |
+|                                               |                     | Verify fedi-token   |
+|                                               |                     |-------------------  |
+|                                               |                     |                  |  |
+|                                               |                     |<------------------  |
+|                                               |                     |                     |
+|                                               |     Session Token   |                     |
+|<--------------------------------------------------------------------|                     |
+|                                               |                     |                     |
+|                             [Federation handshake complete]                               |
+|                                               |                     |                     |
+| Session Token + Signed message                                      |                     |
+|-------------------------------------------------------------------->|                     |
+|                                               |                     |                     |
+|                                               |                     | Signed message      |
+|                                               |                     |-------------------->|
+|                                               |                     |                     |
 ```
 Fig. 3: Sequence diagram of a successful federation handshake.
 
 If Alice's session token expires, or if Alice would like to sign in on another device, she can repeat this process of generating a federation token and exchanging it for a session token.
 
 The usage of a federation token prevents a malicious user from generating an external session token on behalf of another user.
+
+!!! info
+
+    You can read more about the Identity Pubkey and Certificate in [7. Keys and signatures](#7-keys-and-signatures).
 
 ### 3.1 Federation tokens
 
@@ -250,12 +254,6 @@ This `NEW_SESSION` message should be sent to all sessions, except for the new se
     noticing. MLS's forward secrecy guarantees, that messages sent before a malicious session joins
     the encrypted channel cannot be decrypted by that session. If secrecy/confidentiality are of
     concern, users should host their own home server and use end-to-end encryption.
-
-### 3.3 Best practices
-
-#### 3.3.1 Home server operation and design
-
-- Employ a caching layer to handle the potentially large amount of requests for public key certificates without putting unnecessary strain on the database.
 
 ## 4. Federating direct/group messages
 
@@ -478,9 +476,9 @@ Once a server has given out a "last resort" `KeyPackage` to a client, the server
 
 ### 7.2 User identity keys and message signing
 
-As mentioned section #3, users must hold on to an identity key pair at all times. This key pair is used to represent a user's identity and to verify message integrity, by having a user sign all messages they send with their private identity key. The key pair is generated by the user, and the respective public key is sent to the user's home server when first registering on the server, or when rotating keys. The key is stored in the client's local storage. Upon receiving a new identity key pair, a home server will generate a new certificate containing the clients' public identity key and the corresponding users' federation ID, and send it to the client. This certificate is proof that the home server attests to the clients key. The client then attaches this certificate to any message it sends, alongside the actual signature of the message.
+As mentioned section #3, users must hold on to an identity key pair at all times. This key pair is used to represent a user's identity and to verify message integrity, by having a user sign all messages they send with their private identity key. The key pair is generated by the user, and the respective public key is sent to the user's home server when first registering on the server, or when rotating keys. The key is stored in the client's local storage. Upon receiving a new identity key pair, a home server will generate a new certificate containing the clients' public identity key and the corresponding users' federation ID, and send it to the client. This certificate is proof that the home server attests to the clients key.
 
-A client may choose to rotate their identity key at any time. This is done by generating a new identity key pair, and sending the new public identity key to their home server. 
+A client may choose to rotate their identity key at any time. This is done by generating a new identity key pair, and sending the new public identity key to their home server. The home server will then also generate a new certificate for the client.
 
 Even though section 7.1 defines that a `KeyPackage` should be deleted by the server after it has been given out once, servers must keep track of the identity keys of all users that are registered on the server, and must be able to provide a users' identity key (or keys, in the case of multi-device users) for a given timestamp, when requested. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of a user may change over time and users must sign all messages they send to other servers. Likewise, a client should also keep track of all of its own identity keys, to potentially verify their identity in case of a migration.
 
@@ -489,6 +487,41 @@ Signing messages prevents a malicious foreign server from impersonating a user.
 #### 7.2.1 Message verification
 
 Of course, in order for message signing to actually verify message integrity, clients **must** verify the signatures of all messages they receive. This is done by verifying the signature of the message with the public key and certificate of the sender, which both can be obtained from the home server the message was sent on. Clients must also verify that the certificate attached to the message is valid and that the public key in the certificate matches the public key of the sender. If the verification fails, the message should be treated with extreme caution.
+
+**Example:** Given a signed message from Alice, like Bob would receive it from Server B in [Fig. 3](), Bob's client would verify the signature of the message like so:
+
+```
+Server B                                        Bob                                         Server A
+|                                               |                                           |
+| Alice's signed message                        |                                           |
+|---------------------------------------------->|                                           |
+|                                               |                                           |
+|    Request Certificate for Alice's public key |                                           |
+|<----------------------------------------------|                                           |
+|                                               |                                           |
+| Certificate for Alice's public key            |                                           |
+|---------------------------------------------->|                                           |
+|                                               |                                           |
+|                                               | Request Server A public identity key      |
+|                                               |------------------------------------------>|
+|                                               |                                           |
+|                                               |              Server A public identity key |
+|                                               |<------------------------------------------|
+|                                               |                                           |
+|                                               | Verify signature of Alice's message       |
+|                                               |------------------------------------       |
+|                                               |                                   |       |
+|                                               |<-----------------------------------       |
+|                                               |                                           |
+
+```
+Fig. 6: Sequence diagram of a successful message signature verification.
+
+If the verification fails, Bob's client may try to request Alice's public identity key and certificate from Server A (Alice's home server), and try to verify the signature again. If the verification fails again, the message should be treated with extreme caution.
+
+!!! info
+
+    A failed signature verification does not always mean that the message is invalid. It may be that the user's identity key has changed, and that Server B has not yet received the new public identity key.
 
 !!! bug "TODO"
 
@@ -502,12 +535,28 @@ Clients must not use the same keys on multiple devices. Instead, the MLS protoco
 Each device provides its own `KeyPackages` as well as an own set of unique identity and signature keys. 
 Polyproto home servers must guarantee this uniqueness amongst all users of the server.
 
-### 7.3 Best practices
+### 7.3 Home server generated certificates for public client identity keys (ID-CERT)
 
-#### 7.3.1 Signing keys
+The home server generated public client identity key certificate, ID-CERT for short, is a public key certificate used to prove the validity of a public identity key. The ID-CERT is signed by a user's home server and includes the public identity key of the user, as well as the federation ID of the user.
+
+The addition of a certificate may seem ubiquitous, but it is necessary to prevent a malicious foreign server from abusing public identity key caching to impersonate a user. Consider the following example which employs foreign server public identity key caching, but no home server issued identity key certificates:
+
+!!! example "Potential abuse scenario"
+
+    A malicious foreign server B can fake a message from Alice (Home server: Server A) to Bob (Home Server: Server B), by generating a new identity key pair and using it to sign the malicious message. The foreign server then sends that message to Bob, who will then request Alice's public identity key from Server B, who will then send Bob the malicious public identity key. Bob will succeed in verifying the signature of the message, and not notice that the message is malicious.
+
+The above scenario is not possible with home server issued identity key certificates, as the malicious server cannot generate an identity key pair for Alice which is signed by Server A.
+
+### 7.4 Best practices
+
+#### 7.4.1 Signing keys
 
 - Instance/user signing keys should be rotated at least every 30 days. This is to ensure that a compromised key can only be used for a limited amount of time.
 - If Bobs client fails to verify the signature of Alice's message with the public key/certificate pair received from Server B, it should ask Server A for the public key of Alice at the time the message was sent. If the verification fails again, the message should be treated with extreme caution.
+
+#### 7.4.2 Home server operation and design
+
+- Employ a caching layer for your home server to handle the potentially large amount of requests for public key certificates without putting unnecessary strain on the database.
 
 ## 8. Account migration
 
@@ -569,7 +618,7 @@ Server_A                               Alice_A                                  
 |-------------------------------------------------------------------------------------------->|                                                   |
 |                                      |                                                      |                                                   |
 ```
-Fig. 6: Sequence diagram depicting a successful migration of Alice_A's account to Alice_B's account, where Server A is reachable and cooperative.
+Fig. 7: Sequence diagram depicting a successful migration of Alice_A's account to Alice_B's account, where Server A is reachable and cooperative.
 
 Alternatively, if Server A is offline or deemed uncooperative, the following sequence diagram depicts how the migration can be done without Server A's cooperation:
 
@@ -605,7 +654,7 @@ Server_A     Alice_A                                                            
 |            |                                                                                |-------------------------------------------------->|
 |            |                                                                                |                                                   |
 ```
-Fig. 7: Sequence diagram depicting a successful migration of Alice_A's account to Alice_B's account, where Server A is unreachable or uncooperative.
+Fig. 8: Sequence diagram depicting a successful migration of Alice_A's account to Alice_B's account, where Server A is unreachable or uncooperative.
 
 !!! question "If the old home server is not needed for the migration, why try to contact it in the first place?"
 
@@ -674,4 +723,4 @@ Alice_A                                              Server_C                   
 |                                                    |<--------------------------------------------------------------      |                                                     
 |                                                    |                                                                     |                                                     
 ```
-Fig. 8: Sequence diagram depicting the re-signing procedure.
+Fig. 9: Sequence diagram depicting the re-signing procedure.
