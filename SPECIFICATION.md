@@ -456,7 +456,7 @@ The MLS protocol used by polyproto-core has a built-in ability to negotiate prot
 
 !!! warning
 
-    This section is not exhaustive and does not cover all aspects of MLS and KeyPackages. It exists solely to give a general overview of how KeyPackages are used in polyproto-core.
+    The sections 7.1 and 7.1.1 are not exhaustive and do not cover all aspects of MLS and KeyPackages. They exist solely to give a general overview of how KeyPackages are used in polyproto-core.
     Please read and understand the MLS specification (RFC9420) to implement polyproto-core correctly.
 
 A polyproto-core compliant server must store KeyPackages for all users that are registered on the server. The `KeyPackage` is a JSON object that contains the following information:
