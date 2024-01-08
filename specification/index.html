@@ -1711,9 +1711,9 @@ Say that Alice is on server A, and Bob is on server B. Alice wants to send a mes
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>|                                               |                     |                     |
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|                              Federation token |                     |                     |
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>|&lt;----------------------------------------------|                     |                     |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|                              [Federation handshake start]                                 |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|                              [Federation handshake start]           |                     |
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>|                                               |                     |                     |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Federation token, Public Profile, Identity Pubkey + Certificate     |                     |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Federation token, Public Profile, ID-CERT     |                     |                     |
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>|--------------------------------------------------------------------&gt;|                     |
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>|                                               |                     |                     |
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>|                                               |        Get pubkey   |                     |
@@ -1730,9 +1730,9 @@ Say that Alice is on server A, and Bob is on server B. Alice wants to send a mes
 <a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>|                                               |     Session Token   |                     |
 <a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>|&lt;--------------------------------------------------------------------|                     |
 <a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>|                                               |                     |                     |
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>|                             [Federation handshake complete]                               |
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>|                             [Federation handshake complete]         |                     |
 <a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>|                                               |                     |                     |
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>| Session Token + Signed message                                      |                     |
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>| Session Token + Signed message                |                     |                     |
 <a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>|--------------------------------------------------------------------&gt;|                     |
 <a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>|                                               |                     |                     |
 <a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>|                                               |                     | Signed message      |
@@ -1741,7 +1741,6 @@ Say that Alice is on server A, and Bob is on server B. Alice wants to send a mes
 </code></pre></div>
 Fig. 3: Sequence diagram of a successful federation handshake.</p>
 <p>If Alice's session token expires, or if Alice would like to sign in on another device, she can repeat this process of generating a federation token and exchanging it for a session token.</p>
-<p>The usage of a federation token prevents a malicious user from generating an external session token on behalf of another user.</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>You can read more about the Identity Pubkey and Certificate in <a href="#7-keys-and-signatures">7. Keys and signatures</a>.</p>
@@ -1980,7 +1979,7 @@ Please read and understand the MLS specification (RFC9420) to implement polyprot
 <p>Even though section 7.1 defines that a <code>KeyPackage</code> should be deleted by the server after it has been given out once, servers must keep track of the identity keys of all users that are registered on the server, and must be able to provide a users' identity key (or keys, in the case of multi-device users) for a given timestamp, when requested. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of a user may change over time and users must sign all messages they send to other servers. Likewise, a client should also keep track of all of its own identity keys, to potentially verify their identity in case of a migration.</p>
 <p>Signing messages prevents a malicious foreign server from impersonating a user.</p>
 <h4 id="721-message-verification">7.2.1 Message verification<a class="headerlink" href="#721-message-verification" title="Permanent link">&para;</a></h4>
-<p>Of course, in order for message signing to actually verify message integrity, clients <strong>must</strong> verify the signatures of all messages they receive. This is done by verifying the signature of the message with the public key and certificate of the sender, which both can be obtained from the home server the message was sent on. Clients must also verify that the certificate attached to the message is valid and that the public key in the certificate matches the public key of the sender. If the verification fails, the message should be treated with extreme caution.</p>
+<p>Of course, in order for message signing to actually verify message integrity, clients <strong>must</strong> verify the signatures of all messages they receive. This is done by verifying the signature of the message with the public key and certificate of the sender, which both can be obtained from the home server the message was sent on. Clients must also verify that the certificate attached to the message is valid and that the public key in the certificate matches the public key of the sender. </p>
 <p><strong>Example:</strong> Given a signed message from Alice, like Bob would receive it from Server B in <a href="">Fig. 3</a>, Bob's client would verify the signature of the message like so:</p>
 <p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Server B                                        Bob                                         Server A
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>|                                               |                                           |
@@ -2006,14 +2005,15 @@ Please read and understand the MLS specification (RFC9420) to implement polyprot
 <a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>|                                               |                                           |
 </code></pre></div>
 Fig. 6: Sequence diagram of a successful message signature verification.</p>
-<p>If the verification fails, Bob's client may try to request Alice's public identity key and certificate from Server A (Alice's home server), and try to verify the signature again. If the verification fails again, the message should be treated with extreme caution.</p>
+<p>Bob's client may now choose to cache Server A's public identity key and Alice's ID-CERT, so that it does not have to request them again in the future, as long as the ID-CERT/Server public key do not change. If Bob's client receives another message from Alice, it can now verify the signature of the message with the cached public identity key and certificate. </p>
+<div class="admonition bug">
+<p class="admonition-title">TODO</p>
+<p>TODO: What about multiple devices? Should the client cache all public identity keys and certificates for a user? Should the client cache the public identity key and certificate for the device that sent the message? How would the client know which device sent the message? Session IDs? hmm</p>
+</div>
+<p>If the verification fails, Bob's client may try to request Alice's public identity key and certificate from Server A (Alice's home server), and try to verify the signature again. Should the verification fails again, the message should be treated with extreme caution.</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>A failed signature verification does not always mean that the message is invalid. It may be that the user's identity key has changed, and that Server B has not yet received the new public identity key.</p>
-</div>
-<div class="admonition bug">
-<p class="admonition-title">TODO</p>
-<p>TODO: We currently say that the certificate generated by a users home server has to be attached to every message they send. This is not the case, as the certificate is only needed when the user's public identity key changes. This should be fixed throughout the document.</p>
 </div>
 <h4 id="722-multi-device-support">7.2.2 Multi-device support<a class="headerlink" href="#722-multi-device-support" title="Permanent link">&para;</a></h4>
 <p>Polyproto servers and clients must implement multi-device support, as defined in the MLS specification (RFC9420).
