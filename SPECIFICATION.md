@@ -1,6 +1,7 @@
 # polyproto-core Specification
 
 **v0.0.0** - Treat this as an unfinished draft.
+[Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 
 - [polyproto-core Specification](#polyproto-core-specification)
   - [1. APIs and communication protocols](#1-apis-and-communication-protocols)
@@ -38,7 +39,7 @@
 
 This document defines a set of protocols and APIs for a chat service primarily focused on communities. The document is intended to be used as a reference for developers who want to implement a client or server for the Polyphony chat service. Uses of this protocol, hereafter referred to as "polyproto", include Instant Messaging, Voice over IP, and Video over IP, where your identity is federated between multiple servers.
 
-The information provided to you via this document only fully covers polyproto itself. To correctly implement the polyproto, you must read the MLS specification (RFC9420). It is imperative that implementations of this protocol respect all aspects of this specification. 
+The information provided to you via this document only fully covers polyproto itself. To correctly implement the polyproto, you must read the MLS specification (RFC9420). It is imperative that implementations of this protocol respect all aspects of this specification.
 
 The structure of this reference document is heavily inspired by the really well written [Matrix specification](https://spec.matrix.org/latest).
 
