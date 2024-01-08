@@ -164,9 +164,9 @@ Alice's Client                                  Server A              Server B  
 |                                               |                     |                     |
 |                              Federation token |                     |                     |
 |<----------------------------------------------|                     |                     |
-|                              [Federation handshake start]                                 |
+|                              [Federation handshake start]           |                     |
 |                                               |                     |                     |
-| Federation token, Public Profile, Identity Pubkey + Certificate     |                     |
+| Federation token, Public Profile, ID-CERT     |                     |                     |
 |-------------------------------------------------------------------->|                     |
 |                                               |                     |                     |
 |                                               |        Get pubkey   |                     |
@@ -183,9 +183,9 @@ Alice's Client                                  Server A              Server B  
 |                                               |     Session Token   |                     |
 |<--------------------------------------------------------------------|                     |
 |                                               |                     |                     |
-|                             [Federation handshake complete]                               |
+|                             [Federation handshake complete]         |                     |
 |                                               |                     |                     |
-| Session Token + Signed message                                      |                     |
+| Session Token + Signed message                |                     |                     |
 |-------------------------------------------------------------------->|                     |
 |                                               |                     |                     |
 |                                               |                     | Signed message      |
@@ -195,8 +195,6 @@ Alice's Client                                  Server A              Server B  
 Fig. 3: Sequence diagram of a successful federation handshake.
 
 If Alice's session token expires, or if Alice would like to sign in on another device, she can repeat this process of generating a federation token and exchanging it for a session token.
-
-The usage of a federation token prevents a malicious user from generating an external session token on behalf of another user.
 
 !!! info
 
@@ -486,7 +484,7 @@ Signing messages prevents a malicious foreign server from impersonating a user.
 
 #### 7.2.1 Message verification
 
-Of course, in order for message signing to actually verify message integrity, clients **must** verify the signatures of all messages they receive. This is done by verifying the signature of the message with the public key and certificate of the sender, which both can be obtained from the home server the message was sent on. Clients must also verify that the certificate attached to the message is valid and that the public key in the certificate matches the public key of the sender. If the verification fails, the message should be treated with extreme caution.
+Of course, in order for message signing to actually verify message integrity, clients **must** verify the signatures of all messages they receive. This is done by verifying the signature of the message with the public key and certificate of the sender, which both can be obtained from the home server the message was sent on. Clients must also verify that the certificate attached to the message is valid and that the public key in the certificate matches the public key of the sender. 
 
 **Example:** Given a signed message from Alice, like Bob would receive it from Server B in [Fig. 3](), Bob's client would verify the signature of the message like so:
 
@@ -517,15 +515,17 @@ Server B                                        Bob                             
 ```
 Fig. 6: Sequence diagram of a successful message signature verification.
 
-If the verification fails, Bob's client may try to request Alice's public identity key and certificate from Server A (Alice's home server), and try to verify the signature again. If the verification fails again, the message should be treated with extreme caution.
+Bob's client may now choose to cache Server A's public identity key and Alice's ID-CERT, so that it does not have to request them again in the future, as long as the ID-CERT/Server public key do not change. If Bob's client receives another message from Alice, it can now verify the signature of the message with the cached public identity key and certificate. 
+
+!!! bug "TODO"
+
+    TODO: What about multiple devices? Should the client cache all public identity keys and certificates for a user? Should the client cache the public identity key and certificate for the device that sent the message? How would the client know which device sent the message? Session IDs? hmm
+
+If the verification fails, Bob's client may try to request Alice's public identity key and certificate from Server A (Alice's home server), and try to verify the signature again. Should the verification fails again, the message should be treated with extreme caution.
 
 !!! info
 
     A failed signature verification does not always mean that the message is invalid. It may be that the user's identity key has changed, and that Server B has not yet received the new public identity key.
-
-!!! bug "TODO"
-
-    TODO: We currently say that the certificate generated by a users home server has to be attached to every message they send. This is not the case, as the certificate is only needed when the user's public identity key changes. This should be fixed throughout the document.
 
 #### 7.2.2 Multi-device support
 
