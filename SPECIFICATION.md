@@ -511,11 +511,10 @@ Server B                                        Bob                             
 |                                               |                                   |       |
 |                                               |<-----------------------------------       |
 |                                               |                                           |
-
 ```
 Fig. 6: Sequence diagram of a successful message signature verification.
 
-Bob's client may now choose to cache Server A's public identity key and Alice's ID-CERT, so that it does not have to request them again in the future, as long as the ID-CERT/Server public key do not change. If Bob's client receives another message from Alice, it can now verify the signature of the message with the cached public identity key and certificate. 
+Bob's client may now choose to cache Server A's public identity key and Alice's ID-CERT, so that it does not have to request them again in the future, as long as the ID-CERT/Server public key do not change. If Bob's client receives another message from Alice, it can now verify the signature of the message with the cached public identity key and certificate.
 
 !!! bug "TODO"
 
@@ -523,9 +522,18 @@ Bob's client may now choose to cache Server A's public identity key and Alice's 
 
 If the verification fails, Bob's client may try to request Alice's public identity key and certificate from Server A (Alice's home server), and try to verify the signature again. Should the verification fails again, the message should be treated with extreme caution.
 
+!!! question "Why does Bob's client not request Alice's public identity key from Server A?"
+
+    Bob's client could request Alice's public identity key from Server A, instead of Server B. However, this is discouraged, as it
+
+    - Generates unnecessary load on Server A; Doing it this way distributes the load of public identity key more fairly, as the server that the message was sent on is the one that has to process the public identity key request.
+    - Would expose unnecessary metadata to Server A; Server A does not need to know who exactly Alice is talking to, and when. Only Server B, Alice and Bob need to know this information. Always requesting the public identity key from Server A might expose this information to Server A.
+
+    Clients should only use Server A as a fallback for public identity key verification, if Server B does not respond to the request for Alice's public identity key, or if the verification fails with the public identity key from Server B.
+
 !!! info
 
-    A failed signature verification does not always mean that the message is invalid. It may be that the user's identity key has changed, and that Server B has not yet received the new public identity key.
+    A failed signature verification does not always mean that the message is invalid. It may be that the user's identity key has changed, and that Server B has not yet received the new public identity key for some reason.
 
 #### 7.2.2 Multi-device support
 
@@ -551,7 +559,7 @@ The above scenario is not possible with home server issued identity key certific
 
 #### 7.4.1 Signing keys
 
-- Instance/user signing keys should be rotated at least every 30 days. This is to ensure that a compromised key can only be used for a limited amount of time.
+- Instance/user signing keys should be rotated regularly (every 30-90 days). This is to ensure that a compromised key can only be used for a limited amount of time.
 - If Bobs client fails to verify the signature of Alice's message with the public key/certificate pair received from Server B, it should ask Server A for the public key of Alice at the time the message was sent. If the verification fails again, the message should be treated with extreme caution.
 
 #### 7.4.2 Home server operation and design

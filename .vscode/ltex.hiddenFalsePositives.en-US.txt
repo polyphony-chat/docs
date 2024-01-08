@@ -17,3 +17,5 @@
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qquestion \"If the old home server is not needed for the migration, why try to contact it in the first place?\"\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qinfo\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qinfo \"About certificates\"\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qquestion \"Why does Bob not request Alice's public identity key from Server A?\"\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qquestion \"Why does Bob's client not request Alice's public identity key from Server A?\"\\E$"}
