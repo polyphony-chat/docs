@@ -19,3 +19,4 @@
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qinfo \"About certificates\"\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qquestion \"Why does Bob not request Alice's public identity key from Server A?\"\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qquestion \"Why does Bob's client not request Alice's public identity key from Server A?\"\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-core - The core federation protocol and APIs of polyproto, enabling identification and authorization on 'foreign' servers.\\E$"}
