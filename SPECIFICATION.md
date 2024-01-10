@@ -31,6 +31,7 @@
       - [7.2.2 Message verification](#722-message-verification)
       - [7.2.2 Multi-device support](#722-multi-device-support)
     - [7.3 Home server generated certificates for public client identity keys (ID-Cert)](#73-home-server-generated-certificates-for-public-client-identity-keys-id-cert)
+      - [7.3.1 Certificate lifetime](#731-certificate-lifetime)
     - [7.4 Best practices](#74-best-practices)
       - [7.4.1 Signing keys/ID-Certs](#741-signing-keysid-certs)
       - [7.4.2 Home server operation and design](#742-home-server-operation-and-design)
@@ -563,6 +564,12 @@ The addition of a certificate may seem ubiquitous, but it is necessary to preven
     A malicious foreign server B can fake a message from Alice (Home server: Server A) to Bob (Home Server: Server B), by generating a new identity key pair and using it to sign the malicious message. The foreign server then sends that message to Bob, who will then request Alice's public identity key from Server B, who will then send Bob the malicious public identity key. Bob will succeed in verifying the signature of the message, and not notice that the message is malicious.
 
 The above scenario is not possible with home server issued identity key certificates, as the malicious server cannot generate an identity key pair for Alice which is signed by Server A.
+
+#### 7.3.1 Certificate lifetime
+
+!!! bug "TODO"
+
+    TODO: Include lifetime graph of ID-Certs. ID-Certs should be valid for a limited amount of time. The max lifetime of an ID-Cert is defined by the home server and when it renews its' own public identity key. Users can still rotate their identity keys though, but they will have to request a new ID-Cert from their home server.
 
 ### 7.4 Best practices
 
