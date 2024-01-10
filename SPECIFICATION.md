@@ -31,7 +31,6 @@
       - [7.2.2 Message verification](#722-message-verification)
       - [7.2.2 Multi-device support](#722-multi-device-support)
     - [7.3 Home server generated certificates for public client identity keys (ID-Cert)](#73-home-server-generated-certificates-for-public-client-identity-keys-id-cert)
-      - [7.3.1 Certificate lifetime](#731-certificate-lifetime)
     - [7.4 Best practices](#74-best-practices)
       - [7.4.1 Signing keys/ID-Certs](#741-signing-keysid-certs)
       - [7.4.2 Home server operation and design](#742-home-server-operation-and-design)
@@ -489,7 +488,7 @@ As mentioned section #3, users must hold on to an identity key pair at all times
 
 #### 7.2.1 Key rotation
 
-A client may choose to rotate their identity key at any time. This is done by generating a new identity key pair, and sending the new public identity key to their home server, as part of a new `KeyPackage` and a corresponding 'last resort' `KeyPackage`. The home server will then also generate a new certificate and send it to the client. Before sending any messages to a server, a client should inform the server of the key change, to ensure that the server has the correct public identity key cached for the client. The server lets clients connected to it know, that a client has changed their identity key, by sending a [`KEY_CHANGE`](/docs/APIs/Core/Server-Client%20API/WebSockets/gateway_events.md#key_change) gateway event to every client connected to the server. 
+A client may choose to rotate their identity key at any time. This is done by generating a new identity key pair, and sending the new public identity key to their home server, as part of a new `KeyPackage` and a corresponding 'last resort' `KeyPackage`. The home server will then also generate a new certificate and send it to the client. Before sending any messages to a server, a client should inform the server of the key change, to ensure that the server has the correct public identity key cached for the client. The server lets clients connected to it know, that a client has changed their identity key, by sending a [`CLIENT_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#client_key_change) gateway event to every client connected to the server. 
 
 
 Even though section 7.1 defines that a `KeyPackage` should be deleted by the server after it has been given out once, servers must keep track of the identity keys of all users (and their clients) registered on the server, and must be able to provide a clients' public identity key certificate for a given timestamp on request. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of a user may change over time and users must sign all messages they send to other servers. Likewise, a client should also keep track of all of its own identity keys, to potentially verify their identity in case of a migration.
@@ -565,17 +564,15 @@ The addition of a certificate may seem ubiquitous, but it is necessary to preven
 
 The above scenario is not possible with home server issued identity key certificates, as the malicious server cannot generate an identity key pair for Alice which is signed by Server A.
 
-#### 7.3.1 Certificate lifetime
-
-!!! bug "TODO"
-
-    TODO: Include lifetime graph of ID-Certs. ID-Certs should be valid for a limited amount of time. The max lifetime of an ID-Cert is defined by the home server and when it renews its' own public identity key. Users can still rotate their identity keys though, but they will have to request a new ID-Cert from their home server.
+Should the expected lifetime of a servers' identity key come to an early end, perhaps due to being leaked and therefore needing to be rotated, the server should generate a new identity key pair and send a [`SERVER_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#server_key_change) gateway event, as well as a [`LOW_KEY_PACKAGES`](/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages) event to all clients. The clients should then also re-generate their identity keys and request a new ID-Cert from the server, as well as respond to the [`LOW_KEY_PACKAGES`](/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages) event correctly.
 
 ### 7.4 Best practices
 
 #### 7.4.1 Signing keys/ID-Certs
 
 - Instance/user signing keys should be rotated regularly (every 30-90 days). This is to ensure that a compromised key can only be used for a limited amount of time.
+- When a server is asked to generate a new ID-Cert for a user, it must make sure that the new ID-Cert is valid for less than or equal to the lifetime of the server's own public identity key.
+- Due to the fact that a `SERVER_KEY_CHANGE` gateway event is bound to generate a lot of traffic, servers should only manually generate a new identity key pair when absolutely necessary and instead choose a fitting expiry date interval for their identity key pairs. It might also be a good idea to stagger the sending of `SERVER_KEY_CHANGE` gateway events, to prevent a server from initiating a DDoS attack on itself.
 - If Bobs client fails to verify the signature of Alice's message with the public key/certificate pair received from Server B, it should ask Server A for the public key of Alice at the time the message was sent. If the verification fails again, the message should be treated with extreme caution.
 - When a client or server receives the information that a user clients' identity key has been changed, the client/server in question should update their cached public identity key and certificate for the user in question, taking into account the session ID of the new identity key pair.
 
