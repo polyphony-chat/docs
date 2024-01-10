@@ -10,7 +10,7 @@ Routes concerning the creation, deletion and management of federation tokens.
 
 ---
 
-### <p class="request-h"><span class="request request-get">GET</span> Generate Federation Token [:material-pail-outline:](../../rate-limits.md "Bucket: federation-token-generation") [:material-lock-outline:](#authorization "Authorization required") </p> 
+### <span class="request-h"><span class="request request-get">GET</span> Generate Federation Token [:material-pail-outline:](../../rate-limits.md "Bucket: federation-token-generation") [:material-lock-outline:](#authorization "Authorization required") </span> 
 
 `http://localhost:3001/api/federation/token`
 
@@ -52,7 +52,7 @@ Federation tokens are signed using the home server's public signing key, so that
 
 ---
 
-### <p class="request-h"><span class="request request-get">GET</span> Get token generation status [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-open-outline:](#authorization "Authorization not required")</p>
+### <span class="request-h"><span class="request request-get">GET</span> Get token generation status [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-open-outline:](#authorization "Authorization not required")</span>
 
 `http://localhost:3001/api/federation/generation`
 
@@ -82,7 +82,7 @@ curl --request GET \
 
 ---
 
-### <p class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens for self [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required")</p>
+### <span class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens for self [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required")</span>
 
 `http://localhost:3001/api/federation/token/@me`
 
@@ -115,7 +115,7 @@ curl --request DELETE \
 
 ---
 
-### <p class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens for user [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</p>
+### <span class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens for user [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</span>
 
 `http://localhost:3001/api/federation/token/:user_id/@all`
 
@@ -164,7 +164,7 @@ curl --request DELETE \
 
 ---
 
-### <p class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</p>
+### <span class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</span>
 
 `http://localhost:3001/api/federation/token/@all`
 
@@ -196,7 +196,7 @@ curl --request DELETE \
 
 ---
 
-### <p class="request-h"><span class="request request-put">PUT</span> Manage token generation [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</p>
+### <span class="request-h"><span class="request request-put">PUT</span> Manage token generation [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</span>
 
 `http://localhost:3001/api/federation/token/generation`
 
@@ -234,11 +234,11 @@ Routes concerning identifying and authenticating as a user on another server.
 
 ---
 
-### <p class="request-h"><span class="request request-post">POST</span> Generate session token [:material-pail-outline:](../../rate-limits.md "Bucket: auth/login") [:material-lock-open-outline:](#authorization "Authorization not required")</p>
+### <span class="request-h"><span class="request request-post">POST</span> Generate session token [:material-pail-outline:](../../rate-limits.md "Bucket: auth/login") [:material-lock-open-outline:](#authorization "Authorization not required")</span>
 
 `http://localhost:3001/api/federation/session`
 
-Enable or disable token generation. When disabled, the server will not allow the creation of new federation tokens.
+Get a session token to authenticate as a foreign user on this server.
 
 #### Request
 
@@ -268,7 +268,3 @@ Enable or disable token generation. When disabled, the server will not allow the
         "session_token": "exampletoken"
     }
     ```
-
-=== "400 Bad Request"
-
---8<-- "snippets/errors/401-unauthorized.md"
