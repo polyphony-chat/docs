@@ -681,6 +681,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="7.3 Home server generated certificates for public client identity keys (ID-Cert)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#731-certificate-lifetime" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.3.1 Certificate lifetime
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1571,6 +1586,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="7.3 Home server generated certificates for public client identity keys (ID-Cert)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#731-certificate-lifetime" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.3.1 Certificate lifetime
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1711,6 +1741,7 @@
 <li><a href="#722-message-verification">7.2.2 Message verification</a></li>
 <li><a href="#722-multi-device-support">7.2.2 Multi-device support</a></li>
 <li><a href="#73-home-server-generated-certificates-for-public-client-identity-keys-id-cert">7.3 Home server generated certificates for public client identity keys (ID-Cert)</a></li>
+<li><a href="#731-certificate-lifetime">7.3.1 Certificate lifetime</a></li>
 <li><a href="#74-best-practices">7.4 Best practices</a></li>
 <li><a href="#741-signing-keysid-certs">7.4.1 Signing keys/ID-Certs</a></li>
 <li><a href="#742-home-server-operation-and-design">7.4.2 Home server operation and design</a></li>
@@ -2153,6 +2184,11 @@ Polyproto home servers must guarantee this uniqueness amongst all users of the s
 <p>A malicious foreign server B can fake a message from Alice (Home server: Server A) to Bob (Home Server: Server B), by generating a new identity key pair and using it to sign the malicious message. The foreign server then sends that message to Bob, who will then request Alice's public identity key from Server B, who will then send Bob the malicious public identity key. Bob will succeed in verifying the signature of the message, and not notice that the message is malicious.</p>
 </div>
 <p>The above scenario is not possible with home server issued identity key certificates, as the malicious server cannot generate an identity key pair for Alice which is signed by Server A.</p>
+<h4 id="731-certificate-lifetime">7.3.1 Certificate lifetime<a class="headerlink" href="#731-certificate-lifetime" title="Permanent link">&para;</a></h4>
+<div class="admonition bug">
+<p class="admonition-title">TODO</p>
+<p>TODO: Include lifetime graph of ID-Certs. ID-Certs should be valid for a limited amount of time. The max lifetime of an ID-Cert is defined by the home server and when it renews its' own public identity key. Users can still rotate their identity keys though, but they will have to request a new ID-Cert from their home server.</p>
+</div>
 <h3 id="74-best-practices">7.4 Best practices<a class="headerlink" href="#74-best-practices" title="Permanent link">&para;</a></h3>
 <h4 id="741-signing-keysid-certs">7.4.1 Signing keys/ID-Certs<a class="headerlink" href="#741-signing-keysid-certs" title="Permanent link">&para;</a></h4>
 <ul>
