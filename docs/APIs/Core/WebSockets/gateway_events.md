@@ -4,4 +4,12 @@ title: Gateway Events
 
 TODO
 
-## `KEY_CHANGE`
+## `CLIENT_KEY_CHANGE`
+
+TODO
+
+## `SERVER_KEY_CHANGE`
+
+TODO
+
+## `LOW_KEY_PACKAGES`
