@@ -4,8 +4,6 @@
 name: Build mkdocs documentation
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
