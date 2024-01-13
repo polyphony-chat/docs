@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
-site_name: polyproto
+site_name: Polyphony
 repo_url: https://github.com/polyphony-chat/polyproto
 edit_uri: edit/main/docs/
 extra_css:
@@ -47,6 +47,7 @@ theme:
 plugins:
   - privacy
   - search
+  - mkdocs-nav-weight
   - git-revision-date-localized:
       enable_creation_date: true
       type: timeago
