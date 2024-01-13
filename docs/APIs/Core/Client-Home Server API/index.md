@@ -10,7 +10,7 @@ Routes concerning the creation, deletion and management of federation tokens.
 
 ---
 
-### <span class="request-h"><span class="request request-get">GET</span> Generate Federation Token [:material-pail-outline:](../../rate-limits.md "Bucket: federation-token-generation") [:material-lock-outline:](#authorization "Authorization required") </span> 
+### <span class="request-h"><span class="request request-get">GET</span> Generate Federation Token [:material-pail-outline:](../rate-limits.md "Bucket: federation-token-generation") [:material-lock-outline:](#authorization "Authorization required") </span> 
 
 `http://localhost:3001/api/federation/token`
 
@@ -40,7 +40,7 @@ Federation tokens are signed using the home server's public signing key, so that
 
     | Name | Type                                                  | Description                    |
     | ---- | ----------------------------------------------------- | ------------------------------ |
-    | -*   | [`Federation Token`](../../types.md#federation-token) | The generated federation token |
+    | -*   | [`Federation Token`](../types.md#federation-token) | The generated federation token |
 
     ```json
     "exampletoken"
@@ -52,7 +52,7 @@ Federation tokens are signed using the home server's public signing key, so that
 
 ---
 
-### <span class="request-h"><span class="request request-get">GET</span> Get token generation status [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-open-outline:](#authorization "Authorization not required")</span>
+### <span class="request-h"><span class="request request-get">GET</span> Get token generation status [:material-pail-outline:](../rate-limits.md "Bucket: ip/global") [:material-lock-open-outline:](#authorization "Authorization not required")</span>
 
 `http://localhost:3001/api/federation/generation`
 
@@ -82,7 +82,7 @@ curl --request GET \
 
 ---
 
-### <span class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens for self [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required")</span>
+### <span class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens for self [:material-pail-outline:](../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required")</span>
 
 `http://localhost:3001/api/federation/token/@me`
 
@@ -115,7 +115,7 @@ curl --request DELETE \
 
 ---
 
-### <span class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens for user [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</span>
+### <span class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens for user [:material-pail-outline:](../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</span>
 
 `http://localhost:3001/api/federation/token/:user_id/@all`
 
@@ -125,7 +125,7 @@ Revoke all valid federation tokens for a specific user.
 
 | Name      | Type        | Description                                        |
 | --------- | ----------- | -------------------------------------------------- |
-| `user_id` | [`Snowflake`](../../types.md#snowflake) | The ID of the user whose tokens should be revoked. |
+| `user_id` | [`Snowflake`](../types.md#snowflake) | The ID of the user whose tokens should be revoked. |
 
 #### Request
 
@@ -164,7 +164,7 @@ curl --request DELETE \
 
 ---
 
-### <span class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</span>
+### <span class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens [:material-pail-outline:](../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</span>
 
 `http://localhost:3001/api/federation/token/@all`
 
@@ -196,7 +196,7 @@ curl --request DELETE \
 
 ---
 
-### <span class="request-h"><span class="request request-put">PUT</span> Manage token generation [:material-pail-outline:](../../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</span>
+### <span class="request-h"><span class="request request-put">PUT</span> Manage token generation [:material-pail-outline:](../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</span>
 
 `http://localhost:3001/api/federation/token/generation`
 
@@ -234,7 +234,7 @@ Routes concerning identifying and authenticating as a user on another server.
 
 ---
 
-### <span class="request-h"><span class="request request-post">POST</span> Generate session token [:material-pail-outline:](../../rate-limits.md "Bucket: auth/login") [:material-lock-open-outline:](#authorization "Authorization not required")</span>
+### <span class="request-h"><span class="request request-post">POST</span> Generate session token [:material-pail-outline:](../rate-limits.md "Bucket: auth/login") [:material-lock-open-outline:](#authorization "Authorization not required")</span>
 
 `http://localhost:3001/api/federation/session`
 
@@ -246,8 +246,8 @@ Get a session token to authenticate as a foreign user on this server.
 
 | Name                        | Type                                                      | Description                                                            |
 | --------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------- |
-| `federation_token`          | [Federation token](../../types.md#federation-token)       | A valid federation token generated by the clients' home server         |
-| `public_profile` (optional) | [Public user profile](../../types.md#public-user-profile) | The users' public user profile. Required on first connection to server |
+| `federation_token`          | [Federation token](../types.md#federation-token)       | A valid federation token generated by the clients' home server         |
+| `public_profile` (optional) | [Public user profile](../types.md#public-user-profile) | The users' public user profile. Required on first connection to server |
 
 !!! bug "TODO"
 

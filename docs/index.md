@@ -3,20 +3,18 @@ title: Home
 ---
 
 
-# polyproto
+# Polyphony
 
-Advanced, secure and scalable protocol for federated chat services.
+This documentation currently hosts information about polyproto; an advanced, secure and scalable
+protocol for federated chat services.
 
-The core of the protocol lies in the [protocol specification](./specification.md) and in the federation
-API routes, which are used to negotiate and establish connections between foreign servers and
-clients. 
+The core of the protocol lies in the [polyproto-core specification](./Protocol%20Specifications/core.md) and in the
+federation API routes, which are used to negotiate and establish connections between foreign servers
+and clients.
 
-Theoretically, the polyproto-core federation protocol can be used with a different set of chat-APIs 
-However, a full implementation of the protocol requires the use of the
-polyproto-chat routes. 
-
-!!! info
-    polyproto provides no chat-interoperability if you do not use the polyproto-chat API.
+The polyproto-core federation protocol can be used for any kind of online service, enabling you to
+bring federated identities to your federated social network, federated chat service or federated
+$ANYTHING.
 
 ---
 

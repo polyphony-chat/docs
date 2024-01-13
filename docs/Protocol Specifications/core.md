@@ -1,5 +1,6 @@
 ---
-title: Protocol Specification
+title: polyproto-core
+weight: 0
 ---
 
 

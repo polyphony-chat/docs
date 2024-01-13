@@ -146,7 +146,7 @@ Fig. 1: Sequence diagram of a WebSocket connection to a polyproto-core server.
 
 !!! info
 
-    To learn more about polyproto-core WebSockets and WebSocket Events, consult the [WebSockets documentation](/docs/APIs/Core/Server-Client%20API/WebSockets/index.md).
+    To learn more about polyproto-core WebSockets and WebSocket Events, consult the [WebSockets documentation](/docs/APIs/Core/WebSockets/index.md).
 
 ## 3. Federated Identity
 
