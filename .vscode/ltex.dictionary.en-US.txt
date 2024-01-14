@@ -9,3 +9,4 @@ KeyPackages
 WebSocket
 KeyPackage
 $ANYTHING
+cURL

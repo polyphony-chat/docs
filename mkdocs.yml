@@ -66,6 +66,7 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.inlinehilite
   - pymdownx.snippets
+  - pymdownx.details
   - pymdownx.tabbed:
       alternate_style: true
       combine_header_slug: true

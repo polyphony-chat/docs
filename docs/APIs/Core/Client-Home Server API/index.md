@@ -1,214 +1,73 @@
 ---
-title: Server-Client API Routes
+title: Client-Home Server API Routes
 ---
+
+All API endpoints needed for Client-Home Server communication.
+A "Client" in this context is a user or bot client.
+This Page only includes routes which a client can request from its home server. For routes which
+can also be accessed from a foreign server, or with no authentication at all, see the
+[Client-Foreign Server API documentation](../Client-Foreign%20Server%20API/index.md)
 
 --8<-- "snippets/api.md"
 
-## Federation tokens
+## <span class="group-h">Federation tokens</span>
 
 Routes concerning the creation, deletion and management of federation tokens.
 
 ---
 
-### <span class="request-h"><span class="request request-get">GET</span> Generate Federation Token [:material-pail-outline:](../rate-limits.md "Bucket: federation-token-generation") [:material-lock-outline:](#authorization "Authorization required") </span> 
+### <span class="request-h"><span class="request request-post">POST</span> Generate Federation Token [:material-lock-outline:](#authorization "Authorization required") </span>
 
-`http://localhost:3001/api/federation/token`
-
-Ask your home server to generate a federation token for you. You can use this token to identify yourself on another server.
-
-Federation tokens are signed using the home server's public signing key, so that other servers can verify its authenticity.
+`/p2core/token`
 
 #### Request
 
 ##### Body
 
-| Name     | Type     | Description                                             |
-| -------- | -------- | ------------------------------------------------------- |
-| `server` | `String` | The URL of the server the token should be generated for |
+| Name     | Type   | Description                                             |
+| -------- | ------ | ------------------------------------------------------- |
+| `server` | String | The URL of the server the token should be generated for |
 
 ```json
 {
-    "server": "https://server.example.com"
+    "server", "https://someserver.example.com"
 }
 ```
 
-#### Response
-
-=== "200 OK"
-
-    ##### Body
-
-    | Name | Type                                                  | Description                    |
-    | ---- | ----------------------------------------------------- | ------------------------------ |
-    | -*   | [`Federation Token`](../types.md#federation-token) | The generated federation token |
-
-    ```json
-    "exampletoken"
-    ```
-
---8<-- "snippets/errors/401-unauthorized.md"
-
---8<-- "snippets/errors/404-not_federated.md"
-
----
-
-### <span class="request-h"><span class="request request-get">GET</span> Get token generation status [:material-pail-outline:](../rate-limits.md "Bucket: ip/global") [:material-lock-open-outline:](#authorization "Authorization not required")</span>
-
-`http://localhost:3001/api/federation/generation`
-
-Check whether the server currently allows token generation.
-
-#### Request
+##### cURL
 
 ```bash
-curl --request GET \
-     --url http://localhost:3001/api/federation/token/generation \
-     --header 'Authorization: Bearer exampletoken'
+curl -X POST https://example.com/p2core/token \
+-H 'Authorization: Bearer <your_token>' \
+-H 'Content-Type: application/json' \
+-d '{"server":"https://someserver.example.com"}'
 ```
 
 #### Response
 
-=== "200 OK"
+=== "201 Created"
 
-    ##### Body
+##### Body
 
-    A key-value pair indicating whether token generation is enabled using a boolean.
+The generated Federation Token
 
-    ```json
-    {
-        "enabled": true
-    }
-    ```
-
----
-
-### <span class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens for self [:material-pail-outline:](../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required")</span>
-
-`http://localhost:3001/api/federation/token/@me`
-
-Ask your home server to invalidate all federation tokens which have been created for you and are still valid (unused). Doing this manually is not usually required.
-
-#### Request
-
-```bash
-curl --request DELETE \
-     --url http://localhost:3001/api/federation/token/@me \
-     --header 'Authorization: Bearer exampletoken'
+```json
+"aC73Bd8Klaq51Ghmla84Aui..."
 ```
 
-#### Response
-
-=== "200 OK"
-
-    ##### Body
-
-    A JSON array of all the tokens that have been deleted.
-
-    ```json
-    [
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmF0aW9uIjoxMjM0NTY3ODkwLCJmb3JfZmVkZXJhdGlvbl9pZCI6ImV4YW1wbGVAc2VydmVyLmV4YW1wbGUuY29tIiwiZm9yX2F1dGhlbnRpY2F0aW9uX29uIjoib3RoZXJzZXJ2ZXIuZXhhbXBsZS5jb20iLCJub25jZSI6ImV4YW1wbGVub25jZSJ9.3NBVGBU65PzoeZXHtaN-HDxXUxhdkJTXtTjnxL_5tgw",
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmF0aW9uIjoxMjM0NTY3ODkwLCJmb3JfZmVkZXJhdGlvbl9pZCI6ImV4YW1wbGVAc2VydmVyLmV4YW1wbGUuY29tIiwiZm9yX2F1dGhlbnRpY2F0aW9uX29uIjoieWV0YW5vdGhlcnNlcnZlci5leGFtcGxlLmNvbSIsIm5vbmNlIjoiYW5vdGhlcmV4YW1wbGVub25jZSJ9.yGx6abxh_fTWQmx0KrWlTz9GviaF_F34ADR9z06i2eM"
-    ]
-    ```
-
---8<-- "snippets/errors/401-unauthorized.md"
-
 ---
 
-### <span class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens for user [:material-pail-outline:](../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</span>
+### <span class="request-h"><span class="request request-put">PUT</span> Manage Token Generation Status [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</span>
 
-`http://localhost:3001/api/federation/token/:user_id/@all`
-
-Revoke all valid federation tokens for a specific user.
-
-#### Path Variables
-
-| Name      | Type        | Description                                        |
-| --------- | ----------- | -------------------------------------------------- |
-| `user_id` | [`Snowflake`](../types.md#snowflake) | The ID of the user whose tokens should be revoked. |
-
-#### Request
-
-```bash
-curl --request DELETE \
-     --url http://localhost:3001/api/federation/token/:user_id/@all \
-     --header 'Authorization: Bearer exampletoken'
-```
-
-#### Response
-
-=== "200 OK"
-
-    ##### Body
-
-    An unsigned integer indicating the number of tokens that have been deleted.
-
-    ```json
-    12
-    ```
-
---8<-- "snippets/errors/401-unauthorized.md"
-
---8<-- "snippets/errors/403-not_administrator.md"
-
-=== "404 Not Found"
-
-    ##### Body
-
-    ```json
-    {
-        "message": "User not found"
-    }
-    ```
-
-
----
-
-### <span class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens [:material-pail-outline:](../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</span>
-
-`http://localhost:3001/api/federation/token/@all`
-
-Revoke all valid federation tokens.
-
-#### Request
-
-```bash
-curl --request DELETE \
-     --url http://localhost:3001/api/federation/token/@all \
-     --header 'Authorization: Bearer exampletoken'
-```
-
-#### Response
-
-=== "200 OK"
-
-    ##### Body
-
-    An unsigned integer indicating the number of tokens that have been deleted.
-
-    ```json
-    421
-    ```
-
---8<-- "snippets/errors/401-unauthorized.md"
-
---8<-- "snippets/errors/403-not_administrator.md"
-
----
-
-### <span class="request-h"><span class="request request-put">PUT</span> Manage token generation [:material-pail-outline:](../rate-limits.md "Bucket: ip/global") [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</span>
-
-`http://localhost:3001/api/federation/token/generation`
-
-Enable or disable token generation. When disabled, the server will not allow the creation of new federation tokens.
+`/p2core/token/status`
 
 #### Request
 
 ##### Body
 
-| Name      | Type | Description                                               |
-| --------- | ---- | --------------------------------------------------------- |
-| `enabled` | bool | `true` to enable token generation, `false` to disable it. |
+| Name      | Type    | Description                                                                |
+| --------- | ------- | -------------------------------------------------------------------------- |
+| `enabled` | boolean | Whether this server should accept new federation token generation requests |
 
 ```json
 {
@@ -220,51 +79,182 @@ Enable or disable token generation. When disabled, the server will not allow the
 
 === "204 No Content"
 
-    No response body.
+##### Body
 
---8<-- "snippets/errors/401-unauthorized.md"
-
---8<-- "snippets/errors/403-not_administrator.md"
+This response has no body.
 
 ---
 
-## Federated Identity
+### <span class="request-h"><span class="request request-delete">DELETE</span> Federation Tokens for Self [:material-lock-outline:](#authorization "Authorization required")</span>
 
-Routes concerning identifying and authenticating as a user on another server.
-
----
-
-### <span class="request-h"><span class="request request-post">POST</span> Generate session token [:material-pail-outline:](../rate-limits.md "Bucket: auth/login") [:material-lock-open-outline:](#authorization "Authorization not required")</span>
-
-`http://localhost:3001/api/federation/session`
-
-Get a session token to authenticate as a foreign user on this server.
+`/p2core/token/@me`
 
 #### Request
 
 ##### Body
 
-| Name                        | Type                                                      | Description                                                            |
-| --------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------- |
-| `federation_token`          | [Federation token](../types.md#federation-token)       | A valid federation token generated by the clients' home server         |
-| `public_profile` (optional) | [Public user profile](../types.md#public-user-profile) | The users' public user profile. Required on first connection to server |
+This request has no body.
 
-!!! bug "TODO"
+#### Response
 
-    TODO: Add cURL example
+=== "204 No Content"
+
+##### Body
+
+| Type | Description                              |
+| ---- | ---------------------------------------- |
+| uint | The number of deleted federation tokens. |
+
+```json
+3
+```
+
+---
+
+### <span class="request-h"><span class="request request-delete">DELETE</span> Federation Tokens for User [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</span>
+
+`/p2core/token/:user_id`
+
+#### Request
+
+##### Parameters
+
+| Name      | Type      | Description                                     |
+| --------- | --------- | ----------------------------------------------- |
+| `user_id` | Snowflake | `user_id` to delete all generation tokens from. |
+
+##### Body 
+
+This request has no body.
+
+#### Response
+
+=== "204 No Content"
+
+##### Body
+
+This response has no body.
+
+---
+
+### <span class="request-h"><span class="request request-delete">DELETE</span> Federation Tokens for everyone [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</span>
+
+`/p2core/token/@all`
+
+#### Request
+
+##### Body 
+
+This request has no body.
+
+#### Response
+
+=== "204 No Content"
+
+##### Body
+
+This response has no body.
+
+---
+
+## <span class="group-h">Federated Identity</span>
+
+Client-Home Server API endpoints which are concerned with Federated Identity, managing keys, etc.
+
+---
+
+### <span class="request-h"><span class="request request-post">POST</span> Rotate session ID-Cert [:material-lock-outline:](#authorization "Authorization required")</span>
+
+`/p2core/key/user/@me`
+
+!!! info
+
+    This endpoint has a twin, which can be accessed by any server, not just the home server of the user.
+    See [Client-Foreign Server API/Rotate session ID-Cert](../Client-Foreign%20Server%20API/index.md#post-rotate-session-id-cert) for more information.
+
+#### Request
+
+##### Body
+
+| Type | Description |
+| ---- | ----------- |
+| String | The client's public key, encoded in ASCII |
+
+```json
+"-----BEGIN PGP PUBLIC KEY BLOCK-----
+mQINBGSDs58BEADCXP1ArorBtOvGnQdAD26gsOMasyLMqnJyUp8XXCdmTx5+gREs
+vtItmjIshHU6CLUyTwO2IqIb2Fds+AmDsdM1Qx/vM0fVtPAS13T3Tu9rknldJvvN
+GyT3urrgvZ1leqQnwvuHd3WMdtgQ29lc7F/XaP4v2RIlqUiV+bnBoe/6LL7HXTaW
+zy2oKXr/odOD4+476J5APxxXCWVLXr3qfAXmSBQERznYuuRmhyL...
+-----END PGP PUBLIC KEY BLOCK-----"
+```
 
 #### Response
 
 === "201 Created"
 
-    ##### Body
+##### Body
 
-    | Name            | Type     | Description                                              |
-    | --------------- | -------- | -------------------------------------------------------- |
-    | `session_token` | `String` | The session token that has been generated for the client |
+| Type   | Description                                                          |
+| ------ | -------------------------------------------------------------------- |
+| String | The server generated ID-Cert for this public key, encoded in Base64. |
 
-    ```json
-    {
-        "session_token": "exampletoken"
-    }
-    ```
+```json
+"LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWS0tLS0tCk1JSUJqRENDQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYm..."
+```
+
+---
+
+### <span class="request-h"><span class="request request-post">POST</span> Add KeyPackage [:material-lock-outline:](#authorization "Authorization required")</span>
+
+`/p2core/keypackage/@me`
+
+#### Request
+
+##### Body
+
+| Type | Description |
+| ---- | ----------- |
+| JSON-Array of KeyPackages | One or more KeyPackages to add to the available KeyPackages for this user. |
+
+```json
+[ {...}, {...} ]
+```
+
+#### Response
+
+=== "201 Created"
+
+##### Body
+
+This response has no body.
+
+---
+
+### <span class="request-h"><span class="request request-put">PUT</span> Replace Last Resort KeyPackage [:material-lock-outline:](#authorization "Authorization required")</span>
+
+`/p2core/keypackage_lr`
+
+#### Request
+
+##### Body
+
+| Type | Description |
+| ---- | ----------- |
+| KeyPackage | The KeyPackage to replace the current Last Resort KeyPackage with. |
+
+```json
+{...}
+```
+
+#### Response
+
+=== "204 No Content"
+
+##### Body
+
+This response has no body.
+
+---
+
+--8<-- "snippets/glossary.md"
