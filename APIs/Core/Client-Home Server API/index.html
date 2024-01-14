@@ -20,7 +20,7 @@
     
     
       
-        <title>Server-Client API Routes - Polyphony</title>
+        <title>Client-Home Server API Routes - Polyphony</title>
       
     
     
@@ -111,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Server-Client API Routes
+              Client-Home Server API Routes
             
           </span>
         </div>
@@ -969,15 +969,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#server" class="md-nav__link">
-    <span class="md-ellipsis">
-      Server
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#errors" class="md-nav__link">
     <span class="md-ellipsis">
       Errors
@@ -997,13 +988,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#get-generate-federation-token" class="md-nav__link">
+  <a href="#post-generate-federation-token" class="md-nav__link">
     <span class="md-ellipsis">
-      GET Generate Federation Token   
+      POST Generate Federation Token  
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="GET Generate Federation Token">
+    <nav class="md-nav" aria-label="POST Generate Federation Token">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1030,13 +1021,13 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#get-get-token-generation-status" class="md-nav__link">
+  <a href="#put-manage-token-generation-status" class="md-nav__link">
     <span class="md-ellipsis">
-      GET Get token generation status  
+      PUT Manage Token Generation Status  
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="GET Get token generation status">
+    <nav class="md-nav" aria-label="PUT Manage Token Generation Status">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1063,13 +1054,13 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#delete-delete-all-federation-tokens-for-self" class="md-nav__link">
+  <a href="#delete-federation-tokens-for-self" class="md-nav__link">
     <span class="md-ellipsis">
-      DELETE Delete all Federation Tokens for self  
+      DELETE Federation Tokens for Self 
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="DELETE Delete all Federation Tokens for self">
+    <nav class="md-nav" aria-label="DELETE Federation Tokens for Self">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1096,23 +1087,14 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#delete-delete-all-federation-tokens-for-user" class="md-nav__link">
+  <a href="#delete-federation-tokens-for-user" class="md-nav__link">
     <span class="md-ellipsis">
-      DELETE Delete all Federation Tokens for user   
+      DELETE Federation Tokens for User  
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="DELETE Delete all Federation Tokens for user">
+    <nav class="md-nav" aria-label="DELETE Federation Tokens for User">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#path-variables" class="md-nav__link">
-    <span class="md-ellipsis">
-      Path Variables
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#request_3" class="md-nav__link">
@@ -1138,13 +1120,13 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#delete-delete-all-federation-tokens" class="md-nav__link">
+  <a href="#delete-federation-tokens-for-everyone" class="md-nav__link">
     <span class="md-ellipsis">
-      DELETE Delete all Federation Tokens   
+      DELETE Federation Tokens for everyone  
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="DELETE Delete all Federation Tokens">
+    <nav class="md-nav" aria-label="DELETE Federation Tokens for everyone">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1158,39 +1140,6 @@
         
           <li class="md-nav__item">
   <a href="#response_4" class="md-nav__link">
-    <span class="md-ellipsis">
-      Response
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#put-manage-token-generation" class="md-nav__link">
-    <span class="md-ellipsis">
-      PUT Manage token generation   
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="PUT Manage token generation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#request_5" class="md-nav__link">
-    <span class="md-ellipsis">
-      Request
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#response_5" class="md-nav__link">
     <span class="md-ellipsis">
       Response
     </span>
@@ -1219,13 +1168,46 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#post-generate-session-token" class="md-nav__link">
+  <a href="#post-rotate-session-id-cert" class="md-nav__link">
     <span class="md-ellipsis">
-      POST Generate session token  
+      POST Rotate session ID-Cert 
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="POST Generate session token">
+    <nav class="md-nav" aria-label="POST Rotate session ID-Cert">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#request_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Request
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Response
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-add-keypackage" class="md-nav__link">
+    <span class="md-ellipsis">
+      POST Add KeyPackage 
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="POST Add KeyPackage">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1251,8 +1233,50 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#put-replace-last-resort-keypackage" class="md-nav__link">
+    <span class="md-ellipsis">
+      PUT Replace Last Resort KeyPackage 
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PUT Replace Last Resort KeyPackage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#request_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Request
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Response
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Glossary
+    </span>
+  </a>
   
 </li>
       
@@ -1274,21 +1298,22 @@
   
 
 
-  <h1>Server-Client API Routes</h1>
+  <h1>Client-Home Server API Routes</h1>
 
+<p>All API endpoints needed for Client-Home Server communication.
+A "Client" in this context is a user or bot client.
+This Page only includes routes which a client can request from its home server. For routes which
+can also be accessed from a foreign server, or with no authentication at all, see the
+<a href="../Client-Foreign%20Server%20API/">Client-Foreign Server API documentation</a></p>
 <h3 id="authorization">Authorization<a class="headerlink" href="#authorization" title="Permanent link">&para;</a></h3>
 <p><strong>Bearer token</strong>, unless specified otherwise.</p>
-<h3 id="server">Server<a class="headerlink" href="#server" title="Permanent link">&para;</a></h3>
-<p><code>http://localhost:3001/api</code></p>
 <h3 id="errors">Errors<a class="headerlink" href="#errors" title="Permanent link">&para;</a></h3>
 <p>The errors listed below are not exhaustive, and only include the most common errors associated with an endpoint. For rate limit errors, see the Rate Limits documentation.</p>
-<h2 id="federation-tokens">Federation tokens<a class="headerlink" href="#federation-tokens" title="Permanent link">&para;</a></h2>
+<h2 id="federation-tokens"><span class="group-h">Federation tokens</span><a class="headerlink" href="#federation-tokens" title="Permanent link">&para;</a></h2>
 <p>Routes concerning the creation, deletion and management of federation tokens.</p>
 <hr />
-<h3 id="get-generate-federation-token"><span class="request-h"><span class="request request-get">GET</span> Generate Federation Token <a href="../rate-limits/" title="Bucket: federation-token-generation"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.5 7.63a.976.976 0 0 1 1.36.37c.28.47.11 1.09-.36 1.36l-8.23 4.75a.998.998 0 1 1-1-1.73l8.23-4.75M3 4v2h1l.65 3.27L6.5 8.22 6.04 6h11.92l-2.6 13H8.64l-.91-4.57L5.9 15.5 7 21h10l3-15h1V4H3Z"/></svg></span></a> <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a> </span><a class="headerlink" href="#get-generate-federation-token" title="Permanent link">&para;</a></h3>
-<p><code>http://localhost:3001/api/federation/token</code></p>
-<p>Ask your home server to generate a federation token for you. You can use this token to identify yourself on another server.</p>
-<p>Federation tokens are signed using the home server's public signing key, so that other servers can verify its authenticity.</p>
+<h3 id="post-generate-federation-token"><span class="request-h"><span class="request request-post">POST</span> Generate Federation Token <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a> </span><a class="headerlink" href="#post-generate-federation-token" title="Permanent link">&para;</a></h3>
+<p><code>/p2core/token</code></p>
 <h4 id="request">Request<a class="headerlink" href="#request" title="Permanent link">&para;</a></h4>
 <h5 id="body">Body<a class="headerlink" href="#body" title="Permanent link">&para;</a></h5>
 <table>
@@ -1302,195 +1327,36 @@
 <tbody>
 <tr>
 <td><code>server</code></td>
-<td><code>String</code></td>
+<td>String</td>
 <td>The URL of the server the token should be generated for</td>
 </tr>
 </tbody>
 </table>
 <div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">&quot;server&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://server.example.com&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="s2">&quot;server&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;https://someserver.example.com&quot;</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">}</span>
 </code></pre></div>
+<h5 id="curl">cURL<a class="headerlink" href="#curl" title="Permanent link">&para;</a></h5>
+<div class="language-bash highlight"><span class="filename">Bash</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://example.com/p2core/token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>-H<span class="w"> </span><span class="s1">&#39;Authorization: Bearer &lt;your_token&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>-d<span class="w"> </span><span class="s1">&#39;{&quot;server&quot;:&quot;https://someserver.example.com&quot;}&#39;</span>
+</code></pre></div>
 <h4 id="response">Response<a class="headerlink" href="#response" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">200 OK</label><label for="__tabbed_1_2">401 Unauthorized</label><label for="__tabbed_1_3">404 Not Found</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">201 Created</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block">
+<div class="tabbed-block"></div>
+</div>
+</div>
 <h5 id="body_1">Body<a class="headerlink" href="#body_1" title="Permanent link">&para;</a></h5>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>-*</td>
-<td><a href="../types/#federation-token"><code>Federation Token</code></a></td>
-<td>The generated federation token</td>
-</tr>
-</tbody>
-</table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="s2">&quot;exampletoken&quot;</span>
+<p>The generated Federation Token</p>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="s2">&quot;aC73Bd8Klaq51Ghmla84Aui...&quot;</span>
 </code></pre></div>
-</div>
-<div class="tabbed-block">
-<p>Returned if the request does not contain a valid access token.</p>
-</div>
-<div class="tabbed-block">
-<p>Returned if the requested server does not exist or is not federated.</p>
-<h5 id="body_2">Body<a class="headerlink" href="#body_2" title="Permanent link">&para;</a></h5>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nt">&quot;errcode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">404</span><span class="p">,</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;P2CORE_NOT_FEDERATED&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">}</span>
-</code></pre></div>
-</div>
-</div>
-</div>
 <hr />
-<h3 id="get-get-token-generation-status"><span class="request-h"><span class="request request-get">GET</span> Get token generation status <a href="../rate-limits/" title="Bucket: ip/global"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.5 7.63a.976.976 0 0 1 1.36.37c.28.47.11 1.09-.36 1.36l-8.23 4.75a.998.998 0 1 1-1-1.73l8.23-4.75M3 4v2h1l.65 3.27L6.5 8.22 6.04 6h11.92l-2.6 13H8.64l-.91-4.57L5.9 15.5 7 21h10l3-15h1V4H3Z"/></svg></span></a> <a href="#authorization" title="Authorization not required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 20V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h9V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3H7a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6 9a2 2 0 0 1-2-2 2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1-2 2Z"/></svg></span></a></span><a class="headerlink" href="#get-get-token-generation-status" title="Permanent link">&para;</a></h3>
-<p><code>http://localhost:3001/api/federation/generation</code></p>
-<p>Check whether the server currently allows token generation.</p>
+<h3 id="put-manage-token-generation-status"><span class="request-h"><span class="request request-put">PUT</span> Manage Token Generation Status <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a> <a href="" title="This route is only available to server administrators"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 1 9 4v6c0 5.55-3.84 10.74-9 12-5.16-1.26-9-6.45-9-12V5l9-4m0 2.18L5 6.3v4.92C5 15.54 8.25 20 12 21c3.75-1 7-5.46 7-9.78V6.3l-7-3.12M16 14v1.59c-.04.22-.22.37-.47.41H8.47c-.25-.04-.43-.19-.47-.41V14h8m1-6-1 5H8L7 8l2.67 2.67L12 8.34l2.33 2.33L17 8Z"/></svg></span></a></span><a class="headerlink" href="#put-manage-token-generation-status" title="Permanent link">&para;</a></h3>
+<p><code>/p2core/token/status</code></p>
 <h4 id="request_1">Request<a class="headerlink" href="#request_1" title="Permanent link">&para;</a></h4>
-<div class="language-bash highlight"><span class="filename">Bash</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>--request<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">     </span>--url<span class="w"> </span>http://localhost:3001/api/federation/token/generation<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">     </span>--header<span class="w"> </span><span class="s1">&#39;Authorization: Bearer exampletoken&#39;</span>
-</code></pre></div>
-<h4 id="response_1">Response<a class="headerlink" href="#response_1" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">200 OK</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<h5 id="body_3">Body<a class="headerlink" href="#body_3" title="Permanent link">&para;</a></h5>
-<p>A key-value pair indicating whether token generation is enabled using a boolean.</p>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="p">}</span>
-</code></pre></div>
-</div>
-</div>
-</div>
-<hr />
-<h3 id="delete-delete-all-federation-tokens-for-self"><span class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens for self <a href="../rate-limits/" title="Bucket: ip/global"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.5 7.63a.976.976 0 0 1 1.36.37c.28.47.11 1.09-.36 1.36l-8.23 4.75a.998.998 0 1 1-1-1.73l8.23-4.75M3 4v2h1l.65 3.27L6.5 8.22 6.04 6h11.92l-2.6 13H8.64l-.91-4.57L5.9 15.5 7 21h10l3-15h1V4H3Z"/></svg></span></a> <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a></span><a class="headerlink" href="#delete-delete-all-federation-tokens-for-self" title="Permanent link">&para;</a></h3>
-<p><code>http://localhost:3001/api/federation/token/@me</code></p>
-<p>Ask your home server to invalidate all federation tokens which have been created for you and are still valid (unused). Doing this manually is not usually required.</p>
-<h4 id="request_2">Request<a class="headerlink" href="#request_2" title="Permanent link">&para;</a></h4>
-<div class="language-bash highlight"><span class="filename">Bash</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>--request<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">     </span>--url<span class="w"> </span>http://localhost:3001/api/federation/token/@me<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">     </span>--header<span class="w"> </span><span class="s1">&#39;Authorization: Bearer exampletoken&#39;</span>
-</code></pre></div>
-<h4 id="response_2">Response<a class="headerlink" href="#response_2" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">200 OK</label><label for="__tabbed_3_2">401 Unauthorized</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<h5 id="body_4">Body<a class="headerlink" href="#body_4" title="Permanent link">&para;</a></h5>
-<p>A JSON array of all the tokens that have been deleted.</p>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">[</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="s2">&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmF0aW9uIjoxMjM0NTY3ODkwLCJmb3JfZmVkZXJhdGlvbl9pZCI6ImV4YW1wbGVAc2VydmVyLmV4YW1wbGUuY29tIiwiZm9yX2F1dGhlbnRpY2F0aW9uX29uIjoib3RoZXJzZXJ2ZXIuZXhhbXBsZS5jb20iLCJub25jZSI6ImV4YW1wbGVub25jZSJ9.3NBVGBU65PzoeZXHtaN-HDxXUxhdkJTXtTjnxL_5tgw&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="s2">&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmF0aW9uIjoxMjM0NTY3ODkwLCJmb3JfZmVkZXJhdGlvbl9pZCI6ImV4YW1wbGVAc2VydmVyLmV4YW1wbGUuY29tIiwiZm9yX2F1dGhlbnRpY2F0aW9uX29uIjoieWV0YW5vdGhlcnNlcnZlci5leGFtcGxlLmNvbSIsIm5vbmNlIjoiYW5vdGhlcmV4YW1wbGVub25jZSJ9.yGx6abxh_fTWQmx0KrWlTz9GviaF_F34ADR9z06i2eM&quot;</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">]</span>
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<p>Returned if the request does not contain a valid access token.</p>
-</div>
-</div>
-</div>
-<hr />
-<h3 id="delete-delete-all-federation-tokens-for-user"><span class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens for user <a href="../rate-limits/" title="Bucket: ip/global"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.5 7.63a.976.976 0 0 1 1.36.37c.28.47.11 1.09-.36 1.36l-8.23 4.75a.998.998 0 1 1-1-1.73l8.23-4.75M3 4v2h1l.65 3.27L6.5 8.22 6.04 6h11.92l-2.6 13H8.64l-.91-4.57L5.9 15.5 7 21h10l3-15h1V4H3Z"/></svg></span></a> <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a> <a href="" title="This route is only available to server administrators"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 1 9 4v6c0 5.55-3.84 10.74-9 12-5.16-1.26-9-6.45-9-12V5l9-4m0 2.18L5 6.3v4.92C5 15.54 8.25 20 12 21c3.75-1 7-5.46 7-9.78V6.3l-7-3.12M16 14v1.59c-.04.22-.22.37-.47.41H8.47c-.25-.04-.43-.19-.47-.41V14h8m1-6-1 5H8L7 8l2.67 2.67L12 8.34l2.33 2.33L17 8Z"/></svg></span></a></span><a class="headerlink" href="#delete-delete-all-federation-tokens-for-user" title="Permanent link">&para;</a></h3>
-<p><code>http://localhost:3001/api/federation/token/:user_id/@all</code></p>
-<p>Revoke all valid federation tokens for a specific user.</p>
-<h4 id="path-variables">Path Variables<a class="headerlink" href="#path-variables" title="Permanent link">&para;</a></h4>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>user_id</code></td>
-<td><a href="../types/#snowflake"><code>Snowflake</code></a></td>
-<td>The ID of the user whose tokens should be revoked.</td>
-</tr>
-</tbody>
-</table>
-<h4 id="request_3">Request<a class="headerlink" href="#request_3" title="Permanent link">&para;</a></h4>
-<div class="language-bash highlight"><span class="filename">Bash</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>--request<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">     </span>--url<span class="w"> </span>http://localhost:3001/api/federation/token/:user_id/@all<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">     </span>--header<span class="w"> </span><span class="s1">&#39;Authorization: Bearer exampletoken&#39;</span>
-</code></pre></div>
-<h4 id="response_3">Response<a class="headerlink" href="#response_3" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="4:4"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><input id="__tabbed_4_3" name="__tabbed_4" type="radio" /><input id="__tabbed_4_4" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">200 OK</label><label for="__tabbed_4_2">401 Unauthorized</label><label for="__tabbed_4_3">403 Forbidden</label><label for="__tabbed_4_4">404 Not Found</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<h5 id="body_5">Body<a class="headerlink" href="#body_5" title="Permanent link">&para;</a></h5>
-<p>An unsigned integer indicating the number of tokens that have been deleted.</p>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="mi">12</span>
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<p>Returned if the request does not contain a valid access token.</p>
-</div>
-<div class="tabbed-block">
-<p>Returned if the user is not a server administrator.</p>
-<h5 id="body_6">Body<a class="headerlink" href="#body_6" title="Permanent link">&para;</a></h5>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">    </span><span class="nt">&quot;errcode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">403</span><span class="p">,</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;P2CORE_NOT_ADMINISTRATOR&quot;</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="p">}</span>
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<h5 id="body_7">Body<a class="headerlink" href="#body_7" title="Permanent link">&para;</a></h5>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;User not found&quot;</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="p">}</span>
-</code></pre></div>
-</div>
-</div>
-</div>
-<hr />
-<h3 id="delete-delete-all-federation-tokens"><span class="request-h"><span class="request request-delete">DELETE</span> Delete all Federation Tokens <a href="../rate-limits/" title="Bucket: ip/global"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.5 7.63a.976.976 0 0 1 1.36.37c.28.47.11 1.09-.36 1.36l-8.23 4.75a.998.998 0 1 1-1-1.73l8.23-4.75M3 4v2h1l.65 3.27L6.5 8.22 6.04 6h11.92l-2.6 13H8.64l-.91-4.57L5.9 15.5 7 21h10l3-15h1V4H3Z"/></svg></span></a> <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a> <a href="" title="This route is only available to server administrators"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 1 9 4v6c0 5.55-3.84 10.74-9 12-5.16-1.26-9-6.45-9-12V5l9-4m0 2.18L5 6.3v4.92C5 15.54 8.25 20 12 21c3.75-1 7-5.46 7-9.78V6.3l-7-3.12M16 14v1.59c-.04.22-.22.37-.47.41H8.47c-.25-.04-.43-.19-.47-.41V14h8m1-6-1 5H8L7 8l2.67 2.67L12 8.34l2.33 2.33L17 8Z"/></svg></span></a></span><a class="headerlink" href="#delete-delete-all-federation-tokens" title="Permanent link">&para;</a></h3>
-<p><code>http://localhost:3001/api/federation/token/@all</code></p>
-<p>Revoke all valid federation tokens.</p>
-<h4 id="request_4">Request<a class="headerlink" href="#request_4" title="Permanent link">&para;</a></h4>
-<div class="language-bash highlight"><span class="filename">Bash</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>curl<span class="w"> </span>--request<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">     </span>--url<span class="w"> </span>http://localhost:3001/api/federation/token/@all<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">     </span>--header<span class="w"> </span><span class="s1">&#39;Authorization: Bearer exampletoken&#39;</span>
-</code></pre></div>
-<h4 id="response_4">Response<a class="headerlink" href="#response_4" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="5:3"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><input id="__tabbed_5_3" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">200 OK</label><label for="__tabbed_5_2">401 Unauthorized</label><label for="__tabbed_5_3">403 Forbidden</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<h5 id="body_8">Body<a class="headerlink" href="#body_8" title="Permanent link">&para;</a></h5>
-<p>An unsigned integer indicating the number of tokens that have been deleted.</p>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="mi">421</span>
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<p>Returned if the request does not contain a valid access token.</p>
-</div>
-<div class="tabbed-block">
-<p>Returned if the user is not a server administrator.</p>
-<h5 id="body_9">Body<a class="headerlink" href="#body_9" title="Permanent link">&para;</a></h5>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">    </span><span class="nt">&quot;errcode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">403</span><span class="p">,</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;P2CORE_NOT_ADMINISTRATOR&quot;</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="p">}</span>
-</code></pre></div>
-</div>
-</div>
-</div>
-<hr />
-<h3 id="put-manage-token-generation"><span class="request-h"><span class="request request-put">PUT</span> Manage token generation <a href="../rate-limits/" title="Bucket: ip/global"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.5 7.63a.976.976 0 0 1 1.36.37c.28.47.11 1.09-.36 1.36l-8.23 4.75a.998.998 0 1 1-1-1.73l8.23-4.75M3 4v2h1l.65 3.27L6.5 8.22 6.04 6h11.92l-2.6 13H8.64l-.91-4.57L5.9 15.5 7 21h10l3-15h1V4H3Z"/></svg></span></a> <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a> <a href="" title="This route is only available to server administrators"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 1 9 4v6c0 5.55-3.84 10.74-9 12-5.16-1.26-9-6.45-9-12V5l9-4m0 2.18L5 6.3v4.92C5 15.54 8.25 20 12 21c3.75-1 7-5.46 7-9.78V6.3l-7-3.12M16 14v1.59c-.04.22-.22.37-.47.41H8.47c-.25-.04-.43-.19-.47-.41V14h8m1-6-1 5H8L7 8l2.67 2.67L12 8.34l2.33 2.33L17 8Z"/></svg></span></a></span><a class="headerlink" href="#put-manage-token-generation" title="Permanent link">&para;</a></h3>
-<p><code>http://localhost:3001/api/federation/token/generation</code></p>
-<p>Enable or disable token generation. When disabled, the server will not allow the creation of new federation tokens.</p>
-<h4 id="request_5">Request<a class="headerlink" href="#request_5" title="Permanent link">&para;</a></h4>
-<h5 id="body_10">Body<a class="headerlink" href="#body_10" title="Permanent link">&para;</a></h5>
+<h5 id="body_2">Body<a class="headerlink" href="#body_2" title="Permanent link">&para;</a></h5>
 <table>
 <thead>
 <tr>
@@ -1502,97 +1368,226 @@
 <tbody>
 <tr>
 <td><code>enabled</code></td>
-<td>bool</td>
-<td><code>true</code> to enable token generation, <code>false</code> to disable it.</td>
+<td>boolean</td>
+<td>Whether this server should accept new federation token generation requests</td>
 </tr>
 </tbody>
 </table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="p">{</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="p">}</span>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">}</span>
+</code></pre></div>
+<h4 id="response_1">Response<a class="headerlink" href="#response_1" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">204 No Content</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block"></div>
+</div>
+</div>
+<h5 id="body_3">Body<a class="headerlink" href="#body_3" title="Permanent link">&para;</a></h5>
+<p>This response has no body.</p>
+<hr />
+<h3 id="delete-federation-tokens-for-self"><span class="request-h"><span class="request request-delete">DELETE</span> Federation Tokens for Self <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a></span><a class="headerlink" href="#delete-federation-tokens-for-self" title="Permanent link">&para;</a></h3>
+<p><code>/p2core/token/@me</code></p>
+<h4 id="request_2">Request<a class="headerlink" href="#request_2" title="Permanent link">&para;</a></h4>
+<h5 id="body_4">Body<a class="headerlink" href="#body_4" title="Permanent link">&para;</a></h5>
+<p>This request has no body.</p>
+<h4 id="response_2">Response<a class="headerlink" href="#response_2" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:1"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">204 No Content</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block"></div>
+</div>
+</div>
+<h5 id="body_5">Body<a class="headerlink" href="#body_5" title="Permanent link">&para;</a></h5>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>uint</td>
+<td>The number of deleted federation tokens.</td>
+</tr>
+</tbody>
+</table>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="mi">3</span>
+</code></pre></div>
+<hr />
+<h3 id="delete-federation-tokens-for-user"><span class="request-h"><span class="request request-delete">DELETE</span> Federation Tokens for User <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a> <a href="" title="This route is only available to server administrators"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 1 9 4v6c0 5.55-3.84 10.74-9 12-5.16-1.26-9-6.45-9-12V5l9-4m0 2.18L5 6.3v4.92C5 15.54 8.25 20 12 21c3.75-1 7-5.46 7-9.78V6.3l-7-3.12M16 14v1.59c-.04.22-.22.37-.47.41H8.47c-.25-.04-.43-.19-.47-.41V14h8m1-6-1 5H8L7 8l2.67 2.67L12 8.34l2.33 2.33L17 8Z"/></svg></span></a></span><a class="headerlink" href="#delete-federation-tokens-for-user" title="Permanent link">&para;</a></h3>
+<p><code>/p2core/token/:user_id</code></p>
+<h4 id="request_3">Request<a class="headerlink" href="#request_3" title="Permanent link">&para;</a></h4>
+<h5 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h5>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>user_id</code></td>
+<td>Snowflake</td>
+<td><code>user_id</code> to delete all generation tokens from.</td>
+</tr>
+</tbody>
+</table>
+<h5 id="body_6">Body<a class="headerlink" href="#body_6" title="Permanent link">&para;</a></h5>
+<p>This request has no body.</p>
+<h4 id="response_3">Response<a class="headerlink" href="#response_3" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:1"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">204 No Content</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block"></div>
+</div>
+</div>
+<h5 id="body_7">Body<a class="headerlink" href="#body_7" title="Permanent link">&para;</a></h5>
+<p>This response has no body.</p>
+<hr />
+<h3 id="delete-federation-tokens-for-everyone"><span class="request-h"><span class="request request-delete">DELETE</span> Federation Tokens for everyone <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a> <a href="" title="This route is only available to server administrators"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 1 9 4v6c0 5.55-3.84 10.74-9 12-5.16-1.26-9-6.45-9-12V5l9-4m0 2.18L5 6.3v4.92C5 15.54 8.25 20 12 21c3.75-1 7-5.46 7-9.78V6.3l-7-3.12M16 14v1.59c-.04.22-.22.37-.47.41H8.47c-.25-.04-.43-.19-.47-.41V14h8m1-6-1 5H8L7 8l2.67 2.67L12 8.34l2.33 2.33L17 8Z"/></svg></span></a></span><a class="headerlink" href="#delete-federation-tokens-for-everyone" title="Permanent link">&para;</a></h3>
+<p><code>/p2core/token/@all</code></p>
+<h4 id="request_4">Request<a class="headerlink" href="#request_4" title="Permanent link">&para;</a></h4>
+<h5 id="body_8">Body<a class="headerlink" href="#body_8" title="Permanent link">&para;</a></h5>
+<p>This request has no body.</p>
+<h4 id="response_4">Response<a class="headerlink" href="#response_4" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:1"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">204 No Content</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block"></div>
+</div>
+</div>
+<h5 id="body_9">Body<a class="headerlink" href="#body_9" title="Permanent link">&para;</a></h5>
+<p>This response has no body.</p>
+<hr />
+<h2 id="federated-identity"><span class="group-h">Federated Identity</span><a class="headerlink" href="#federated-identity" title="Permanent link">&para;</a></h2>
+<p>Client-Home Server API endpoints which are concerned with Federated Identity, managing keys, etc.</p>
+<hr />
+<h3 id="post-rotate-session-id-cert"><span class="request-h"><span class="request request-post">POST</span> Rotate session ID-Cert <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a></span><a class="headerlink" href="#post-rotate-session-id-cert" title="Permanent link">&para;</a></h3>
+<p><code>/p2core/key/user/@me</code></p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>This endpoint has a twin, which can be accessed by any server, not just the home server of the user.
+See <a href="../Client-Foreign%20Server%20API/#post-rotate-session-id-cert">Client-Foreign Server API/Rotate session ID-Cert</a> for more information.</p>
+</div>
+<h4 id="request_5">Request<a class="headerlink" href="#request_5" title="Permanent link">&para;</a></h4>
+<h5 id="body_10">Body<a class="headerlink" href="#body_10" title="Permanent link">&para;</a></h5>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>String</td>
+<td>The client's public key, encoded in ASCII</td>
+</tr>
+</tbody>
+</table>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="s2">&quot;-----BEGIN PGP PUBLIC KEY BLOCK-----</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="s2">mQINBGSDs58BEADCXP1ArorBtOvGnQdAD26gsOMasyLMqnJyUp8XXCdmTx5+gREs</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="s2">vtItmjIshHU6CLUyTwO2IqIb2Fds+AmDsdM1Qx/vM0fVtPAS13T3Tu9rknldJvvN</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="s2">GyT3urrgvZ1leqQnwvuHd3WMdtgQ29lc7F/XaP4v2RIlqUiV+bnBoe/6LL7HXTaW</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="s2">zy2oKXr/odOD4+476J5APxxXCWVLXr3qfAXmSBQERznYuuRmhyL...</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s2">-----END PGP PUBLIC KEY BLOCK-----&quot;</span>
 </code></pre></div>
 <h4 id="response_5">Response<a class="headerlink" href="#response_5" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="6:3"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><input id="__tabbed_6_3" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">204 No Content</label><label for="__tabbed_6_2">401 Unauthorized</label><label for="__tabbed_6_3">403 Forbidden</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:1"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">201 Created</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block">
-<p>No response body.</p>
+<div class="tabbed-block"></div>
 </div>
-<div class="tabbed-block">
-<p>Returned if the request does not contain a valid access token.</p>
 </div>
-<div class="tabbed-block">
-<p>Returned if the user is not a server administrator.</p>
 <h5 id="body_11">Body<a class="headerlink" href="#body_11" title="Permanent link">&para;</a></h5>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p">{</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">    </span><span class="nt">&quot;errcode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">403</span><span class="p">,</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;P2CORE_NOT_ADMINISTRATOR&quot;</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="p">}</span>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>String</td>
+<td>The server generated ID-Cert for this public key, encoded in Base64.</td>
+</tr>
+</tbody>
+</table>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="s2">&quot;LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWS0tLS0tCk1JSUJqRENDQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYm...&quot;</span>
 </code></pre></div>
-</div>
-</div>
-</div>
 <hr />
-<h2 id="federated-identity">Federated Identity<a class="headerlink" href="#federated-identity" title="Permanent link">&para;</a></h2>
-<p>Routes concerning identifying and authenticating as a user on another server.</p>
-<hr />
-<h3 id="post-generate-session-token"><span class="request-h"><span class="request request-post">POST</span> Generate session token <a href="../rate-limits/" title="Bucket: auth/login"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.5 7.63a.976.976 0 0 1 1.36.37c.28.47.11 1.09-.36 1.36l-8.23 4.75a.998.998 0 1 1-1-1.73l8.23-4.75M3 4v2h1l.65 3.27L6.5 8.22 6.04 6h11.92l-2.6 13H8.64l-.91-4.57L5.9 15.5 7 21h10l3-15h1V4H3Z"/></svg></span></a> <a href="#authorization" title="Authorization not required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 20V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h9V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3H7a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6 9a2 2 0 0 1-2-2 2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1-2 2Z"/></svg></span></a></span><a class="headerlink" href="#post-generate-session-token" title="Permanent link">&para;</a></h3>
-<p><code>http://localhost:3001/api/federation/session</code></p>
-<p>Get a session token to authenticate as a foreign user on this server.</p>
+<h3 id="post-add-keypackage"><span class="request-h"><span class="request request-post">POST</span> Add KeyPackage <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a></span><a class="headerlink" href="#post-add-keypackage" title="Permanent link">&para;</a></h3>
+<p><code>/p2core/keypackage/@me</code></p>
 <h4 id="request_6">Request<a class="headerlink" href="#request_6" title="Permanent link">&para;</a></h4>
 <h5 id="body_12">Body<a class="headerlink" href="#body_12" title="Permanent link">&para;</a></h5>
 <table>
 <thead>
 <tr>
-<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>federation_token</code></td>
-<td><a href="../types/#federation-token">Federation token</a></td>
-<td>A valid federation token generated by the clients' home server</td>
-</tr>
-<tr>
-<td><code>public_profile</code> (optional)</td>
-<td><a href="../types/#public-user-profile">Public user profile</a></td>
-<td>The users' public user profile. Required on first connection to server</td>
+<td>JSON-Array of KeyPackages</td>
+<td>One or more KeyPackages to add to the available KeyPackages for this user.</td>
 </tr>
 </tbody>
 </table>
-<div class="admonition bug">
-<p class="admonition-title">TODO</p>
-<p>TODO: Add cURL example</p>
-</div>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">}</span><span class="w"> </span><span class="p">]</span>
+</code></pre></div>
 <h4 id="response_6">Response<a class="headerlink" href="#response_6" title="Permanent link">&para;</a></h4>
 <div class="tabbed-set tabbed-alternate" data-tabs="7:1"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">201 Created</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block">
+<div class="tabbed-block"></div>
+</div>
+</div>
 <h5 id="body_13">Body<a class="headerlink" href="#body_13" title="Permanent link">&para;</a></h5>
+<p>This response has no body.</p>
+<hr />
+<h3 id="put-replace-last-resort-keypackage"><span class="request-h"><span class="request request-put">PUT</span> Replace Last Resort KeyPackage <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a></span><a class="headerlink" href="#put-replace-last-resort-keypackage" title="Permanent link">&para;</a></h3>
+<p><code>/p2core/keypackage_lr</code></p>
+<h4 id="request_7">Request<a class="headerlink" href="#request_7" title="Permanent link">&para;</a></h4>
+<h5 id="body_14">Body<a class="headerlink" href="#body_14" title="Permanent link">&para;</a></h5>
 <table>
 <thead>
 <tr>
-<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>session_token</code></td>
-<td><code>String</code></td>
-<td>The session token that has been generated for the client</td>
+<td>KeyPackage</td>
+<td>The KeyPackage to replace the current Last Resort KeyPackage with.</td>
 </tr>
 </tbody>
 </table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="p">{</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">    </span><span class="nt">&quot;session_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;exampletoken&quot;</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="p">}</span>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span><span class="err">...</span><span class="p">}</span>
 </code></pre></div>
+<h4 id="response_7">Response<a class="headerlink" href="#response_7" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="8:1"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">204 No Content</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block"></div>
 </div>
 </div>
-</div>
+<h5 id="body_15">Body<a class="headerlink" href="#body_15" title="Permanent link">&para;</a></h5>
+<p>This response has no body.</p>
+<hr />
+<h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Client</strong> - A device or session that is used by a user or bot to connect to a server.</li>
+<li><strong>Federation token</strong> - A one-time use token generated by a user's home server, which is used to authorize/identify a user on a foreign server.</li>
+<li><strong>Foreign server</strong> - A polyproto-core server that a user is not registered on - essentially a third party.</li>
+<li><strong>Foreign user</strong> - A user registered on a foreign server.</li>
+<li><strong>Home server</strong> - The server that a user is registered on. Any polyproto-core compliant server hosted on the same domain is also considered a home server.</li>
+<li><strong>Identity Key</strong> - A key pair which represents a user's identity for a given session. It is used to sign messages and to encrypt messages for the user.</li>
+<li><strong>polyproto</strong> - The combination of the polyproto-core and polyproto-chat protocols and APIs.</li>
+<li><strong>polyproto-chat</strong> - The chat-API used by polyproto. It defines the routes and capabilities of the chat-API used by polyproto.</li>
+<li><strong>polyproto-core</strong> - The core federation protocol and APIs of polyproto, enabling identification and authorization on 'foreign' servers. It is independent of the chat-API used.</li>
+<li><strong>User</strong> - An entity represented by a federation ID, registered on a home server.</li>
+</ul>
 
 
 
@@ -1615,7 +1610,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-01-13T22:37:45+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-01-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-01-14T19:52:56+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-01-14</span>
   </span>
 
     

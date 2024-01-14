@@ -1,6 +1,6 @@
 .request-h {
     font-size: 1em; 
-    font-weight: bold;
+    font-weight: normal;
 }
 
 .request {
@@ -12,11 +12,11 @@
 }
 
 .request-post {
-    color: #00b7ba;
+    color: #00e4e8;
 }
 
 .request-put {
-    color: #0088ba;
+    color: #0080ff;
 }
 
 .request-patch {
@@ -24,5 +24,9 @@
 }
 
 .request-delete {
-    color: #ba0000;
+    color: #ba0c00;
+}
+
+.group-h {
+    font-weight: bold;
 }

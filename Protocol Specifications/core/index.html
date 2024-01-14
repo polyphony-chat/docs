@@ -2010,6 +2010,7 @@ Please read and understand the MLS specification (RFC9420) to implement polyprot
 -  That the <code>init_key</code> values of all <code>KeyPackages</code> are unique, as the <code>init_key</code> is what makes the <code>KeyPackage</code> one-time use.
 -  That the contents of the <code>LeafNode</code> as well as the <code>init_key</code> were signed by the user who submitted the <code>KeyPackage</code>.</p>
 <p>Because <code>KeyPackages</code> are supposed to be used only once, it is recommended that servers store multiple valid <code>KeyPackages</code> for each user. A server must notify a client when it is running low on <code>KeyPackages</code> for a user. Consult the Client-Server-API for more information on how servers should request new <code>KeyPackages</code> from clients. Servers should delete a <code>KeyPackage</code> when it is no longer valid.</p>
+<p>Servers only store <code>KeyPackages</code> for home server users, i.e. not for foreign users.</p>
 <div class="admonition note">
 <p class="admonition-title">About keys</p>
 <p>It is recommended that keys are to be generated using the <code>EdDSA</code> signature scheme, however, other signature schemes may be used as well.</p>
