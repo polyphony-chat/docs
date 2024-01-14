@@ -248,6 +248,10 @@ Client                                               Server
 ```
 Fig. 3: Sequence diagram of the two-step authentication process.
 
+!!! info
+
+    "Two-step authentication" is not to be confused with two-factor authentication. Two-step authentication is a process where the authentication is split into two steps, where the first step is used to verify the correctness of the provided information, and the second step is used to verify the identity of the user. Two-factor authentication can of course also be used in polyproto-core, and would be part of the first step of the authentication process.
+
 #### 4.1.1 Using the same identity for different polyproto-core implementations
 
 A user may choose to use the same identity for multiple polyproto-core implementations. The additional behavior required by polyproto-core server implementations is really simple, as the server only needs to verify the ID-Cert of the user.
