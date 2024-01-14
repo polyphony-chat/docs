@@ -387,10 +387,6 @@ During the initial authentication process, a client must provide at least one [`
 
 The public identity key inside the `LeafNode` of this `KeyPackage` is signed using the home servers' private key, so that home servers act as a certificate authority for their users' keys.
 
-!!! info
-
-    See [7.1. KeyPackages](#71-keypackages) for an outline on what a `KeyPackage` is, and consult the MLS specification (RFC9420) for more implementation details.
-
 ### 6.3 Multi-device support
 
 polyproto-core servers and clients using encryption should implement multi-device support, as defined in the MLS specification (RFC9420).
