@@ -447,6 +447,10 @@ The resulting ID-Cert contains the following information, in addition to the inf
 ```
 Fig. 4: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert from their home server.
 
+!!! info 
+
+    See [7.2.1](#721-key-rotation) for more information on what an "associated client" is.
+
 #### 7.1.1 Necessity of ID-Certs
 
 The addition of a certificate may seem ubiquitous, but it is necessary to prevent a malicious foreign server from abusing public identity key caching to impersonate a user. Consider the following example which employs foreign server public identity key caching, but no home server issued identity key certificates:
@@ -469,7 +473,7 @@ As briefly mentioned section [#4](#4-federated-identity), users must hold on to 
 
 #### 7.2.1 Key rotation
 
-A client may choose to rotate their identity key at any time. This is done by generating a new identity key pair, and sending the new public identity key to their home server, as part of a new Certificate Signing Request, at least one new `KeyPackage` and one corresponding 'last resort' `KeyPackage`. The home server will then generate the new ID-Cert, send it to the client, and let all clients with a relationship to the client that rotated their identity key know, that this clients' public identity key has changed. The server does this by sending a [`CLIENT_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#client_key_change) gateway event to those clients. For example, in the context of a chat application built with polyproto-chat, a relationship between two clients exists, if the two clients share a guild, a group or a direct message channel, if they are friends, or if they have a pending friend request between each other.
+A client may choose to rotate their identity key at any time. This is done by generating a new identity key pair, and sending the new public identity key to their home server, as part of a new Certificate Signing Request, at least one new `KeyPackage` and one corresponding 'last resort' `KeyPackage`. The home server will then generate the new ID-Cert, send it to the client, and let all associated clients know, that this clients' public identity key has changed. The server does this by sending a [`CLIENT_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#client_key_change) gateway event to those clients. For example, in the context of a chat application built with polyproto-chat, an associating relationship between two clients exists, if the two clients share a guild, a group or a direct message channel, if they are friends, or if they have a pending friend request between each other.
 
 Before sending any messages to a server, a client that performed a key rotation should inform the server of that change, to ensure that the server has the correct ID-Cert cached for the client.
 
