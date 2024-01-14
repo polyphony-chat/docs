@@ -11,20 +11,22 @@
     - [3.2 Client-foreign server API](#32-client-foreign-server-api)
     - [3.3 WebSockets](#33-websockets)
   - [4. Federated Identity](#4-federated-identity)
-    - [4.1 Federation tokens](#41-federation-tokens)
-    - [4.2 Abuse prevention](#42-abuse-prevention)
+    - [4.1 Authentication](#41-authentication)
+      - [4.1.1 Using the same identity for different polyproto-core implementations](#411-using-the-same-identity-for-different-polyproto-core-implementations)
+    - [4.2 Federation tokens](#42-federation-tokens)
+    - [4.3 Abuse prevention](#43-abuse-prevention)
   - [5. Users](#5-users)
   - [6. Encryption](#6-encryption)
     - [6.1. KeyPackages](#61-keypackages)
       - [6.1.1 Last resort KeyPackages](#611-last-resort-keypackages)
     - [6.2 Initial authentication](#62-initial-authentication)
+    - [6.3 Multi-device support](#63-multi-device-support)
   - [7. Keys and signatures](#7-keys-and-signatures)
+    - [7.1 Home server signed certificates for public client identity keys (ID-Cert)](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
+      - [7.1.1 Necessity of ID-Certs](#711-necessity-of-id-certs)
     - [7.2 User identity keys and message signing](#72-user-identity-keys-and-message-signing)
       - [7.2.1 Key rotation](#721-key-rotation)
       - [7.2.2 message verification](#722-message-verification)
-      - [6.2.2 Multi-device support](#622-multi-device-support)
-    - [7.3 Home server signed certificates for public client identity keys (ID-Cert)](#73-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
-      - [7.3.1 Necessity of ID-Certs](#731-necessity-of-id-certs)
     - [7.4 Best practices](#74-best-practices)
       - [7.4.1 Signing keys/ID-Certs](#741-signing-keysid-certs)
       - [7.4.2 Home server operation and design](#742-home-server-operation-and-design)
@@ -33,17 +35,23 @@
     - [8.2 Re-signing messages](#82-re-signing-messages)
 
 
-The polyproto-core protocol is a home-server-based federation protocol specification centered around the [Messaging Layer Security (MLS) protocol as defined by RFC9420 of the IETF](https://datatracker.ietf.org/doc/html/rfc9420), intended for use in community-centered chat service applications/application implementations. This document is intended to be used as a starting point for developers wanting to develop software which can interoperate with other polyproto-core implementations. Uses of this protocol include Guild-Based, Group-Based and one on one Instant Messaging, Voice over IP, and Video over IP, where your identity is federated between multiple servers.
+The polyproto-core protocol is a home-server-based federation protocol specification intended for use in applications where a user identity is needed. polyproto-core focuses on federated identity, and apart from the usage of MLS for encryption, does not specify any application-specific features. It is intended to be used as a base for application implementations and other protocols, such as polyproto-chat, which is a chat protocol built on top of polyproto-core. Any specific polyproto-core user identity can be used for multiple applications, as long as the applications support polyproto-core. 
 
-To correctly implement polyproto-core, you must read and understand the MLS protocol specification (RFC9420).
-
-The structure of this reference document is heavily inspired by the really well written [Matrix specification](https://spec.matrix.org/latest).
+ This document is intended to be used as a starting point for developers wanting to develop software which can interoperate with other polyproto-core implementations.
 
 ## 1. Terminology used in this document
 
-In addition to the glossary you can find at the end of this document, the following terminology is used throughout this document:
+In addition to the terminology found in the glossary located at the end of this document, the following terminology is used throughout this document:
 
-- <a id="glossary-messages">**Message, Messages**</a>: In the context of this protocol specification, a **message** is any piece of data sent by a client that is intended to be identifiable as being sent by a specific user. To qualify as a "message", this piece of data must also, at any point in time, and also if only briefly, be visible to other users and/or the unauthenticated public.
+- **Message, Messages**: In the context of this protocol specification, a **message** is any piece of data sent by a client that is intended to be identifiable as being sent by a specific user. To qualify as a "message", this piece of data must also, at any point in time, and also if only briefly, be visible to other users and/or the unauthenticated public. Examples of things that would qualify as messages include:
+    - A message sent to another user in a chat application
+    - A post on a social media platform
+    - A "like" interaction on a social media platform
+    - Reaction emojis in Discord-like chat applications
+    - Group join/leave messages
+    - Reporting a post/user, if the report is not anonymous
+
+Terminology not specified in this section or in the glossary has been defined somewhere else in this document.
 
 ## 2. Trust model
 
@@ -64,17 +72,17 @@ Aside from these REST APIs, polyproto-core also uses WebSockets for real-time co
 
 ### 3.1 Client-Home server API
 
-The *Client-Home server* API of polyproto-core is concerned with authentication- and federation-related issues.
+The [*Client-Home server*](./docs/APIs/Core/Client-Home%20Server%20API/index.md) API of polyproto-core is concerned with authentication- and federation-related issues between a client and its' home server.
 A client in this context is expected to be a user/bot session.
 
 ### 3.2 Client-foreign server API
 
-The *Client-foreign server* API of polyproto-core is used for tasks such as requesting the server's or a user's public key(s) or migrating a user account.
-The definition of "client" in this context is broader, since it includes both users/bots and other home servers.
+The [*Client-foreign server*](./docs/APIs/Core/Client-Foreign%20Server%20API/index.md) API of polyproto-core is used for tasks such as requesting the servers' or a users' public key(s) or migrating a user account.
+The definition of "client" in this context is broader, since it includes both users/bots and other polyproto-core servers.
 
 ### 3.3 WebSockets
 
-WebSockets in polyproto-core are used for real-time communication between clients and servers. WebSockets are used both in *Client-Home server* and *Client-foreign server* communication.
+WebSockets in polyproto-core are used for real-time communication between user/bot clients and servers. WebSockets are used both in *Client-Home server* and *Client-foreign server* communication.
 
 WebSocket connections to polyproto-core servers consist of the following cycle:
 
@@ -146,6 +154,7 @@ An identity key defined in [section #7. Keys and signatures](#7-keys-and-signatu
 
 **Example:**
 Say that Alice is on server A, and Bob is on server B. Alice wants to send a message to Bob.
+For this, Alice has to interact with the foreign server B.
 
 Alice's client will send a message to their home server (Server A), asking it to generate a one-time use federation token for registering on server B. Alice takes this token and sends it to server B. Server B will then ask server A if the token is valid. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B using this token, and send the message to server B. Server B will then send the message to Bob's client.
 
@@ -185,7 +194,7 @@ Alice's Client                                  Server A              Server B  
 |                                               |                     |-------------------->|
 |                                               |                     |                     |
 ```
-Fig. 2: Sequence diagram of a successful federation handshake.
+Fig. 2: Sequence diagram of a successful federation handshake and message sending process.
 
 If Alice's session token expires, or if Alice would like to sign in on another device, she can repeat this process of generating a federation token and exchanging it for a session token.
 
@@ -193,7 +202,19 @@ If Alice's session token expires, or if Alice would like to sign in on another d
 
     You can read more about the Identity Pubkey and Certificate in [7. Keys and signatures](#7-keys-and-signatures).
 
-### 4.1 Federation tokens
+### 4.1 Authentication
+
+Authenticating a new user or client in the context of polyproto-core is usually a two-step process.
+
+1. The client sends the implementation-specific authentication information to the server. The server verifies this information and responds with an HTTP status code indicating whether the authentication was successful or not. However, the authentication process is not yet complete, and the server does not yet provide a session token or any further information to the client.
+2. The client performs a second request, this time to the polyproto-core authentication API, providing the server with a [CSR](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert). The server verifies the CSR and responds with the signed [ID-Cert](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert), along with a session token, or whatever other implementation-specific information is needed to complete the authentication process.
+
+#### 4.1.1 Using the same identity for different polyproto-core implementations
+
+A user may choose to use the same identity for multiple polyproto-core implementations. The additional behavior required by polyproto-core server implementations is really simple, as the server only needs to verify the ID-Cert of the user.
+To verify the ID-Cert, the server can simply request the other servers' public identity key and then verify the signature of the ID-Cert with the public identity key of the other server.
+
+### 4.2 Federation tokens
 
 Federation tokens are generated by the user's home server. The token is a JSON object that contains the following information:
 
@@ -205,7 +226,7 @@ Federation tokens are generated by the user's home server. The token is a JSON o
 
 The usage of federation tokens prevents replay attacks, as a token is valid only once, only for a limited amount of time, and only for a specific server.
 
-### 4.2 Abuse prevention
+### 4.3 Abuse prevention
 
 To protect users from malicious home servers secretly acting on the behalf of non-consenting users,
 a mechanism is needed to prevent home servers from generating federation tokens for users without
@@ -269,7 +290,7 @@ The following regex can be used to validate user IDs: `\b([A-Z0-9._%+-]+)@([A-Z0
 
     MLS is a cryptographic protocol that provides confidentiality, integrity, and authenticity guarantees for group messaging applications. It builds on top of the [Double Ratchet Algorithm](https://signal.org/docs/specifications/doubleratchet/) and [X3DH](https://signal.org/docs/specifications/x3dh/) to provide these security guarantees.
 
-Implementations of polyproto-core may opt to support encryption to secure communication channels. The selected security protocol for all polyproto-core implementations is the Messaging Layer Security protocol, provided that MLS can feasibly be integrated within the context of the given implementation.
+Implementations of polyproto-core may opt to support encryption to secure communication channels. The selected security protocol for all polyproto-core implementations is the Messaging Layer Security protocol, provided that MLS can feasibly be integrated within the context of the given implementation. The MLS protocol has a built-in ability to negotiate protocol versions, cipher suites, extensions, credential types, and additional proposal types. For two implementations of polyproto-core to be compatible with each other in the context of encryption, they must have overlapping capabilities in these areas.
 
 The following sections explain the additional behavior that polyproto-core implementations utilizing MLS must implement.
 
@@ -305,6 +326,10 @@ A `KeyPackage` is supposed to be used only once. Servers must ensure the followi
 
 Because `KeyPackages` are supposed to be used only once, it is recommended that servers store multiple valid `KeyPackages` for each user. A server must notify a client when it is running low on `KeyPackages` for a user. Consult the Client-Server-API for more information on how servers should request new `KeyPackages` from clients. Servers should delete a `KeyPackage` when it is no longer valid.
 
+!!! note "About keys"
+
+    It is recommended that keys are to be generated using the `EdDSA` signature scheme, however, other signature schemes may be used as well.
+
 #### 6.1.1 Last resort KeyPackages
 
 A "last resort" `KeyPackage` is a `KeyPackage` which can be used multiple times. Such `KeyPackages` are only to be given out to clients when a server has no more valid, regular `KeyPackages` available for a user. This is to prevent DoS attacks, where a malicious client could request a large amount of `KeyPackages` for a user, causing other users not being able to adding the attacked user to an encrypted group or guild channel.
@@ -321,14 +346,81 @@ The public identity key inside the `LeafNode` of this `KeyPackage` is signed usi
 
     See [7.1. KeyPackages](#71-keypackages) for an outline on what a `KeyPackage` is, and consult the MLS specification (RFC9420) for more implementation details.
 
+### 6.3 Multi-device support
+
+polyproto-core servers and clients using encryption should implement multi-device support, as defined in the MLS specification (RFC9420).
+Clients must not use the same keys on multiple devices. Instead, the MLS protocol assigns a new `LeafNode` to each device.
+
+Each device provides its own `KeyPackages` as well as an own identity key. 
+
 ## 7. Keys and signatures
 
-It is recommended that keys are to be generated using the `EdDSA` signature scheme, however, other signature schemes may be used as well.
-The MLS protocol used by polyproto-core has a built-in ability to negotiate protocol versions, cipher suites, extensions, credential types, and additional proposal types. For two implementations of polyproto-core to be compatible with each other, they must have overlapping capabilities in these areas.
+### 7.1 Home server signed certificates for public client identity keys (ID-Cert)
+
+The home server signed public client identity key certificate, ID-Cert for short, is a public key certificate used to prove the validity of a public identity key. The ID-Cert is a user generated public identity key certificate signing request (CSR), signed by a user's home server, and includes information about the user's identity, as well as the public identity key of the user. Clients can receive an ID-Cert in exchange for a CSR.
+
+A CSR includes the following information:
+- The public identity key of the client.
+- The federation ID of the user associated with the client.
+- The session ID of the client. The session ID is a unique identifier for a session, which does not change when a client rotates their identity keys.
+- Optionally, an expiry date for the certificate. This expiry date must be less than or equal to the expiry date of the home servers' public identity key certificate.
+
+The resulting ID-Cert contains the following information, in addition to the information supplied through the CSR:
+- Issuer information: The home servers' domain.
+- Serial number: A unique identifier for the certificate.
+- Signature algorithm: The algorithm used to sign the certificate.
+- Signature: The signature of the certificate, generated using the home servers' private identity key.
+- Expiry date: The expiry date of the certificate.
+
+```
+                                       Server                                                Client                           
+                                       |                                                     |                                 
+                                       |                                                     | Create CSR for own identity key 
+                                       |                                                     |-------------------------------- 
+                                       |                                                     |                               | 
+                                       |                                                     |<------------------------------- 
+                                       |                                                     |                                 
+                                       |      Request key rotation/CSR signing, CSR attached |                                 
+                                       |<----------------------------------------------------|                                 
+                                       |                                                     |                                 
+                                       | Verify validity of claims presented in the CSR      |                                 
+                                       |-----------------------------------------------      |                                 
+                                       |                                              |      |                                 
+                                       |<----------------------------------------------      |                                 
+                                       |                                                     |                                 
+                                       | Create ID-Cert for Client                           |                                 
+                                       |--------------------------                           |                                 
+                                       |                         |                           |                                 
+                                       |<-------------------------                           |                                 
+                                       |                                                     |                                 
+                                       | Respond with ID-Cert                                |                                 
+                                       |---------------------------------------------------->|                                 
+-------------------------------------\ |                                                     |                                 
+| Send CLIENT_KEY_CHANGE to everyone |-|                                                     |                                 
+|------------------------------------| |                                                     |                                 
+                                       |                                                     |                                 
+```
+Fig. 4: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert from their home server.
+
+#### 7.1.1 Necessity of ID-Certs
+
+The addition of a certificate may seem ubiquitous, but it is necessary to prevent a malicious foreign server from abusing public identity key caching to impersonate a user. Consider the following example which employs foreign server public identity key caching, but no home server issued identity key certificates:
+
+!!! example "Potential abuse scenario"
+
+    A malicious foreign server B can fake a message from Alice (Home server: Server A) to Bob (Home Server: Server B), by generating a new identity key pair and using it to sign the malicious message. The foreign server then sends that message to Bob, who will then request Alice's public identity key from Server B, who will then send Bob the malicious public identity key. Bob will succeed in verifying the signature of the message, and not notice that the message is malicious.
+
+The above scenario is not possible with home server issued identity key certificates, as the malicious server cannot generate an identity key pair for Alice which is signed by Server A.
+
+Should the expected lifetime of a servers' identity key come to an early end, perhaps due to being leaked and therefore needing to be rotated, the server should generate a new identity key pair + ID-Cert and send a [`SERVER_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#server_key_change) gateway event, as well as a [`LOW_KEY_PACKAGES`](/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages) event to all clients. The clients should then also re-generate their identity keys and request a new ID-Cert from the server (via sending a CSR), as well as respond to the [`LOW_KEY_PACKAGES`](/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages) event correctly.
+
+!!! note
+
+    A `LOW_KEY_PACKAGES` event is only sent by servers which use MLS encryption. Server/Clients not using MLS encryption can safely ignore this event.
 
 ### 7.2 User identity keys and message signing
 
-As mentioned section [#3](#3-federated-identity), users must hold on to an identity key pair at all times. This key pair is used to represent a user's identity and to verify message integrity, by having a user sign all messages they send with their private identity key. The key pair is generated by the user, and a user-generated identity key certificate signing request (CSR) is sent to the user's home server when first connecting to the server with a new client, or when rotating keys. The key is stored in the client's local storage. Upon receiving a new identity key CSR, a home server will sign this CSR and send the resulting public key certificate to the client. This certificate is proof that the home server attests to the clients key. Read section [7.3](#73-home-server-generated-certificates-for-public-client-identity-keys-id-cert) for more information on the certificate.
+As briefly mentioned section [#4](#4-federated-identity), users must hold on to an identity key pair at all times. This key pair is used to represent a user's identity and to verify message integrity, by having a user sign all messages they send with their private identity key. The key pair is generated by the user, and a user-generated identity key certificate signing request (CSR) is sent to the user's home server when first connecting to the server with a new client, or when rotating keys. The key is stored in the client's local storage. Upon receiving a new identity key CSR, a home server will sign this CSR and send the resulting public key certificate to the client. This certificate is proof that the home server attests to the clients key. Read section [7.3](#73-home-server-generated-certificates-for-public-client-identity-keys-id-cert) for more information on the certificate.
 
 #### 7.2.1 Key rotation
 
@@ -336,7 +428,7 @@ A client may choose to rotate their identity key at any time. This is done by ge
 
 Before sending any messages to a server, a client that performed a key rotation should inform the server of that change, to ensure that the server has the correct ID-Cert cached for the client.
 
-Even though section 7.1 defines that a `KeyPackage` should be deleted by the server after it has been given out once, servers must keep track of the ID-Certs of all users (and their clients) registered on the server, and must be able to provide a clients' ID-Cert for a given timestamp on request. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of a user may change over time and users must sign all messages they send to other servers. Likewise, a client should also keep track of all of its own ID-Certs, to potentially verify its identity in case of a migration.
+Home servers must keep track of the ID-Certs of all users (and their clients) registered on them, and must be able to provide a clients' ID-Cert for a given timestamp on request. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of a user may change over time and users must sign all messages they send to servers. Likewise, a client should also keep all of its own ID-Certs stored perpetually, to potentially verify its identity in case of a migration.
 
 Signing messages prevents a malicious foreign server from impersonating a user.
 
@@ -389,72 +481,6 @@ If the verification fails, Bob's client should try to re-request the key from Se
 
     A failed signature verification does not always mean that the message is invalid. It may be that the user's identity key has changed, and that Server B has not yet received the new public identity key for some reason.
 
-#### 6.2.2 Multi-device support
-
-Polyproto servers and clients must implement multi-device support, as defined in the MLS specification (RFC9420).
-Clients must not use the same keys on multiple devices. Instead, the MLS protocol assigns a new `LeafNode` to each device.
-
-Each device provides its own `KeyPackages` as well as an own identity key. 
-
-### 7.3 Home server signed certificates for public client identity keys (ID-Cert)
-
-The home server signed public client identity key certificate, ID-Cert for short, is a public key certificate used to prove the validity of a public identity key. The ID-Cert is a user generated public identity key certificate signing request (CSR), signed by a user's home server, and includes information about the user's identity, as well as the public identity key of the user. Clients can receive an ID-Cert in exchange for a CSR.
-
-A CSR includes the following information:
-- The public identity key of the client.
-- The federation ID of the user associated with the client.
-- The session ID of the client. The session ID is a unique identifier for a session, which does not change when a client rotates their identity keys.
-- Optionally, an expiry date for the certificate. This expiry date must be less than or equal to the expiry date of the home servers' public identity key certificate.
-
-The resulting ID-Cert contains the following information, in addition to the information supplied through the CSR:
-- Issuer information: The home servers' domain.
-- Serial number: A unique identifier for the certificate.
-- Signature algorithm: The algorithm used to sign the certificate.
-- Signature: The signature of the certificate, generated using the home servers' private identity key.
-- Expiry date: The expiry date of the certificate.
-
-```
-                                       Server                                                Client                           
-                                       |                                                     |                                 
-                                       |                                                     | Create CSR for own identity key 
-                                       |                                                     |-------------------------------- 
-                                       |                                                     |                               | 
-                                       |                                                     |<------------------------------- 
-                                       |                                                     |                                 
-                                       |      Request key rotation/CSR signing, CSR attached |                                 
-                                       |<----------------------------------------------------|                                 
-                                       |                                                     |                                 
-                                       | Verify validity of claims presented in the CSR      |                                 
-                                       |-----------------------------------------------      |                                 
-                                       |                                              |      |                                 
-                                       |<----------------------------------------------      |                                 
-                                       |                                                     |                                 
-                                       | Create ID-Cert for Client                           |                                 
-                                       |--------------------------                           |                                 
-                                       |                         |                           |                                 
-                                       |<-------------------------                           |                                 
-                                       |                                                     |                                 
-                                       | Respond with ID-Cert                                |                                 
-                                       |---------------------------------------------------->|                                 
--------------------------------------\ |                                                     |                                 
-| Send CLIENT_KEY_CHANGE to everyone |-|                                                     |                                 
-|------------------------------------| |                                                     |                                 
-                                       |                                                     |                                 
-```
-Fig. 4: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert from their home server.
-
-#### 7.3.1 Necessity of ID-Certs
-
-The addition of a certificate may seem ubiquitous, but it is necessary to prevent a malicious foreign server from abusing public identity key caching to impersonate a user. Consider the following example which employs foreign server public identity key caching, but no home server issued identity key certificates:
-
-!!! example "Potential abuse scenario"
-
-    A malicious foreign server B can fake a message from Alice (Home server: Server A) to Bob (Home Server: Server B), by generating a new identity key pair and using it to sign the malicious message. The foreign server then sends that message to Bob, who will then request Alice's public identity key from Server B, who will then send Bob the malicious public identity key. Bob will succeed in verifying the signature of the message, and not notice that the message is malicious.
-
-The above scenario is not possible with home server issued identity key certificates, as the malicious server cannot generate an identity key pair for Alice which is signed by Server A.
-
-Should the expected lifetime of a servers' identity key come to an early end, perhaps due to being leaked and therefore needing to be rotated, the server should generate a new identity key pair + ID-Cert and send a [`SERVER_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#server_key_change) gateway event, as well as a [`LOW_KEY_PACKAGES`](/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages) event to all clients. The clients should then also re-generate their identity keys and request a new ID-Cert from the server (via sending a CSR), as well as respond to the [`LOW_KEY_PACKAGES`](/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages) event correctly.
-
 ### 7.4 Best practices
 
 #### 7.4.1 Signing keys/ID-Certs
@@ -492,15 +518,15 @@ Migrating an account is done with the following steps:
 ### 8.1 Migrating a user account
 
 ```
-Server_A                               Alice_A                                                Server_B                                            Alice_B 
+Server A                               Alice A                                                Server B                                            Alice B 
 |                                      |                                                      |                                                   |
-|                                      |                                                      |      Migration Request (Signed, Alice_A->Alice_B) |
+|                                      |                                                      |      Migration Request (Signed, Alice A->Alice B) |
 |                                      |                                                      |<--------------------------------------------------|
 |                                      |                                                      |                                                   |
-|                                      | Migration Request (Signed, Alice_A->Alice_B)         |                                                   |
+|                                      | Migration Request (Signed, Alice A->Alice B)         |                                                   |
 |                                      |----------------------------------------------------->|                                                   |
 |                                      |                                                      |                                                   |
-|       Fetch full profile of Alice_A (Attached: Migration Request, Signed, Alice_A->Alice_B) |                                                   |
+|       Fetch full profile of Alice A (Attached: Migration Request, Signed, Alice A->Alice B) |                                                   |
 |<--------------------------------------------------------------------------------------------|                                                   |
 |                                      |                                                      |                                                   |
 | Verify Signed Migration Request      |                                                      |                                                   |
@@ -508,10 +534,10 @@ Server_A                               Alice_A                                  
 |                               |      |                                                      |                                                   |
 |<-------------------------------      |                                                      |                                                   |
 |                                      |                                                      |                                                   |
-| Full profile of Alice_A              |                                                      |                                                   |
+| Full profile of Alice A              |                                                      |                                                   |
 |-------------------------------------------------------------------------------------------->|                                                   |
 |                                      |                                                      |                                                   |
-|                                      |                                                      | Verify, replace Alice_B profile with Alice_A      |
+|                                      |                                                      | Verify, replace Alice B profile with Alice A      |
 |                                      |                                                      |---------------------------------------------      |
 |                                      |                                                      |                                            |      |
 |                                      |                                                      |<--------------------------------------------      |
@@ -519,29 +545,29 @@ Server_A                               Alice_A                                  
 |                                      |                                                      | New account data                                  |
 |                                      |                                                      |-------------------------------------------------->|
 |                                      |                                                      |                                                   |
-| Deactivate Alice_A's account         |                                                      |                                                   |
+| Deactivate Alice A's account         |                                                      |                                                   |
 |-----------------------------         |                                                      |                                                   |
 |                            |         |                                                      |                                                   |
 |<----------------------------         |                                                      |                                                   |
 |                                      |                                                      |                                                   |
-| Set up redirect from Alice_A to Alice_B                                                     |                                                   |
+| Set up redirect from Alice A to Alice B                                                     |                                                   |
 |-------------------------------------------------------------------------------------------->|                                                   |
 |                                      |                                                      |                                                   |
 ```
-Fig. 5: Sequence diagram depicting a successful migration of Alice_A's account to Alice_B's account, where Server A is reachable and cooperative.
+Fig. 5: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is reachable and cooperative.
 
 Alternatively, if Server A is offline or deemed uncooperative, the following sequence diagram depicts how the migration can be done without Server A's cooperation:
 
 ```
-Server_A     Alice_A                                                                          Server_B                                            Alice_B 
+Server A     Alice A                                                                          Server B                                            Alice B 
 |            |                                                                                |                                                   |
-|            |                                                                                |      Migration Request (Signed, Alice_A->Alice_B) |
+|            |                                                                                |      Migration Request (Signed, Alice A->Alice B) |
 |            |                                                                                |<--------------------------------------------------|
 |            |                                                                                |                                                   |
-|            | Migration Request (Signed, Alice_A->Alice_B)                                   |                                                   |
+|            | Migration Request (Signed, Alice A->Alice B)                                   |                                                   |
 |            |------------------------------------------------------------------------------->|                                                   |
 |            |                                                                                |                                                   |
-|       Fetch full profile of Alice_A (Attached: Migration Request, Signed, Alice_A->Alice_B) |                                                   |
+|       Fetch full profile of Alice A (Attached: Migration Request, Signed, Alice A->Alice B) |                                                   |
 |<--------------------------------------------------------------------------------------------|                                                   |
 |            |                                                                                |                                                   |
 |            |                                                                                | Wait for response...                              |
@@ -549,13 +575,13 @@ Server_A     Alice_A                                                            
 |            |                                                                                |                    |                              |
 |            |                                                                                |<--------------------                              |
 |            |                                                                                |                                                   |
-|            |                       Server_A offline/not cooperative, send profile or abort? |                                                   |
+|            |                       Server A offline/not cooperative, send profile or abort? |                                                   |
 |            |<-------------------------------------------------------------------------------|                                                   |
 |            |                                                                                |                                                   |
 |            | Full profile of Self                                                           |                                                   |
 |            |------------------------------------------------------------------------------->|                                                   |
 |            |                                                                                |                                                   |
-|            |                                                                                | Verify, replace Alice_B profile with Alice_A      |
+|            |                                                                                | Verify, replace Alice B profile with Alice A      |
 |            |                                                                                |---------------------------------------------      |
 |            |                                                                                |                                            |      |
 |            |                                                                                |<--------------------------------------------      |
@@ -564,7 +590,7 @@ Server_A     Alice_A                                                            
 |            |                                                                                |-------------------------------------------------->|
 |            |                                                                                |                                                   |
 ```
-Fig. 6: Sequence diagram depicting a successful migration of Alice_A's account to Alice_B's account, where Server A is unreachable or uncooperative.
+Fig. 6: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is unreachable or uncooperative.
 
 !!! question "If the old home server is not needed for the migration, why try to contact it in the first place?"
 
@@ -592,9 +618,9 @@ Re-signing messages mustn't overwrite the old signature. Instead, a new variant 
 be created, which contains the new signature.
 
 ```
-Alice_A                                              Server_C                                                              Alice_B                                                 
+Alice A                                              Server C                                                              Alice B                                                 
 |                                                    |                                                                     |                                                     
-| Request allow message re-signing for Alice_B       |                                                                     |                                                     
+| Request allow message re-signing for Alice B       |                                                                     |                                                     
 |--------------------------------------------------->|                                                                     |                                                     
 |                                                    |                                                                     |                                                     
 |          List of keys to verify + challenge string |                                                                     |                                                     
@@ -603,18 +629,18 @@ Alice_A                                              Server_C                   
 | Completed challenge for each key on the list       |                                                                     |                                                     
 |--------------------------------------------------->|                                                                     |                                                     
 |                                                    |                                                                     |                                                     
-|                                                    | Verify challenge, unlock re-signing for Alice_B                     |                                                     
+|                                                    | Verify challenge, unlock re-signing for Alice B                     |                                                     
 |                                                    |------------------------------------------------                     |                                                     
 |                                                    |                                               |                     |                                                     
 |                                                    |<-----------------------------------------------                     |                                                     
 |                                                    |                                                                     |                                                     
-|                                                    |                   Request message re-signing for Alice_A's messages |                                                     
+|                                                    |                   Request message re-signing for Alice A's messages |                                                     
 |                                                    |<--------------------------------------------------------------------|                                                     
 |                                                    |                                                                     |                                                     
 |                                                    | List of old messages (including old signatures + certificates)      |                                                     
 |                                                    |-------------------------------------------------------------------->|                                                     
 |                                                    |                                                                     |                                                     
-|                                                    |                                                                     | Verify that Server_C has not tampered with messages 
+|                                                    |                                                                     | Verify that Server C has not tampered with messages 
 |                                                    |                                                                     |---------------------------------------------------- 
 |                                                    |                                                                     |                                                   | 
 |                                                    |                                                                     |<--------------------------------------------------- 
