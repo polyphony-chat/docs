@@ -1725,6 +1725,7 @@
 </li>
 </ul>
 <p>The polyproto-core protocol is a home-server-based federation protocol specification intended for use in applications where a user identity is needed. polyproto-core focuses on federated identity, and apart from the usage of MLS for encryption, does not specify any application-specific features. It is intended to be used as a base for application implementations and other protocols, such as polyproto-chat, which is a chat protocol built on top of polyproto-core. Any specific polyproto-core user identity can be used for multiple applications, as long as the applications support polyproto-core. </p>
+<p>No part of polyproto-core is considered less important than any other part, and all parts of polyproto-core are required for a polyproto-core implementation to be considered compliant with the polyproto-core specification. The only exception to this is the encryption part of polyproto-core, which is optional, as the necessity of encryption depends on the specific implementation.</p>
 <p>This document is intended to be used as a starting point for developers wanting to develop software which can interoperate with other polyproto-core implementations.</p>
 <h2 id="1-terminology-used-in-this-document">1. Terminology used in this document<a class="headerlink" href="#1-terminology-used-in-this-document" title="Permanent link">&para;</a></h2>
 <p>In addition to the terminology found in the glossary located at the end of this document, the following terminology is used throughout this document:</p>
@@ -1868,7 +1869,7 @@ Fig. 2: Sequence diagram of a successful federation handshake and message sendin
 <p>You can read more about the Identity Pubkey and Certificate in <a href="#7-keys-and-signatures">7. Keys and signatures</a>.</p>
 </div>
 <h3 id="41-authentication">4.1 Authentication<a class="headerlink" href="#41-authentication" title="Permanent link">&para;</a></h3>
-<p>Authenticating a new user or client in the context of polyproto-core is usually a two-step process.</p>
+<p>Authenticating a new user or client in the context of polyproto-core is a two-step process.</p>
 <ol>
 <li>The client sends the implementation-specific authentication information to the server. The server verifies this information and responds with an HTTP status code indicating whether the authentication was successful or not. However, the authentication process is not yet complete, and the server does not yet provide a session token or any further information to the client.</li>
 <li>The client performs a second request, this time to the polyproto-core authentication API, providing the server with a <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">CSR</a>. The server verifies the CSR and responds with the signed <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">ID-Cert</a>, along with a session token, or whatever other implementation-specific information is needed to complete the authentication process.</li>
@@ -1926,7 +1927,7 @@ To verify the ID-Cert, the server can simply request the other servers' public i
 <li>The domain of the user's home server.</li>
 <li>A securely-randomly generated nonce</li>
 </ul>
-<p>The usage of federation tokens prevents replay attacks, as a token is valid only once, only for a limited amount of time, and only for a specific server.</p>
+<p>The usage of federation tokens prevents replay attacks, as a token is valid only once, only for a short amount of time, and only for a specific server.</p>
 <h3 id="43-abuse-prevention">4.3 Abuse prevention<a class="headerlink" href="#43-abuse-prevention" title="Permanent link">&para;</a></h3>
 <p>To protect users from malicious home servers secretly acting on the behalf of non-consenting users,
 a mechanism is needed to prevent home servers from generating federation tokens for users without
