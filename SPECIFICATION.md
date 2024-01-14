@@ -149,10 +149,10 @@ Fig. 1: Sequence diagram of a WebSocket connection to a polyproto-core server.
 
 ## 4. Federated Identity
 
-Federating user identities means that users can fully participate on other instances' guilds and talk to other instances' users.
-This means that users can, for example, DM users from another server or join another servers' Guilds. 
+Federating user identities means that users can fully participate on foreign servers, as if it were their home server.
+Taking polyproto-chat as an example, this means that a polyproto-chat user can send direct messages to users from another server or join another servers' Guilds. 
 
-An identity key defined in [section #7. Keys and signatures](#7-keys-and-signatures) is used to sign messages that the user sends to other servers.
+An identity certificate defined in sections [#7. Keys and signatures](#7-keys-and-signatures) and [#7.1 Home server signed certificates for public client identity keys (ID-Cert)](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) is used to sign messages that the user sends to other servers.
 
 **Example:**
 Say that Alice is on server A, and Bob is on server B. Alice wants to send a message to Bob.
