@@ -1826,7 +1826,7 @@ Taking polyproto-chat as an example, this means that a polyproto-chat user can s
 <p><strong>Example:</strong>
 Say that Alice is on server A, and Bob is on server B. Alice wants to send a message to Bob.
 For this, Alice has to interact with the foreign server B.</p>
-<p>Alice's client will send a message to their home server (Server A), asking it to generate a one-time use federation token for registering on server B. Alice takes this token and sends it to server B. Server B will then ask server A if the token is valid. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B using this token, and send the message to server B. Server B will then send the message to Bob's client.</p>
+<p>Alice's client will send a request to server B, requesting a challenge string. After receiving the challenge string, Alice signs this string with their ID-Cert and sends the signature and her ID-Cert to Server B. Server B can now verify, that it was actually Alice who signed the string, and not a malicious outsider. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B using this token, and send the message to server B. Server B will then send the message to Bob's client.</p>
 <p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Alice&#39;s Client                                  Server A              Server B              Bob&#39;s Client
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>|                                               |                     |                     |
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Federation token request                      |                     |                     |
@@ -1863,6 +1863,14 @@ For this, Alice has to interact with the foreign server B.</p>
 <a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>|                                               |                     |                     |
 </code></pre></div>
 Fig. 2: Sequence diagram of a successful federation handshake and message sending process.</p>
+<div class="admonition bug">
+<p class="admonition-title">TODO</p>
+<p>TODO: The above sequence diagram has to be re-done.</p>
+</div>
+<div class="admonition bug">
+<p class="admonition-title">TODO</p>
+<p>TODO: Federation tokens will be replaced with a different system, which is currently being worked on.</p>
+</div>
 <p>If Alice's session token expires, or if Alice would like to sign in on another device, she can repeat this process of generating a federation token and exchanging it for a session token.</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
@@ -1874,6 +1882,10 @@ Fig. 2: Sequence diagram of a successful federation handshake and message sendin
 <li>The client sends the implementation-specific authentication information to the server. The server verifies this information and responds with an HTTP status code indicating whether the authentication was successful or not. However, the authentication process is not yet complete, and the server does not yet provide a session token or any further information to the client.</li>
 <li>The client performs a second request, this time to the polyproto-core authentication API, providing the server with a <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">CSR</a>. The server verifies the CSR and responds with the signed <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">ID-Cert</a>, along with a session token, or whatever other implementation-specific information is needed to complete the authentication process.</li>
 </ol>
+<div class="admonition bug">
+<p class="admonition-title">TODO</p>
+<p>TODO: Switching step 1 and 2 might be a better idea. Also, the current step two doesn't yet mention the federation handshake from the previous section.</p>
+</div>
 <p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Client                                               Server                                                           
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>|                                                    |                                            
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>| Authentication Step 1                              |                                            
@@ -1928,6 +1940,10 @@ To verify the ID-Cert, the server can simply request the other servers' public i
 <li>A securely-randomly generated nonce</li>
 </ul>
 <p>The usage of federation tokens prevents replay attacks, as a token is valid only once, only for a short amount of time, and only for a specific server.</p>
+<div class="admonition bug">
+<p class="admonition-title">TODO</p>
+<p>TODO: As federation tokens will be replaced with a different system, which is currently being worked on, this section will be updated.</p>
+</div>
 <h3 id="43-abuse-prevention">4.3 Abuse prevention<a class="headerlink" href="#43-abuse-prevention" title="Permanent link">&para;</a></h3>
 <p>To protect users from malicious home servers secretly acting on the behalf of non-consenting users,
 a mechanism is needed to prevent home servers from generating federation tokens for users without
