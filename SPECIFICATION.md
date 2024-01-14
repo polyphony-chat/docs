@@ -204,7 +204,7 @@ If Alice's session token expires, or if Alice would like to sign in on another d
 
 ### 4.1 Authentication
 
-Authenticating a new user or client in the context of polyproto-core is usually a two-step process.
+Authenticating a new user or client in the context of polyproto-core is a two-step process.
 
 1. The client sends the implementation-specific authentication information to the server. The server verifies this information and responds with an HTTP status code indicating whether the authentication was successful or not. However, the authentication process is not yet complete, and the server does not yet provide a session token or any further information to the client.
 2. The client performs a second request, this time to the polyproto-core authentication API, providing the server with a [CSR](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert). The server verifies the CSR and responds with the signed [ID-Cert](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert), along with a session token, or whatever other implementation-specific information is needed to complete the authentication process.
