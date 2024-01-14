@@ -37,7 +37,7 @@
 
 The polyproto-core protocol is a home-server-based federation protocol specification intended for use in applications where a user identity is needed. polyproto-core focuses on federated identity, and apart from the usage of MLS for encryption, does not specify any application-specific features. It is intended to be used as a base for application implementations and other protocols, such as polyproto-chat, which is a chat protocol built on top of polyproto-core. Any specific polyproto-core user identity can be used for multiple applications, as long as the applications support polyproto-core. 
 
- This document is intended to be used as a starting point for developers wanting to develop software which can interoperate with other polyproto-core implementations.
+This document is intended to be used as a starting point for developers wanting to develop software which can interoperate with other polyproto-core implementations.
 
 ## 1. Terminology used in this document
 
