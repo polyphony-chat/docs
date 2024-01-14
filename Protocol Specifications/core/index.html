@@ -1820,9 +1820,9 @@ The definition of "client" in this context is broader, since it includes both us
 <p>To learn more about polyproto-core WebSockets and WebSocket Events, consult the <a href="/docs/APIs/Core/WebSockets/index.md">WebSockets documentation</a>.</p>
 </div>
 <h2 id="4-federated-identity">4. Federated Identity<a class="headerlink" href="#4-federated-identity" title="Permanent link">&para;</a></h2>
-<p>Federating user identities means that users can fully participate on other instances' guilds and talk to other instances' users.
-This means that users can, for example, DM users from another server or join another servers' Guilds. </p>
-<p>An identity key defined in <a href="#7-keys-and-signatures">section #7. Keys and signatures</a> is used to sign messages that the user sends to other servers.</p>
+<p>Federating user identities means that users can fully participate on foreign servers, as if it were their home server.
+Taking polyproto-chat as an example, this means that a polyproto-chat user can send direct messages to users from another server or join another servers' Guilds. </p>
+<p>An identity certificate defined in sections <a href="#7-keys-and-signatures">#7. Keys and signatures</a> and <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">#7.1 Home server signed certificates for public client identity keys (ID-Cert)</a> is used to sign messages that the user sends to other servers.</p>
 <p><strong>Example:</strong>
 Say that Alice is on server A, and Bob is on server B. Alice wants to send a message to Bob.
 For this, Alice has to interact with the foreign server B.</p>
