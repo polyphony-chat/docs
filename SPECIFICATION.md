@@ -4,34 +4,33 @@
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 
 - [polyproto-core Specification](#polyproto-core-specification)
-  - [1. Trust model](#1-trust-model)
-  - [2. APIs and communication protocols](#2-apis-and-communication-protocols)
-    - [2.1 Client-Home server API](#21-client-home-server-api)
-    - [2.2 Client-foreign server API](#22-client-foreign-server-api)
-    - [2.3 WebSockets](#23-websockets)
-  - [3. Federated Identity](#3-federated-identity)
-    - [3.1 Federation tokens](#31-federation-tokens)
-    - [3.2 Abuse prevention](#32-abuse-prevention)
-  - [4. Users](#4-users)
-  - [5. Encryption](#5-encryption)
-    - [5.1. KeyPackages](#51-keypackages)
-      - [5.1.1 Last resort KeyPackages](#511-last-resort-keypackages)
-    - [5.2 Initial authentication](#52-initial-authentication)
-  - [6. Keys and signatures](#6-keys-and-signatures)
-    - [6.2 User identity keys and message signing](#62-user-identity-keys-and-message-signing)
-      - [6.2.1 Key rotation](#621-key-rotation)
-      - [6.2.2 Message verification](#622-message-verification)
+  - [1. Terminology used in this document](#1-terminology-used-in-this-document)
+  - [2. Trust model](#2-trust-model)
+  - [3. APIs and communication protocols](#3-apis-and-communication-protocols)
+    - [3.1 Client-Home server API](#31-client-home-server-api)
+    - [3.2 Client-foreign server API](#32-client-foreign-server-api)
+    - [3.3 WebSockets](#33-websockets)
+  - [4. Federated Identity](#4-federated-identity)
+    - [4.1 Federation tokens](#41-federation-tokens)
+    - [4.2 Abuse prevention](#42-abuse-prevention)
+  - [5. Users](#5-users)
+  - [6. Encryption](#6-encryption)
+    - [6.1. KeyPackages](#61-keypackages)
+      - [6.1.1 Last resort KeyPackages](#611-last-resort-keypackages)
+    - [6.2 Initial authentication](#62-initial-authentication)
+  - [7. Keys and signatures](#7-keys-and-signatures)
+    - [7.2 User identity keys and message signing](#72-user-identity-keys-and-message-signing)
+      - [7.2.1 Key rotation](#721-key-rotation)
+      - [7.2.2 message verification](#722-message-verification)
       - [6.2.2 Multi-device support](#622-multi-device-support)
-    - [6.3 Home server signed certificates for public client identity keys (ID-Cert)](#63-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
-      - [6.3.1 Necessity of ID-Certs](#631-necessity-of-id-certs)
-    - [6.4 Best practices](#64-best-practices)
-      - [6.4.1 Signing keys/ID-Certs](#641-signing-keysid-certs)
-      - [6.4.2 Home server operation and design](#642-home-server-operation-and-design)
-  - [7. Account migration](#7-account-migration)
-    - [7.1 Migrating a user account](#71-migrating-a-user-account)
-    - [7.2 Re-signing messages](#72-re-signing-messages)
-  - [8. Additional information](#8-additional-information)
-    - [8.1 Terminology used in this document](#81-terminology-used-in-this-document)
+    - [7.3 Home server signed certificates for public client identity keys (ID-Cert)](#73-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
+      - [7.3.1 Necessity of ID-Certs](#731-necessity-of-id-certs)
+    - [7.4 Best practices](#74-best-practices)
+      - [7.4.1 Signing keys/ID-Certs](#741-signing-keysid-certs)
+      - [7.4.2 Home server operation and design](#742-home-server-operation-and-design)
+  - [8. Account migration](#8-account-migration)
+    - [8.1 Migrating a user account](#81-migrating-a-user-account)
+    - [8.2 Re-signing messages](#82-re-signing-messages)
 
 
 The polyproto-core protocol is a home-server-based federation protocol specification centered around the [Messaging Layer Security (MLS) protocol as defined by RFC9420 of the IETF](https://datatracker.ietf.org/doc/html/rfc9420), intended for use in community-centered chat service applications/application implementations. This document is intended to be used as a starting point for developers wanting to develop software which can interoperate with other polyproto-core implementations. Uses of this protocol include Guild-Based, Group-Based and one on one Instant Messaging, Voice over IP, and Video over IP, where your identity is federated between multiple servers.
@@ -40,7 +39,13 @@ To correctly implement polyproto-core, you must read and understand the MLS prot
 
 The structure of this reference document is heavily inspired by the really well written [Matrix specification](https://spec.matrix.org/latest).
 
-## 1. Trust model
+## 1. Terminology used in this document
+
+In addition to the glossary you can find at the end of this document, the following terminology is used throughout this document:
+
+- <a id="glossary-messages">**Message, Messages**</a>: In the context of this protocol specification, a **message** is any piece of data sent by a client that is intended to be identifiable as being sent by a specific user. To qualify as a "message", this piece of data must also, at any point in time, and also if only briefly, be visible to other users and/or the unauthenticated public.
+
+## 2. Trust model
 
 polyproto-core operates under the following trust assumptions:
 
@@ -51,23 +56,23 @@ polyproto-core operates under the following trust assumptions:
 5.  Non-home servers cannot execute actions that might seem to be performed by a foreign user without that user's explicit consent; otherwise, they would be immediately exposed.
 6.  A user relies on their home server to act as a certificate authority for their identity keys, without the home server possessing the identity itself.
 
-## 2. APIs and communication protocols
+## 3. APIs and communication protocols
 
 The polyproto-core specification defines a set of APIs. These APIs are the Client-Home server and Client-Foreign server APIs.
 
 Aside from these REST APIs, polyproto-core also uses WebSockets for real-time communication between clients and servers.
 
-### 2.1 Client-Home server API
+### 3.1 Client-Home server API
 
 The *Client-Home server* API of polyproto-core is concerned with authentication- and federation-related issues.
 A client in this context is expected to be a user/bot session.
 
-### 2.2 Client-foreign server API
+### 3.2 Client-foreign server API
 
 The *Client-foreign server* API of polyproto-core is used for tasks such as requesting the server's or a user's public key(s) or migrating a user account.
 The definition of "client" in this context is broader, since it includes both users/bots and other home servers.
 
-### 2.3 WebSockets
+### 3.3 WebSockets
 
 WebSockets in polyproto-core are used for real-time communication between clients and servers. WebSockets are used both in *Client-Home server* and *Client-foreign server* communication.
 
@@ -132,15 +137,15 @@ Fig. 1: Sequence diagram of a WebSocket connection to a polyproto-core server.
 
     To learn more about polyproto-core WebSockets and WebSocket Events, consult the [WebSockets documentation](/docs/APIs/Core/WebSockets/index.md).
 
-## 3. Federated Identity
+## 4. Federated Identity
 
 Federating user identities means that users can fully participate on other instances' guilds and talk to other instances' users.
 This means that users can, for example, DM users from another server or join another servers' Guilds. 
 
-An identity key defined in [section #7. Keys and signatures](#7-keys-and-signatures) is used to sign [messages](#glossary-messages) that the user sends to other servers.
+An identity key defined in [section #7. Keys and signatures](#7-keys-and-signatures) is used to sign messages that the user sends to other servers.
 
 **Example:**
-Say that Alice is on server A, and Bob is on server B. Alice wants to send a [message](#glossary-messages) to Bob.
+Say that Alice is on server A, and Bob is on server B. Alice wants to send a message to Bob.
 
 Alice's client will send a message to their home server (Server A), asking it to generate a one-time use federation token for registering on server B. Alice takes this token and sends it to server B. Server B will then ask server A if the token is valid. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B using this token, and send the message to server B. Server B will then send the message to Bob's client.
 
@@ -188,7 +193,7 @@ If Alice's session token expires, or if Alice would like to sign in on another d
 
     You can read more about the Identity Pubkey and Certificate in [7. Keys and signatures](#7-keys-and-signatures).
 
-### 3.1 Federation tokens
+### 4.1 Federation tokens
 
 Federation tokens are generated by the user's home server. The token is a JSON object that contains the following information:
 
@@ -200,7 +205,7 @@ Federation tokens are generated by the user's home server. The token is a JSON o
 
 The usage of federation tokens prevents replay attacks, as a token is valid only once, only for a limited amount of time, and only for a specific server.
 
-### 3.2 Abuse prevention
+### 4.2 Abuse prevention
 
 To protect users from malicious home servers secretly acting on the behalf of non-consenting users,
 a mechanism is needed to prevent home servers from generating federation tokens for users without
@@ -245,7 +250,7 @@ information:
     session cannot decrypt any messages sent before its' join epoch. If secrecy or confidentiality
     are of concern, users should host their own home server and use end-to-end encryption.
 
-## 4. Users
+## 5. Users
 
 Each client must have a user associated with it. A user is identified by a unique federation ID (FID), which consists of the user's username (which must be unique on the instance) and the instance's root domain. A FID is formatted as follows: `user@domain.tld`, which makes for a globally unique user ID. Federation IDs are case-insensitive.
 
@@ -256,11 +261,11 @@ The following regex can be used to validate user IDs: `\b([A-Z0-9._%+-]+)@([A-Z0
     Validating a federation ID with the above regex does not guarantee that the ID is valid. It only
     indicates that the federation ID is formatted correctly.
 
-## 5. Encryption
+## 6. Encryption
 
 !!! abstract "About MLS"
 
-    Polyproto offers end-to-end encryption for [messages](#glossary-messages) via [Message Layer Security (MLS)](https://messaginglayersecurity.rocks/). polyproto-core compliant servers take on the role of both an Authentication Service and a Delivery Service in the context of MLS.
+    Polyproto offers end-to-end encryption for messages via [Message Layer Security (MLS)](https://messaginglayersecurity.rocks/). polyproto-core compliant servers take on the role of both an Authentication Service and a Delivery Service in the context of MLS.
 
     MLS is a cryptographic protocol that provides confidentiality, integrity, and authenticity guarantees for group messaging applications. It builds on top of the [Double Ratchet Algorithm](https://signal.org/docs/specifications/doubleratchet/) and [X3DH](https://signal.org/docs/specifications/x3dh/) to provide these security guarantees.
 
@@ -268,11 +273,11 @@ Implementations of polyproto-core may opt to support encryption to secure commun
 
 The following sections explain the additional behavior that polyproto-core implementations utilizing MLS must implement.
 
-### 5.1. KeyPackages
+### 6.1. KeyPackages
 
 !!! warning
 
-    The sections 5.1 and 5.1.1 are not exhaustive and do not cover all aspects of MLS and KeyPackages. They exist solely to give a general overview of how KeyPackages are used in polyproto-core.
+    The sections 6.1 and 6.1.1 are not exhaustive and do not cover all aspects of MLS and KeyPackages. They exist solely to give a general overview of how KeyPackages are used in polyproto-core.
     Please read and understand the MLS specification (RFC9420) to implement polyproto-core correctly.
 
 A polyproto-core compliant server must store KeyPackages for all users that are registered on the server. The `KeyPackage` is a JSON object that contains the following information:
@@ -300,13 +305,13 @@ A `KeyPackage` is supposed to be used only once. Servers must ensure the followi
 
 Because `KeyPackages` are supposed to be used only once, it is recommended that servers store multiple valid `KeyPackages` for each user. A server must notify a client when it is running low on `KeyPackages` for a user. Consult the Client-Server-API for more information on how servers should request new `KeyPackages` from clients. Servers should delete a `KeyPackage` when it is no longer valid.
 
-#### 5.1.1 Last resort KeyPackages
+#### 6.1.1 Last resort KeyPackages
 
 A "last resort" `KeyPackage` is a `KeyPackage` which can be used multiple times. Such `KeyPackages` are only to be given out to clients when a server has no more valid, regular `KeyPackages` available for a user. This is to prevent DoS attacks, where a malicious client could request a large amount of `KeyPackages` for a user, causing other users not being able to adding the attacked user to an encrypted group or guild channel.
 
 Once a server has given out a "last resort" `KeyPackage` to a client, the server should request a new "last resort" `KeyPackage` from the client from the user, once they connect to the server again. The old "last resort" `KeyPackage` should then be deleted.
 
-### 5.2 Initial authentication
+### 6.2 Initial authentication
 
 During the initial authentication process, a client must provide at least one [`KeyPackage`](#61-keypackages), as well as one ["last resort" `KeyPackage`](#611-last-resort-keypackages) to the server, in addition to the required registration information.
 
@@ -316,30 +321,30 @@ The public identity key inside the `LeafNode` of this `KeyPackage` is signed usi
 
     See [7.1. KeyPackages](#71-keypackages) for an outline on what a `KeyPackage` is, and consult the MLS specification (RFC9420) for more implementation details.
 
-## 6. Keys and signatures
+## 7. Keys and signatures
 
 It is recommended that keys are to be generated using the `EdDSA` signature scheme, however, other signature schemes may be used as well.
 The MLS protocol used by polyproto-core has a built-in ability to negotiate protocol versions, cipher suites, extensions, credential types, and additional proposal types. For two implementations of polyproto-core to be compatible with each other, they must have overlapping capabilities in these areas.
 
-### 6.2 User identity keys and [message](#glossary-messages) signing
+### 7.2 User identity keys and message signing
 
-As mentioned section [#3](#3-federated-identity), users must hold on to an identity key pair at all times. This key pair is used to represent a user's identity and to verify [message](#glossary-messages) integrity, by having a user sign all [messages](#glossary-messages) they send with their private identity key. The key pair is generated by the user, and a user-generated identity key certificate signing request (CSR) is sent to the user's home server when first connecting to the server with a new client, or when rotating keys. The key is stored in the client's local storage. Upon receiving a new identity key CSR, a home server will sign this CSR and send the resulting public key certificate to the client. This certificate is proof that the home server attests to the clients key. Read section [7.3](#73-home-server-generated-certificates-for-public-client-identity-keys-id-cert) for more information on the certificate.
+As mentioned section [#3](#3-federated-identity), users must hold on to an identity key pair at all times. This key pair is used to represent a user's identity and to verify message integrity, by having a user sign all messages they send with their private identity key. The key pair is generated by the user, and a user-generated identity key certificate signing request (CSR) is sent to the user's home server when first connecting to the server with a new client, or when rotating keys. The key is stored in the client's local storage. Upon receiving a new identity key CSR, a home server will sign this CSR and send the resulting public key certificate to the client. This certificate is proof that the home server attests to the clients key. Read section [7.3](#73-home-server-generated-certificates-for-public-client-identity-keys-id-cert) for more information on the certificate.
 
-#### 6.2.1 Key rotation
+#### 7.2.1 Key rotation
 
-A client may choose to rotate their identity key at any time. This is done by generating a new identity key pair, and sending the new public identity key to their home server, as part of a new Certificate Signing Request, at least one new `KeyPackage` and one corresponding 'last resort' `KeyPackage`. The home server will then generate the new ID-Cert, send it to the client, and let all clients with a relationship to the client that rotated their identity key know, that this clients' public identity key has changed. The server does this by sending a [`CLIENT_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#client_key_change) gateway event to those clients. For example, in the context of a chat application built with polyproto-chat, a relationship between two clients exists, if the two clients share a guild, a group or a direct [message](#glossary-messages) channel, if they are friends, or if they have a pending friend request between each other.
+A client may choose to rotate their identity key at any time. This is done by generating a new identity key pair, and sending the new public identity key to their home server, as part of a new Certificate Signing Request, at least one new `KeyPackage` and one corresponding 'last resort' `KeyPackage`. The home server will then generate the new ID-Cert, send it to the client, and let all clients with a relationship to the client that rotated their identity key know, that this clients' public identity key has changed. The server does this by sending a [`CLIENT_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#client_key_change) gateway event to those clients. For example, in the context of a chat application built with polyproto-chat, a relationship between two clients exists, if the two clients share a guild, a group or a direct message channel, if they are friends, or if they have a pending friend request between each other.
 
-Before sending any [messages](#glossary-messages) to a server, a client that performed a key rotation should inform the server of that change, to ensure that the server has the correct ID-Cert cached for the client.
+Before sending any messages to a server, a client that performed a key rotation should inform the server of that change, to ensure that the server has the correct ID-Cert cached for the client.
 
-Even though section 7.1 defines that a `KeyPackage` should be deleted by the server after it has been given out once, servers must keep track of the ID-Certs of all users (and their clients) registered on the server, and must be able to provide a clients' ID-Cert for a given timestamp on request. This is to ensure [messages](#glossary-messages) sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of a user may change over time and users must sign all [messages](#glossary-messages) they send to other servers. Likewise, a client should also keep track of all of its own ID-Certs, to potentially verify its identity in case of a migration.
+Even though section 7.1 defines that a `KeyPackage` should be deleted by the server after it has been given out once, servers must keep track of the ID-Certs of all users (and their clients) registered on the server, and must be able to provide a clients' ID-Cert for a given timestamp on request. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of a user may change over time and users must sign all messages they send to other servers. Likewise, a client should also keep track of all of its own ID-Certs, to potentially verify its identity in case of a migration.
 
 Signing messages prevents a malicious foreign server from impersonating a user.
 
-#### 6.2.2 [Message](#glossary-messages) verification
+#### 7.2.2 message verification
 
-Of course, in order for [message](#glossary-messages) signing to actually verify [message](#glossary-messages) integrity, clients **must** verify the signatures of all [messages](#glossary-messages) they receive. This is done by verifying the signature of the [message](#glossary-messages) with the ID-Cert of the sender and the ID-Cert of the senders' home server. Clients must also verify that the certificate attached to the [message](#glossary-messages) is valid and that the public key in the certificate matches the public key of the sender. 
+Of course, in order for message signing to actually verify message integrity, clients **must** verify the signatures of all messages they receive. This is done by verifying the signature of the message with the ID-Cert of the sender and the ID-Cert of the senders' home server. Clients must also verify that the certificate attached to the message is valid and that the public key in the certificate matches the public key of the sender. 
 
-**Example:** Given a signed [message](#glossary-messages) from Alice, like Bob would receive it from Server B in [Fig. 3](#fig-3), Bob's client would verify the signature of the [message](#glossary-messages) like so:
+**Example:** Given a signed message from Alice, like Bob would receive it from Server B in [Fig. 3](#fig-3), Bob's client would verify the signature of the message like so:
 
 ```
 Server B                                        Bob                                         Server A
@@ -365,24 +370,24 @@ Server B                                        Bob                             
 |                                               |<-----------------------------------       |
 |                                               |                                           |
 ```
-Fig. 3: Sequence diagram of a successful [message](#glossary-messages) signature verification.
+Fig. 3: Sequence diagram of a successful message signature verification.
 
-Bob's client may now choose to cache Server A's public identity key and Alice's ID-Cert, so that it does not have to request them again in the future, as long as the ID-Cert/Server public key do not change and are not expired. If Bob's client receives another [message](#glossary-messages) from Alice, it can now verify the signature of the [message](#glossary-messages) with the cached ID-Certs.
+Bob's client may now choose to cache Server A's public identity key and Alice's ID-Cert, so that it does not have to request them again in the future, as long as the ID-Cert/Server public key do not change and are not expired. If Bob's client receives another message from Alice, it can now verify the signature of the message with the cached ID-Certs.
 
-If the verification fails, Bob's client should try to re-request the key from Server B first. Should the verification fail again, Bob's client may try to request Alice's public identity key and certificate from Server A (Alice's home server), and try to verify the signature again. Should the verification still not succeed, the [message](#glossary-messages) should be treated with extreme caution.
+If the verification fails, Bob's client should try to re-request the key from Server B first. Should the verification fail again, Bob's client may try to request Alice's public identity key and certificate from Server A (Alice's home server), and try to verify the signature again. Should the verification still not succeed, the message should be treated with extreme caution.
 
 !!! question "Why does Bob's client not request Alice's public identity key from Server A?"
 
     Bob's client could request Alice's public identity key from Server A, instead of Server B. However, this is discouraged, as it
 
-    - Generates unnecessary load on Server A; Doing it this way distributes the load of public identity key more fairly, as the server that the [message](#glossary-messages) was sent on is the one that has to process the public identity key request.
+    - Generates unnecessary load on Server A; Doing it this way distributes the load of public identity key more fairly, as the server that the message was sent on is the one that has to process the public identity key request.
     - Would expose unnecessary metadata to Server A; Server A does not need to know who exactly Alice is talking to, and when. Only Server B, Alice and Bob need to know this information. Always requesting the public identity key from Server A might expose this information to Server A.
 
     Clients should only use Server A as a fallback for public identity key verification, if Server B does not respond to the request for Alice's public identity key, or if the verification fails with the public identity key from Server B.
 
 !!! info
 
-    A failed signature verification does not always mean that the [message](#glossary-messages) is invalid. It may be that the user's identity key has changed, and that Server B has not yet received the new public identity key for some reason.
+    A failed signature verification does not always mean that the message is invalid. It may be that the user's identity key has changed, and that Server B has not yet received the new public identity key for some reason.
 
 #### 6.2.2 Multi-device support
 
@@ -391,7 +396,7 @@ Clients must not use the same keys on multiple devices. Instead, the MLS protoco
 
 Each device provides its own `KeyPackages` as well as an own identity key. 
 
-### 6.3 Home server signed certificates for public client identity keys (ID-Cert)
+### 7.3 Home server signed certificates for public client identity keys (ID-Cert)
 
 The home server signed public client identity key certificate, ID-Cert for short, is a public key certificate used to prove the validity of a public identity key. The ID-Cert is a user generated public identity key certificate signing request (CSR), signed by a user's home server, and includes information about the user's identity, as well as the public identity key of the user. Clients can receive an ID-Cert in exchange for a CSR.
 
@@ -438,35 +443,35 @@ The resulting ID-Cert contains the following information, in addition to the inf
 ```
 Fig. 4: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert from their home server.
 
-#### 6.3.1 Necessity of ID-Certs
+#### 7.3.1 Necessity of ID-Certs
 
 The addition of a certificate may seem ubiquitous, but it is necessary to prevent a malicious foreign server from abusing public identity key caching to impersonate a user. Consider the following example which employs foreign server public identity key caching, but no home server issued identity key certificates:
 
 !!! example "Potential abuse scenario"
 
-    A malicious foreign server B can fake a [message](#glossary-messages) from Alice (Home server: Server A) to Bob (Home Server: Server B), by generating a new identity key pair and using it to sign the malicious [message](#glossary-messages). The foreign server then sends that [message](#glossary-messages) to Bob, who will then request Alice's public identity key from Server B, who will then send Bob the malicious public identity key. Bob will succeed in verifying the signature of the [message](#glossary-messages), and not notice that the [message](#glossary-messages) is malicious.
+    A malicious foreign server B can fake a message from Alice (Home server: Server A) to Bob (Home Server: Server B), by generating a new identity key pair and using it to sign the malicious message. The foreign server then sends that message to Bob, who will then request Alice's public identity key from Server B, who will then send Bob the malicious public identity key. Bob will succeed in verifying the signature of the message, and not notice that the message is malicious.
 
 The above scenario is not possible with home server issued identity key certificates, as the malicious server cannot generate an identity key pair for Alice which is signed by Server A.
 
 Should the expected lifetime of a servers' identity key come to an early end, perhaps due to being leaked and therefore needing to be rotated, the server should generate a new identity key pair + ID-Cert and send a [`SERVER_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#server_key_change) gateway event, as well as a [`LOW_KEY_PACKAGES`](/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages) event to all clients. The clients should then also re-generate their identity keys and request a new ID-Cert from the server (via sending a CSR), as well as respond to the [`LOW_KEY_PACKAGES`](/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages) event correctly.
 
-### 6.4 Best practices
+### 7.4 Best practices
 
-#### 6.4.1 Signing keys/ID-Certs
+#### 7.4.1 Signing keys/ID-Certs
 
 - Instance/user signing keys should be rotated regularly (every 3-6 months). This is to ensure that a compromised key can only be used for a limited amount of time.
 - When a server is asked to generate a new ID-Cert for a user, it must make sure that the CSR is valid and, if set, has an expiry date which is less than or equal to the expiry date of the server's own ID-Cert.
 - Due to the fact that a `SERVER_KEY_CHANGE` gateway event is bound to generate a lot of traffic, servers should only manually generate a new identity key pair when absolutely necessary and instead choose a fitting expiry date interval for their identity key certificates. It might also be a good idea to stagger the sending of `SERVER_KEY_CHANGE` gateway events, to prevent a server from initiating a DDoS attack on itself.
 - When a client or server receives the information that a user clients' identity key has been changed, the client/server in question should update their cached ID-Cert for the user in question, taking into account the session ID of the new identity key pair.
 
-#### 6.4.2 Home server operation and design
+#### 7.4.2 Home server operation and design
 
 - Employ a caching layer for your home server to handle the potentially large amount of requests for public key certificates without putting unnecessary strain on the database.
 
-## 7. Account migration
+## 8. Account migration
 
 Account migration allows users to move their account and associated data to another identity.
-This allows users to switch home servers while not losing ownership of [messages](#glossary-messages) sent by them.
+This allows users to switch home servers while not losing ownership of messages sent by them.
 
 Migrating an account is done with the following steps:
 
@@ -480,11 +485,11 @@ Migrating an account is done with the following steps:
    The old server now forward requests regarding the old account to the new server.
    Alternatively, if the old server is shut down, the new server can request the information
    from the old user directly.
-5. The old account can now request the resigning of its [messages](#glossary-messages), transferring ownership of the
-   [messages](#glossary-messages) to the new account. To have all [messages](#glossary-messages) from a server re-signed, a user must
-   prove that they are the owner of the private keys used to sign the [messages](#glossary-messages).
+5. The old account can now request the resigning of its messages, transferring ownership of the
+   messages to the new account. To have all messages from a server re-signed, a user must
+   prove that they are the owner of the private keys used to sign the messages.
 
-### 7.1 Migrating a user account
+### 8.1 Migrating a user account
 
 ```
 Server_A                               Alice_A                                                Server_B                                            Alice_B 
@@ -569,21 +574,21 @@ Fig. 6: Sequence diagram depicting a successful migration of Alice_A's account t
     regarding the old account to the new server, which makes the process more seamless for other
     users. The "non-cooperative homeserver migration method" is only a last resort.
 
-### 7.2 Re-signing [messages](#glossary-messages)
+### 8.2 Re-signing messages
 
-Re-signing [messages](#glossary-messages) is the process of transferring ownership of [messages](#glossary-messages) from an old account to the
+Re-signing messages is the process of transferring ownership of messages from an old account to the
 new, migrated account. The process requires some coordination between the new and old accounts, 
 and can only be initiated by the old account. 
 
-To initiate the process, the old account must send an API request to the server where [messages](#glossary-messages)
+To initiate the process, the old account must send an API request to the server where messages
 should be re-signed. The request must contain the federation ID of the new account. The server will 
-then respond with a list of all keys that were used to sign [messages](#glossary-messages) sent by the old account. The
+then respond with a list of all keys that were used to sign messages sent by the old account. The
 old account will then need to prove that it is in possession of the private keys that were used to
-sign the [messages](#glossary-messages). This is done by signing a challenge string with the private keys. The server will
+sign the messages. This is done by signing a challenge string with the private keys. The server will
 then verify the signature, and, if the verification is successful, grant the new account the ability
-to re-sign all [messages](#glossary-messages) sent by the old account which were signed with the provided keys.
+to re-sign all messages sent by the old account which were signed with the provided keys.
 
-Re-signing [messages](#glossary-messages) mustn't overwrite the old signature. Instead, a new variant of the [message](#glossary-messages) must
+Re-signing messages mustn't overwrite the old signature. Instead, a new variant of the message must
 be created, which contains the new signature.
 
 ```
@@ -629,9 +634,3 @@ Alice_A                                              Server_C                   
 |                                                    |                                                                     |                                                     
 ```
 Fig. 7: Sequence diagram depicting the re-signing procedure.
-
-## 8. Additional information
-
-### 8.1 Terminology used in this document
-
-- <a id="glossary-messages">**Message**</a>: In the context of this protocol specification, a message is any piece of data sent by a client that is intended to be identifiable as being sent by a specific user. To qualify as a "message", this piece of data must also, at any point in time, and also if only briefly, be visible to other users and/or the unauthenticated public.
