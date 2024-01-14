@@ -209,6 +209,45 @@ Authenticating a new user or client in the context of polyproto-core is usually 
 1. The client sends the implementation-specific authentication information to the server. The server verifies this information and responds with an HTTP status code indicating whether the authentication was successful or not. However, the authentication process is not yet complete, and the server does not yet provide a session token or any further information to the client.
 2. The client performs a second request, this time to the polyproto-core authentication API, providing the server with a [CSR](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert). The server verifies the CSR and responds with the signed [ID-Cert](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert), along with a session token, or whatever other implementation-specific information is needed to complete the authentication process.
 
+```
+Client                                               Server                                                           
+|                                                    |                                            
+| Authentication Step 1                              |                                            
+|--------------------------------------------------->|                                            
+|                                                    |                                            
+|                                                    | Verify correctness of provided information 
+|                                                    |------------------------------------------- 
+|                                                    |                                          | 
+|                                                    |<------------------------------------------ 
+|                                                    | -------------------------                  
+|                                                    |-| Verified successfully |                  
+|                                                    | -------------------------                  
+|                                                    |                                            
+|                               HTTP Status Code 202 |                                            
+|<---------------------------------------------------|                                            
+|                                                    |                                            
+| Authentication Step 2                              |                                            
+|--------------------------------------------------->|                                            
+|                                                    |                                            
+|                                                    | Verify provided CSR                        
+|                                                    |--------------------                        
+|                                                    |                   |                        
+|                                                    |<-------------------                        
+|                                                    | ------------                               
+|                                                    |-| CSR okay |                               
+|                                                    | ------------                               
+|                                                    |                                            
+|                                                    | Signing CSR                                
+|                                                    |------------                                
+|                                                    |           |                                
+|                                                    |<-----------                                
+|                                                    |                                            
+|      HTTP Status Code 201, ID-Cert + Session token |                                            
+|<---------------------------------------------------|                                            
+|                                                    |                                            
+```
+Fig. 3: Sequence diagram of the two-step authentication process.
+
 #### 4.1.1 Using the same identity for different polyproto-core implementations
 
 A user may choose to use the same identity for multiple polyproto-core implementations. The additional behavior required by polyproto-core server implementations is really simple, as the server only needs to verify the ID-Cert of the user.
@@ -462,7 +501,7 @@ Server B                                        Bob                             
 |                                               |<-----------------------------------       |
 |                                               |                                           |
 ```
-Fig. 3: Sequence diagram of a successful message signature verification.
+Fig. 5: Sequence diagram of a successful message signature verification.
 
 Bob's client may now choose to cache Server A's public identity key and Alice's ID-Cert, so that it does not have to request them again in the future, as long as the ID-Cert/Server public key do not change and are not expired. If Bob's client receives another message from Alice, it can now verify the signature of the message with the cached ID-Certs.
 
@@ -554,7 +593,7 @@ Server A                               Alice A                                  
 |-------------------------------------------------------------------------------------------->|                                                   |
 |                                      |                                                      |                                                   |
 ```
-Fig. 5: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is reachable and cooperative.
+Fig. 6: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is reachable and cooperative.
 
 Alternatively, if Server A is offline or deemed uncooperative, the following sequence diagram depicts how the migration can be done without Server A's cooperation:
 
@@ -590,7 +629,7 @@ Server A     Alice A                                                            
 |            |                                                                                |-------------------------------------------------->|
 |            |                                                                                |                                                   |
 ```
-Fig. 6: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is unreachable or uncooperative.
+Fig. 7: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is unreachable or uncooperative.
 
 !!! question "If the old home server is not needed for the migration, why try to contact it in the first place?"
 
@@ -659,4 +698,4 @@ Alice A                                              Server C                   
 |                                                    |<--------------------------------------------------------------      |                                                     
 |                                                    |                                                                     |                                                     
 ```
-Fig. 7: Sequence diagram depicting the re-signing procedure.
+Fig. 8: Sequence diagram depicting the re-signing procedure.
