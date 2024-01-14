@@ -1,5 +1,6 @@
 ---
 title: Client-Foreign Server API Routes
+weight: -900
 ---
 
 All API endpoints needed for Client-Home Server communication.

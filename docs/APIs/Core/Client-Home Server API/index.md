@@ -1,5 +1,6 @@
 ---
 title: Client-Home Server API Routes
+weight: -1000
 ---
 
 All API endpoints needed for Client-Home Server communication.
