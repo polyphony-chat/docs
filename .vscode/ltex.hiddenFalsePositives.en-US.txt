@@ -20,3 +20,6 @@
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qquestion \"Why does Bob not request Alice's public identity key from Server A?\"\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qquestion \"Why does Bob's client not request Alice's public identity key from Server A?\"\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-core - The core federation protocol and APIs of polyproto, enabling identification and authorization on 'foreign' servers.\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-core focuses on federated identity, and apart from the usage of MLS for encryption, does not specify any application-specific features.\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-core servers and clients using encryption should implement multi-device support, as defined in the MLS specification (RFC9420).\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qnote \"About keys\"\\E$"}
