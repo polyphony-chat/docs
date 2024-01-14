@@ -371,6 +371,8 @@ A `KeyPackage` is supposed to be used only once. Servers must ensure the followi
 
 Because `KeyPackages` are supposed to be used only once, it is recommended that servers store multiple valid `KeyPackages` for each user. A server must notify a client when it is running low on `KeyPackages` for a user. Consult the Client-Server-API for more information on how servers should request new `KeyPackages` from clients. Servers should delete a `KeyPackage` when it is no longer valid.
 
+Servers only store `KeyPackages` for home server users, i.e. not for foreign users.
+
 !!! note "About keys"
 
     It is recommended that keys are to be generated using the `EdDSA` signature scheme, however, other signature schemes may be used as well.
