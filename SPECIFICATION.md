@@ -418,32 +418,32 @@ The resulting ID-Cert contains the following information, in addition to the inf
 - Expiry date: The expiry date of the certificate.
 
 ```
-                                       Server                                                Client                           
-                                       |                                                     |                                 
-                                       |                                                     | Create CSR for own identity key 
-                                       |                                                     |-------------------------------- 
-                                       |                                                     |                               | 
-                                       |                                                     |<------------------------------- 
-                                       |                                                     |                                 
-                                       |      Request key rotation/CSR signing, CSR attached |                                 
-                                       |<----------------------------------------------------|                                 
-                                       |                                                     |                                 
-                                       | Verify validity of claims presented in the CSR      |                                 
-                                       |-----------------------------------------------      |                                 
-                                       |                                              |      |                                 
-                                       |<----------------------------------------------      |                                 
-                                       |                                                     |                                 
-                                       | Create ID-Cert for Client                           |                                 
-                                       |--------------------------                           |                                 
-                                       |                         |                           |                                 
-                                       |<-------------------------                           |                                 
-                                       |                                                     |                                 
-                                       | Respond with ID-Cert                                |                                 
-                                       |---------------------------------------------------->|                                 
--------------------------------------\ |                                                     |                                 
-| Send CLIENT_KEY_CHANGE to everyone |-|                                                     |                                 
-|------------------------------------| |                                                     |                                 
-                                       |                                                     |                                 
+                                                 Server                                                Client                           
+                                                 |                                                     |                                 
+                                                 |                                                     | Create CSR for own identity key 
+                                                 |                                                     |-------------------------------- 
+                                                 |                                                     |                               | 
+                                                 |                                                     |<------------------------------- 
+                                                 |                                                     |                                 
+                                                 |      Request key rotation/CSR signing, CSR attached |                                 
+                                                 |<----------------------------------------------------|                                 
+                                                 |                                                     |                                 
+                                                 | Verify validity of claims presented in the CSR      |                                 
+                                                 |-----------------------------------------------      |                                 
+                                                 |                                              |      |                                 
+                                                 |<----------------------------------------------      |                                 
+                                                 |                                                     |                                 
+                                                 | Create ID-Cert for Client                           |                                 
+                                                 |--------------------------                           |                                 
+                                                 |                         |                           |                                 
+                                                 |<-------------------------                           |                                 
+                                                 |                                                     |                                 
+                                                 | Respond with ID-Cert                                |                                 
+                                                 |---------------------------------------------------->|                                 
+------------------------------------------------ |                                                     |                                 
+| Send CLIENT_KEY_CHANGE to associated clients |-|                                                     |                                 
+------------------------------------------------ |                                                     |                                 
+                                                 |                                                     |                                 
 ```
 Fig. 4: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert from their home server.
 
