@@ -263,37 +263,39 @@ Say that Alice is on server A, and would like to authenticate on Server B using 
 Alice's client will send a request to server B, requesting a challenge string. After receiving the challenge string, Alice signs this string with their ID-Cert and sends the signature and her ID-Cert to Server B. Server B can now verify, that it was actually Alice who signed the string, and not a malicious outsider. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B using this token.
 
 ```
-Alice's Client                                  Server A              Server B
-|                                               |                     |
-| Challenge string request                      |                     |
-|---------------------------------------------->|                     |
-|                                               |                     |
-|                              Challenge string |                     |
-|<----------------------------------------------|                     |
-|                                               |                     |        
-|                                               |                     |
-| Signed challenge, ID-Cert, Optional payload   |                     |
-|-------------------------------------------------------------------->|
-|                                               |                     |
-|                                               |          Get pubkey |
-|                                               |<--------------------|
-|                                               |                     |
-|                                               | Server A Pubkey     |
-|                                               |-------------------->|
-|                                               |                     |
-|                                               |                     |
-|                                               |                     |
-|                                               |                     |
-|                                               |                     |
-|                                               |                     |
-|                                               |       Session Token |
-|<--------------------------------------------------------------------|
-|                                               |                     |
+Alice's Client                                  Server A                            Server B
+|                                               |                                   |
+| Challenge string request                      |                                   |
+|---------------------------------------------->|                                   |
+|                                               |                                   |
+|                              Challenge string |                                   |
+|<----------------------------------------------|                                   |
+|                                               |                                   |        
+|                                               |                                   |
+| Signed challenge, ID-Cert, optional payload   |                                   |
+|---------------------------------------------------------------------------------->|
+|                                               |                                   |
+|                                               |                        Get pubkey |
+|                                               |<----------------------------------|
+|                                               |                                   |
+|                                               | Server A Pubkey                   |
+|                                               |---------------------------------->|
+|                                               |                                   |
+|                                               |                                   |
+|                                               |                                   |
+|                                               |                                   |
+|                                               |                                   |
+|                                               |                                   |
+|                                               |   Session Token, optional payload |
+|<----------------------------------------------------------------------------------|
+|                                               |                                   |
 
 ```
 Fig. 4: Sequence diagram of a successful identity verification.
 
-The "optional payload" in the above diagram is optional, additional data a server may request from a user. This is most useful in the context of using the same identity for different, polyproto-core based services, as one service might require additional information about a user, which another service does not need. The payload is signed by the user's private identity key. 
+The "optional payload" sent by Alice in the above diagram is optional, additional data a server may request from a user. This is most useful in the context of using the same identity for different, polyproto-core based services, as one service might require additional information about a user, which another service does not need. The payload is signed by the user's private identity key. 
+
+Likewise, the "optional payload" sent by the server in the above diagram can be used by implementations to send additional information to the client. An example might be initial account information.
 
 !!! example
 
