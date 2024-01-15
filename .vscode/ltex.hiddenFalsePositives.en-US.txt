@@ -43,3 +43,6 @@
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qabstract\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qnote \"Using one identity for multiple polyproto-core implementations\"\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qexample\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-core does not \"} JSON-Object\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-core does not provide any defaults for this field\"} JSON-Object n.A.\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-core does not provide any defaults for this field.\"}\\E$"}

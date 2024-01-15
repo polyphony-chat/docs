@@ -17,6 +17,106 @@ can also be accessed from a foreign server, or with no authentication at all, se
 
 ---
 
+## <span class="group-h">Authentication</span>
+
+Authentication endpoints, such as creating an identity and authenticating a client with an identity.
+
+---
+
+### <span class="request-h"><span class="request request-post">POST</span> Create Identity</span>
+
+`/p2core/identity`
+
+#### Request
+
+##### Body
+
+| Name                                                                                                                                                                                                                           | Type        | Description                                   |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- | --------------------------------------------- |
+| `username`                                                                                                                                                                                                                     | String      | The preferred username for this new identity. |
+| `password` :material-help:{title="This field is optional."}                                                                                                                                                                    | String      | The password for this new identity.           |
+| `auth_payload` :material-help:{title="This field is optional."} :material-code-braces:{title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."} | JSON-Object | n.A.                                              |
+
+```json
+{
+  "username": "alice",
+  "password": "s3cr3t",
+  "auth_payload": {
+    "email": "alice@example.com"
+}
+```
+
+#### Response
+
+=== "201 Created"
+
+    ##### Body
+
+    | Name                                                                                                                                                                                                                       | Type        | Description                                                               |
+    | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------- |
+    | `fid`                                                                                                                                                                                                                      | String      | The [Federation ID](../../Glossary.md#federation-id) of the new identity. |
+    | `payload` :material-help:{title="This field is optional."} :material-code-braces:{title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."} | JSON-Object | n.A. |
+
+    ```json
+    {
+    "fid": "xenia@example.com",
+    "payload": {
+        "some_account_information": "important information"
+    }
+    }
+    ```
+
+=== "409 Conflict"
+
+    ##### Body
+
+    ```json
+    {
+        "errcode": 409,
+        "error": "P2CORE_FEDERATION_ID_TAKEN"
+    }
+    ```
+
+---
+
+### <span class="request-h"><span class="request request-post">POST</span> Authenticate Session</span>
+
+`/p2core/session/trust`
+
+#### Request
+
+##### Body
+
+| Name                                                                                                                                                                                                                            | Type           | Description                                                                                                                         |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `username`                                                                                                                                                                                                                      | String         | The username of the identity to authenticate.                                                                                       |
+| `csr`                                                                                                                                                                                                                           | String, Base64 | A [certificate signing request (CSR)](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) |
+| `password` :material-help:{title="This field is optional."}                                                                                                                                                                     | String         | The password for this identity.                                                                                                     |
+| `auth_payload` :material-help:{title="This field is optional."} :material-code-braces:{title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."} | JSON-Object    | n.A.                                                                                                                                |
+
+#### Response
+
+=== "201 Created"
+
+    ##### Body
+
+    | Name      | Type           | Description                                                                                                                                                             |
+    | --------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | `id_cert` | String, Base64 | The [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) for this unique Identity-Session combination |
+
+=== "409 Conflict"
+
+    ##### Body
+
+    ```json
+    {
+        "errcode": 409,
+        "error": "P2CORE_SESSION_ID_TAKEN"
+    }
+    ```
+
+---
+
 ## <span class="group-h">Federated Identity</span>
 
 Client-Home Server API endpoints which are concerned with Federated Identity, managing keys, etc.
@@ -31,8 +131,8 @@ Client-Home Server API endpoints which are concerned with Federated Identity, ma
 
 ##### Body
 
-| Type | Description |
-| ---- | ----------- |
+| Type   | Description                               |
+| ------ | ----------------------------------------- |
 | String | The client's public key, encoded in ASCII |
 
 ```json
@@ -74,8 +174,8 @@ Client-Home Server API endpoints which are concerned with encryption, such as Ke
 
 ##### Body
 
-| Type | Description |
-| ---- | ----------- |
+| Type                      | Description                                                                |
+| ------------------------- | -------------------------------------------------------------------------- |
 | JSON-Array of KeyPackages | One or more KeyPackages to add to the available KeyPackages for this user. |
 
 ```json
@@ -100,8 +200,8 @@ This response has no body.
 
 ##### Body
 
-| Type | Description |
-| ---- | ----------- |
+| Type       | Description                                                        |
+| ---------- | ------------------------------------------------------------------ |
 | KeyPackage | The KeyPackage to replace the current Last Resort KeyPackage with. |
 
 ```json
