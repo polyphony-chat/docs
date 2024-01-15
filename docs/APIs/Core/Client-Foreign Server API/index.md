@@ -18,6 +18,91 @@ If you'd like to see the routes, which require such a relationship, see the [Cli
 
 ---
 
+## <span class="group-h">Authentication</span>
+
+Routes concerning authentication.
+
+---
+
+### <span class="request-h"><span class="request request-get">GET</span> Challenge string</span>
+
+`/p2core/challenge`
+
+#### Request
+
+##### Body
+
+This request has no body.
+
+#### Response
+
+    === "200 OK"
+
+    ##### Body
+
+    | Name            | Type   | Description                                                                                                       |
+    | --------------- | ------ | ----------------------------------------------------------------------------------------------------------------- |
+    | `challenge`     | String | The [challenge string](../types.md#challenge-string), which the client should sign with its private identity key. |
+    | `lifetime_unix` | String | The UNIX timestamp after which the challenge expires.                                                             |
+
+    ```json
+    {
+        "challenge": "UH675678rbnFGNHJV2ijcnr3ghjHV74jah...",
+        "lifetime_unix": "1620000000"
+    }
+    ```
+
+---
+
+### <span class="request-h"><span class="request request-post">POST</span> Identify</span>
+
+`/p2core/session/identify`
+
+#### Request
+
+##### Body
+
+| Name                                                                                                                                                                                                                            | Type           | Description                                                                                                                                             |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `challenge`                                                                                                                                                                                                                     | String         | The [completed challenge string](../types.md#completed-challenge-string), signed with the client's private identity key.                                |
+| `id_cert`                                                                                                                                                                                                                       | String, Base64 | The client's [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert), encoded in Base64. |
+| `auth_payload` :material-help:{title="This field is optional."} :material-code-braces:{title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."} | JSON-Object    | n.A.                                                                                                                                                    |
+
+```json
+{
+    "completed_challenge": {
+        "challenge": "UH675678rbnFGNHJV2ijcnr3ghjHV74jah...",
+        "signature": "Ac4hjv2ijcnr3ghjHV74jahUH675678rbnFGNHJV..."
+    },
+    "id_cert": "gA3hjv2ijcnr3ghjHV74jahUH675678rbnFGNHJV...",
+    "auth_payload": {
+        "my_custom_attribute": "my_custom_value"
+    }
+}
+```
+
+#### Response
+
+=== "201 Created"
+
+    ##### Body
+
+    | Name                                                                                                                                                                                                                       | Type        | Description                                                           |
+    | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------- |
+    | `token`                                                                                                                                                                                                                    | String      | A session token, to be used for further identification/authentication |
+    | `payload` :material-help:{title="This field is optional."} :material-code-braces:{title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."} | JSON-Object | n.A.                                                                  |
+
+    ```json
+    {
+        "token": "G5a6hjv2ijcnr3ghjHV74jahUH675678rbnFGNHJV...",
+        "payload": {
+            "my_custom_response_attribute": "my_custom_response_value"
+        }
+    }
+    ```
+
+---
+
 ## <span class="group-h">Federated Identity</span>
 
 Routes concerning federated identities, such as authentication and ID-Cert management.
