@@ -978,23 +978,23 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#federated-identity" class="md-nav__link">
+  <a href="#authentication" class="md-nav__link">
     <span class="md-ellipsis">
-      Federated Identity
+      Authentication
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Federated Identity">
+    <nav class="md-nav" aria-label="Authentication">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#put-rotate-server-identity-key" class="md-nav__link">
+  <a href="#get-challenge-string" class="md-nav__link">
     <span class="md-ellipsis">
-      PUT Rotate Server Identity Key  
+      GET Challenge string
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="PUT Rotate Server Identity Key">
+    <nav class="md-nav" aria-label="GET Challenge string">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1021,13 +1021,13 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#get-server-id-cert" class="md-nav__link">
+  <a href="#post-identify" class="md-nav__link">
     <span class="md-ellipsis">
-      GET Server ID-Cert
+      POST Identify
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="GET Server ID-Cert">
+    <nav class="md-nav" aria-label="POST Identify">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1053,14 +1053,29 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#get-user-id-certs" class="md-nav__link">
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#federated-identity" class="md-nav__link">
     <span class="md-ellipsis">
-      GET User ID-Cert(s)
+      Federated Identity
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="GET User ID-Cert(s)">
+    <nav class="md-nav" aria-label="Federated Identity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#put-rotate-server-identity-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      PUT Rotate Server Identity Key  
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PUT Rotate Server Identity Key">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1087,13 +1102,13 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#post-rotate-session-id-cert" class="md-nav__link">
+  <a href="#get-server-id-cert" class="md-nav__link">
     <span class="md-ellipsis">
-      POST Rotate session ID-Cert 
+      GET Server ID-Cert
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="POST Rotate session ID-Cert">
+    <nav class="md-nav" aria-label="GET Server ID-Cert">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1107,6 +1122,72 @@
         
           <li class="md-nav__item">
   <a href="#response_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Response
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-user-id-certs" class="md-nav__link">
+    <span class="md-ellipsis">
+      GET User ID-Cert(s)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GET User ID-Cert(s)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#request_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Request
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Response
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-rotate-session-id-cert" class="md-nav__link">
+    <span class="md-ellipsis">
+      POST Rotate session ID-Cert 
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="POST Rotate session ID-Cert">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#request_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Request
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response_5" class="md-nav__link">
     <span class="md-ellipsis">
       Response
     </span>
@@ -1145,7 +1226,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#request_4" class="md-nav__link">
+  <a href="#request_6" class="md-nav__link">
     <span class="md-ellipsis">
       Request
     </span>
@@ -1154,7 +1235,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#response_4" class="md-nav__link">
+  <a href="#response_6" class="md-nav__link">
     <span class="md-ellipsis">
       Response
     </span>
@@ -1215,21 +1296,123 @@ If you'd like to see the routes, which require such a relationship, see the <a h
 <h3 id="errors">Errors<a class="headerlink" href="#errors" title="Permanent link">&para;</a></h3>
 <p>The errors listed below are not exhaustive, and only include the most common errors associated with an endpoint. For rate limit errors, see the Rate Limits documentation.</p>
 <hr />
+<h2 id="authentication"><span class="group-h">Authentication</span><a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
+<p>Routes concerning authentication.</p>
+<hr />
+<h3 id="get-challenge-string"><span class="request-h"><span class="request request-get">GET</span> Challenge string</span><a class="headerlink" href="#get-challenge-string" title="Permanent link">&para;</a></h3>
+<p><code>/p2core/challenge</code></p>
+<h4 id="request">Request<a class="headerlink" href="#request" title="Permanent link">&para;</a></h4>
+<h5 id="body">Body<a class="headerlink" href="#body" title="Permanent link">&para;</a></h5>
+<p>This request has no body.</p>
+<h4 id="response">Response<a class="headerlink" href="#response" title="Permanent link">&para;</a></h4>
+<div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code>=== &quot;200 OK&quot;
+
+##### Body
+
+| Name            | Type   | Description                                                                                                       |
+| --------------- | ------ | ----------------------------------------------------------------------------------------------------------------- |
+| `challenge`     | String | The [challenge string](../types.md#challenge-string), which the client should sign with its private identity key. |
+| `lifetime_unix` | String | The UNIX timestamp after which the challenge expires.                                                             |
+
+```json
+{
+    &quot;challenge&quot;: &quot;UH675678rbnFGNHJV2ijcnr3ghjHV74jah...&quot;,
+    &quot;lifetime_unix&quot;: &quot;1620000000&quot;
+}
+```
+</code></pre></div>
+<hr />
+<h3 id="post-identify"><span class="request-h"><span class="request request-post">POST</span> Identify</span><a class="headerlink" href="#post-identify" title="Permanent link">&para;</a></h3>
+<p><code>/p2core/session/identify</code></p>
+<h4 id="request_1">Request<a class="headerlink" href="#request_1" title="Permanent link">&para;</a></h4>
+<h5 id="body_1">Body<a class="headerlink" href="#body_1" title="Permanent link">&para;</a></h5>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>challenge</code></td>
+<td>String</td>
+<td>The <a href="../types/#completed-challenge-string">completed challenge string</a>, signed with the client's private identity key.</td>
+</tr>
+<tr>
+<td><code>id_cert</code></td>
+<td>String, Base64</td>
+<td>The client's <a href="/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">ID-Cert</a>, encoded in Base64.</td>
+</tr>
+<tr>
+<td><code>auth_payload</code> <span class="twemoji" title="This field is optional."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 19h3v3h-3v-3m2-17c5.35.22 7.68 5.62 4.5 9.67-.83 1-2.17 1.66-2.83 2.5C13 15 13 16 13 17h-3c0-1.67 0-3.08.67-4.08.66-1 2-1.59 2.83-2.25C15.92 8.43 15.32 5.26 12 5a3 3 0 0 0-3 3H6a6 6 0 0 1 6-6Z"/></svg></span> <span class="twemoji" title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 3a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2H3v2h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h2v-2H8v-5a2 2 0 0 0-2-2 2 2 0 0 0 2-2V5h2V3m6 0a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1v2h-1a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-2v-2h2v-5a2 2 0 0 1 2-2 2 2 0 0 1-2-2V5h-2V3h2Z"/></svg></span></td>
+<td>JSON-Object</td>
+<td>n.A.</td>
+</tr>
+</tbody>
+</table>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nt">&quot;completed_challenge&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">        </span><span class="nt">&quot;challenge&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UH675678rbnFGNHJV2ijcnr3ghjHV74jah...&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">        </span><span class="nt">&quot;signature&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ac4hjv2ijcnr3ghjHV74jahUH675678rbnFGNHJV...&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">&quot;id_cert&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gA3hjv2ijcnr3ghjHV74jahUH675678rbnFGNHJV...&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nt">&quot;auth_payload&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span><span class="nt">&quot;my_custom_attribute&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my_custom_value&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="p">}</span>
+</code></pre></div>
+<h4 id="response_1">Response<a class="headerlink" href="#response_1" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">201 Created</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<h5 id="body_2">Body<a class="headerlink" href="#body_2" title="Permanent link">&para;</a></h5>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>token</code></td>
+<td>String</td>
+<td>A session token, to be used for further identification/authentication</td>
+</tr>
+<tr>
+<td><code>payload</code> <span class="twemoji" title="This field is optional."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 19h3v3h-3v-3m2-17c5.35.22 7.68 5.62 4.5 9.67-.83 1-2.17 1.66-2.83 2.5C13 15 13 16 13 17h-3c0-1.67 0-3.08.67-4.08.66-1 2-1.59 2.83-2.25C15.92 8.43 15.32 5.26 12 5a3 3 0 0 0-3 3H6a6 6 0 0 1 6-6Z"/></svg></span> <span class="twemoji" title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 3a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2H3v2h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h2v-2H8v-5a2 2 0 0 0-2-2 2 2 0 0 0 2-2V5h2V3m6 0a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1v2h-1a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-2v-2h2v-5a2 2 0 0 1 2-2 2 2 0 0 1-2-2V5h-2V3h2Z"/></svg></span></td>
+<td>JSON-Object</td>
+<td>n.A.</td>
+</tr>
+</tbody>
+</table>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nt">&quot;token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;G5a6hjv2ijcnr3ghjHV74jahUH675678rbnFGNHJV...&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">&quot;payload&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">        </span><span class="nt">&quot;my_custom_response_attribute&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my_custom_response_value&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">}</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<hr />
 <h2 id="federated-identity"><span class="group-h">Federated Identity</span><a class="headerlink" href="#federated-identity" title="Permanent link">&para;</a></h2>
 <p>Routes concerning federated identities, such as authentication and ID-Cert management.</p>
 <hr />
 <h3 id="put-rotate-server-identity-key"><span class="request-h"><span class="request request-put">PUT</span> Rotate Server Identity Key <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a> <a href="" title="This route is only available to server administrators"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 1 9 4v6c0 5.55-3.84 10.74-9 12-5.16-1.26-9-6.45-9-12V5l9-4m0 2.18L5 6.3v4.92C5 15.54 8.25 20 12 21c3.75-1 7-5.46 7-9.78V6.3l-7-3.12M16 14v1.59c-.04.22-.22.37-.47.41H8.47c-.25-.04-.43-.19-.47-.41V14h8m1-6-1 5H8L7 8l2.67 2.67L12 8.34l2.33 2.33L17 8Z"/></svg></span></a></span><a class="headerlink" href="#put-rotate-server-identity-key" title="Permanent link">&para;</a></h3>
 <p><code>/p2core/key/server</code></p>
-<h4 id="request">Request<a class="headerlink" href="#request" title="Permanent link">&para;</a></h4>
-<h5 id="body">Body<a class="headerlink" href="#body" title="Permanent link">&para;</a></h5>
+<h4 id="request_2">Request<a class="headerlink" href="#request_2" title="Permanent link">&para;</a></h4>
+<h5 id="body_3">Body<a class="headerlink" href="#body_3" title="Permanent link">&para;</a></h5>
 <p>This request has no body.</p>
-<h4 id="response">Response<a class="headerlink" href="#response" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">200 OK</label></div>
+<h4 id="response_2">Response<a class="headerlink" href="#response_2" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">200 OK</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
-</div>
-</div>
-<h5 id="body_1">Body<a class="headerlink" href="#body_1" title="Permanent link">&para;</a></h5>
+<div class="tabbed-block">
+<h5 id="body_4">Body<a class="headerlink" href="#body_4" title="Permanent link">&para;</a></h5>
 <table>
 <thead>
 <tr>
@@ -1244,18 +1427,21 @@ If you'd like to see the routes, which require such a relationship, see the <a h
 </tr>
 </tbody>
 </table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="s2">&quot;-----BEGIN PGP PUBLIC KEY BLOCK-----</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="s2">mQINBGSDs58BEADCXP1ArorBtOvGnQdAD26gsOMasyLMqnJyUp8XXCdmTx5+gREs</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="s2">vtItmjIshHU6CLUyTwO2IqIb2Fds+AmDsdM1Qx/vM0fVtPAS13T3Tu9rknldJvvN</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="s2">GyT3urrgvZ1leqQnwvuHd3WMdtgQ29lc7F/XaP4v2RIlqUiV+bnBoe/6LL7HXTaW</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="s2">zy2oKXr/odOD4+476J5APxxXCWVLXr3qfAXmSBQERznYuuRmhyL...</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="s2">-----END PGP PUBLIC KEY BLOCK-----&quot;</span>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="s2">&quot;-----BEGIN PGP PUBLIC KEY BLOCK-----</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="s2">mQINBGSDs58BEADCXP1ArorBtOvGnQdAD26gsOMasyLMqnJyUp8XXCdmTx5+gREs</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="s2">vtItmjIshHU6CLUyTwO2IqIb2Fds+AmDsdM1Qx/vM0fVtPAS13T3Tu9rknldJvvN</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s2">GyT3urrgvZ1leqQnwvuHd3WMdtgQ29lc7F/XaP4v2RIlqUiV+bnBoe/6LL7HXTaW</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s2">zy2oKXr/odOD4+476J5APxxXCWVLXr3qfAXmSBQERznYuuRmhyL...</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s2">-----END PGP PUBLIC KEY BLOCK-----&quot;</span>
 </code></pre></div>
+</div>
+</div>
+</div>
 <hr />
 <h3 id="get-server-id-cert"><span class="request-h"><span class="request request-get">GET</span> Server ID-Cert</span><a class="headerlink" href="#get-server-id-cert" title="Permanent link">&para;</a></h3>
 <p><code>/p2core/key/server</code></p>
-<h4 id="request_1">Request<a class="headerlink" href="#request_1" title="Permanent link">&para;</a></h4>
-<h5 id="body_2">Body<a class="headerlink" href="#body_2" title="Permanent link">&para;</a></h5>
+<h4 id="request_3">Request<a class="headerlink" href="#request_3" title="Permanent link">&para;</a></h4>
+<h5 id="body_5">Body<a class="headerlink" href="#body_5" title="Permanent link">&para;</a></h5>
 <table>
 <thead>
 <tr>
@@ -1272,37 +1458,29 @@ If you'd like to see the routes, which require such a relationship, see the <a h
 </tr>
 </tbody>
 </table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1620000000&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">}</span>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1620000000&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="p">}</span>
 </code></pre></div>
-<h4 id="response_1">Response<a class="headerlink" href="#response_1" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">200 OK</label></div>
+<h4 id="response_3">Response<a class="headerlink" href="#response_3" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:1"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
 </div>
-<h5 id="body_3">Body<a class="headerlink" href="#body_3" title="Permanent link">&para;</a></h5>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ID-Cert, Binary</td>
-<td>The servers' public identity certificate, in binary format.</td>
-</tr>
-</tbody>
-</table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">[</span><span class="err">...</span><span class="p">]</span>
+<h5 id="body_6">Body<a class="headerlink" href="#body_6" title="Permanent link">&para;</a></h5>
+<div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code>| Type             | Description                                                    |
+| ---------------- | -------------------------------------------------------------- |
+| String, Base64  | The servers&#39; public [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert).     |
+
+```json
+[...]
+```
 </code></pre></div>
 <hr />
 <h3 id="get-user-id-certs"><span class="request-h"><span class="request request-get">GET</span> User ID-Cert(s)</span><a class="headerlink" href="#get-user-id-certs" title="Permanent link">&para;</a></h3>
 <p><code>/p2core/key/user/:user_id</code></p>
-<h4 id="request_2">Request<a class="headerlink" href="#request_2" title="Permanent link">&para;</a></h4>
+<h4 id="request_4">Request<a class="headerlink" href="#request_4" title="Permanent link">&para;</a></h4>
 <h5 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h5>
 <table>
 <thead>
@@ -1320,7 +1498,7 @@ If you'd like to see the routes, which require such a relationship, see the <a h
 </tr>
 </tbody>
 </table>
-<h5 id="body_4">Body<a class="headerlink" href="#body_4" title="Permanent link">&para;</a></h5>
+<h5 id="body_7">Body<a class="headerlink" href="#body_7" title="Permanent link">&para;</a></h5>
 <table>
 <thead>
 <tr>
@@ -1337,17 +1515,15 @@ If you'd like to see the routes, which require such a relationship, see the <a h
 </tr>
 </tbody>
 </table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1620000000&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">}</span>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1620000000&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="p">}</span>
 </code></pre></div>
-<h4 id="response_2">Response<a class="headerlink" href="#response_2" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="3:1"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">200 OK</label></div>
+<h4 id="response_4">Response<a class="headerlink" href="#response_4" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:1"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">200 OK</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
-</div>
-</div>
-<h5 id="body_5">Body<a class="headerlink" href="#body_5" title="Permanent link">&para;</a></h5>
+<div class="tabbed-block">
+<h5 id="body_8">Body<a class="headerlink" href="#body_8" title="Permanent link">&para;</a></h5>
 <table>
 <thead>
 <tr>
@@ -1357,18 +1533,21 @@ If you'd like to see the routes, which require such a relationship, see the <a h
 </thead>
 <tbody>
 <tr>
-<td>JSON-Array of ID-Cert(s), Binary</td>
-<td>The user's public identity certificate(s), in binary format.</td>
+<td>JSON-Array of Strings (Base64)</td>
+<td>The user's public identity certificate(s), encoded in Base64.</td>
 </tr>
 </tbody>
 </table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">[</span><span class="err">...</span><span class="p">]</span>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">[</span><span class="err">...</span><span class="p">]</span>
 </code></pre></div>
+</div>
+</div>
+</div>
 <hr />
 <h3 id="post-rotate-session-id-cert"><span class="request-h"><span class="request request-post">POST</span> Rotate session ID-Cert <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a></span><a class="headerlink" href="#post-rotate-session-id-cert" title="Permanent link">&para;</a></h3>
 <p><code>/p2core/session/idcert/extern</code></p>
-<h4 id="request_3">Request<a class="headerlink" href="#request_3" title="Permanent link">&para;</a></h4>
-<h5 id="body_6">Body<a class="headerlink" href="#body_6" title="Permanent link">&para;</a></h5>
+<h4 id="request_5">Request<a class="headerlink" href="#request_5" title="Permanent link">&para;</a></h4>
+<h5 id="body_9">Body<a class="headerlink" href="#body_9" title="Permanent link">&para;</a></h5>
 <table>
 <thead>
 <tr>
@@ -1378,28 +1557,29 @@ If you'd like to see the routes, which require such a relationship, see the <a h
 </thead>
 <tbody>
 <tr>
-<td>ID-Cert, Binary</td>
-<td>The new public identity certificate, in binary format.</td>
+<td>String, Base64</td>
+<td>The new <a href="/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">ID-Cert</a> for this session ID.</td>
 </tr>
 </tbody>
 </table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">[</span><span class="err">...</span><span class="p">]</span>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">[</span><span class="err">...</span><span class="p">]</span>
 </code></pre></div>
-<h4 id="response_3">Response<a class="headerlink" href="#response_3" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="4:1"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">201 Created</label></div>
+<h4 id="response_5">Response<a class="headerlink" href="#response_5" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:1"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">201 Created</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
-</div>
-</div>
-<h5 id="body_7">Body<a class="headerlink" href="#body_7" title="Permanent link">&para;</a></h5>
+<div class="tabbed-block">
+<h5 id="body_10">Body<a class="headerlink" href="#body_10" title="Permanent link">&para;</a></h5>
 <p>This response has no body.</p>
 <hr />
 <h2 id="encryption"><span class="group-h">Encryption</span><a class="headerlink" href="#encryption" title="Permanent link">&para;</a></h2>
 <p>Client-Foreign Server API endpoints which are concerned with encryption related tasks.</p>
+</div>
+</div>
+</div>
 <hr />
 <h3 id="get-keypackages"><span class="request-h"><span class="request request-get">GET</span> KeyPackage(s) <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a></span><a class="headerlink" href="#get-keypackages" title="Permanent link">&para;</a></h3>
 <p><code>/p2core/keypackage/:user_id</code></p>
-<h4 id="request_4">Request<a class="headerlink" href="#request_4" title="Permanent link">&para;</a></h4>
+<h4 id="request_6">Request<a class="headerlink" href="#request_6" title="Permanent link">&para;</a></h4>
 <h5 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">&para;</a></h5>
 <table>
 <thead>
@@ -1417,15 +1597,13 @@ If you'd like to see the routes, which require such a relationship, see the <a h
 </tr>
 </tbody>
 </table>
-<h5 id="body_8">Body<a class="headerlink" href="#body_8" title="Permanent link">&para;</a></h5>
+<h5 id="body_11">Body<a class="headerlink" href="#body_11" title="Permanent link">&para;</a></h5>
 <p>This request has no body.</p>
-<h4 id="response_4">Response<a class="headerlink" href="#response_4" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="5:1"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">200 OK</label></div>
+<h4 id="response_6">Response<a class="headerlink" href="#response_6" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:1"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">200 OK</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
-</div>
-</div>
-<h5 id="body_9">Body<a class="headerlink" href="#body_9" title="Permanent link">&para;</a></h5>
+<div class="tabbed-block">
+<h5 id="body_12">Body<a class="headerlink" href="#body_12" title="Permanent link">&para;</a></h5>
 <table>
 <thead>
 <tr>
@@ -1440,8 +1618,11 @@ If you'd like to see the routes, which require such a relationship, see the <a h
 </tr>
 </tbody>
 </table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">[</span><span class="err">...</span><span class="p">]</span>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">[</span><span class="err">...</span><span class="p">]</span>
 </code></pre></div>
+</div>
+</div>
+</div>
 <hr />
 <h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1478,7 +1659,7 @@ If you'd like to see the routes, which require such a relationship, see the <a h
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-01-15T18:03:06+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-01-15</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-01-15T19:08:49+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-01-15</span>
   </span>
 
     
