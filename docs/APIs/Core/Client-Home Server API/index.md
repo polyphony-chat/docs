@@ -9,9 +9,9 @@ This Page only includes routes which a client can request from its home server. 
 can also be accessed from a foreign server, or with no authentication at all, see the
 [Client-Foreign Server API documentation](../Client-Foreign%20Server%20API/index.md)
 
-!!! bug "TODO"
+!!! bug "Unfinished section"
 
-    TODO: Add/rework routes according to the new section 4 of the spec.
+    TODO: This section is not yet finished. It is missing descriptions for some routes, some error-code responses, etc.
 
 --8<-- "snippets/api.md"
 
