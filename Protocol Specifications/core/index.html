@@ -2098,17 +2098,21 @@ Clients must not use the same keys on multiple devices. Instead, the MLS protoco
 <h2 id="7-keys-and-signatures">7. Keys and signatures<a class="headerlink" href="#7-keys-and-signatures" title="Permanent link">&para;</a></h2>
 <h3 id="71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">7.1 Home server signed certificates for public client identity keys (ID-Cert)<a class="headerlink" href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert" title="Permanent link">&para;</a></h3>
 <p>The home server signed public client identity key certificate, ID-Cert for short, is a public key certificate used to prove the validity of a public identity key. The ID-Cert is a user generated public identity key certificate signing request (CSR), signed by a user's home server, and includes information about the user's identity, as well as the public identity key of the user. Clients can receive an ID-Cert in exchange for a CSR.</p>
-<p>A CSR includes the following information:
-- The public identity key of the client.
-- The federation ID of the user associated with the client.
-- The session ID of the client. The session ID is a unique identifier for a session, which does not change when a client rotates their identity keys.
-- Optionally, an expiry date for the certificate. This expiry date must be less than or equal to the expiry date of the home servers' public identity key certificate.</p>
-<p>The resulting ID-Cert contains the following information, in addition to the information supplied through the CSR:
-- Issuer information: The home servers' domain.
-- Serial number: A unique identifier for the certificate.
-- Signature algorithm: The algorithm used to sign the certificate.
-- Signature: The signature of the certificate, generated using the home servers' private identity key.
-- Expiry date: The expiry date of the certificate.</p>
+<p>A CSR includes the following information:</p>
+<ul>
+<li>The public identity key of the client.</li>
+<li>The federation ID of the user associated with the client.</li>
+<li>The session ID of the client. The session ID is a unique identifier for a session, which does not change when a client rotates their identity keys.</li>
+<li>Optionally, an expiry date for the certificate. This expiry date must be less than or equal to the expiry date of the home servers' public identity key certificate.</li>
+</ul>
+<p>The resulting ID-Cert contains the following information, in addition to the information supplied through the CSR:</p>
+<ul>
+<li>Issuer information: The home servers' domain.</li>
+<li>Serial number: A unique identifier for the certificate.</li>
+<li>Signature algorithm: The algorithm used to sign the certificate.</li>
+<li>Signature: The signature of the certificate, generated using the home servers' private identity key.</li>
+<li>Expiry date: The expiry date of the certificate.</li>
+</ul>
 <p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>                                                 Server                                                Client                           
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>                                                 |                                                     |                                 
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>                                                 |                                                     | Create CSR for own identity key 
