@@ -11,7 +11,7 @@ can also be accessed from a foreign server, or with no authentication at all, se
 
 !!! bug "Unfinished section"
 
-    TODO: This section is not yet finished. It is missing descriptions for some routes, some error-code responses, etc.
+    TODO: This section is not yet finished. It is missing descriptions for most routes, some error-code responses, etc.
 
 --8<-- "snippets/api.md"
 
