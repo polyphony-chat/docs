@@ -12,8 +12,11 @@
     - [3.3 WebSockets](#33-websockets)
   - [4. Federated Identity](#4-federated-identity)
     - [4.1 Authentication](#41-authentication)
-      - [4.1.1 Using the same identity for different polyproto-core implementations](#411-using-the-same-identity-for-different-polyproto-core-implementations)
-    - [4.2 Federation tokens](#42-federation-tokens)
+      - [4.1.1 Registering a new user on a polyproto-core home server](#411-registering-a-new-user-on-a-polyproto-core-home-server)
+      - [4.1.2 Authenticating a new client on a polyproto-core home server](#412-authenticating-a-new-client-on-a-polyproto-core-home-server)
+      - [4.1.3 Authenticating on a foreign server](#413-authenticating-on-a-foreign-server)
+      - [4.1.4 Using the same identity for different polyproto-core implementations](#414-using-the-same-identity-for-different-polyproto-core-implementations)
+    - [4.2 Challenge Strings](#42-challenge-strings)
     - [4.3 Abuse prevention](#43-abuse-prevention)
   - [5. Users](#5-users)
   - [6. Encryption](#6-encryption)
@@ -154,94 +157,72 @@ Taking polyproto-chat as an example, this means that a polyproto-chat user can s
 
 An identity certificate defined in sections [#7. Keys and signatures](#7-keys-and-signatures) and [#7.1 Home server signed certificates for public client identity keys (ID-Cert)](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) is used to sign messages that the user sends to other servers.
 
-**Example:**
-Say that Alice is on server A, and Bob is on server B. Alice wants to send a message to Bob.
-For this, Alice has to interact with the foreign server B.
-
-Alice's client will send a request to server B, requesting a challenge string. After receiving the challenge string, Alice signs this string with their ID-Cert and sends the signature and her ID-Cert to Server B. Server B can now verify, that it was actually Alice who signed the string, and not a malicious outsider. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B using this token, and send the message to server B. Server B will then send the message to Bob's client.
-
-```
-Alice's Client                                  Server A              Server B              Bob's Client
-|                                               |                     |                     |
-| Federation token request                      |                     |                     |
-|---------------------------------------------->|                     |                     |
-|                                               |                     |                     |
-|                              Federation token |                     |                     |
-|<----------------------------------------------|                     |                     |
-|                              [Federation handshake start]           |                     |
-|                                               |                     |                     |
-| Federation token, Public Profile, ID-Cert     |                     |                     |
-|-------------------------------------------------------------------->|                     |
-|                                               |                     |                     |
-|                                               |        Get pubkey   |                     |
-|                                               |<--------------------|                     |
-|                                               |                     |                     |
-|                                               | Server A Pubkey     |                     |
-|                                               |-------------------->|                     |
-|                                               |                     |                     |
-|                                               |                     | Verify fedi-token   |
-|                                               |                     |-------------------  |
-|                                               |                     |                  |  |
-|                                               |                     |<------------------  |
-|                                               |                     |                     |
-|                                               |     Session Token   |                     |
-|<--------------------------------------------------------------------|                     |
-|                                               |                     |                     |
-|                             [Federation handshake complete]         |                     |
-|                                               |                     |                     |
-| Session Token + Signed message                |                     |                     |
-|-------------------------------------------------------------------->|                     |
-|                                               |                     |                     |
-|                                               |                     | Signed message      |
-|                                               |                     |-------------------->|
-|                                               |                     |                     |
-```
-Fig. 2: Sequence diagram of a successful federation handshake and message sending process.
-
-!!! bug "TODO"
-
-    TODO: The above sequence diagram has to be re-done.
-
-!!! bug "TODO"
-
-    TODO: Federation tokens will be replaced with a different system, which is currently being worked on.
-
-If Alice's session token expires, or if Alice would like to sign in on another device, she can repeat this process of generating a federation token and exchanging it for a session token.
-
 !!! info
 
     You can read more about the Identity Pubkey and Certificate in [7. Keys and signatures](#7-keys-and-signatures).
 
 ### 4.1 Authentication
 
-Authenticating a new user or client in the context of polyproto-core is a two-step process.
+#### 4.1.1 Registering a new user on a polyproto-core home server
 
-1. The client sends the implementation-specific authentication information to the server. The server verifies this information and responds with an HTTP status code indicating whether the authentication was successful or not. However, the authentication process is not yet complete, and the server does not yet provide a session token or any further information to the client.
-2. The client performs a second request, this time to the polyproto-core authentication API, providing the server with a [CSR](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert). The server verifies the CSR and responds with the signed [ID-Cert](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert), along with a session token, or whatever other implementation-specific information is needed to complete the authentication process.
+Registering a new user in the context of polyproto-core is done through an API route defined in the polyproto-core Client-Home server API documentation.
+The registration process consists of two steps:
 
-!!! bug "TODO"
+1. The client sends the home server a request containing the registration information, such as the username, password, email address, etc. The server verifies the correctness of the provided information, checks if the username is available, etc. The server then responds with an HTTP status code indicating whether the registration was successful. However, the registration process is not yet complete, and the server does not yet provide a session token or any further information to the client.
+2. Adding a new client to the just registered user is done by performing the same steps as authenticating a new client on a polyproto-core home server, described in section [4.1.2](#412-authenticating-a-new-client-on-a-polyproto-core-home-server). If both steps are successful, the registration process is complete.
 
-    TODO: Switching step 1 and 2 might be a better idea. Also, the current step two doesn't yet mention the federation handshake from the previous section.
+```
+Client                                               Server                                                           
+|                             |                                            
+| Registration information    |                                            
+|---------------------------->|                                            
+|                             |                                            
+|                             | Verify correctness of provided information,
+|                             | check if username is available, etc. 
+|                             |------------------------------------------- 
+|                             |                                          | 
+|                             |<------------------------------------------ 
+|                             | -------------------------                  
+|                             |-| Verified successfully |                  
+|                             | -------------------------                                                           
+|                             |                                            
+|                             | Verify provided CSR                        
+|                             |--------------------                        
+|                             |                   |                        
+|                             |<-------------------                        
+|                             | ------------                               
+|                             |-| CSR okay |                               
+|                             | ------------                               
+|                             |                                            
+|                             | Signing CSR                                
+|                             |------------                                
+|                             |           |                                
+|                             |<-----------                                
+|                             |                                            
+|        HTTP Status Code 202 |                                            
+|<----------------------------|                                            
+|                             |                                            
+```
+Fig. 2: Sequence diagram of a successful identity creation process.
+
+#### 4.1.2 Authenticating a new client on a polyproto-core home server
+
+Whenever a user would like to access their account from a new device, they must authenticate the new session with their home server. This is done by sending the home server a request containing the authentication information, such as the username and password, and a [certificate signing request (CSR)](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) for the new client. The server verifies the correctness of the provided information and, given that the verification succeeds, signs the CSR and responds with the newly generated ID-Cert, along with a session token.
 
 ```
 Client                                               Server                                                           
 |                                                    |                                            
-| Authentication Step 1                              |                                            
+| Auth information, CSR                              |                                            
 |--------------------------------------------------->|                                            
 |                                                    |                                            
-|                                                    | Verify correctness of provided information 
+|                                                    | Verify correctness of provided auth
+|                                                    | information
 |                                                    |------------------------------------------- 
 |                                                    |                                          | 
 |                                                    |<------------------------------------------ 
 |                                                    | -------------------------                  
 |                                                    |-| Verified successfully |                  
-|                                                    | -------------------------                  
-|                                                    |                                            
-|                               HTTP Status Code 202 |                                            
-|<---------------------------------------------------|                                            
-|                                                    |                                            
-| Authentication Step 2                              |                                            
-|--------------------------------------------------->|                                            
+|                                                    | -------------------------                                                           
 |                                                    |                                            
 |                                                    | Verify provided CSR                        
 |                                                    |--------------------                        
@@ -260,32 +241,68 @@ Client                                               Server
 |<---------------------------------------------------|                                            
 |                                                    |                                            
 ```
-Fig. 3: Sequence diagram of the two-step authentication process.
+Fig. 3: Sequence diagram of a successful client authentication process.
 
-!!! info
+The client is now authenticated and can use the session token and ID-Cert to perform actions on behalf of the user identified by the ID-Cert.
 
-    "Two-step authentication" is not to be confused with two-factor authentication. Two-step authentication is a process where the authentication is split into two steps, where the first step is used to verify the correctness of the provided information, and the second step is used to verify the identity of the user. Two-factor authentication can of course also be used in polyproto-core, and would be part of the first step of the authentication process.
+#### 4.1.3 Authenticating on a foreign server
 
-#### 4.1.1 Using the same identity for different polyproto-core implementations
+Authenticating on a foreign server is similar to authenticating on a home server, with the difference being that the user must sign a challenge string with their private identity key, and send the signature to the foreign server, along with their ID-Cert. The foreign server MUST then verify the following to be true:
+
+- The ID-Cert is valid and signed by the home server that the user claims to be from.
+- The signature of the challenge string is valid and signed by the user's private identity key.
+- The ID-Cert is not expired.
+
+If the verification is successful, the foreign server can issue a session token to the user.
+
+**Example:**
+Say that Alice is on server A, and would like to authenticate on Server B using her existing identity.
+
+Alice's client will send a request to server B, requesting a challenge string. After receiving the challenge string, Alice signs this string with their ID-Cert and sends the signature and her ID-Cert to Server B. Server B can now verify, that it was actually Alice who signed the string, and not a malicious outsider. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B using this token.
+```
+Alice's Client                                  Server A              Server B
+|                                               |                     |
+| Challenge string request                      |                     |
+|---------------------------------------------->|                     |
+|                                               |                     |
+|                              Challenge string |                     |
+|<----------------------------------------------|                     |
+|                                               |                     |        
+|                                               |                     |
+| Signed challenge, ID-Cert                     |                     |
+|-------------------------------------------------------------------->|
+|                                               |                     |
+|                                               |          Get pubkey |
+|                                               |<--------------------|
+|                                               |                     |
+|                                               | Server A Pubkey     |
+|                                               |-------------------->|
+|                                               |                     |
+|                                               |                     |
+|                                               |                     |
+|                                               |                     |
+|                                               |                     |
+|                                               |                     |
+|                                               |       Session Token |
+|<--------------------------------------------------------------------|
+|                                               |                     |
+
+```
+Fig. 4: Sequence diagram of a successful identity verification.
+
+If Alice's session token expires, she can repeat this process of requesting a challenge string and, together with her ID-Cert, exchange it for a session token.
+However, if Alice wants to access this third party account from a completely new device, they will have to perform the steps described in section [4.1.2](#412-authenticating-a-new-client-on-a-polyproto-core-home-server) to obtain a valid ID-Cert for that session.
+
+#### 4.1.4 Using the same identity for different polyproto-core implementations
 
 A user may choose to use the same identity for multiple polyproto-core implementations. The additional behavior required by polyproto-core server implementations is really simple, as the server only needs to verify the ID-Cert of the user.
 To verify the ID-Cert, the server can simply request the other servers' public identity key and then verify the signature of the ID-Cert with the public identity key of the other server.
 
-### 4.2 Federation tokens
+### 4.2 Challenge Strings
 
-Federation tokens are generated by the user's home server. The token is a JSON object that contains the following information:
+Challenge strings are generated by servers. They are a random, unique string of characters, which is used to verify that the user is in possession of their private identity key. The string is signed by the user's private identity key, and the signature is sent to the server, along with the user's ID-Cert. By verifying the signature of the challenge string with the user's ID-Cert, the server can verify that the user is in possession of their private identity key, and is who they claim to be.
 
-- The time at which the token expires.
-- The user's federation ID.
-- The domain of the server that the token is intended for.
-- The domain of the user's home server.
-- A securely-randomly generated nonce
-
-The usage of federation tokens prevents replay attacks, as a token is valid only once, only for a short amount of time, and only for a specific server.
-
-!!! bug "TODO"
-
-    TODO: As federation tokens will be replaced with a different system, which is currently being worked on, this section will be updated.
+The usage of challenge strings prevents replay attacks, as the challenge string is unique, meaning that it is different even for two identical requests. This means that a malicious server cannot simply replay a request to another server, as the signature of the challenge string would be different.
 
 ### 4.3 Abuse prevention
 
@@ -300,29 +317,22 @@ their consent.
     malicious server can then impersonate the user on another server, as well as read unencrypted
     data (such as messages, in the context of a chat application) sent on the other server.
 
-The above scenario is not unique to polyproto-core, and rather a problem other federated services/
-protocols, like ActivityPub, have as well. There is no real solution to this problem, but it can be
-mitigated a bit by making it more difficult for malicious home servers to do something like this
-without the user noticing.
+!!! abstract
 
-Polyproto servers should notify users, when a new session token is generated for
+    The above scenario is not unique to polyproto-core, and rather a problem other federated services/
+    protocols, like ActivityPub, have as well. There is no real solution to this problem, but it can be
+    mitigated a bit by making it more difficult for malicious home servers to do something like this
+    without the user noticing.
+
+Polyproto servers MUST notify users, when a new session token is generated for
 them. This would make the malicious home server's actions more noticeable to the user. However, this does
 not address the issue of the malicious home server being able to generate a federation token for a server
 which you are not yet connected to, as the user would have no way to receive the notification of a 
 session token being created for them, if they are not connected to that server. Clients
-re-connecting to a server after being offline should be notified of any new session tokens that were
-generated for them while they were offline. This `NEW_SESSION` gateway event should be sent to all
-sessions, except for the new session. The `NEW_SESSION` gateway event should contain the following
-information:
-
-```json
-{
-  "ip": "<IP address of the session>",
-  "user_agent": "<User agent of the session>",
-  "timestamp": "<Timestamp of when the session was created>",
-  "session_pubkey": "<Public key of the session>",
-}
-```
+re-connecting to a server after being offline MUST be notified of any new session tokens that were
+generated for them while they were offline. This `NEW_SESSION` gateway event MUST be sent to all
+sessions, except for the new session. The information stored in a `NEW_SESSION` event can be found
+in the [Gateway Events documentation](/docs/APIs/Core/WebSockets/gateway_events.md#new_session).
 
 !!! note
 
@@ -334,7 +344,7 @@ information:
 
 ## 5. Users
 
-Each client must have a user associated with it. A user is identified by a unique federation ID (FID), which consists of the user's username (which must be unique on the instance) and the instance's root domain. A FID is formatted as follows: `user@optionalsubdomain.domain.tld`, which makes for a globally unique user ID. Federation IDs are case-insensitive.
+Each client must have a user identity associated with it. A user is identified by a unique federation ID (FID), which consists of the user's username (which must be unique on the instance) and the instance's root domain. A FID is formatted as follows: `user@optionalsubdomain.domain.tld`, which makes for a globally unique user ID. Federation IDs are case-insensitive.
 
 The following regex can be used to validate user IDs: `\b([A-Z0-9._%+-]+)@([A-Z0-9.-]+\.[A-Z]{2,})\b`.
 
@@ -459,7 +469,7 @@ The resulting ID-Cert contains the following information, in addition to the inf
 ------------------------------------------------ |                                                     |                                 
                                                  |                                                     |                                 
 ```
-Fig. 4: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert from their home server.
+Fig. 5: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert from their home server.
 
 !!! info 
 
@@ -525,7 +535,7 @@ Server B                                        Bob                             
 |                                               |<-----------------------------------       |
 |                                               |                                           |
 ```
-Fig. 5: Sequence diagram of a successful message signature verification.
+Fig. 6: Sequence diagram of a successful message signature verification.
 
 Bob's client may now choose to cache Server A's public identity key and Alice's ID-Cert, so that it does not have to request them again in the future, as long as the ID-Cert/Server public key do not change and are not expired. If Bob's client receives another message from Alice, it can now verify the signature of the message with the cached ID-Certs.
 
@@ -617,7 +627,7 @@ Server A                               Alice A                                  
 |-------------------------------------------------------------------------------------------->|                                                   |
 |                                      |                                                      |                                                   |
 ```
-Fig. 6: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is reachable and cooperative.
+Fig. 7: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is reachable and cooperative.
 
 Alternatively, if Server A is offline or deemed uncooperative, the following sequence diagram depicts how the migration can be done without Server A's cooperation:
 
@@ -653,7 +663,7 @@ Server A     Alice A                                                            
 |            |                                                                                |-------------------------------------------------->|
 |            |                                                                                |                                                   |
 ```
-Fig. 7: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is unreachable or uncooperative.
+Fig. 8: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is unreachable or uncooperative.
 
 !!! question "If the old home server is not needed for the migration, why try to contact it in the first place?"
 
@@ -722,4 +732,4 @@ Alice A                                              Server C                   
 |                                                    |<--------------------------------------------------------------      |                                                     
 |                                                    |                                                                     |                                                     
 ```
-Fig. 8: Sequence diagram depicting the re-signing procedure.
+Fig. 9: Sequence diagram depicting the re-signing procedure.
