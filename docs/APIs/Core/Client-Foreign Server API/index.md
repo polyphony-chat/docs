@@ -190,6 +190,7 @@ This request has no body.
 ```json
 [...]
 ```
+
 ---
 
 --8<-- "snippets/glossary.md"
