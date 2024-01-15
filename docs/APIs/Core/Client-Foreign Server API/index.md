@@ -20,51 +20,7 @@ If you'd like to see the routes, which require such a relationship, see the [Cli
 
 ## <span class="group-h">Federated Identity</span>
 
-Routes concerning federated identities, such as authentication and key management.
-
----
-
-### <span class="request-h"><span class="request request-post">POST</span> Generate Session Token [:material-lock-outline:](#authorization "Authorization required")</span>
-
-`/p2core/session/auth`
-
-#### Request
-
-##### Body
-
-| Name                                                                                                                                                | Type                     | Description                                                   |
-| --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------- |
-| `federation_token`                                                                                                                                  | Federation Token         | A valid federation token to authenticate with on this server. |
-| `id_cert`                                                                                                                                           | ID-Cert, Binary Data     | The client's ID-Cert.                                         |
-| `key_packages` :material-email-lock-outline:{title="This field is only required in polyproto-core implementations which support MLS encryption."}   | JSON-Array of KeyPackage | One or more KeyPackages                                       |
-| `key_package_lr` :material-email-lock-outline:{title="This field is only required in polyproto-core implementations which support MLS encryption."} | KeyPackage               | A "Last-Resort" KeyPackage                                    |
-
-```json
-{
-    "federation_token": {...},
-    "id_cert": [...],
-    "key_packages": [{...}, {...}],
-    "key_package_lr": {...}
-}
-```
-
-#### Response
-
-=== "201 Created"
-
-##### Body
-
-| Name                                                     | Type        | Description                                                                                                                                                                                                                                                 |
-| -------------------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `session_token`                                          | String      | The generated session token                                                                                                                                                                                                                                 |
-| `extra` :material-help:{title="This field is optional."} | JSON Object | Implementation-specific data which might be sent along the session token, when the authentication succeeds. Read the documentation of the specific polyproto-core implementation to see if this field should be expected, and if so, what its contents are. |
-
-```json
-{
-    "session_token": "eYjd34GsAdfgAd.4332hfiwodm3lo...",
-    "extra": {...}
-}
-```
+Routes concerning federated identities, such as authentication and ID-Cert management.
 
 ---
 
@@ -173,6 +129,38 @@ zy2oKXr/odOD4+476J5APxxXCWVLXr3qfAXmSBQERznYuuRmhyL...
 
 ---
 
+### <span class="request-h"><span class="request request-post">POST</span> Rotate session ID-Cert [:material-lock-outline:](#authorization "Authorization required")</span>
+
+`/p2core/session/idcert/extern`
+
+#### Request
+
+##### Body
+
+| Type             | Description                                                                 |
+| ---------------- | --------------------------------------------------------------------------- |
+| ID-Cert, Binary  | The new public identity certificate, in binary format.                      |
+
+```json
+[...]
+```
+
+#### Response
+
+=== "201 Created"
+
+##### Body
+
+This response has no body.
+
+---
+
+## <span class="group-h">Encryption</span>
+
+Client-Foreign Server API endpoints which are concerned with encryption related tasks.
+
+---
+
 ### <span class="request-h"><span class="request request-get">GET</span> KeyPackage(s) [:material-lock-outline:](#authorization "Authorization required")</span>
 
 `/p2core/keypackage/:user_id`
@@ -202,38 +190,6 @@ This request has no body.
 ```json
 [...]
 ```
-
----
-
-### <span class="request-h"><span class="request request-post">POST</span> Rotate session ID-Cert [:material-lock-outline:](#authorization "Authorization required")</span>
-
-`/p2core/key/user/@me`
-
-!!! info
-
-    This endpoint has a twin, for when the server the client is interacting with, is its home server.
-    See [Client-Home Server API/Rotate session ID-Cert](../Client-Home%20Server%20API/index.md#post-rotate-session-id-cert) for more information.
-
-#### Request
-
-##### Body
-
-| Type             | Description                                                                 |
-| ---------------- | --------------------------------------------------------------------------- |
-| ID-Cert, Binary  | The new public identity certificate, in binary format.                      |
-
-```json
-[...]
-```
-
-#### Response
-
-=== "201 Created"
-
-##### Body
-
-This response has no body.
-
 ---
 
 --8<-- "snippets/glossary.md"

@@ -25,12 +25,7 @@ Client-Home Server API endpoints which are concerned with Federated Identity, ma
 
 ### <span class="request-h"><span class="request request-post">POST</span> Rotate session ID-Cert [:material-lock-outline:](#authorization "Authorization required")</span>
 
-`/p2core/key/user/@me`
-
-!!! info
-
-    This endpoint has a twin, which can be accessed by any server, not just the home server of the user.
-    See [Client-Foreign Server API/Rotate session ID-Cert](../Client-Foreign%20Server%20API/index.md#post-rotate-session-id-cert) for more information.
+`/p2core/session/idcert`
 
 #### Request
 
@@ -62,6 +57,12 @@ zy2oKXr/odOD4+476J5APxxXCWVLXr3qfAXmSBQERznYuuRmhyL...
 ```json
 "LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWS0tLS0tCk1JSUJqRENDQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYm..."
 ```
+
+---
+
+## <span class="group-h">Encryption</span>
+
+Client-Home Server API endpoints which are concerned with encryption, such as KeyPackage management.
 
 ---
 
