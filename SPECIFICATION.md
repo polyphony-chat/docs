@@ -166,48 +166,47 @@ An identity certificate defined in sections [#7. Keys and signatures](#7-keys-an
 #### 4.1.1 Registering a new user on a polyproto-core home server
 
 Registering a new user in the context of polyproto-core is done through an API route defined in the polyproto-core Client-Home server API documentation.
-The registration process consists of two steps:
 
-1. The client sends the home server a request containing the registration information, such as the username, password, email address, etc. The server verifies the correctness of the provided information, checks if the username is available, etc. The server then responds with an HTTP status code indicating whether the registration was successful. However, the registration process is not yet complete, and the server does not yet provide a session token or any further information to the client.
-2. Adding a new client to the just registered user is done by performing the same steps as authenticating a new client on a polyproto-core home server, described in section [4.1.2](#412-authenticating-a-new-client-on-a-polyproto-core-home-server). If both steps are successful, the registration process is complete.
+To register, the client sends a request to the home server, containing the registration information. The server verifies the correctness of the provided information, checks if the username is available and then responds with HTTP status code 201 and the newly created identities' federation ID, given the request was successful. The registration process is now complete, meaning that the new identity has been created. However, at this point, the server does not yet provide a session token, as the user still has to authenticate a client.
+1. Adding a new client to newly created identity is described in section [4.1.2](#412-authenticating-a-new-client-on-a-polyproto-core-home-server).
 
 ```
 Client                                               Server                                                           
-|                             |                                            
-| Registration information    |                                            
-|---------------------------->|                                            
-|                             |                                            
-|                             | Verify correctness of provided information,
-|                             | check if username is available, etc. 
-|                             |------------------------------------------- 
-|                             |                                          | 
-|                             |<------------------------------------------ 
-|                             | -------------------------                  
-|                             |-| Verified successfully |                  
-|                             | -------------------------                                                           
-|                             |                                            
-|                             | Verify provided CSR                        
-|                             |--------------------                        
-|                             |                   |                        
-|                             |<-------------------                        
-|                             | ------------                               
-|                             |-| CSR okay |                               
-|                             | ------------                               
-|                             |                                            
-|                             | Signing CSR                                
-|                             |------------                                
-|                             |           |                                
-|                             |<-----------                                
-|                             |                                            
-|        HTTP Status Code 202 |                                            
-|<----------------------------|                                            
-|                             |                                            
+|                                              |                                            
+| Registration information                     |                                            
+|--------------------------------------------->|                                            
+|                                              |                                            
+|                                              | Verify correctness of provided information,
+|                                              | check if username is available, etc. 
+|                                              |------------------------------------------- 
+|                                              |                                          | 
+|                                              |<------------------------------------------ 
+|                                              | -------------------------                  
+|                                              |-| Verified successfully |                  
+|                                              | -------------------------                                                           
+|                                              |                                            
+|                                              | Verify provided CSR                        
+|                                              |--------------------                        
+|                                              |                   |                        
+|                                              |<-------------------                        
+|                                              | ------------                               
+|                                              |-| CSR okay |                               
+|                                              | ------------                               
+|                                              |                                            
+|                                              | Signing CSR                                
+|                                              |------------                                
+|                                              |           |                                
+|                                              |<-----------                                
+|                                              |                                            
+|    HTTP Status Code 201 + user federation ID |                                            
+|<---------------------------------------------|                                            
+|                                              |                                            
 ```
 Fig. 2: Sequence diagram of a successful identity creation process.
 
 #### 4.1.2 Authenticating a new client on a polyproto-core home server
 
-Whenever a user would like to access their account from a new device, they must authenticate the new session with their home server. This is done by sending the home server a request containing the authentication information, such as the username and password, and a [certificate signing request (CSR)](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) for the new client. The server verifies the correctness of the provided information and, given that the verification succeeds, signs the CSR and responds with the newly generated ID-Cert, along with a session token.
+Whenever a user would like to access their account from a new device, they must authenticate the new session with their home server. This is done by sending the home server a request containing their authentication information, such as their username and password, and a [certificate signing request (CSR)](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) for the new client. The server verifies the correctness of the provided information and, given that the verification succeeds, signs the CSR and responds with the newly generated ID-Cert, along with a session token.
 
 ```
 Client                                               Server                                                           
