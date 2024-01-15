@@ -1019,9 +1019,36 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#411-using-the-same-identity-for-different-polyproto-core-implementations" class="md-nav__link">
+  <a href="#411-registering-a-new-user-on-a-polyproto-core-home-server" class="md-nav__link">
     <span class="md-ellipsis">
-      4.1.1 Using the same identity for different polyproto-core implementations
+      4.1.1 Registering a new user on a polyproto-core home server
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#412-authenticating-a-new-client-on-a-polyproto-core-home-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1.2 Authenticating a new client on a polyproto-core home server
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#413-authenticating-on-a-foreign-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1.3 Authenticating on a foreign server
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#414-using-the-same-identity-for-different-polyproto-core-implementations" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1.4 Using the same identity for different polyproto-core implementations
     </span>
   </a>
   
@@ -1033,9 +1060,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#42-federation-tokens" class="md-nav__link">
+  <a href="#42-challenge-strings" class="md-nav__link">
     <span class="md-ellipsis">
-      4.2 Federation tokens
+      4.2 Challenge Strings
     </span>
   </a>
   
@@ -1412,9 +1439,36 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#411-using-the-same-identity-for-different-polyproto-core-implementations" class="md-nav__link">
+  <a href="#411-registering-a-new-user-on-a-polyproto-core-home-server" class="md-nav__link">
     <span class="md-ellipsis">
-      4.1.1 Using the same identity for different polyproto-core implementations
+      4.1.1 Registering a new user on a polyproto-core home server
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#412-authenticating-a-new-client-on-a-polyproto-core-home-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1.2 Authenticating a new client on a polyproto-core home server
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#413-authenticating-on-a-foreign-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1.3 Authenticating on a foreign server
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#414-using-the-same-identity-for-different-polyproto-core-implementations" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1.4 Using the same identity for different polyproto-core implementations
     </span>
   </a>
   
@@ -1426,9 +1480,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#42-federation-tokens" class="md-nav__link">
+  <a href="#42-challenge-strings" class="md-nav__link">
     <span class="md-ellipsis">
-      4.2 Federation tokens
+      4.2 Challenge Strings
     </span>
   </a>
   
@@ -1694,8 +1748,11 @@
 </li>
 <li><a href="#4-federated-identity">4. Federated Identity</a><ul>
 <li><a href="#41-authentication">4.1 Authentication</a></li>
-<li><a href="#411-using-the-same-identity-for-different-polyproto-core-implementations">4.1.1 Using the same identity for different polyproto-core implementations</a></li>
-<li><a href="#42-federation-tokens">4.2 Federation tokens</a></li>
+<li><a href="#411-registering-a-new-user-on-a-polyproto-core-home-server">4.1.1 Registering a new user on a polyproto-core home server</a></li>
+<li><a href="#412-authenticating-a-new-client-on-a-polyproto-core-home-server">4.1.2 Authenticating a new client on a polyproto-core home server</a></li>
+<li><a href="#413-authenticating-on-a-foreign-server">4.1.3 Authenticating on a foreign server</a></li>
+<li><a href="#414-using-the-same-identity-for-different-polyproto-core-implementations">4.1.4 Using the same identity for different polyproto-core implementations</a></li>
+<li><a href="#42-challenge-strings">4.2 Challenge Strings</a></li>
 <li><a href="#43-abuse-prevention">4.3 Abuse prevention</a></li>
 </ul>
 </li>
@@ -1823,127 +1880,132 @@ The definition of "client" in this context is broader, since it includes both us
 <p>Federating user identities means that users can fully participate on foreign servers, as if it were their home server.
 Taking polyproto-chat as an example, this means that a polyproto-chat user can send direct messages to users from another server or join another servers' Guilds. </p>
 <p>An identity certificate defined in sections <a href="#7-keys-and-signatures">#7. Keys and signatures</a> and <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">#7.1 Home server signed certificates for public client identity keys (ID-Cert)</a> is used to sign messages that the user sends to other servers.</p>
-<p><strong>Example:</strong>
-Say that Alice is on server A, and Bob is on server B. Alice wants to send a message to Bob.
-For this, Alice has to interact with the foreign server B.</p>
-<p>Alice's client will send a request to server B, requesting a challenge string. After receiving the challenge string, Alice signs this string with their ID-Cert and sends the signature and her ID-Cert to Server B. Server B can now verify, that it was actually Alice who signed the string, and not a malicious outsider. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B using this token, and send the message to server B. Server B will then send the message to Bob's client.</p>
-<p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Alice&#39;s Client                                  Server A              Server B              Bob&#39;s Client
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>|                                               |                     |                     |
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Federation token request                      |                     |                     |
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|----------------------------------------------&gt;|                     |                     |
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>|                                               |                     |                     |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|                              Federation token |                     |                     |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>|&lt;----------------------------------------------|                     |                     |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|                              [Federation handshake start]           |                     |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>|                                               |                     |                     |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Federation token, Public Profile, ID-Cert     |                     |                     |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>|--------------------------------------------------------------------&gt;|                     |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>|                                               |                     |                     |
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>|                                               |        Get pubkey   |                     |
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>|                                               |&lt;--------------------|                     |
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>|                                               |                     |                     |
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>|                                               | Server A Pubkey     |                     |
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>|                                               |--------------------&gt;|                     |
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>|                                               |                     |                     |
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>|                                               |                     | Verify fedi-token   |
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>|                                               |                     |-------------------  |
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>|                                               |                     |                  |  |
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>|                                               |                     |&lt;------------------  |
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>|                                               |                     |                     |
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>|                                               |     Session Token   |                     |
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>|&lt;--------------------------------------------------------------------|                     |
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>|                                               |                     |                     |
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>|                             [Federation handshake complete]         |                     |
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>|                                               |                     |                     |
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>| Session Token + Signed message                |                     |                     |
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>|--------------------------------------------------------------------&gt;|                     |
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>|                                               |                     |                     |
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>|                                               |                     | Signed message      |
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>|                                               |                     |--------------------&gt;|
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>|                                               |                     |                     |
-</code></pre></div>
-Fig. 2: Sequence diagram of a successful federation handshake and message sending process.</p>
-<div class="admonition bug">
-<p class="admonition-title">TODO</p>
-<p>TODO: The above sequence diagram has to be re-done.</p>
-</div>
-<div class="admonition bug">
-<p class="admonition-title">TODO</p>
-<p>TODO: Federation tokens will be replaced with a different system, which is currently being worked on.</p>
-</div>
-<p>If Alice's session token expires, or if Alice would like to sign in on another device, she can repeat this process of generating a federation token and exchanging it for a session token.</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>You can read more about the Identity Pubkey and Certificate in <a href="#7-keys-and-signatures">7. Keys and signatures</a>.</p>
 </div>
 <h3 id="41-authentication">4.1 Authentication<a class="headerlink" href="#41-authentication" title="Permanent link">&para;</a></h3>
-<p>Authenticating a new user or client in the context of polyproto-core is a two-step process.</p>
+<h4 id="411-registering-a-new-user-on-a-polyproto-core-home-server">4.1.1 Registering a new user on a polyproto-core home server<a class="headerlink" href="#411-registering-a-new-user-on-a-polyproto-core-home-server" title="Permanent link">&para;</a></h4>
+<p>Registering a new user in the context of polyproto-core is done through an API route defined in the polyproto-core Client-Home server API documentation.
+The registration process consists of two steps:</p>
 <ol>
-<li>The client sends the implementation-specific authentication information to the server. The server verifies this information and responds with an HTTP status code indicating whether the authentication was successful or not. However, the authentication process is not yet complete, and the server does not yet provide a session token or any further information to the client.</li>
-<li>The client performs a second request, this time to the polyproto-core authentication API, providing the server with a <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">CSR</a>. The server verifies the CSR and responds with the signed <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">ID-Cert</a>, along with a session token, or whatever other implementation-specific information is needed to complete the authentication process.</li>
+<li>The client sends the home server a request containing the registration information, such as the username, password, email address, etc. The server verifies the correctness of the provided information, checks if the username is available, etc. The server then responds with an HTTP status code indicating whether the registration was successful. However, the registration process is not yet complete, and the server does not yet provide a session token or any further information to the client.</li>
+<li>Adding a new client to the just registered user is done by performing the same steps as authenticating a new client on a polyproto-core home server, described in section <a href="#412-authenticating-a-new-client-on-a-polyproto-core-home-server">4.1.2</a>. If both steps are successful, the registration process is complete.</li>
 </ol>
-<div class="admonition bug">
-<p class="admonition-title">TODO</p>
-<p>TODO: Switching step 1 and 2 might be a better idea. Also, the current step two doesn't yet mention the federation handshake from the previous section.</p>
-</div>
+<p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Client                                               Server                                                           
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>|                             |                                            
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Registration information    |                                            
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|----------------------------&gt;|                                            
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>|                             |                                            
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|                             | Verify correctness of provided information,
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>|                             | check if username is available, etc. 
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|                             |------------------------------------------- 
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>|                             |                                          | 
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>|                             |&lt;------------------------------------------ 
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>|                             | -------------------------                  
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>|                             |-| Verified successfully |                  
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>|                             | -------------------------                                                           
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>|                             |                                            
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>|                             | Verify provided CSR                        
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>|                             |--------------------                        
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>|                             |                   |                        
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>|                             |&lt;-------------------                        
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>|                             | ------------                               
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>|                             |-| CSR okay |                               
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>|                             | ------------                               
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>|                             |                                            
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>|                             | Signing CSR                                
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>|                             |------------                                
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>|                             |           |                                
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>|                             |&lt;-----------                                
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>|                             |                                            
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>|        HTTP Status Code 202 |                                            
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>|&lt;----------------------------|                                            
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>|                             |                                            
+</code></pre></div>
+Fig. 2: Sequence diagram of a successful identity creation process.</p>
+<h4 id="412-authenticating-a-new-client-on-a-polyproto-core-home-server">4.1.2 Authenticating a new client on a polyproto-core home server<a class="headerlink" href="#412-authenticating-a-new-client-on-a-polyproto-core-home-server" title="Permanent link">&para;</a></h4>
+<p>Whenever a user would like to access their account from a new device, they must authenticate the new session with their home server. This is done by sending the home server a request containing the authentication information, such as the username and password, and a <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">certificate signing request (CSR)</a> for the new client. The server verifies the correctness of the provided information and, given that the verification succeeds, signs the CSR and responds with the newly generated ID-Cert, along with a session token.</p>
 <p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Client                                               Server                                                           
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>|                                                    |                                            
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>| Authentication Step 1                              |                                            
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>| Auth information, CSR                              |                                            
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>|---------------------------------------------------&gt;|                                            
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>|                                                    |                                            
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>|                                                    | Verify correctness of provided information 
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>|                                                    |------------------------------------------- 
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>|                                                    |                                          | 
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>|                                                    |&lt;------------------------------------------ 
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>|                                                    | -------------------------                  
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>|                                                    |-| Verified successfully |                  
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>|                                                    | -------------------------                  
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>|                                                    |                                            
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>|                               HTTP Status Code 202 |                                            
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>|&lt;---------------------------------------------------|                                            
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>|                                                    |                                            
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>| Authentication Step 2                              |                                            
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>|---------------------------------------------------&gt;|                                            
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>|                                                    |                                            
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>|                                                    | Verify provided CSR                        
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>|                                                    |--------------------                        
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>|                                                    |                   |                        
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>|                                                    |&lt;-------------------                        
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>|                                                    | ------------                               
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>|                                                    |-| CSR okay |                               
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>|                                                    | ------------                               
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>|                                                    | Verify correctness of provided auth
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>|                                                    | information
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>|                                                    |------------------------------------------- 
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>|                                                    |                                          | 
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>|                                                    |&lt;------------------------------------------ 
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>|                                                    | -------------------------                  
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>|                                                    |-| Verified successfully |                  
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>|                                                    | -------------------------                                                           
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>|                                                    |                                            
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>|                                                    | Verify provided CSR                        
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>|                                                    |--------------------                        
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>|                                                    |                   |                        
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>|                                                    |&lt;-------------------                        
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>|                                                    | ------------                               
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>|                                                    |-| CSR okay |                               
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>|                                                    | ------------                               
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>|                                                    |                                            
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>|                                                    | Signing CSR                                
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>|                                                    |------------                                
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>|                                                    |           |                                
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>|                                                    |&lt;-----------                                
 <a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>|                                                    |                                            
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>|                                                    | Signing CSR                                
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>|                                                    |------------                                
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>|                                                    |           |                                
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>|                                                    |&lt;-----------                                
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>|                                                    |                                            
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>|      HTTP Status Code 201, ID-Cert + Session token |                                            
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>|&lt;---------------------------------------------------|                                            
-<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>|                                                    |                                            
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>|      HTTP Status Code 201, ID-Cert + Session token |                                            
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>|&lt;---------------------------------------------------|                                            
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>|                                                    |                                            
 </code></pre></div>
-Fig. 3: Sequence diagram of the two-step authentication process.</p>
-<div class="admonition info">
-<p class="admonition-title">Info</p>
-<p>"Two-step authentication" is not to be confused with two-factor authentication. Two-step authentication is a process where the authentication is split into two steps, where the first step is used to verify the correctness of the provided information, and the second step is used to verify the identity of the user. Two-factor authentication can of course also be used in polyproto-core, and would be part of the first step of the authentication process.</p>
-</div>
-<h4 id="411-using-the-same-identity-for-different-polyproto-core-implementations">4.1.1 Using the same identity for different polyproto-core implementations<a class="headerlink" href="#411-using-the-same-identity-for-different-polyproto-core-implementations" title="Permanent link">&para;</a></h4>
+Fig. 3: Sequence diagram of a successful client authentication process.</p>
+<p>The client is now authenticated and can use the session token and ID-Cert to perform actions on behalf of the user identified by the ID-Cert.</p>
+<h4 id="413-authenticating-on-a-foreign-server">4.1.3 Authenticating on a foreign server<a class="headerlink" href="#413-authenticating-on-a-foreign-server" title="Permanent link">&para;</a></h4>
+<p>Authenticating on a foreign server is similar to authenticating on a home server, with the difference being that the user must sign a challenge string with their private identity key, and send the signature to the foreign server, along with their ID-Cert. The foreign server MUST then verify the following to be true:</p>
+<ul>
+<li>The ID-Cert is valid and signed by the home server that the user claims to be from.</li>
+<li>The signature of the challenge string is valid and signed by the user's private identity key.</li>
+<li>The ID-Cert is not expired.</li>
+</ul>
+<p>If the verification is successful, the foreign server can issue a session token to the user.</p>
+<p><strong>Example:</strong>
+Say that Alice is on server A, and would like to authenticate on Server B using her existing identity.</p>
+<p>Alice's client will send a request to server B, requesting a challenge string. After receiving the challenge string, Alice signs this string with their ID-Cert and sends the signature and her ID-Cert to Server B. Server B can now verify, that it was actually Alice who signed the string, and not a malicious outsider. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B using this token.
+<div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Alice&#39;s Client                                  Server A              Server B
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>|                                               |                     |
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>| Challenge string request                      |                     |
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>|----------------------------------------------&gt;|                     |
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>|                                               |                     |
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>|                              Challenge string |                     |
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>|&lt;----------------------------------------------|                     |
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>|                                               |                     |        
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>|                                               |                     |
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>| Signed challenge, ID-Cert                     |                     |
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>|--------------------------------------------------------------------&gt;|
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>|                                               |                     |
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>|                                               |          Get pubkey |
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>|                                               |&lt;--------------------|
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>|                                               |                     |
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>|                                               | Server A Pubkey     |
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>|                                               |--------------------&gt;|
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>|                                               |                     |
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>|                                               |                     |
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>|                                               |                     |
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>|                                               |                     |
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>|                                               |                     |
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>|                                               |                     |
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>|                                               |       Session Token |
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>|&lt;--------------------------------------------------------------------|
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>|                                               |                     |
+</code></pre></div>
+Fig. 4: Sequence diagram of a successful identity verification.</p>
+<p>If Alice's session token expires, she can repeat this process of requesting a challenge string and, together with her ID-Cert, exchange it for a session token.
+However, if Alice wants to access this third party account from a completely new device, they will have to perform the steps described in section <a href="#412-authenticating-a-new-client-on-a-polyproto-core-home-server">4.1.2</a> to obtain a valid ID-Cert for that session.</p>
+<h4 id="414-using-the-same-identity-for-different-polyproto-core-implementations">4.1.4 Using the same identity for different polyproto-core implementations<a class="headerlink" href="#414-using-the-same-identity-for-different-polyproto-core-implementations" title="Permanent link">&para;</a></h4>
 <p>A user may choose to use the same identity for multiple polyproto-core implementations. The additional behavior required by polyproto-core server implementations is really simple, as the server only needs to verify the ID-Cert of the user.
 To verify the ID-Cert, the server can simply request the other servers' public identity key and then verify the signature of the ID-Cert with the public identity key of the other server.</p>
-<h3 id="42-federation-tokens">4.2 Federation tokens<a class="headerlink" href="#42-federation-tokens" title="Permanent link">&para;</a></h3>
-<p>Federation tokens are generated by the user's home server. The token is a JSON object that contains the following information:</p>
-<ul>
-<li>The time at which the token expires.</li>
-<li>The user's federation ID.</li>
-<li>The domain of the server that the token is intended for.</li>
-<li>The domain of the user's home server.</li>
-<li>A securely-randomly generated nonce</li>
-</ul>
-<p>The usage of federation tokens prevents replay attacks, as a token is valid only once, only for a short amount of time, and only for a specific server.</p>
-<div class="admonition bug">
-<p class="admonition-title">TODO</p>
-<p>TODO: As federation tokens will be replaced with a different system, which is currently being worked on, this section will be updated.</p>
-</div>
+<h3 id="42-challenge-strings">4.2 Challenge Strings<a class="headerlink" href="#42-challenge-strings" title="Permanent link">&para;</a></h3>
+<p>Challenge strings are generated by servers. They are a random, unique string of characters, which is used to verify that the user is in possession of their private identity key. The string is signed by the user's private identity key, and the signature is sent to the server, along with the user's ID-Cert. By verifying the signature of the challenge string with the user's ID-Cert, the server can verify that the user is in possession of their private identity key, and is who they claim to be.</p>
+<p>The usage of challenge strings prevents replay attacks, as the challenge string is unique, meaning that it is different even for two identical requests. This means that a malicious server cannot simply replay a request to another server, as the signature of the challenge string would be different.</p>
 <h3 id="43-abuse-prevention">4.3 Abuse prevention<a class="headerlink" href="#43-abuse-prevention" title="Permanent link">&para;</a></h3>
 <p>To protect users from malicious home servers secretly acting on the behalf of non-consenting users,
 a mechanism is needed to prevent home servers from generating federation tokens for users without
@@ -1955,26 +2017,22 @@ users, and use it to generate a session token on the user's behalf. This is a pr
 malicious server can then impersonate the user on another server, as well as read unencrypted
 data (such as messages, in the context of a chat application) sent on the other server.</p>
 </div>
+<div class="admonition abstract">
+<p class="admonition-title">Abstract</p>
 <p>The above scenario is not unique to polyproto-core, and rather a problem other federated services/
 protocols, like ActivityPub, have as well. There is no real solution to this problem, but it can be
 mitigated a bit by making it more difficult for malicious home servers to do something like this
 without the user noticing.</p>
-<p>Polyproto servers should notify users, when a new session token is generated for
+</div>
+<p>Polyproto servers MUST notify users, when a new session token is generated for
 them. This would make the malicious home server's actions more noticeable to the user. However, this does
 not address the issue of the malicious home server being able to generate a federation token for a server
 which you are not yet connected to, as the user would have no way to receive the notification of a 
 session token being created for them, if they are not connected to that server. Clients
-re-connecting to a server after being offline should be notified of any new session tokens that were
-generated for them while they were offline. This <code>NEW_SESSION</code> gateway event should be sent to all
-sessions, except for the new session. The <code>NEW_SESSION</code> gateway event should contain the following
-information:</p>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;ip&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;IP address of the session&gt;&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&quot;user_agent&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;User agent of the session&gt;&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;Timestamp of when the session was created&gt;&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nt">&quot;session_pubkey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;Public key of the session&gt;&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">}</span>
-</code></pre></div>
+re-connecting to a server after being offline MUST be notified of any new session tokens that were
+generated for them while they were offline. This <code>NEW_SESSION</code> gateway event MUST be sent to all
+sessions, except for the new session. The information stored in a <code>NEW_SESSION</code> event can be found
+in the <a href="/docs/APIs/Core/WebSockets/gateway_events.md#new_session">Gateway Events documentation</a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>With proper safety precautions and strong encryption, it is extremely unlikely for a malicious
@@ -1984,7 +2042,7 @@ session cannot decrypt any messages sent before its' join epoch. If secrecy or c
 are of concern, users should host their own home server and use end-to-end encryption.</p>
 </div>
 <h2 id="5-users">5. Users<a class="headerlink" href="#5-users" title="Permanent link">&para;</a></h2>
-<p>Each client must have a user associated with it. A user is identified by a unique federation ID (FID), which consists of the user's username (which must be unique on the instance) and the instance's root domain. A FID is formatted as follows: <code>user@optionalsubdomain.domain.tld</code>, which makes for a globally unique user ID. Federation IDs are case-insensitive.</p>
+<p>Each client must have a user identity associated with it. A user is identified by a unique federation ID (FID), which consists of the user's username (which must be unique on the instance) and the instance's root domain. A FID is formatted as follows: <code>user@optionalsubdomain.domain.tld</code>, which makes for a globally unique user ID. Federation IDs are case-insensitive.</p>
 <p>The following regex can be used to validate user IDs: <code>\b([A-Z0-9._%+-]+)@([A-Z0-9.-]+\.[A-Z]{2,})\b</code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -2082,7 +2140,7 @@ Clients must not use the same keys on multiple devices. Instead, the MLS protoco
 <a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>------------------------------------------------ |                                                     |                                 
 <a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>                                                 |                                                     |                                 
 </code></pre></div>
-Fig. 4: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert from their home server.</p>
+Fig. 5: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert from their home server.</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>See <a href="#721-key-rotation">7.2.1</a> for more information on what an "associated client" is.</p>
@@ -2132,7 +2190,7 @@ Fig. 4: Sequence diagram depicting the process of a client using a CSR to reques
 <a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>|                                               |&lt;-----------------------------------       |
 <a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>|                                               |                                           |
 </code></pre></div>
-Fig. 5: Sequence diagram of a successful message signature verification.</p>
+Fig. 6: Sequence diagram of a successful message signature verification.</p>
 <p>Bob's client may now choose to cache Server A's public identity key and Alice's ID-Cert, so that it does not have to request them again in the future, as long as the ID-Cert/Server public key do not change and are not expired. If Bob's client receives another message from Alice, it can now verify the signature of the message with the cached ID-Certs.</p>
 <p>If the verification fails, Bob's client should try to re-request the key from Server B first. Should the verification fail again, Bob's client may try to request Alice's public identity key and certificate from Server A (Alice's home server), and try to verify the signature again. Should the verification still not succeed, the message should be treated with extreme caution.</p>
 <div class="admonition question">
@@ -2216,7 +2274,7 @@ This allows users to switch home servers while not losing ownership of messages 
 <a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>|--------------------------------------------------------------------------------------------&gt;|                                                   |
 <a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>|                                      |                                                      |                                                   |
 </code></pre></div>
-Fig. 6: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is reachable and cooperative.</p>
+Fig. 7: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is reachable and cooperative.</p>
 <p>Alternatively, if Server A is offline or deemed uncooperative, the following sequence diagram depicts how the migration can be done without Server A's cooperation:</p>
 <p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Server A     Alice A                                                                          Server B                                            Alice B 
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>|            |                                                                                |                                                   |
@@ -2249,7 +2307,7 @@ Fig. 6: Sequence diagram depicting a successful migration of Alice A's account t
 <a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>|            |                                                                                |--------------------------------------------------&gt;|
 <a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>|            |                                                                                |                                                   |
 </code></pre></div>
-Fig. 7: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is unreachable or uncooperative.</p>
+Fig. 8: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is unreachable or uncooperative.</p>
 <div class="admonition question">
 <p class="admonition-title">If the old home server is not needed for the migration, why try to contact it in the first place?</p>
 <p>It is generally preferrable to have the old home server cooperate with the migration, as it
@@ -2312,7 +2370,7 @@ be created, which contains the new signature.</p>
 <a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a>|                                                    |&lt;--------------------------------------------------------------      |                                                     
 <a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a>|                                                    |                                                                     |                                                     
 </code></pre></div>
-Fig. 8: Sequence diagram depicting the re-signing procedure.</p>
+Fig. 9: Sequence diagram depicting the re-signing procedure.</p>
 <h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Client</strong> - A device or session that is used by a user or bot to connect to a server.</li>
