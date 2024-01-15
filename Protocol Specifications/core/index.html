@@ -1886,46 +1886,43 @@ Taking polyproto-chat as an example, this means that a polyproto-chat user can s
 </div>
 <h3 id="41-authentication">4.1 Authentication<a class="headerlink" href="#41-authentication" title="Permanent link">&para;</a></h3>
 <h4 id="411-registering-a-new-user-on-a-polyproto-core-home-server">4.1.1 Registering a new user on a polyproto-core home server<a class="headerlink" href="#411-registering-a-new-user-on-a-polyproto-core-home-server" title="Permanent link">&para;</a></h4>
-<p>Registering a new user in the context of polyproto-core is done through an API route defined in the polyproto-core Client-Home server API documentation.
-The registration process consists of two steps:</p>
-<ol>
-<li>The client sends the home server a request containing the registration information, such as the username, password, email address, etc. The server verifies the correctness of the provided information, checks if the username is available, etc. The server then responds with an HTTP status code indicating whether the registration was successful. However, the registration process is not yet complete, and the server does not yet provide a session token or any further information to the client.</li>
-<li>Adding a new client to the just registered user is done by performing the same steps as authenticating a new client on a polyproto-core home server, described in section <a href="#412-authenticating-a-new-client-on-a-polyproto-core-home-server">4.1.2</a>. If both steps are successful, the registration process is complete.</li>
-</ol>
+<p>Registering a new user in the context of polyproto-core is done through an API route defined in the polyproto-core Client-Home server API documentation.</p>
+<p>To register, the client sends a request to the home server, containing the registration information. The server verifies the correctness of the provided information, checks if the username is available and then responds with HTTP status code 201 and the newly created identities' federation ID, given the request was successful. The registration process is now complete, meaning that the new identity has been created. However, at this point, the server does not yet provide a session token, as the user still has to authenticate a client.
+1. Adding a new client to newly created identity is described in section <a href="#412-authenticating-a-new-client-on-a-polyproto-core-home-server">4.1.2</a>.</p>
 <p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Client                                               Server                                                           
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>|                             |                                            
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Registration information    |                                            
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|----------------------------&gt;|                                            
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>|                             |                                            
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|                             | Verify correctness of provided information,
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>|                             | check if username is available, etc. 
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|                             |------------------------------------------- 
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>|                             |                                          | 
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>|                             |&lt;------------------------------------------ 
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>|                             | -------------------------                  
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>|                             |-| Verified successfully |                  
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>|                             | -------------------------                                                           
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>|                             |                                            
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>|                             | Verify provided CSR                        
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>|                             |--------------------                        
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>|                             |                   |                        
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>|                             |&lt;-------------------                        
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>|                             | ------------                               
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>|                             |-| CSR okay |                               
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>|                             | ------------                               
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>|                             |                                            
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>|                             | Signing CSR                                
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>|                             |------------                                
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>|                             |           |                                
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>|                             |&lt;-----------                                
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>|                             |                                            
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>|        HTTP Status Code 202 |                                            
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>|&lt;----------------------------|                                            
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>|                             |                                            
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>|                                              |                                            
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Registration information                     |                                            
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---------------------------------------------&gt;|                                            
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>|                                              |                                            
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|                                              | Verify correctness of provided information,
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>|                                              | check if username is available, etc. 
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|                                              |------------------------------------------- 
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>|                                              |                                          | 
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>|                                              |&lt;------------------------------------------ 
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>|                                              | -------------------------                  
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>|                                              |-| Verified successfully |                  
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>|                                              | -------------------------                                                           
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>|                                              |                                            
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>|                                              | Verify provided CSR                        
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>|                                              |--------------------                        
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>|                                              |                   |                        
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>|                                              |&lt;-------------------                        
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>|                                              | ------------                               
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>|                                              |-| CSR okay |                               
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>|                                              | ------------                               
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>|                                              |                                            
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>|                                              | Signing CSR                                
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>|                                              |------------                                
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>|                                              |           |                                
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>|                                              |&lt;-----------                                
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>|                                              |                                            
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>|    HTTP Status Code 201 + user federation ID |                                            
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>|&lt;---------------------------------------------|                                            
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>|                                              |                                            
 </code></pre></div>
 Fig. 2: Sequence diagram of a successful identity creation process.</p>
 <h4 id="412-authenticating-a-new-client-on-a-polyproto-core-home-server">4.1.2 Authenticating a new client on a polyproto-core home server<a class="headerlink" href="#412-authenticating-a-new-client-on-a-polyproto-core-home-server" title="Permanent link">&para;</a></h4>
-<p>Whenever a user would like to access their account from a new device, they must authenticate the new session with their home server. This is done by sending the home server a request containing the authentication information, such as the username and password, and a <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">certificate signing request (CSR)</a> for the new client. The server verifies the correctness of the provided information and, given that the verification succeeds, signs the CSR and responds with the newly generated ID-Cert, along with a session token.</p>
+<p>Whenever a user would like to access their account from a new device, they must authenticate the new session with their home server. This is done by sending the home server a request containing their authentication information, such as their username and password, and a <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">certificate signing request (CSR)</a> for the new client. The server verifies the correctness of the provided information and, given that the verification succeeds, signs the CSR and responds with the newly generated ID-Cert, along with a session token.</p>
 <p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Client                                               Server                                                           
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>|                                                    |                                            
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>| Auth information, CSR                              |                                            
