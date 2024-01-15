@@ -8,6 +8,10 @@ A "Client" in this context is a user/bot client, an authenticated user or anothe
 This Page only includes routes, for which a client does not need a "Client-Home Server relationship" with the server.
 If you'd like to see the routes, which require such a relationship, see the [Client-Home Server API documentation](../Client-Home%20Server%20API/index.md)
 
+!!! bug "TODO"
+
+    TODO: Add/rework routes according to the new section 4 of the spec.
+
 ---
 
 --8<-- "snippets/api.md"

@@ -9,6 +9,10 @@ This Page only includes routes which a client can request from its home server. 
 can also be accessed from a foreign server, or with no authentication at all, see the
 [Client-Foreign Server API documentation](../Client-Foreign%20Server%20API/index.md)
 
+!!! bug "TODO"
+
+    TODO: Add/rework routes according to the new section 4 of the spec.
+
 --8<-- "snippets/api.md"
 
 ## <span class="group-h">Federation tokens</span>
