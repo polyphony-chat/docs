@@ -427,12 +427,14 @@ Each device provides its own `KeyPackages` as well as an own identity key.
 The home server signed public client identity key certificate, ID-Cert for short, is a public key certificate used to prove the validity of a public identity key. The ID-Cert is a user generated public identity key certificate signing request (CSR), signed by a user's home server, and includes information about the user's identity, as well as the public identity key of the user. Clients can receive an ID-Cert in exchange for a CSR.
 
 A CSR includes the following information:
+
 - The public identity key of the client.
 - The federation ID of the user associated with the client.
 - The session ID of the client. The session ID is a unique identifier for a session, which does not change when a client rotates their identity keys.
 - Optionally, an expiry date for the certificate. This expiry date must be less than or equal to the expiry date of the home servers' public identity key certificate.
 
 The resulting ID-Cert contains the following information, in addition to the information supplied through the CSR:
+
 - Issuer information: The home servers' domain.
 - Serial number: A unique identifier for the certificate.
 - Signature algorithm: The algorithm used to sign the certificate.
