@@ -15,7 +15,6 @@
       - [4.1.1 Registering a new user on a polyproto-core home server](#411-registering-a-new-user-on-a-polyproto-core-home-server)
       - [4.1.2 Authenticating a new client on a polyproto-core home server](#412-authenticating-a-new-client-on-a-polyproto-core-home-server)
       - [4.1.3 Authenticating on a foreign server](#413-authenticating-on-a-foreign-server)
-      - [4.1.4 Using the same identity for different polyproto-core implementations](#414-using-the-same-identity-for-different-polyproto-core-implementations)
     - [4.2 Challenge Strings](#42-challenge-strings)
     - [4.3 Abuse prevention](#43-abuse-prevention)
   - [5. Users](#5-users)
@@ -157,6 +156,11 @@ Taking polyproto-chat as an example, this means that a polyproto-chat user can s
 
 An identity certificate defined in sections [#7. Keys and signatures](#7-keys-and-signatures) and [#7.1 Home server signed certificates for public client identity keys (ID-Cert)](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) is used to sign messages that the user sends to other servers.
 
+!!! note "Using one identity for multiple polyproto-core implementations"
+
+    A user can choose to use the same identity for multiple polyproto-core implementations. If section [4.1.3](#413-authenticating-on-a-foreign-server) is implemented correctly, this should not be a problem. However, if a user wants to use the same identity for multiple polyproto-core implementations, they must ensure that the implementations use the same identity key pair.
+
+
 !!! info
 
     You can read more about the Identity Pubkey and Certificate in [7. Keys and signatures](#7-keys-and-signatures).
@@ -268,7 +272,7 @@ Alice's Client                                  Server A              Server B
 |<----------------------------------------------|                     |
 |                                               |                     |        
 |                                               |                     |
-| Signed challenge, ID-Cert                     |                     |
+| Signed challenge, ID-Cert, Optional payload   |                     |
 |-------------------------------------------------------------------->|
 |                                               |                     |
 |                                               |          Get pubkey |
@@ -289,13 +293,14 @@ Alice's Client                                  Server A              Server B
 ```
 Fig. 4: Sequence diagram of a successful identity verification.
 
+The "optional payload" in the above diagram is optional, additional data a server may request from a user. This is most useful in the context of using the same identity for different, polyproto-core based services, as one service might require additional information about a user, which another service does not need. The payload is signed by the user's private identity key. 
+
+!!! example
+
+    Alice currently has a polyproto-core identity, which she created when signing up for "https://example.com/chat". When signing up for this service, she didn't need to provide any additional information on registration. However, when she wants to sign up for "https://example.com/social", she is asked to provide her email address, which she can provide as the "optional payload". The server can then store the email address in its' database, associate it with Alice's identity, and let Alice log in with her existing identity. 
+
 If Alice's session token expires, she can repeat this process of requesting a challenge string and, together with her ID-Cert, exchange it for a session token.
 However, if Alice wants to access this third party account from a completely new device, they will have to perform the steps described in section [4.1.2](#412-authenticating-a-new-client-on-a-polyproto-core-home-server) to obtain a valid ID-Cert for that session.
-
-#### 4.1.4 Using the same identity for different polyproto-core implementations
-
-A user may choose to use the same identity for multiple polyproto-core implementations. The additional behavior required by polyproto-core server implementations is really simple, as the server only needs to verify the ID-Cert of the user.
-To verify the ID-Cert, the server can simply request the other servers' public identity key and then verify the signature of the ID-Cert with the public identity key of the other server.
 
 ### 4.2 Challenge Strings
 
