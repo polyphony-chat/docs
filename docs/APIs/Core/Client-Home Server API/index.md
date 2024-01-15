@@ -145,17 +145,17 @@ Client-Home Server API endpoints which are concerned with Federated Identity, ma
 
 === "201 Created"
 
-##### Body
+    ##### Body
 
-| Name      | Type           | Description            |
-| --------- | -------------- | ---------------------- |
-| `id_cert` | String, Base64 | The generated [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert). |
+    | Name      | Type           | Description            |
+    | --------- | -------------- | ---------------------- |
+    | `id_cert` | String, Base64 | The generated [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert). |
 
-```json
-{ 
-    "id_cert": "LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWS0tLS0tCk1JSUJqRENDQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYm..."
-}
-```
+    ```json
+    { 
+        "id_cert": "LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWS0tLS0tCk1JSUJqRENDQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYm..."
+    }
+    ```
 
 ---
 
@@ -185,9 +185,9 @@ Client-Home Server API endpoints which are concerned with encryption, such as Ke
 
 === "201 Created"
 
-##### Body
+    ##### Body
 
-This response has no body.
+    This response has no body.
 
 ---
 
@@ -211,9 +211,9 @@ This response has no body.
 
 === "204 No Content"
 
-##### Body
+    ##### Body
 
-This response has no body.
+    This response has no body.
 
 ---
 

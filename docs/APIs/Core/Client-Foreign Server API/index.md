@@ -123,20 +123,20 @@ This request has no body.
 
 === "200 OK"
 
-##### Body
+    ##### Body
 
-| Type   | Description                                                    |
-| ------ | -------------------------------------------------------------- |
-| String | The servers' new public identity key, in ASCII-representation. |
+    | Type   | Description                                                    |
+    | ------ | -------------------------------------------------------------- |
+    | String | The servers' new public identity key, in ASCII-representation. |
 
-```json
-"-----BEGIN PGP PUBLIC KEY BLOCK-----
-mQINBGSDs58BEADCXP1ArorBtOvGnQdAD26gsOMasyLMqnJyUp8XXCdmTx5+gREs
-vtItmjIshHU6CLUyTwO2IqIb2Fds+AmDsdM1Qx/vM0fVtPAS13T3Tu9rknldJvvN
-GyT3urrgvZ1leqQnwvuHd3WMdtgQ29lc7F/XaP4v2RIlqUiV+bnBoe/6LL7HXTaW
-zy2oKXr/odOD4+476J5APxxXCWVLXr3qfAXmSBQERznYuuRmhyL...
------END PGP PUBLIC KEY BLOCK-----"
-```
+    ```json
+    "-----BEGIN PGP PUBLIC KEY BLOCK-----
+    mQINBGSDs58BEADCXP1ArorBtOvGnQdAD26gsOMasyLMqnJyUp8XXCdmTx5+gREs
+    vtItmjIshHU6CLUyTwO2IqIb2Fds+AmDsdM1Qx/vM0fVtPAS13T3Tu9rknldJvvN
+    GyT3urrgvZ1leqQnwvuHd3WMdtgQ29lc7F/XaP4v2RIlqUiV+bnBoe/6LL7HXTaW
+    zy2oKXr/odOD4+476J5APxxXCWVLXr3qfAXmSBQERznYuuRmhyL...
+    -----END PGP PUBLIC KEY BLOCK-----"
+    ```
 
 ---
 
@@ -164,13 +164,13 @@ zy2oKXr/odOD4+476J5APxxXCWVLXr3qfAXmSBQERznYuuRmhyL...
 
 ##### Body
 
-| Type             | Description                                                    |
-| ---------------- | -------------------------------------------------------------- |
-| String, Base64  | The servers' public [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert).     |
+    | Type             | Description                                                    |
+    | ---------------- | -------------------------------------------------------------- |
+    | String, Base64  | The servers' public [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert).     |
 
-```json
-[...]
-```
+    ```json
+    [...]
+    ```
 
 ---
 
@@ -202,15 +202,15 @@ zy2oKXr/odOD4+476J5APxxXCWVLXr3qfAXmSBQERznYuuRmhyL...
 
 === "200 OK"
 
-##### Body
+    ##### Body
 
-| Type                           | Description                                                   |
-| ------------------------------ | ------------------------------------------------------------- |
-| JSON-Array of Strings (Base64) | The user's public identity certificate(s), encoded in Base64. |
+    | Type                           | Description                                                   |
+    | ------------------------------ | ------------------------------------------------------------- |
+    | JSON-Array of Strings (Base64) | The user's public identity certificate(s), encoded in Base64. |
 
-```json
-[...]
-```
+    ```json
+    [...]
+    ```
 
 ---
 
@@ -234,15 +234,15 @@ zy2oKXr/odOD4+476J5APxxXCWVLXr3qfAXmSBQERznYuuRmhyL...
 
 === "201 Created"
 
-##### Body
+    ##### Body
 
-This response has no body.
+    This response has no body.
 
----
+    ---
 
-## <span class="group-h">Encryption</span>
+    ## <span class="group-h">Encryption</span>
 
-Client-Foreign Server API endpoints which are concerned with encryption related tasks.
+    Client-Foreign Server API endpoints which are concerned with encryption related tasks.
 
 ---
 
@@ -266,15 +266,15 @@ This request has no body.
 
 === "200 OK"
 
-##### Body
+    ##### Body
 
-| Type                                | Description                                                                                                                                   |
-| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| JSON-Array of KeyPackage(s), Binary | The user's KeyPackage(s), in binary format. Each entry in the array corresponds to a different client the requested user is authenticated on. |
+    | Type                                | Description                                                                                                                                   |
+    | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+    | JSON-Array of KeyPackage(s), Binary | The user's KeyPackage(s), in binary format. Each entry in the array corresponds to a different client the requested user is authenticated on. |
 
-```json
-[...]
-```
+    ```json
+    [...]
+    ```
 
 ---
 
