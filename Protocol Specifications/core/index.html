@@ -1966,7 +1966,6 @@ Fig. 3: Sequence diagram of a successful client authentication process.</p>
 <p><strong>Example:</strong>
 Say that Alice is on server A, and would like to authenticate on Server B using her existing identity.</p>
 <p>Alice's client will send a request to server B, requesting a challenge string. After receiving the challenge string, Alice signs this string with their ID-Cert and sends the signature and her ID-Cert to Server B. Server B can now verify, that it was actually Alice who signed the string, and not a malicious outsider. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B using this token.</p>
-<p>A cha</p>
 <p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Alice&#39;s Client                                  Server A              Server B
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>|                                               |                     |
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>| Challenge string request                      |                     |
