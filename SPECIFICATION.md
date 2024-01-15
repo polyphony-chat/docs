@@ -76,7 +76,7 @@ Aside from these REST APIs, polyproto-core also uses WebSockets for real-time co
 
 ### 3.1 Client-Home server API
 
-The [*Client-Home server*](./docs/APIs/Core/Client-Home%20Server%20API/index.md) API of polyproto-core is concerned with authentication- and federation-related issues between a client and its' home server.
+The [*Client-Home server*](./docs/APIs/Core/Client-Home%20Server%20API/index.md) API of polyproto-core is concerned with authentication- and federation-related issues between a client and its home server.
 A client in this context is expected to be a user/bot session.
 
 ### 3.2 Client-foreign server API
