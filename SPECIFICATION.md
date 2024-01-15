@@ -29,7 +29,7 @@
       - [7.1.1 Necessity of ID-Certs](#711-necessity-of-id-certs)
     - [7.2 User identity keys and message signing](#72-user-identity-keys-and-message-signing)
       - [7.2.1 Key rotation](#721-key-rotation)
-      - [7.2.2 message verification](#722-message-verification)
+      - [7.2.2 Message verification](#722-message-verification)
     - [7.4 Best practices](#74-best-practices)
       - [7.4.1 Signing keys/ID-Certs](#741-signing-keysid-certs)
       - [7.4.2 Home server operation and design](#742-home-server-operation-and-design)
@@ -441,36 +441,6 @@ The resulting ID-Cert contains the following information, in addition to the inf
 - Signature: The signature of the certificate, generated using the home servers' private identity key.
 - Expiry date: The expiry date of the certificate.
 
-```
-                                                 Server                                                Client                           
-                                                 |                                                     |                                 
-                                                 |                                                     | Create CSR for own identity key 
-                                                 |                                                     |-------------------------------- 
-                                                 |                                                     |                               | 
-                                                 |                                                     |<------------------------------- 
-                                                 |                                                     |                                 
-                                                 |      Request key rotation/CSR signing, CSR attached |                                 
-                                                 |<----------------------------------------------------|                                 
-                                                 |                                                     |                                 
-                                                 | Verify validity of claims presented in the CSR      |                                 
-                                                 |-----------------------------------------------      |                                 
-                                                 |                                              |      |                                 
-                                                 |<----------------------------------------------      |                                 
-                                                 |                                                     |                                 
-                                                 | Create ID-Cert for Client                           |                                 
-                                                 |--------------------------                           |                                 
-                                                 |                         |                           |                                 
-                                                 |<-------------------------                           |                                 
-                                                 |                                                     |                                 
-                                                 | Respond with ID-Cert                                |                                 
-                                                 |---------------------------------------------------->|                                 
------------------------------------------------- |                                                     |                                 
-| Send CLIENT_KEY_CHANGE to associated clients |-|                                                     |                                 
------------------------------------------------- |                                                     |                                 
-                                                 |                                                     |                                 
-```
-Fig. 5: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert from their home server.
-
 !!! info 
 
     See [7.2.1](#721-key-rotation) for more information on what an "associated client" is.
@@ -503,9 +473,37 @@ Before sending any messages to a server, a client that performed a key rotation 
 
 Home servers must keep track of the ID-Certs of all users (and their clients) registered on them, and must be able to provide a clients' ID-Cert for a given timestamp on request. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of a user may change over time and users must sign all messages they send to servers. Likewise, a client should also keep all of its own ID-Certs stored perpetually, to potentially verify its identity in case of a migration.
 
-Signing messages prevents a malicious foreign server from impersonating a user.
+```
+                                                 Server                                                Client                           
+                                                 |                                                     |                                 
+                                                 |                                                     | Create CSR for own identity key 
+                                                 |                                                     |-------------------------------- 
+                                                 |                                                     |                               | 
+                                                 |                                                     |<------------------------------- 
+                                                 |                                                     |                                 
+                                                 |      Request key rotation/CSR signing, CSR attached |                                 
+                                                 |<----------------------------------------------------|                                 
+                                                 |                                                     |                                 
+                                                 | Verify validity of claims presented in the CSR      |                                 
+                                                 |-----------------------------------------------      |                                 
+                                                 |                                              |      |                                 
+                                                 |<----------------------------------------------      |                                 
+                                                 |                                                     |                                 
+                                                 | Create ID-Cert for Client                           |                                 
+                                                 |--------------------------                           |                                 
+                                                 |                         |                           |                                 
+                                                 |<-------------------------                           |                                 
+                                                 |                                                     |                                 
+                                                 | Respond with ID-Cert                                |                                 
+                                                 |---------------------------------------------------->|                                 
+------------------------------------------------ |                                                     |                                 
+| Send CLIENT_KEY_CHANGE to associated clients |-|                                                     |                                 
+------------------------------------------------ |                                                     |                                 
+                                                 |                                                     |                                 
+```
+Fig. 5: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert from their home server.
 
-#### 7.2.2 message verification
+#### 7.2.2 Message verification
 
 Of course, in order for message signing to actually verify message integrity, clients **must** verify the signatures of all messages they receive. This is done by verifying the signature of the message with the ID-Cert of the sender and the ID-Cert of the senders' home server. Clients must also verify that the certificate attached to the message is valid and that the public key in the certificate matches the public key of the sender. 
 
