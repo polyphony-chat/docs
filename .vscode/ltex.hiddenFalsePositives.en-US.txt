@@ -46,3 +46,4 @@
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-core does not \"} JSON-Object\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-core does not provide any defaults for this field\"} JSON-Object n.A.\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-core does not provide any defaults for this field.\"}\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qbug \"Unfinished section\"\\E$"}
