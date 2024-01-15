@@ -18,46 +18,6 @@ If you'd like to see the routes, which require such a relationship, see the [Cli
 
 ---
 
-## <span class="group-h">Federation Tokens</span>
-
-Routes concerning the creation, deletion and management of federation tokens.
-
----
-
-### <span class="request-h"><span class="request request-get">GET</span> Token Generation Status</span>
-
-`/p2core/token/status`
-
-#### Request
-
-##### Body
-
-This request has no body.
-
-##### cURL
-
-```bash
-curl -X GET "https://example.com/p2core/token/status"
-```
-
-#### Response
-
-=== "200 OK"
-
-##### Body
-
-| Name      | Type    | Description                                                                    |
-| --------- | ------- | ------------------------------------------------------------------------------ |
-| `enabled` | boolean | Whether this server currently accepts new federation token generation requests |
-
-```json
-{
-    "enabled": true
-}
-```
-
----
-
 ## <span class="group-h">Federated Identity</span>
 
 Routes concerning federated identities, such as authentication and key management.
