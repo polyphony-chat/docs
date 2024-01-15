@@ -40,3 +40,4 @@
 {"rule":"SENTENCE_WHITESPACE","sentence":"^\\Q\\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q   | JSON-Array of \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q | One or more \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q                                     |\n| :material-email-lock-outline:(\"This field is only required in polyproto-core implementations which support MLS encryption.\")\\E$"}
 {"rule":"EN_UNPAIRED_BRACKETS","sentence":"^\\QPUT Rotate Server Identity Key :material-lock-outline: :material-shield-crown-outline:(\"This route is only available to server administrators\")\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qinfo \"MLS-enabled polyproto-core servers\"\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qabstract\\E$"}

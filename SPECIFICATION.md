@@ -258,9 +258,6 @@ Say that Alice is on server A, and would like to authenticate on Server B using 
 
 Alice's client will send a request to server B, requesting a challenge string. After receiving the challenge string, Alice signs this string with their ID-Cert and sends the signature and her ID-Cert to Server B. Server B can now verify, that it was actually Alice who signed the string, and not a malicious outsider. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B using this token.
 
-A cha
-
-
 ```
 Alice's Client                                  Server A              Server B
 |                                               |                     |
