@@ -240,9 +240,9 @@ This request has no body.
 
     ---
 
-    ## <span class="group-h">Encryption</span>
+## <span class="group-h">Encryption</span>
 
-    Client-Foreign Server API endpoints which are concerned with encryption related tasks.
+Client-Foreign Server API endpoints which are concerned with encryption related tasks.
 
 ---
 
