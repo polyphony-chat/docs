@@ -79,7 +79,7 @@ Authentication endpoints, such as creating an identity and authenticating a clie
 
 ---
 
-### <span class="request-h"><span class="request request-post">POST</span> Authenticate Session</span>
+### <span class="request-h"><span class="request request-post">POST</span> Authenticate new Session</span>
 
 `/p2core/session/trust`
 
