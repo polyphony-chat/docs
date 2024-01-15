@@ -131,17 +131,14 @@ Client-Home Server API endpoints which are concerned with Federated Identity, ma
 
 ##### Body
 
-| Type   | Description                               |
-| ------ | ----------------------------------------- |
-| String | The client's public key, encoded in ASCII |
+| Name  | Type           | Description                                                                                                                                                                                         |
+| ----- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `csr` | String, Base64 | A [certificate signing request (CSR)](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) containing a new public key for this session ID. |
 
 ```json
-"-----BEGIN PGP PUBLIC KEY BLOCK-----
-mQINBGSDs58BEADCXP1ArorBtOvGnQdAD26gsOMasyLMqnJyUp8XXCdmTx5+gREs
-vtItmjIshHU6CLUyTwO2IqIb2Fds+AmDsdM1Qx/vM0fVtPAS13T3Tu9rknldJvvN
-GyT3urrgvZ1leqQnwvuHd3WMdtgQ29lc7F/XaP4v2RIlqUiV+bnBoe/6LL7HXTaW
-zy2oKXr/odOD4+476J5APxxXCWVLXr3qfAXmSBQERznYuuRmhyL...
------END PGP PUBLIC KEY BLOCK-----"
+{
+    "csr": "mQINBGSDs58BEADCXP1ArorBtOvGnQdAD26gsOMasyLMqnJyUp8XXCdmTx5..."
+}
 ```
 
 #### Response
@@ -150,12 +147,14 @@ zy2oKXr/odOD4+476J5APxxXCWVLXr3qfAXmSBQERznYuuRmhyL...
 
 ##### Body
 
-| Type   | Description                                                          |
-| ------ | -------------------------------------------------------------------- |
-| String | The server generated ID-Cert for this public key, encoded in Base64. |
+| Name      | Type           | Description            |
+| --------- | -------------- | ---------------------- |
+| `id_cert` | String, Base64 | The generated [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert). |
 
 ```json
-"LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWS0tLS0tCk1JSUJqRENDQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYm..."
+{ 
+    "id_cert": "LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWS0tLS0tCk1JSUJqRENDQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYm..."
+}
 ```
 
 ---
