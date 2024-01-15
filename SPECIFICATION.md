@@ -167,8 +167,7 @@ An identity certificate defined in sections [#7. Keys and signatures](#7-keys-an
 
 Registering a new user in the context of polyproto-core is done through an API route defined in the polyproto-core Client-Home server API documentation.
 
-To register, the client sends a request to the home server, containing the registration information. The server verifies the correctness of the provided information, checks if the username is available and then responds with HTTP status code 201 and the newly created identities' federation ID, given the request was successful. The registration process is now complete, meaning that the new identity has been created. However, at this point, the server does not yet provide a session token, as the user still has to authenticate a client.
-1. Adding a new client to newly created identity is described in section [4.1.2](#412-authenticating-a-new-client-on-a-polyproto-core-home-server).
+To register, the client sends a request to the home server, containing the registration information. The server verifies the correctness of the provided information, checks if the username is available and then responds with HTTP status code 201 and the newly created identities' federation ID, given the request was successful. The registration process is now complete, meaning that the new identity has been created. However, at this point, the server does not yet provide a session token, as the user still has to authenticate a client. Adding a new client to newly created identity is described in section [4.1.2](#412-authenticating-a-new-client-on-a-polyproto-core-home-server).
 
 ```
 Client                                               Server                                                           
