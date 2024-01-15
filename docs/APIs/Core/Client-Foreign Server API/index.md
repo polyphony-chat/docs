@@ -81,7 +81,7 @@ zy2oKXr/odOD4+476J5APxxXCWVLXr3qfAXmSBQERznYuuRmhyL...
 
 | Type             | Description                                                    |
 | ---------------- | -------------------------------------------------------------- |
-| ID-Cert, Binary  | The servers' public identity certificate, in binary format.     |
+| String, Base64  | The servers' public [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert).     |
 
 ```json
 [...]
@@ -119,9 +119,9 @@ zy2oKXr/odOD4+476J5APxxXCWVLXr3qfAXmSBQERznYuuRmhyL...
 
 ##### Body
 
-| Type                             | Description                                                  |
-| -------------------------------- | ------------------------------------------------------------ |
-| JSON-Array of ID-Cert(s), Binary | The user's public identity certificate(s), in binary format. |
+| Type                           | Description                                                   |
+| ------------------------------ | ------------------------------------------------------------- |
+| JSON-Array of Strings (Base64) | The user's public identity certificate(s), encoded in Base64. |
 
 ```json
 [...]
@@ -137,9 +137,9 @@ zy2oKXr/odOD4+476J5APxxXCWVLXr3qfAXmSBQERznYuuRmhyL...
 
 ##### Body
 
-| Type             | Description                                                                 |
-| ---------------- | --------------------------------------------------------------------------- |
-| ID-Cert, Binary  | The new public identity certificate, in binary format.                      |
+| Type           | Description                                                                                                                                         |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| String, Base64 | The new [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) for this session ID. |
 
 ```json
 [...]
