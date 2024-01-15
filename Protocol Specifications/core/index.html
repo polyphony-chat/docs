@@ -1045,15 +1045,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#414-using-the-same-identity-for-different-polyproto-core-implementations" class="md-nav__link">
-    <span class="md-ellipsis">
-      4.1.4 Using the same identity for different polyproto-core implementations
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1465,15 +1456,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#414-using-the-same-identity-for-different-polyproto-core-implementations" class="md-nav__link">
-    <span class="md-ellipsis">
-      4.1.4 Using the same identity for different polyproto-core implementations
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1751,7 +1733,6 @@
 <li><a href="#411-registering-a-new-user-on-a-polyproto-core-home-server">4.1.1 Registering a new user on a polyproto-core home server</a></li>
 <li><a href="#412-authenticating-a-new-client-on-a-polyproto-core-home-server">4.1.2 Authenticating a new client on a polyproto-core home server</a></li>
 <li><a href="#413-authenticating-on-a-foreign-server">4.1.3 Authenticating on a foreign server</a></li>
-<li><a href="#414-using-the-same-identity-for-different-polyproto-core-implementations">4.1.4 Using the same identity for different polyproto-core implementations</a></li>
 <li><a href="#42-challenge-strings">4.2 Challenge Strings</a></li>
 <li><a href="#43-abuse-prevention">4.3 Abuse prevention</a></li>
 </ul>
@@ -1880,6 +1861,10 @@ The definition of "client" in this context is broader, since it includes both us
 <p>Federating user identities means that users can fully participate on foreign servers, as if it were their home server.
 Taking polyproto-chat as an example, this means that a polyproto-chat user can send direct messages to users from another server or join another servers' Guilds. </p>
 <p>An identity certificate defined in sections <a href="#7-keys-and-signatures">#7. Keys and signatures</a> and <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">#7.1 Home server signed certificates for public client identity keys (ID-Cert)</a> is used to sign messages that the user sends to other servers.</p>
+<div class="admonition note">
+<p class="admonition-title">Using one identity for multiple polyproto-core implementations</p>
+<p>A user can choose to use the same identity for multiple polyproto-core implementations. If section <a href="#413-authenticating-on-a-foreign-server">4.1.3</a> is implemented correctly, this should not be a problem. However, if a user wants to use the same identity for multiple polyproto-core implementations, they must ensure that the implementations use the same identity key pair.</p>
+</div>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>You can read more about the Identity Pubkey and Certificate in <a href="#7-keys-and-signatures">7. Keys and signatures</a>.</p>
@@ -1975,7 +1960,7 @@ Say that Alice is on server A, and would like to authenticate on Server B using 
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>|&lt;----------------------------------------------|                     |
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>|                                               |                     |        
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>|                                               |                     |
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>| Signed challenge, ID-Cert                     |                     |
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>| Signed challenge, ID-Cert, Optional payload   |                     |
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>|--------------------------------------------------------------------&gt;|
 <a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>|                                               |                     |
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>|                                               |          Get pubkey |
@@ -1994,11 +1979,13 @@ Say that Alice is on server A, and would like to authenticate on Server B using 
 <a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>|                                               |                     |
 </code></pre></div>
 Fig. 4: Sequence diagram of a successful identity verification.</p>
+<p>The "optional payload" in the above diagram is optional, additional data a server may request from a user. This is most useful in the context of using the same identity for different, polyproto-core based services, as one service might require additional information about a user, which another service does not need. The payload is signed by the user's private identity key. </p>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p>Alice currently has a polyproto-core identity, which she created when signing up for "https://example.com/chat". When signing up for this service, she didn't need to provide any additional information on registration. However, when she wants to sign up for "https://example.com/social", she is asked to provide her email address, which she can provide as the "optional payload". The server can then store the email address in its' database, associate it with Alice's identity, and let Alice log in with her existing identity. </p>
+</div>
 <p>If Alice's session token expires, she can repeat this process of requesting a challenge string and, together with her ID-Cert, exchange it for a session token.
 However, if Alice wants to access this third party account from a completely new device, they will have to perform the steps described in section <a href="#412-authenticating-a-new-client-on-a-polyproto-core-home-server">4.1.2</a> to obtain a valid ID-Cert for that session.</p>
-<h4 id="414-using-the-same-identity-for-different-polyproto-core-implementations">4.1.4 Using the same identity for different polyproto-core implementations<a class="headerlink" href="#414-using-the-same-identity-for-different-polyproto-core-implementations" title="Permanent link">&para;</a></h4>
-<p>A user may choose to use the same identity for multiple polyproto-core implementations. The additional behavior required by polyproto-core server implementations is really simple, as the server only needs to verify the ID-Cert of the user.
-To verify the ID-Cert, the server can simply request the other servers' public identity key and then verify the signature of the ID-Cert with the public identity key of the other server.</p>
 <h3 id="42-challenge-strings">4.2 Challenge Strings<a class="headerlink" href="#42-challenge-strings" title="Permanent link">&para;</a></h3>
 <p>Challenge strings are generated by servers. They are a random, unique string of alphanumeric characters, which is used to verify that the user is in possession of their private identity key. The length of a challenge string must be greater than or equal to 32 characters, and shall not be greater than 256 characters. Challenge strings must have a lifetime, which is specified as a UNIX timestamp. The challenge must automatically count as failed, if the current (now) UNIX timestamp is greater than the specified lifetime.  The lifetime must always be indicated. The string is signed by the user's private identity key, and the signature is sent to the server, along with the user's ID-Cert. By verifying the signature of the challenge string with the user's ID-Cert, the server can verify that the user is in possession of their private identity key, and is who they claim to be.</p>
 <p>The usage of challenge strings prevents replay attacks, as the challenge string is unique, meaning that it is different even for two identical requests. This means that a malicious server cannot simply replay a request to another server, as the signature of the challenge string would be different.</p>
