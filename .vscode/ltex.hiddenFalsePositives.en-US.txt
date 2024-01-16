@@ -49,3 +49,6 @@
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qbug \"Unfinished section\"\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-core servers and clients employing encryption should support multi-device use.\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-core servers and clients employing encryption must support multi-device use.\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto is a federated protocol, engineered around that what is most important in any application: Users.\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto is a federated protocol, engineered around what is most important in any application: Users.\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto is a federated protocol, engineered around what is most important in any application: User Experience.\\E$"}
