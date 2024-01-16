@@ -112,8 +112,7 @@ else Server defined reason
 end
 
 
-opt Resume connection
-  Note right of g: Otherwise, repeat from step 1
+opt Resume connection#59;<br />otherwise, repeat from step 1
   c->>g: Open new connection
   c->>g: Send resume event
   g->>c: Send missed events
