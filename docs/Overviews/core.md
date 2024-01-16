@@ -1,5 +1,10 @@
 # An Overview of polyproto-core
 
+!!! danger "Work in Progress"
+
+    This overview page is not yet finished. However, that what is there is already representative of
+    what the polyproto protocol is about.
+
 polyproto is a federated protocol, engineered around what is most important in any application: User Experience.
 Read this document for an overview of the concepts and ideas behind polyproto.
 
@@ -18,7 +23,19 @@ Together, this makes for an individual, yet globally unique identifier.
 When you, for example, chat with someone on a different server, that other server is fully in control
 about what data it chooses to present to you. To make sure that you are actually talking to `xenia@example.com`,
 and not to an evil server admin who simply claims to be `xenia`, the tried and true technique of
-message signing is used. This is how it works:
+message signing is used. 
+
+```mermaid
+flowchart LR
+    hs[(Your Home Server)] --- you(You)
+    you -- Send signed message --> fs[(A Foreign Server)]
+    fs -- Forwards message --> other(Other User)
+    fs --> verify{Verify message signature}
+    other --> verify
+    verify -- Get certificate from home server to verify --> hs
+```
+
+This is how it works:
 
 - Every user client has an own identity key pair, comprised of a public and a private key. The public
   key is cryptographically linked to the private key, meaning that this public key can not "fit onto"
