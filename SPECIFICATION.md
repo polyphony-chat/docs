@@ -89,57 +89,37 @@ In polyproto-core, WebSockets facilitate real-time communication between user/bo
 
 WebSocket connections to polyproto-core servers consist of the following cycle:
 
-```
-    +------------------+       1. Establish Connection        +-----------+
-    |      Client      |------------------------------------> |  Gateway  |
-    +------------------+                                      +-----------+
-                                                              
-    +------------------+        2. Receive Hello Event        +-----------+
-    |      Client      |<------------------------------------ |  Gateway  |
-    +------------------+                                      +-----------+
-                                        
-                      3. Start Heartbeat Interval (continually)
+```mermaid
+sequenceDiagram
 
- +------------------------------------------------------------------------->-+
- |  +------------------+       3.1 Send Heartbeat Event       +-----------+  |
- ^  |      Client      |------------------------------------> |  Gateway  |  |
- |  +------------------+                                      +-----------+  |
- |                                                            |              |
- |  +------------------+    3.2 Receive Heartbeat ACK Event   +-----------+  |
- |  |      Client      |<------------------------------------ |  Gateway  |  v
- |  +------------------+                                      +-----------+  |
- +-<-------------------------------------------------------------------------+
+actor c as Client
+participant g as Gateway
 
-    +------------------+      4. Send Identify payload        +-----------+
-    |      Client      |------------------------------------> |  Gateway  |
-    +------------------+                                      +-----------+
-                                                              
-    +------------------+        5. Receive Ready Event        +-----------+
-    |      Client      |<------------------------------------ |  Gateway  |
-    +------------------+                                      +-----------+
+c->>g: Establish connection
+g->>c: Recieve hello event
 
-    +------------------+    6. Disconnect (for any reason)    +-----------+
-    |      Client      |<------------------------------------ |  Gateway  |
-    +------------------+                                      +-----------+
+loop TODO: interval
+  c->>g: Send heartbeat event
+  g->>c: Send heartbeat ACK Event
+end
 
-                          7. Resume connection, if eligible
-                           (otherwise: repeat from step 1)
+c->>g: Send identify payload
 
-    +------------------+       7.1 Open new connection        +-----------+
-    |      Client      |------------------------------------> |  Gateway  |
-    +------------------+                                      +-----------+
+alt Server accepts
+  g->>c: Send ready event
+else Server defined reason
+  g->>c: Disconnect with specified reason
+end
 
-    +------------------+        7.2 Send Resume Event         +-----------+
-    |      Client      |------------------------------------> |  Gateway  |
-    +------------------+                                      +-----------+
-                                                              
-    +------------------+      7.3 Receive Missed Events       +-----------+
-    |      Client      |<------------------------------------ |  Gateway  |
-    +------------------+                                      +-----------+
-                      
-    +------------------+      7.4 Receive Resumed Event       +-----------+
-    |      Client      |<------------------------------------ |  Gateway  |
-    +------------------+                                      +-----------+
+
+opt Resume connection
+  Note right of g: Otherwise, repeat from step 1
+  c->>g: Open new connection
+  c->>g: Send resume event
+  g->>c: Send missed events
+  g->>c: Send resumed event
+end
+
 ```
 
 Fig. 1: Sequence diagram of a WebSocket connection to a polyproto-core server.
