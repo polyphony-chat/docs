@@ -63,7 +63,11 @@ markdown_extensions:
       use_pygments: true
       pygments_lang_class: true
       auto_title: true
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.details
