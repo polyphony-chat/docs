@@ -28,6 +28,8 @@ Routes concerning authentication.
 
 `/p2core/challenge`
 
+Request a challenge string. See [the type definition](../types.md#challenge-string) or the corresponding [protocol definition chapter](/Protocol%20Specifications/core/#)
+
 #### Request
 
 ##### Body

@@ -47,3 +47,5 @@
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-core does not provide any defaults for this field\"} JSON-Object n.A.\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-core does not provide any defaults for this field.\"}\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qbug \"Unfinished section\"\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-core servers and clients employing encryption should support multi-device use.\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto-core servers and clients employing encryption must support multi-device use.\\E$"}
