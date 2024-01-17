@@ -52,3 +52,4 @@
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto is a federated protocol, engineered around that what is most important in any application: Users.\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto is a federated protocol, engineered around what is most important in any application: Users.\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto is a federated protocol, engineered around what is most important in any application: User Experience.\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto - The core federation protocol and APIs of polyproto, enabling identification and authorization on 'foreign' servers.\\E$"}

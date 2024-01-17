@@ -7,7 +7,6 @@
 - **Home client** - From a server perspective, any client registered on the server, where the client would view the server as its home server.
 - **Home server** - The server that a user is registered on. Any polyproto-core compliant server hosted on the same domain is also considered a home server.
 - **Identity Key** - A key pair which represents a user's identity for a given session. It is used to sign messages and to encrypt messages for the user.
-- **polyproto** - The combination of the polyproto-core and polyproto-chat protocols and APIs.
 - **polyproto-chat** - The chat-API used by polyproto. It defines the routes and capabilities of the chat-API used by polyproto.
-- **polyproto-core** - The core federation protocol and APIs of polyproto, enabling identification and authorization on 'foreign' servers. It is independent of the chat-API used.
+- **polyproto** - The core federation protocol and APIs of polyproto, enabling identification and authorization on 'foreign' servers. It is independent of the chat-API used.
 - **User** - An entity represented by a federation ID, registered on a home server.

@@ -1,9 +1,9 @@
-# polyproto-core Specification
+# polyproto Specification
 
 **v0.0.0** - Treat this as an unfinished draft.
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 
-- [polyproto-core Specification](#polyproto-core-specification)
+- [polyproto Specification](#polyproto-specification)
   - [1. Terminology used in this document](#1-terminology-used-in-this-document)
   - [2. Trust model](#2-trust-model)
   - [3. APIs and communication protocols](#3-apis-and-communication-protocols)
@@ -12,8 +12,8 @@
     - [3.3 WebSockets](#33-websockets)
   - [4. Federated Identity](#4-federated-identity)
     - [4.1 Authentication](#41-authentication)
-      - [4.1.1 Registering a new user on a polyproto-core home server](#411-registering-a-new-user-on-a-polyproto-core-home-server)
-      - [4.1.2 Authenticating a new client on a polyproto-core home server](#412-authenticating-a-new-client-on-a-polyproto-core-home-server)
+      - [4.1.1 Registering a new user on a polyproto home server](#411-registering-a-new-user-on-a-polyproto-home-server)
+      - [4.1.2 Authenticating a new client on a polyproto home server](#412-authenticating-a-new-client-on-a-polyproto-home-server)
       - [4.1.3 Authenticating on a foreign server](#413-authenticating-on-a-foreign-server)
     - [4.2 Challenge Strings](#42-challenge-strings)
     - [4.3 Abuse prevention](#43-abuse-prevention)
@@ -37,11 +37,11 @@
     - [8.2 Re-signing messages](#82-re-signing-messages)
 
 
-The polyproto-core protocol is a home-server-based federation protocol specification intended for use in applications where a user identity is needed. polyproto-core focuses on federated identity, and apart from the usage of MLS for encryption, does not specify any application-specific features. It is intended to be used as a base for application implementations and other protocols, such as polyproto-chat, which is a chat protocol built on top of polyproto-core. Any specific polyproto-core user identity can be used for multiple applications, as long as the applications support polyproto-core. 
+The polyproto protocol is a home-server-based federation protocol specification intended for use in applications where a user identity is needed. polyproto focuses on federated identity, and apart from the usage of MLS for encryption, does not specify any application-specific features. It is intended to be used as a base for application implementations and other protocols, such as polyproto-chat, which is a chat protocol built on top of polyproto. Any specific polyproto user identity can be used for multiple applications, as long as the applications support polyproto. 
 
-No part of polyproto-core is considered less important than any other part, and all parts of polyproto-core are required for a polyproto-core implementation to be considered compliant with the polyproto-core specification. The only exception to this is the encryption part of polyproto-core, which is optional, as the necessity of encryption depends on the specific implementation.
+No part of polyproto is considered less important than any other part, and all parts of polyproto are required for a polyproto implementation to be considered compliant with the polyproto specification. The only exception to this is the encryption part of polyproto, which is optional, as the necessity of encryption depends on the specific implementation.
 
-This document is intended to be used as a starting point for developers wanting to develop software which can interoperate with other polyproto-core implementations.
+This document is intended to be used as a starting point for developers wanting to develop software which can interoperate with other polyproto implementations.
 
 ## 1. Terminology used in this document
 
@@ -59,7 +59,7 @@ Terminology not specified in this section or in the glossary has been defined so
 
 ## 2. Trust model
 
-polyproto-core operates under the following trust assumptions:
+polyproto operates under the following trust assumptions:
 
 1. Users entrust their home server and its admins with data security and discretion on actions appearing as user-performed.
 2. Users only distrust their home servers in case of irregularities or conflicting information.
@@ -70,24 +70,24 @@ polyproto-core operates under the following trust assumptions:
 
 ## 3. APIs and communication protocols
 
-The polyproto-core specification defines a set of APIs, namely the Client-Home server and Client-Foreign server APIs. 
-In addition to these REST APIs, polyproto-core employs WebSockets for real-time communication between clients and servers.
+The polyproto specification defines a set of APIs, namely the Client-Home server and Client-Foreign server APIs. 
+In addition to these REST APIs, polyproto employs WebSockets for real-time communication between clients and servers.
 
 ### 3.1 Client-Home server API
 
-The [*Client-Home server*](./docs/APIs/Core/Client-Home%20Server%20API/index.md) API of polyproto-core is concerned with authentication- and federation-related issues between a client and its home server.
+The [*Client-Home server*](./docs/APIs/Core/Client-Home%20Server%20API/index.md) API of polyproto is concerned with authentication- and federation-related issues between a client and its home server.
 A client in this context is expected to be a user/bot session.
 
 ### 3.2 Client-foreign server API
 
-The [*Client-foreign server*](./docs/APIs/Core/Client-Foreign%20Server%20API/index.md) API of polyproto-core is used for tasks such as requesting the servers' or a users' public key(s) or migrating a user account.
-The definition of "client" in this context is broader, since it includes both users/bots and other polyproto-core servers.
+The [*Client-foreign server*](./docs/APIs/Core/Client-Foreign%20Server%20API/index.md) API of polyproto is used for tasks such as requesting the servers' or a users' public key(s) or migrating a user account.
+The definition of "client" in this context is broader, since it includes both users/bots and other polyproto servers.
 
 ### 3.3 WebSockets
 
-In polyproto-core, WebSockets facilitate real-time communication between user/bot clients and servers, and they are employed in both Client-Home Server and Client-Foreign Server communication.
+In polyproto, WebSockets facilitate real-time communication between user/bot clients and servers, and they are employed in both Client-Home Server and Client-Foreign Server communication.
 
-WebSocket connections to polyproto-core servers consist of the following cycle:
+WebSocket connections to polyproto servers consist of the following cycle:
 
 ```mermaid
 sequenceDiagram
@@ -121,11 +121,11 @@ end
 
 ```
 
-Fig. 1: Sequence diagram of a WebSocket connection to a polyproto-core server.
+Fig. 1: Sequence diagram of a WebSocket connection to a polyproto server.
 
 !!! info
 
-    To learn more about polyproto-core WebSockets and WebSocket Events, consult the [WebSockets documentation](/docs/APIs/Core/WebSockets/index.md).
+    To learn more about polyproto WebSockets and WebSocket Events, consult the [WebSockets documentation](/docs/APIs/Core/WebSockets/index.md).
 
 ## 4. Federated Identity
 
@@ -134,9 +134,9 @@ For instance, in polyproto-chat, a user can send direct messages to users from a
 
 Identity certificates defined in sections [#7. Keys and signatures](#7-keys-and-signatures) and [#7.1 Home server signed certificates for public client identity keys (ID-Cert)](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) are employed to sign messages that the user sends to other servers.
 
-!!! note "Using one identity for multiple polyproto-core implementations"
+!!! note "Using one identity for multiple polyproto implementations"
 
-    A user can choose to use the same identity for multiple polyproto-core implementations. If section [4.1.3](#413-authenticating-on-a-foreign-server) is implemented correctly, this should not be a problem.
+    A user can choose to use the same identity for multiple polyproto implementations. If section [4.1.3](#413-authenticating-on-a-foreign-server) is implemented correctly, this should not be a problem.
 
 
 !!! info
@@ -145,11 +145,11 @@ Identity certificates defined in sections [#7. Keys and signatures](#7-keys-and-
 
 ### 4.1 Authentication
 
-#### 4.1.1 Registering a new user on a polyproto-core home server
+#### 4.1.1 Registering a new user on a polyproto home server
 
-Registering a new user in the context of polyproto-core is done through an API route defined in the polyproto-core Client-Home server API documentation.
+Registering a new user in the context of polyproto is done through an API route defined in the polyproto Client-Home server API documentation.
 
-To register, the client sends the necessary information to their home server. The server verifies the data, checks username availability, and responds with HTTP 201 and the new identity's federation ID, if successful. However, a session token isn't provided until the user authenticates a client, as detailed in section [4.1.2](#412-authenticating-a-new-client-on-a-polyproto-core-home-server).
+To register, the client sends the necessary information to their home server. The server verifies the data, checks username availability, and responds with HTTP 201 and the new identity's federation ID, if successful. However, a session token isn't provided until the user authenticates a client, as detailed in section [4.1.2](#412-authenticating-a-new-client-on-a-polyproto-home-server).
 
 ```mermaid
 sequenceDiagram
@@ -171,7 +171,7 @@ end
 ```
 Fig. 2: Sequence diagram of a successful identity creation process.
 
-#### 4.1.2 Authenticating a new client on a polyproto-core home server
+#### 4.1.2 Authenticating a new client on a polyproto home server
 
 To access their account from a new device, a user authenticates the session with their home server by sending authentication information and a [certificate signing request (CSR)](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) for the new client. If verified successfully, the server signs the CSR and responds with the newly generated ID-Cert and a session token.
 
@@ -225,16 +225,16 @@ sb->>a: Session token, optional payload
 ```
 Fig. 4: Sequence diagram of a successful identity verification.
 
-In the diagram, Alice's "optional payload" is extra data that may be requested by servers. This is useful when using a single identity across various polyproto-core implementations, due to differing information needs. The payload is signed with the user's private identity key.
+In the diagram, Alice's "optional payload" is extra data that may be requested by servers. This is useful when using a single identity across various polyproto implementations, due to differing information needs. The payload is signed with the user's private identity key.
 
 Likewise, the "optional payload" sent by the server in the above diagram can be used by implementations to send additional information to the client. An example might be initial account information.
 
 !!! example
 
-    Alice currently has a polyproto-core identity, which she created when signing up for "https://example.com/chat". When signing up for this service, she didn't need to provide any additional information on registration. However, when she wants to user her existing identity to sign up for "https://example.com/social", she is asked to provide her email address, which she can provide as the "optional payload". The server can then store the email address in its' database, associate it with Alice's identity, and let Alice log in with her existing identity. 
+    Alice currently has a polyproto identity, which she created when signing up for "https://example.com/chat". When signing up for this service, she didn't need to provide any additional information on registration. However, when she wants to user her existing identity to sign up for "https://example.com/social", she is asked to provide her email address, which she can provide as the "optional payload". The server can then store the email address in its' database, associate it with Alice's identity, and let Alice log in with her existing identity. 
 
 If Alice's session token expires, she can repeat this process of requesting a challenge string and, together with her ID-Cert, exchange it for a session token.
-However, if Alice wants to access this third party account from a completely new device, they will have to perform the steps described in section [4.1.2](#412-authenticating-a-new-client-on-a-polyproto-core-home-server) to obtain a valid ID-Cert for that session.
+However, if Alice wants to access this third party account from a completely new device, they will have to perform the steps described in section [4.1.2](#412-authenticating-a-new-client-on-a-polyproto-home-server) to obtain a valid ID-Cert for that session.
 
 ### 4.2 Challenge Strings
 
@@ -257,7 +257,7 @@ their consent.
 
 !!! abstract
 
-    The above scenario is not unique to polyproto-core, and rather a problem other federated services/
+    The above scenario is not unique to polyproto, and rather a problem other federated services/
     protocols, like ActivityPub, have as well. There is no real solution to this problem, but it can be
     mitigated a bit by making it more difficult for malicious home servers to do something like this
     without the user noticing.
@@ -289,22 +289,22 @@ The following regex can be used to validate user IDs: `\b([A-Z0-9._%+-]+)@([A-Z0
 
 !!! abstract "About MLS"
 
-    Polyproto offers end-to-end encryption for messages via [Message Layer Security (MLS)](https://messaginglayersecurity.rocks/). polyproto-core compliant servers take on the role of both an Authentication Service and a Delivery Service in the context of MLS.
+    Polyproto offers end-to-end encryption for messages via [Message Layer Security (MLS)](https://messaginglayersecurity.rocks/). polyproto compliant servers take on the role of both an Authentication Service and a Delivery Service in the context of MLS.
 
     MLS is a cryptographic protocol that provides confidentiality, integrity, and authenticity guarantees for group messaging applications. It builds on top of the [Double Ratchet Algorithm](https://signal.org/docs/specifications/doubleratchet/) and [X3DH](https://signal.org/docs/specifications/x3dh/) to provide these security guarantees.
 
-Implementations of polyproto-core may opt to support encryption to secure communication channels. The selected security protocol for all polyproto-core implementations is the Messaging Layer Security protocol, given its feasibility within the implementation context. MLS inherently supports negotiation of protocol versions, cipher suites, extensions, credential types, and extra proposal types. For two implementations of polyproto-core to be compatible with each other in the context of encryption, they must have overlapping capabilities in these areas.
+Implementations of polyproto may opt to support encryption to secure communication channels. The selected security protocol for all polyproto implementations is the Messaging Layer Security protocol, given its feasibility within the implementation context. MLS inherently supports negotiation of protocol versions, cipher suites, extensions, credential types, and extra proposal types. For two implementations of polyproto to be compatible with each other in the context of encryption, they must have overlapping capabilities in these areas.
 
-The following sections explain the additional behavior that polyproto-core implementations utilizing MLS must implement.
+The following sections explain the additional behavior that polyproto implementations utilizing MLS must implement.
 
 ### 6.1. KeyPackages
 
 !!! warning
 
-    The sections 6.1 and 6.1.1 are not exhaustive and do not cover all aspects of MLS and KeyPackages. They exist solely to give a general overview of how KeyPackages are used in polyproto-core.
-    Please read and understand the MLS specification (RFC9420) to implement polyproto-core correctly.
+    The sections 6.1 and 6.1.1 are not exhaustive and do not cover all aspects of MLS and KeyPackages. They exist solely to give a general overview of how KeyPackages are used in polyproto.
+    Please read and understand the MLS specification (RFC9420) to implement polyproto correctly.
 
-A polyproto-core compliant server must store KeyPackages for all clients registered on it. The KeyPackage is a JSON object that contains the following information:
+A polyproto compliant server must store KeyPackages for all clients registered on it. The KeyPackage is a JSON object that contains the following information:
 
 ```json
 {
@@ -349,7 +349,7 @@ The public identity key inside the `LeafNode` of this KeyPackage corresponds to 
 
 ### 6.3 Multi-device support
 
-polyproto-core servers and clients employing encryption must support multi-device use. The MLS protocol assigns each device a unique `LeafNode` and prohibits key sharing across devices. Each device offers distinct KeyPackages and an own ID-Cert.
+polyproto servers and clients employing encryption must support multi-device use. The MLS protocol assigns each device a unique `LeafNode` and prohibits key sharing across devices. Each device offers distinct KeyPackages and an own ID-Cert.
 
 ## 7. Keys and signatures
 
@@ -357,7 +357,7 @@ polyproto-core servers and clients employing encryption must support multi-devic
  
 The ID-Cert, a public key certificate, validates a public user identity key. It's a user-generated CSR ([Certificate Signing Request](https://en.wikipedia.org/wiki/Certificate_signing_request)), signed by a home server, encompassing user identity information, as well as the client's public identity key. Clients can acquire an ID-Cert in return for a CSR.
 
-ID-Certs form the basis of message signing, verification and encryption in polyproto-core They are used to verify the identity of a client, and to verify the integrity of messages sent by a client.
+ID-Certs form the basis of message signing, verification and encryption in polyproto They are used to verify the identity of a client, and to verify the integrity of messages sent by a client.
 
 A CSR includes the following information:
 
