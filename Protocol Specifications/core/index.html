@@ -1895,57 +1895,35 @@ The definition of "client" in this context is broader, since it includes both us
 <h3 id="33-websockets">3.3 WebSockets<a class="headerlink" href="#33-websockets" title="Permanent link">&para;</a></h3>
 <p>In polyproto-core, WebSockets facilitate real-time communication between user/bot clients and servers, and they are employed in both Client-Home Server and Client-Foreign Server communication.</p>
 <p>WebSocket connections to polyproto-core servers consist of the following cycle:</p>
-<div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>    +------------------+       1. Establish Connection        +-----------+
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    |      Client      |------------------------------------&gt; |  Gateway  |
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    +------------------+                                      +-----------+
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    +------------------+        2. Receive Hello Event        +-----------+
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    |      Client      |&lt;------------------------------------ |  Gateway  |
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    +------------------+                                      +-----------+
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>                      3. Start Heartbeat Interval (continually)
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a> +-------------------------------------------------------------------------&gt;-+
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a> |  +------------------+       3.1 Send Heartbeat Event       +-----------+  |
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a> ^  |      Client      |------------------------------------&gt; |  Gateway  |  |
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a> |  +------------------+                                      +-----------+  |
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a> |                                                            |              |
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a> |  +------------------+    3.2 Receive Heartbeat ACK Event   +-----------+  |
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a> |  |      Client      |&lt;------------------------------------ |  Gateway  |  v
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a> |  +------------------+                                      +-----------+  |
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a> +-&lt;-------------------------------------------------------------------------+
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    +------------------+      4. Send Identify payload        +-----------+
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    |      Client      |------------------------------------&gt; |  Gateway  |
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    +------------------+                                      +-----------+
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    +------------------+        5. Receive Ready Event        +-----------+
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    |      Client      |&lt;------------------------------------ |  Gateway  |
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    +------------------+                                      +-----------+
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    +------------------+    6. Disconnect (for any reason)    +-----------+
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    |      Client      |&lt;------------------------------------ |  Gateway  |
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    +------------------+                                      +-----------+
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>                          7. Resume connection, if eligible
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>                           (otherwise: repeat from step 1)
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>    +------------------+       7.1 Open new connection        +-----------+
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    |      Client      |------------------------------------&gt; |  Gateway  |
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>    +------------------+                                      +-----------+
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>    +------------------+        7.2 Send Resume Event         +-----------+
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>    |      Client      |------------------------------------&gt; |  Gateway  |
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>    +------------------+                                      +-----------+
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>    +------------------+      7.3 Receive Missed Events       +-----------+
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>    |      Client      |&lt;------------------------------------ |  Gateway  |
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>    +------------------+                                      +-----------+
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>    +------------------+      7.4 Receive Resumed Event       +-----------+
-<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>    |      Client      |&lt;------------------------------------ |  Gateway  |
-<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>    +------------------+                                      +-----------+
-</code></pre></div>
+<pre class="mermaid"><code>sequenceDiagram
+
+actor c as Client
+participant g as Gateway
+
+c-&gt;&gt;g: Establish connection
+g-&gt;&gt;c: Recieve hello event
+
+loop TODO: interval
+  c-&gt;&gt;g: Send heartbeat event
+  g-&gt;&gt;c: Send heartbeat ACK Event
+end
+
+c-&gt;&gt;g: Send identify payload
+
+alt Server accepts
+  g-&gt;&gt;c: Send ready event
+else Server defined reason
+  g-&gt;&gt;c: Disconnect with specified reason
+end
+
+
+opt Resume connection#59;&lt;br /&gt;otherwise, repeat from step 1
+  c-&gt;&gt;g: Open new connection
+  c-&gt;&gt;g: Send resume event
+  g-&gt;&gt;c: Send missed events
+  g-&gt;&gt;c: Send resumed event
+end
+</code></pre>
 <p>Fig. 1: Sequence diagram of a WebSocket connection to a polyproto-core server.</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
@@ -1967,71 +1945,41 @@ For instance, in polyproto-chat, a user can send direct messages to users from a
 <h4 id="411-registering-a-new-user-on-a-polyproto-core-home-server">4.1.1 Registering a new user on a polyproto-core home server<a class="headerlink" href="#411-registering-a-new-user-on-a-polyproto-core-home-server" title="Permanent link">&para;</a></h4>
 <p>Registering a new user in the context of polyproto-core is done through an API route defined in the polyproto-core Client-Home server API documentation.</p>
 <p>To register, the client sends the necessary information to their home server. The server verifies the data, checks username availability, and responds with HTTP 201 and the new identity's federation ID, if successful. However, a session token isn't provided until the user authenticates a client, as detailed in section <a href="#412-authenticating-a-new-client-on-a-polyproto-core-home-server">4.1.2</a>.</p>
-<p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Client                                               Server                                                           
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>|                                              |                                            
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Registration information                     |                                            
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---------------------------------------------&gt;|                                            
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>|                                              |                                            
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|                                              | Verify correctness of provided information,
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>|                                              | check if username is available, etc. 
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|                                              |------------------------------------------- 
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>|                                              |                                          | 
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>|                                              |&lt;------------------------------------------ 
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>|                                              | -------------------------                  
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>|                                              |-| Verified successfully |                  
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>|                                              | -------------------------                                                           
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>|                                              |                                            
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>|                                              | Verify provided CSR                        
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>|                                              |--------------------                        
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>|                                              |                   |                        
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>|                                              |&lt;-------------------                        
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>|                                              | ------------                               
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>|                                              |-| CSR okay |                               
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>|                                              | ------------                               
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>|                                              |                                            
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>|                                              | Signing CSR                                
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>|                                              |------------                                
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>|                                              |           |                                
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>|                                              |&lt;-----------                                
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>|                                              |                                            
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>|    HTTP Status Code 201 + user federation ID |                                            
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>|&lt;---------------------------------------------|                                            
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>|                                              |                                            
-</code></pre></div>
+<p><pre class="mermaid"><code>sequenceDiagram
+
+actor c as Client
+participant s as Server
+
+c-&gt;&gt;s: Registration information
+s-&gt;&gt;s: Verify correctness of provided information,&lt;br /&gt;check if username is available, etc
+
+alt verification successful
+  s-&gt;&gt;s: Verify provided CSR
+
+  alt CSR okay
+    s-&gt;&gt;s: Sign CSR
+    s-&gt;&gt;c: HTTP status code 201, with user federation ID
+  end
+end</code></pre>
 Fig. 2: Sequence diagram of a successful identity creation process.</p>
 <h4 id="412-authenticating-a-new-client-on-a-polyproto-core-home-server">4.1.2 Authenticating a new client on a polyproto-core home server<a class="headerlink" href="#412-authenticating-a-new-client-on-a-polyproto-core-home-server" title="Permanent link">&para;</a></h4>
 <p>To access their account from a new device, a user authenticates the session with their home server by sending authentication information and a <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">certificate signing request (CSR)</a> for the new client. If verified successfully, the server signs the CSR and responds with the newly generated ID-Cert and a session token.</p>
-<p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Client                                               Server                                                           
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>|                                                    |                                            
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>| Auth information, CSR                              |                                            
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>|---------------------------------------------------&gt;|                                            
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>|                                                    |                                            
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>|                                                    | Verify correctness of provided auth
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>|                                                    | information
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>|                                                    |------------------------------------------- 
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>|                                                    |                                          | 
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>|                                                    |&lt;------------------------------------------ 
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>|                                                    | -------------------------                  
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>|                                                    |-| Verified successfully |                  
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>|                                                    | -------------------------                                                           
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>|                                                    |                                            
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>|                                                    | Verify provided CSR                        
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>|                                                    |--------------------                        
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>|                                                    |                   |                        
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>|                                                    |&lt;-------------------                        
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>|                                                    | ------------                               
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>|                                                    |-| CSR okay |                               
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>|                                                    | ------------                               
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>|                                                    |                                            
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>|                                                    | Signing CSR                                
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>|                                                    |------------                                
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>|                                                    |           |                                
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>|                                                    |&lt;-----------                                
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>|                                                    |                                            
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>|      HTTP Status Code 201, ID-Cert + Session token |                                            
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>|&lt;---------------------------------------------------|                                            
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>|                                                    |                                            
-</code></pre></div>
+<p><pre class="mermaid"><code>sequenceDiagram
+
+actor c as Client
+participant s as Server
+
+c-&gt;&gt;s: Auth information, CSR
+s-&gt;&gt;s: Verify correctness of provided auth information
+
+alt Verified successfully
+  s-&gt;&gt;s: Verify provided CSR
+  alt CSR okay
+  s-&gt;&gt;s: Sign CSR
+  s-&gt;&gt;c: HTTP status code 201, ID-Cert + session token
+  end
+end
+</code></pre>
 Fig. 3: Sequence diagram of a successful client authentication process.</p>
 <p>The client is now authenticated and can use the session token and ID-Cert to perform actions on behalf of the user identified by the ID-Cert.</p>
 <h4 id="413-authenticating-on-a-foreign-server">4.1.3 Authenticating on a foreign server<a class="headerlink" href="#413-authenticating-on-a-foreign-server" title="Permanent link">&para;</a></h4>
@@ -2040,33 +1988,18 @@ Fig. 3: Sequence diagram of a successful client authentication process.</p>
 <p><strong>Example:</strong>
 Say that Alice is on server A, and would like to authenticate on Server B using her existing identity.</p>
 <p>Alice's client sends a request to Server B for a challenge string. Upon receiving a response, Alice signs this challenge string with their ID-Cert and sends the signature and her ID-Cert to Server B. Server B can now verify, that it was actually Alice who signed the string, and not a malicious outsider. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B using this token.</p>
-<p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Alice&#39;s Client                                  Server A                            Server B
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>|                                               |                                   |
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>| Challenge string request                      |                                   |
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>|----------------------------------------------&gt;|                                   |
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>|                                               |                                   |
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>|                              Challenge string |                                   |
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>|&lt;----------------------------------------------|                                   |
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>|                                               |                                   |        
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>|                                               |                                   |
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>| Signed challenge, ID-Cert, optional payload   |                                   |
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>|----------------------------------------------------------------------------------&gt;|
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>|                                               |                                   |
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>|                                               |                        Get pubkey |
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>|                                               |&lt;----------------------------------|
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>|                                               |                                   |
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>|                                               | Server A Pubkey                   |
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>|                                               |----------------------------------&gt;|
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>|                                               |                                   |
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>|                                               |                                   |
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>|                                               |                                   |
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>|                                               |                                   |
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>|                                               |                                   |
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>|                                               |                                   |
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>|                                               |   Session Token, optional payload |
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>|&lt;----------------------------------------------------------------------------------|
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>|                                               |                                   |
-</code></pre></div>
+<p><pre class="mermaid"><code>sequenceDiagram
+
+actor a as Alice
+participant sa as Server A
+participant sb as Server B
+
+a-&gt;&gt;sa: Challenge string request
+sa-&gt;&gt;a: Challenge string
+a-&gt;&gt;sb: Signed challenge, ID-Cert, optional payload
+sb-&gt;&gt;a: Get public key
+sa-&gt;&gt;sb: Send public key
+sb-&gt;&gt;a: Session token, optional payload</code></pre>
 Fig. 4: Sequence diagram of a successful identity verification.</p>
 <p>In the diagram, Alice's "optional payload" is extra data that may be requested by servers. This is useful when using a single identity across various polyproto-core implementations, due to differing information needs. The payload is signed with the user's private identity key.</p>
 <p>Likewise, the "optional payload" sent by the server in the above diagram can be used by implementations to send additional information to the client. An example might be initial account information.</p>
@@ -2130,13 +2063,13 @@ indicates that the federation ID is formatted correctly.</p>
 Please read and understand the MLS specification (RFC9420) to implement polyproto-core correctly.</p>
 </div>
 <p>A polyproto-core compliant server must store KeyPackages for all clients registered on it. The KeyPackage is a JSON object that contains the following information:</p>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;protocol_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;Version&gt;&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">&quot;cipher_suite&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;CipherSuite&gt;&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nt">&quot;init_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;HPKEPublicKey&gt;&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nt">&quot;leaf_node&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;LeafNode&gt;&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="nt">&quot;extensions&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;Extensions&gt;&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">}</span>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;protocol_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;Version&gt;&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">&quot;cipher_suite&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;CipherSuite&gt;&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">&quot;init_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;HPKEPublicKey&gt;&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">&quot;leaf_node&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;LeafNode&gt;&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nt">&quot;extensions&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;Extensions&gt;&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">}</span>
 </code></pre></div>
 <ul>
 <li><code>protocol_version</code> denotes the MLS protocol version.</li>
@@ -2199,33 +2132,19 @@ Please read and understand the MLS specification (RFC9420) to implement polyprot
 <p>A client may choose to rotate their identity key at any time. This is done by generating a new identity key pair, and sending the new public identity key to their home server, as part of a new Certificate Signing Request, at least one new KeyPackage and one corresponding 'last resort' KeyPackage. The home server will then generate the new ID-Cert, send it to the client, and let all associated clients know, that this clients' public identity key has changed. The server does this by sending a <a href="/docs/APIs/Core/WebSockets/gateway_events.md#client_key_change"><code>CLIENT_KEY_CHANGE</code></a> gateway event to those clients. For example, in the context of a chat application built with polyproto-chat, an associating relationship between two clients exists, if the two clients share a guild, a group or a direct message channel, if they are friends, or if they have a pending friend request between each other.</p>
 <p>Before sending any messages to a server, a client that performed a key rotation should inform the server of that change, to ensure that the server has the correct ID-Cert cached for the client.</p>
 <p>Home servers must keep track of the ID-Certs of all users (and their clients) registered on them, and must be able to provide a clients' ID-Cert for a given timestamp on request. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of a user may change over time and users must sign all messages they send to servers. Likewise, a client should also keep all of its own ID-Certs stored perpetually, to potentially verify its identity in case of a migration.</p>
-<p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>                                                 Server                                                Client                           
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>                                                 |                                                     |                                 
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>                                                 |                                                     | Create CSR for own identity key 
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>                                                 |                                                     |-------------------------------- 
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>                                                 |                                                     |                               | 
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>                                                 |                                                     |&lt;------------------------------- 
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>                                                 |                                                     |                                 
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>                                                 |      Request key rotation/CSR signing, CSR attached |                                 
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>                                                 |&lt;----------------------------------------------------|                                 
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>                                                 |                                                     |                                 
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>                                                 | Verify validity of claims presented in the CSR      |                                 
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>                                                 |-----------------------------------------------      |                                 
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>                                                 |                                              |      |                                 
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>                                                 |&lt;----------------------------------------------      |                                 
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>                                                 |                                                     |                                 
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>                                                 | Create ID-Cert for Client                           |                                 
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>                                                 |--------------------------                           |                                 
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>                                                 |                         |                           |                                 
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>                                                 |&lt;-------------------------                           |                                 
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>                                                 |                                                     |                                 
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>                                                 | Respond with ID-Cert                                |                                 
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>                                                 |----------------------------------------------------&gt;|                                 
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>------------------------------------------------ |                                                     |                                 
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>| Send CLIENT_KEY_CHANGE to associated clients |-|                                                     |                                 
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>------------------------------------------------ |                                                     |                                 
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>                                                 |                                                     |                                 
-</code></pre></div>
+<p><pre class="mermaid"><code>sequenceDiagram
+
+actor c as Client
+participant s as Server
+
+c-&gt;&gt;c: Create CSR for own identity key
+c-&gt;&gt;s: Request key rotation/CSR signing, CSR attached
+s-&gt;&gt;s: Verify validity of claims presented in the CSR
+alt verify success
+  s-&gt;&gt;s: Create ID-Cert for Client
+  s-&gt;&gt;c: Respond with ID-Cert
+end
+Note right of s: Send CLIENT_KEY_CHANGE to associated clients</code></pre>
 Fig. 5: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert from their home server.</p>
 <p>If a server's identity key lifetime unexpectedly ends, perhaps due to a leak necessitating rotation, the server should generate a new identity key pair and broadcast <a href="/docs/APIs/Core/WebSockets/gateway_events.md#server_key_change"><code>SERVER_KEY_CHANGE</code></a> and <a href="/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages"><code>LOW_KEY_PACKAGES</code></a> gateway events to all clients. Clients should regenerate their identity keys, request a new ID-Cert (via a CSR), and respond appropriately to the <a href="/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages"><code>LOW_KEY_PACKAGES</code></a> event. Should a client be offline at the time of the key change, it must be informed of the change upon reconnection.</p>
 <div class="admonition note">
@@ -2235,29 +2154,19 @@ Fig. 5: Sequence diagram depicting the process of a client using a CSR to reques
 <h4 id="722-message-verification">7.2.2 Message verification<a class="headerlink" href="#722-message-verification" title="Permanent link">&para;</a></h4>
 <p>To ensure message integrity via signing, clients and servers must verify message signatures. This involves cross-checking the message signature against the sender's ID-Cert and the senders' home server's public key, while also confirming the validity of the ID-Cert attached to the message and ensuring its public key matches the sender's.</p>
 <p><strong>Example:</strong> Given a signed message from Alice, like Bob would receive it from Server B in <a href="#fig-3">Fig. 3</a>, Bob's client would verify the signature of the message like so:</p>
-<p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Server B                                        Bob                                         Server A
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>|                                               |                                           |
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>| Alice&#39;s signed message                        |                                           |
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>|----------------------------------------------&gt;|                                           |
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>|                                               |                                           |
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>|                       Request Alice&#39;s ID-Cert |                                           |
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>|&lt;----------------------------------------------|                                           |
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>|                                               |                                           |
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>| Alice&#39;s ID-Cert                               |                                           |
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>|----------------------------------------------&gt;|                                           |
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>|                                               |                                           |
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>|                                               | Request Server A ID-Cert                  |
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>|                                               |------------------------------------------&gt;|
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>|                                               |                                           |
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>|                                               |                          Server A ID-Cert |
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>|                                               |&lt;------------------------------------------|
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>|                                               |                                           |
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>|                                               | Verify signature of Alice&#39;s message       |
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>|                                               |------------------------------------       |
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>|                                               |                                   |       |
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>|                                               |&lt;-----------------------------------       |
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>|                                               |                                           |
-</code></pre></div>
+<p><pre class="mermaid"><code>sequenceDiagram
+
+actor b as Bob
+participant sa as Server A
+participant sb as Server B
+
+sb-&gt;&gt;b: Alice's signed message
+b-&gt;&gt;sb: Request Alice's ID-Cert
+sb-&gt;&gt;b: Alice's ID-Cert
+b-&gt;&gt;sa: Request Server A ID-Cert
+sa-&gt;&gt;b: Server A ID-Cert
+b-&gt;&gt;b: Verify signature of Alice's message
+</code></pre>
 Fig. 6: Sequence diagram of a successful message signature verification.</p>
 <p>Bob's client should now cache Server A's public identity key and Alice's ID-Cert, to avoid having to request them again for as long as the ID-Cert/Server public key do not change, and are not expired.</p>
 <p>If the verification fails, Bob's client should try to re-request the key from Server B first. Should the verification fail again, Bob's client may try to request Alice's public identity key and certificate from Server A (Alice's home server), and try to verify the signature again. Should the verification still not succeed, the message should be treated with extreme caution.</p>
@@ -2306,75 +2215,39 @@ This allows users to switch home servers while not losing ownership of messages 
    prove that they are the owner of the private keys used to sign the messages.</li>
 </ol>
 <h3 id="81-migrating-a-user-account">8.1 Migrating a user account<a class="headerlink" href="#81-migrating-a-user-account" title="Permanent link">&para;</a></h3>
-<p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Server A                               Alice A                                                Server B                                            Alice B 
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>|                                      |                                                      |                                                   |
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>|                                      |                                                      |      Migration Request (Signed, Alice A-&gt;Alice B) |
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>|                                      |                                                      |&lt;--------------------------------------------------|
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>|                                      |                                                      |                                                   |
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>|                                      | Migration Request (Signed, Alice A-&gt;Alice B)         |                                                   |
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>|                                      |-----------------------------------------------------&gt;|                                                   |
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>|                                      |                                                      |                                                   |
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>|       Fetch full profile of Alice A (Attached: Migration Request, Signed, Alice A-&gt;Alice B) |                                                   |
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>|&lt;--------------------------------------------------------------------------------------------|                                                   |
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>|                                      |                                                      |                                                   |
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>| Verify Signed Migration Request      |                                                      |                                                   |
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>|--------------------------------      |                                                      |                                                   |
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>|                               |      |                                                      |                                                   |
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>|&lt;-------------------------------      |                                                      |                                                   |
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>|                                      |                                                      |                                                   |
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>| Full profile of Alice A              |                                                      |                                                   |
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>|--------------------------------------------------------------------------------------------&gt;|                                                   |
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>|                                      |                                                      |                                                   |
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>|                                      |                                                      | Verify, replace Alice B profile with Alice A      |
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>|                                      |                                                      |---------------------------------------------      |
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>|                                      |                                                      |                                            |      |
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>|                                      |                                                      |&lt;--------------------------------------------      |
-<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>|                                      |                                                      |                                                   |
-<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>|                                      |                                                      | New account data                                  |
-<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>|                                      |                                                      |--------------------------------------------------&gt;|
-<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>|                                      |                                                      |                                                   |
-<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>| Deactivate Alice A&#39;s account         |                                                      |                                                   |
-<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>|-----------------------------         |                                                      |                                                   |
-<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>|                            |         |                                                      |                                                   |
-<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>|&lt;----------------------------         |                                                      |                                                   |
-<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>|                                      |                                                      |                                                   |
-<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>| Set up redirect from Alice A to Alice B                                                     |                                                   |
-<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>|--------------------------------------------------------------------------------------------&gt;|                                                   |
-<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>|                                      |                                                      |                                                   |
-</code></pre></div>
+<p><pre class="mermaid"><code>sequenceDiagram
+
+actor aa as Alice A
+actor ab as Alice B
+participant sa as Server A
+participant sb as Server B
+
+ab-&gt;&gt;sb: Migration request (signed, Alice A-&gt;Alice B)
+aa-&gt;&gt;sb: Migration request (signed, Alice A-&gt;Alice B)
+sb-&gt;&gt;sa: Fetch full profile of Alice A,&lt;br /&gt;attached with migration request
+sa-&gt;&gt;sa: Verify signed migration request
+sa-&gt;&gt;sb: Full profile of Alice A
+sb-&gt;&gt;sb: Verify, replace Alice B with Alice A
+sb-&gt;&gt;ab: New account data
+sa-&gt;&gt;sa: Deactivate Alice A's account
+sa-&gt;&gt;sa: Setup redirect from Alice A to Alice B</code></pre>
 Fig. 7: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is reachable and cooperative.</p>
 <p>Alternatively, if Server A is offline or deemed uncooperative, the following sequence diagram depicts how the migration can be done without Server A's cooperation:</p>
-<p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Server A     Alice A                                                                          Server B                                            Alice B 
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>|            |                                                                                |                                                   |
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>|            |                                                                                |      Migration Request (Signed, Alice A-&gt;Alice B) |
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>|            |                                                                                |&lt;--------------------------------------------------|
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>|            |                                                                                |                                                   |
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>|            | Migration Request (Signed, Alice A-&gt;Alice B)                                   |                                                   |
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>|            |-------------------------------------------------------------------------------&gt;|                                                   |
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>|            |                                                                                |                                                   |
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>|       Fetch full profile of Alice A (Attached: Migration Request, Signed, Alice A-&gt;Alice B) |                                                   |
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>|&lt;--------------------------------------------------------------------------------------------|                                                   |
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>|            |                                                                                |                                                   |
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>|            |                                                                                | Wait for response...                              |
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>|            |                                                                                |---------------------                              |
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>|            |                                                                                |                    |                              |
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>|            |                                                                                |&lt;--------------------                              |
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>|            |                                                                                |                                                   |
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>|            |                       Server A offline/not cooperative, send profile or abort? |                                                   |
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>|            |&lt;-------------------------------------------------------------------------------|                                                   |
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>|            |                                                                                |                                                   |
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>|            | Full profile of Self                                                           |                                                   |
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>|            |-------------------------------------------------------------------------------&gt;|                                                   |
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>|            |                                                                                |                                                   |
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>|            |                                                                                | Verify, replace Alice B profile with Alice A      |
-<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>|            |                                                                                |---------------------------------------------      |
-<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>|            |                                                                                |                                            |      |
-<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>|            |                                                                                |&lt;--------------------------------------------      |
-<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>|            |                                                                                |                                                   |
-<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>|            |                                                                                | New account data                                  |
-<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>|            |                                                                                |--------------------------------------------------&gt;|
-<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>|            |                                                                                |                                                   |
-</code></pre></div>
+<p><pre class="mermaid"><code>sequenceDiagram
+
+actor aa as Alice A
+actor ab as Alice B
+participant sa as Server A
+participant sb as Server B
+
+ab-&gt;&gt;sb: Migration request (Signed, Alice A-&gt;Alice B)
+aa-&gt;&gt;sb: Migration request (Signed, Alice A-&gt;Alice B)
+sb-&gt;&gt;sa: Fetch full profile of Alice A,&lt;br /&gt;attached with migration request
+sa--xsb: Server A offline send profile or abort?
+aa-&gt;&gt;sb: Full profile of Self
+sb-&gt;&gt;sb: Verify, replace Alice B profile with Alice A
+sb-&gt;&gt;ab: New account data
+</code></pre>
 Fig. 8: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is unreachable or uncooperative.</p>
 <div class="admonition question">
 <p class="admonition-title">If the old home server is not needed for the migration, why try to contact it in the first place?</p>
@@ -2386,47 +2259,22 @@ users. The "non-cooperative homeserver migration method" is only a last resort.<
 </div>
 <h3 id="82-re-signing-messages">8.2 Re-signing messages<a class="headerlink" href="#82-re-signing-messages" title="Permanent link">&para;</a></h3>
 <p>Transferring message ownership from an old to a new account, known as re-signing messages, necessitates coordination between the two accounts, initiated by the old account. To start, the old account sends an API request containing the new account's federation ID to the server where messages should be re-signed. The server responds with all public keys used for signing the old account's messages, along with one challenge string. The old account will then need to prove that it is in possession of the private keys that were used to sign the messages. This is done by signing a challenge string with the private keys. If the server verifies the challenge, it authorizes the new account to re-sign the old account's messages signed with the verified key. Instead of overwriting the message, a new message variant with the new signature is created.</p>
-<p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Alice A                                              Server C                                                              Alice B                                                 
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>|                                                    |                                                                     |                                                     
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>| Request allow message re-signing for Alice B       |                                                                     |                                                     
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>|---------------------------------------------------&gt;|                                                                     |                                                     
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>|                                                    |                                                                     |                                                     
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>|          List of keys to verify + challenge string |                                                                     |                                                     
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>|&lt;---------------------------------------------------|                                                                     |                                                     
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>|                                                    |                                                                     |                                                     
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>| Completed challenge for each key on the list       |                                                                     |                                                     
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>|---------------------------------------------------&gt;|                                                                     |                                                     
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>|                                                    |                                                                     |                                                     
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>|                                                    | Verify challenge, unlock re-signing for Alice B                     |                                                     
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>|                                                    |------------------------------------------------                     |                                                     
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>|                                                    |                                               |                     |                                                     
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>|                                                    |&lt;-----------------------------------------------                     |                                                     
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>|                                                    |                                                                     |                                                     
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>|                                                    |                   Request message re-signing for Alice A&#39;s messages |                                                     
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>|                                                    |&lt;--------------------------------------------------------------------|                                                     
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>|                                                    |                                                                     |                                                     
-<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>|                                                    | List of old messages (including old signatures + certificates)      |                                                     
-<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>|                                                    |--------------------------------------------------------------------&gt;|                                                     
-<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>|                                                    |                                                                     |                                                     
-<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>|                                                    |                                                                     | Verify that Server C has not tampered with messages 
-<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>|                                                    |                                                                     |---------------------------------------------------- 
-<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>|                                                    |                                                                     |                                                   | 
-<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>|                                                    |                                                                     |&lt;--------------------------------------------------- 
-<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>|                                                    |                                                                     |                                                     
-<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>|                                                    |                                                                     | Re-sign messages with own keys                      
-<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>|                                                    |                                                                     |-------------------------------                      
-<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>|                                                    |                                                                     |                              |                      
-<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>|                                                    |                                                                     |&lt;------------------------------                      
-<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>|                                                    |                                                                     |                                                     
-<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>|                                                    |                                                        New messages |                                                     
-<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>|                                                    |&lt;--------------------------------------------------------------------|                                                     
-<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>|                                                    |                                                                     |                                                     
-<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>|                                                    | Verify that only FID and signature related fields have changed      |                                                     
-<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>|                                                    |---------------------------------------------------------------      |                                                     
-<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a>|                                                    |                                                              |      |                                                     
-<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a>|                                                    |&lt;--------------------------------------------------------------      |                                                     
-<a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a>|                                                    |                                                                     |                                                     
-</code></pre></div>
+<p><pre class="mermaid"><code>sequenceDiagram
+
+actor aa as Alice A
+actor ab as Alice B
+participant sc as Server C
+
+aa-&gt;&gt;sc: Request allow message re-signing for Alice B
+sc-&gt;&gt;aa: List of keys to verify + challenge string
+aa-&gt;&gt;sc: Completed challenge for each key on the list
+sc-&gt;&gt;sc: Verify challenge, unlock re-signing for Alice B
+ab-&gt;&gt;sc: Request message re-signing for Alice A's messages
+sc-&gt;&gt;ab: List of old messages (including old signatures + certificates)
+ab-&gt;&gt;ab: Verify that Server C has not tampered with messages
+ab-&gt;&gt;ab: Re-sign messages with own keys
+ab-&gt;&gt;sc: Send new messages
+sc-&gt;&gt;sc: Verify that only FID and signature related fields have changed</code></pre>
 Fig. 9: Sequence diagram depicting the re-signing procedure.</p>
 <h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
 <ul>
