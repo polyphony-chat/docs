@@ -22,7 +22,7 @@ Together, this makes for an individual, yet globally unique identifier.
 
 ## Trust
 
-In a world where everyone is out to get you, trusting as little entities as possible is always a good
+In a world where everyone is out to get you, trusting the smallest possible amount of entities is a good
 idea. polyproto makes sure that almost everyone you do trust is under constant scrutiny, and thus provides
 measures to verify a data authors' identity, and that the actual data has not been tampered with.
 
