@@ -20,7 +20,7 @@
     
     
       
-        <title>An Overview of polyproto-core - Polyphony</title>
+        <title>An Overview of polyproto - Polyphony</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#an-overview-of-polyproto-core" class="md-skip">
+        <a href="#an-overview-of-polyproto" class="md-skip">
           Skip to content
         </a>
       
@@ -111,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              An Overview of polyproto-core
+              An Overview of polyproto
             
           </span>
         </div>
@@ -924,7 +924,7 @@
           
   
   <span class="md-ellipsis">
-    An Overview of polyproto-core
+    An Overview of polyproto
   </span>
   
 
@@ -935,7 +935,7 @@
         
   
   <span class="md-ellipsis">
-    An Overview of polyproto-core
+    An Overview of polyproto
   </span>
   
 
@@ -969,6 +969,15 @@
   <a href="#trust" class="md-nav__link">
     <span class="md-ellipsis">
       Trust
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#message-signing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Message signing
     </span>
   </a>
   
@@ -1131,6 +1140,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#message-signing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Message signing
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1149,7 +1167,7 @@
   
 
 
-<h1 id="an-overview-of-polyproto-core">An Overview of polyproto-core<a class="headerlink" href="#an-overview-of-polyproto-core" title="Permanent link">&para;</a></h1>
+<h1 id="an-overview-of-polyproto">An Overview of polyproto<a class="headerlink" href="#an-overview-of-polyproto" title="Permanent link">&para;</a></h1>
 <div class="admonition danger">
 <p class="admonition-title">Work in Progress</p>
 <p>This overview page is not yet finished. However, that what is there is already representative of
@@ -1164,6 +1182,17 @@ and they look like this: </p>
 <p>Everything after the <code>@</code> is your Home Servers' domain, and the part before the <code>@</code> is your username.
 Together, this makes for an individual, yet globally unique identifier.</p>
 <h2 id="trust">Trust<a class="headerlink" href="#trust" title="Permanent link">&para;</a></h2>
+<p>In a world where everyone is out to get you, trusting as little entities as possible is always a good
+idea. polyproto makes sure that almost everyone you do trust is under constant scrutiny, and thus provides
+measures to verify a data authors' identity, and that the actual data has not been tampered with.</p>
+<p>Aside from yourself, the entity with the most trust assigned to it is your home server. Creating your
+identity on a specific home server is a pledge from that server and its admins to you, where they promise
+not to create sessions on your behalf, or to otherwise perform actions which can be publicly identified
+to be carried out by you, without your explicit consent.</p>
+<p>Should you ever change your mind about your home server's trustworthiness, you can always migrate to another
+server while keeping the ownership status of your data on all servers you have sent data to, even if
+your home server is offline indefinitely.</p>
+<h2 id="message-signing">Message signing<a class="headerlink" href="#message-signing" title="Permanent link">&para;</a></h2>
 <p>When you, for example, chat with someone on a different server, that other server is fully in control
 about what data it chooses to present to you. To make sure that you are actually talking to <code>xenia@example.com</code>,
 and not to an evil server admin who simply claims to be <code>xenia</code>, the tried and true technique of
@@ -1180,7 +1209,7 @@ message signing is used. </p>
 <li>Every user client has an own identity key pair, comprised of a public and a private key. The public
   key is cryptographically linked to the private key, meaning that this public key can not "fit onto"
   another private key.</li>
-<li>Your Home Server attests to your key pairs, by creating a certificate for your public key, which it
+<li>Your home server attests to your key pairs, by creating a certificate for your public key, which it
   signs with its own secret, public/private key pair, and then sends to you.</li>
 </ul>
 <p>Now, there is a relationship between your identity and your home server, meaning that if a dispute were
@@ -1188,8 +1217,10 @@ to arise, there'd always be a third party - your home server - "backing" your id
 <ul>
 <li>When sending a message with polyproto, you generate a signature for that messages' contents and attach
   this signature to the message you send to other servers. </li>
-<li>Any user, at any point, can now take this signature and your identity certificate and cryptographically
-  verify that it was, in fact, you who sent the message.</li>
+<li>Any user, at any point, can now take this signature, your identity certificate and your home servers'
+  public key and cryptographically verify that it was, in fact, you who sent the message, and that the
+  message was not tampered with. To distribute the load of ID-Cert requests more evenly, it is always
+  the duty of the server that the data exchange is happening on, to cache and hand out ID-Certs of users.</li>
 </ul>
 <p>This paragraph simplifies a lot of things and deliberately leaves out things like mandatory defense mechanisms
 against potentially even more foreign servers, for the sake of clarity. If you are interested about the
@@ -1218,7 +1249,7 @@ in the specification document, which covers this exact thing and more.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-01-16T22:34:00+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-01-16</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-01-17T19:16:23+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-01-17</span>
   </span>
 
     
