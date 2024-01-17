@@ -1,4 +1,4 @@
-# An Overview of polyproto-core
+# An Overview of polyproto
 
 !!! danger "Work in Progress"
 
@@ -18,7 +18,24 @@ and they look like this:
 Everything after the `@` is your Home Servers' domain, and the part before the `@` is your username.
 Together, this makes for an individual, yet globally unique identifier.
 
+
+
 ## Trust
+
+In a world where everyone is out to get you, trusting as little entities as possible is always a good
+idea. polyproto makes sure that almost everyone you do trust is under constant scrutiny, and thus provides
+measures to verify a data authors' identity, and that the actual data has not been tampered with.
+
+Aside from yourself, the entity with the most trust assigned to it is your home server. Creating your
+identity on a specific home server is a pledge from that server and its admins to you, where they promise
+not to create sessions on your behalf, or to otherwise perform actions which can be publicly identified
+to be carried out by you, without your explicit consent.
+
+Should you ever change your mind about your home server's trustworthiness, you can always migrate to another
+server while keeping the ownership status of your data on all servers you have sent data to, even if
+your home server is offline indefinitely.
+
+## Message signing
 
 When you, for example, chat with someone on a different server, that other server is fully in control
 about what data it chooses to present to you. To make sure that you are actually talking to `xenia@example.com`,
@@ -40,7 +57,7 @@ This is how it works:
 - Every user client has an own identity key pair, comprised of a public and a private key. The public
   key is cryptographically linked to the private key, meaning that this public key can not "fit onto"
   another private key.
-- Your Home Server attests to your key pairs, by creating a certificate for your public key, which it
+- Your home server attests to your key pairs, by creating a certificate for your public key, which it
   signs with its own secret, public/private key pair, and then sends to you.
 
 Now, there is a relationship between your identity and your home server, meaning that if a dispute were
@@ -48,8 +65,10 @@ to arise, there'd always be a third party - your home server - "backing" your id
 
 - When sending a message with polyproto, you generate a signature for that messages' contents and attach
   this signature to the message you send to other servers. 
-- Any user, at any point, can now take this signature and your identity certificate and cryptographically
-  verify that it was, in fact, you who sent the message.
+- Any user, at any point, can now take this signature, your identity certificate and your home servers'
+  public key and cryptographically verify that it was, in fact, you who sent the message, and that the
+  message was not tampered with. To distribute the load of ID-Cert requests more evenly, it is always
+  the duty of the server that the data exchange is happening on, to cache and hand out ID-Certs of users.
 
 This paragraph simplifies a lot of things and deliberately leaves out things like mandatory defense mechanisms
 against potentially even more foreign servers, for the sake of clarity. If you are interested about the
