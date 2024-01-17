@@ -5,8 +5,10 @@
     This overview page is not yet finished. However, that what is there is already representative of
     what the polyproto protocol is about.
 
-polyproto is a federated protocol, engineered around what is most important in any application: User Experience.
-Read this document for an overview of the concepts and ideas behind polyproto.
+polyproto is a federated identity and message exchange protocol, which can be used for almost anything.
+If you'd like to build an application where federation, user control and data integrity are wanted,
+then polyproto is most likely for you. Read this overview to get to know the core concepts and technologies
+used in the protocol. 
 
 ## Identity
 
@@ -18,12 +20,10 @@ and they look like this:
 Everything after the `@` is your Home Servers' domain, and the part before the `@` is your username.
 Together, this makes for an individual, yet globally unique identifier.
 
-
-
 ## Trust
 
-In a world where everyone is out to get you, trusting the smallest possible amount of entities is a good
-idea. polyproto makes sure that almost everyone you do trust is under constant scrutiny, and thus provides
+Trusting the smallest possible amount of entities is great practice when it comes to security.
+polyproto makes sure that almost everyone you do trust is under constant scrutiny, and thus provides
 measures to verify a data authors' identity, and that the actual data has not been tampered with.
 
 Aside from yourself, the entity with the most trust assigned to it is your home server. Creating your
@@ -75,3 +75,13 @@ against potentially even more foreign servers, for the sake of clarity. If you a
 details, feel free to jump to 
 [section 7.1 in the protocol](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
 in the specification document, which covers this exact thing and more.
+
+## Technology
+
+Probably the most refreshing aspect about this new protocol is, that it is really boring. There is really
+nothing new about any given atomic aspect of polyproto. Polyproto uses well-known, tried and battle-tested
+technologies, like asymmetric encryption, public key infrastructure, public key certificates, digital signatures,
+JSON over REST and other, already well established technologies like WebSockets.
+
+polyproto should be easy - both for developers and for end users, who, ideally, should never have to
+notice any of the technical stuff going on in the background.
