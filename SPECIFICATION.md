@@ -89,57 +89,36 @@ In polyproto-core, WebSockets facilitate real-time communication between user/bo
 
 WebSocket connections to polyproto-core servers consist of the following cycle:
 
-```
-    +------------------+       1. Establish Connection        +-----------+
-    |      Client      |------------------------------------> |  Gateway  |
-    +------------------+                                      +-----------+
-                                                              
-    +------------------+        2. Receive Hello Event        +-----------+
-    |      Client      |<------------------------------------ |  Gateway  |
-    +------------------+                                      +-----------+
-                                        
-                      3. Start Heartbeat Interval (continually)
+```mermaid
+sequenceDiagram
 
- +------------------------------------------------------------------------->-+
- |  +------------------+       3.1 Send Heartbeat Event       +-----------+  |
- ^  |      Client      |------------------------------------> |  Gateway  |  |
- |  +------------------+                                      +-----------+  |
- |                                                            |              |
- |  +------------------+    3.2 Receive Heartbeat ACK Event   +-----------+  |
- |  |      Client      |<------------------------------------ |  Gateway  |  v
- |  +------------------+                                      +-----------+  |
- +-<-------------------------------------------------------------------------+
+actor c as Client
+participant g as Gateway
 
-    +------------------+      4. Send Identify payload        +-----------+
-    |      Client      |------------------------------------> |  Gateway  |
-    +------------------+                                      +-----------+
-                                                              
-    +------------------+        5. Receive Ready Event        +-----------+
-    |      Client      |<------------------------------------ |  Gateway  |
-    +------------------+                                      +-----------+
+c->>g: Establish connection
+g->>c: Recieve hello event
 
-    +------------------+    6. Disconnect (for any reason)    +-----------+
-    |      Client      |<------------------------------------ |  Gateway  |
-    +------------------+                                      +-----------+
+loop TODO: interval
+  c->>g: Send heartbeat event
+  g->>c: Send heartbeat ACK Event
+end
 
-                          7. Resume connection, if eligible
-                           (otherwise: repeat from step 1)
+c->>g: Send identify payload
 
-    +------------------+       7.1 Open new connection        +-----------+
-    |      Client      |------------------------------------> |  Gateway  |
-    +------------------+                                      +-----------+
+alt Server accepts
+  g->>c: Send ready event
+else Server defined reason
+  g->>c: Disconnect with specified reason
+end
 
-    +------------------+        7.2 Send Resume Event         +-----------+
-    |      Client      |------------------------------------> |  Gateway  |
-    +------------------+                                      +-----------+
-                                                              
-    +------------------+      7.3 Receive Missed Events       +-----------+
-    |      Client      |<------------------------------------ |  Gateway  |
-    +------------------+                                      +-----------+
-                      
-    +------------------+      7.4 Receive Resumed Event       +-----------+
-    |      Client      |<------------------------------------ |  Gateway  |
-    +------------------+                                      +-----------+
+
+opt Resume connection#59;<br />otherwise, repeat from step 1
+  c->>g: Open new connection
+  c->>g: Send resume event
+  g->>c: Send missed events
+  g->>c: Send resumed event
+end
+
 ```
 
 Fig. 1: Sequence diagram of a WebSocket connection to a polyproto-core server.
@@ -172,37 +151,23 @@ Registering a new user in the context of polyproto-core is done through an API r
 
 To register, the client sends the necessary information to their home server. The server verifies the data, checks username availability, and responds with HTTP 201 and the new identity's federation ID, if successful. However, a session token isn't provided until the user authenticates a client, as detailed in section [4.1.2](#412-authenticating-a-new-client-on-a-polyproto-core-home-server).
 
-```
-Client                                               Server                                                           
-|                                              |                                            
-| Registration information                     |                                            
-|--------------------------------------------->|                                            
-|                                              |                                            
-|                                              | Verify correctness of provided information,
-|                                              | check if username is available, etc. 
-|                                              |------------------------------------------- 
-|                                              |                                          | 
-|                                              |<------------------------------------------ 
-|                                              | -------------------------                  
-|                                              |-| Verified successfully |                  
-|                                              | -------------------------                                                           
-|                                              |                                            
-|                                              | Verify provided CSR                        
-|                                              |--------------------                        
-|                                              |                   |                        
-|                                              |<-------------------                        
-|                                              | ------------                               
-|                                              |-| CSR okay |                               
-|                                              | ------------                               
-|                                              |                                            
-|                                              | Signing CSR                                
-|                                              |------------                                
-|                                              |           |                                
-|                                              |<-----------                                
-|                                              |                                            
-|    HTTP Status Code 201 + user federation ID |                                            
-|<---------------------------------------------|                                            
-|                                              |                                            
+```mermaid
+sequenceDiagram
+
+actor c as Client
+participant s as Server
+
+c->>s: Registration information
+s->>s: Verify correctness of provided information,<br />check if username is available, etc
+
+alt verification successful
+  s->>s: Verify provided CSR
+
+  alt CSR okay
+    s->>s: Sign CSR
+    s->>c: HTTP status code 201, with user federation ID
+  end
+end
 ```
 Fig. 2: Sequence diagram of a successful identity creation process.
 
@@ -210,37 +175,23 @@ Fig. 2: Sequence diagram of a successful identity creation process.
 
 To access their account from a new device, a user authenticates the session with their home server by sending authentication information and a [certificate signing request (CSR)](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) for the new client. If verified successfully, the server signs the CSR and responds with the newly generated ID-Cert and a session token.
 
-```
-Client                                               Server                                                           
-|                                                    |                                            
-| Auth information, CSR                              |                                            
-|--------------------------------------------------->|                                            
-|                                                    |                                            
-|                                                    | Verify correctness of provided auth
-|                                                    | information
-|                                                    |------------------------------------------- 
-|                                                    |                                          | 
-|                                                    |<------------------------------------------ 
-|                                                    | -------------------------                  
-|                                                    |-| Verified successfully |                  
-|                                                    | -------------------------                                                           
-|                                                    |                                            
-|                                                    | Verify provided CSR                        
-|                                                    |--------------------                        
-|                                                    |                   |                        
-|                                                    |<-------------------                        
-|                                                    | ------------                               
-|                                                    |-| CSR okay |                               
-|                                                    | ------------                               
-|                                                    |                                            
-|                                                    | Signing CSR                                
-|                                                    |------------                                
-|                                                    |           |                                
-|                                                    |<-----------                                
-|                                                    |                                            
-|      HTTP Status Code 201, ID-Cert + Session token |                                            
-|<---------------------------------------------------|                                            
-|                                                    |                                            
+```mermaid
+sequenceDiagram
+
+actor c as Client
+participant s as Server
+
+c->>s: Auth information, CSR
+s->>s: Verify correctness of provided auth information
+
+alt Verified successfully
+  s->>s: Verify provided CSR
+  alt CSR okay
+  s->>s: Sign CSR
+  s->>c: HTTP status code 201, ID-Cert + session token
+  end
+end
+
 ```
 Fig. 3: Sequence diagram of a successful client authentication process.
 
@@ -257,34 +208,20 @@ Say that Alice is on server A, and would like to authenticate on Server B using 
 
 Alice's client sends a request to Server B for a challenge string. Upon receiving a response, Alice signs this challenge string with their ID-Cert and sends the signature and her ID-Cert to Server B. Server B can now verify, that it was actually Alice who signed the string, and not a malicious outsider. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B using this token.
 
-```
-Alice's Client                                  Server A                            Server B
-|                                               |                                   |
-| Challenge string request                      |                                   |
-|---------------------------------------------->|                                   |
-|                                               |                                   |
-|                              Challenge string |                                   |
-|<----------------------------------------------|                                   |
-|                                               |                                   |        
-|                                               |                                   |
-| Signed challenge, ID-Cert, optional payload   |                                   |
-|---------------------------------------------------------------------------------->|
-|                                               |                                   |
-|                                               |                        Get pubkey |
-|                                               |<----------------------------------|
-|                                               |                                   |
-|                                               | Server A Pubkey                   |
-|                                               |---------------------------------->|
-|                                               |                                   |
-|                                               |                                   |
-|                                               |                                   |
-|                                               |                                   |
-|                                               |                                   |
-|                                               |                                   |
-|                                               |   Session Token, optional payload |
-|<----------------------------------------------------------------------------------|
-|                                               |                                   |
 
+```mermaid
+sequenceDiagram
+
+actor a as Alice
+participant sa as Server A
+participant sb as Server B
+
+a->>sa: Challenge string request
+sa->>a: Challenge string
+a->>sb: Signed challenge, ID-Cert, optional payload
+sb->>a: Get public key
+sa->>sb: Send public key
+sb->>a: Session token, optional payload
 ```
 Fig. 4: Sequence diagram of a successful identity verification.
 
@@ -464,33 +401,20 @@ Before sending any messages to a server, a client that performed a key rotation 
 
 Home servers must keep track of the ID-Certs of all users (and their clients) registered on them, and must be able to provide a clients' ID-Cert for a given timestamp on request. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of a user may change over time and users must sign all messages they send to servers. Likewise, a client should also keep all of its own ID-Certs stored perpetually, to potentially verify its identity in case of a migration.
 
-```
-                                                 Server                                                Client                           
-                                                 |                                                     |                                 
-                                                 |                                                     | Create CSR for own identity key 
-                                                 |                                                     |-------------------------------- 
-                                                 |                                                     |                               | 
-                                                 |                                                     |<------------------------------- 
-                                                 |                                                     |                                 
-                                                 |      Request key rotation/CSR signing, CSR attached |                                 
-                                                 |<----------------------------------------------------|                                 
-                                                 |                                                     |                                 
-                                                 | Verify validity of claims presented in the CSR      |                                 
-                                                 |-----------------------------------------------      |                                 
-                                                 |                                              |      |                                 
-                                                 |<----------------------------------------------      |                                 
-                                                 |                                                     |                                 
-                                                 | Create ID-Cert for Client                           |                                 
-                                                 |--------------------------                           |                                 
-                                                 |                         |                           |                                 
-                                                 |<-------------------------                           |                                 
-                                                 |                                                     |                                 
-                                                 | Respond with ID-Cert                                |                                 
-                                                 |---------------------------------------------------->|                                 
------------------------------------------------- |                                                     |                                 
-| Send CLIENT_KEY_CHANGE to associated clients |-|                                                     |                                 
------------------------------------------------- |                                                     |                                 
-                                                 |                                                     |                                 
+```mermaid
+sequenceDiagram
+
+actor c as Client
+participant s as Server
+
+c->>c: Create CSR for own identity key
+c->>s: Request key rotation/CSR signing, CSR attached
+s->>s: Verify validity of claims presented in the CSR
+alt verify success
+  s->>s: Create ID-Cert for Client
+  s->>c: Respond with ID-Cert
+end
+Note right of s: Send CLIENT_KEY_CHANGE to associated clients
 ```
 Fig. 5: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert from their home server.
 
@@ -506,29 +430,20 @@ To ensure message integrity via signing, clients and servers must verify message
 
 **Example:** Given a signed message from Alice, like Bob would receive it from Server B in [Fig. 3](#fig-3), Bob's client would verify the signature of the message like so:
 
-```
-Server B                                        Bob                                         Server A
-|                                               |                                           |
-| Alice's signed message                        |                                           |
-|---------------------------------------------->|                                           |
-|                                               |                                           |
-|                       Request Alice's ID-Cert |                                           |
-|<----------------------------------------------|                                           |
-|                                               |                                           |
-| Alice's ID-Cert                               |                                           |
-|---------------------------------------------->|                                           |
-|                                               |                                           |
-|                                               | Request Server A ID-Cert                  |
-|                                               |------------------------------------------>|
-|                                               |                                           |
-|                                               |                          Server A ID-Cert |
-|                                               |<------------------------------------------|
-|                                               |                                           |
-|                                               | Verify signature of Alice's message       |
-|                                               |------------------------------------       |
-|                                               |                                   |       |
-|                                               |<-----------------------------------       |
-|                                               |                                           |
+```mermaid
+sequenceDiagram
+
+actor b as Bob
+participant sa as Server A
+participant sb as Server B
+
+sb->>b: Alice's signed message
+b->>sb: Request Alice's ID-Cert
+sb->>b: Alice's ID-Cert
+b->>sa: Request Server A ID-Cert
+sa->>b: Server A ID-Cert
+b->>b: Verify signature of Alice's message
+
 ```
 Fig. 6: Sequence diagram of a successful message signature verification.
 
@@ -585,78 +500,44 @@ Migrating an account is done with the following steps:
 
 ### 8.1 Migrating a user account
 
-```
-Server A                               Alice A                                                Server B                                            Alice B 
-|                                      |                                                      |                                                   |
-|                                      |                                                      |      Migration Request (Signed, Alice A->Alice B) |
-|                                      |                                                      |<--------------------------------------------------|
-|                                      |                                                      |                                                   |
-|                                      | Migration Request (Signed, Alice A->Alice B)         |                                                   |
-|                                      |----------------------------------------------------->|                                                   |
-|                                      |                                                      |                                                   |
-|       Fetch full profile of Alice A (Attached: Migration Request, Signed, Alice A->Alice B) |                                                   |
-|<--------------------------------------------------------------------------------------------|                                                   |
-|                                      |                                                      |                                                   |
-| Verify Signed Migration Request      |                                                      |                                                   |
-|--------------------------------      |                                                      |                                                   |
-|                               |      |                                                      |                                                   |
-|<-------------------------------      |                                                      |                                                   |
-|                                      |                                                      |                                                   |
-| Full profile of Alice A              |                                                      |                                                   |
-|-------------------------------------------------------------------------------------------->|                                                   |
-|                                      |                                                      |                                                   |
-|                                      |                                                      | Verify, replace Alice B profile with Alice A      |
-|                                      |                                                      |---------------------------------------------      |
-|                                      |                                                      |                                            |      |
-|                                      |                                                      |<--------------------------------------------      |
-|                                      |                                                      |                                                   |
-|                                      |                                                      | New account data                                  |
-|                                      |                                                      |-------------------------------------------------->|
-|                                      |                                                      |                                                   |
-| Deactivate Alice A's account         |                                                      |                                                   |
-|-----------------------------         |                                                      |                                                   |
-|                            |         |                                                      |                                                   |
-|<----------------------------         |                                                      |                                                   |
-|                                      |                                                      |                                                   |
-| Set up redirect from Alice A to Alice B                                                     |                                                   |
-|-------------------------------------------------------------------------------------------->|                                                   |
-|                                      |                                                      |                                                   |
+```mermaid
+sequenceDiagram
+
+actor aa as Alice A
+actor ab as Alice B
+participant sa as Server A
+participant sb as Server B
+
+ab->>sb: Migration request (signed, Alice A->Alice B)
+aa->>sb: Migration request (signed, Alice A->Alice B)
+sb->>sa: Fetch full profile of Alice A,<br />attached with migration request
+sa->>sa: Verify signed migration request
+sa->>sb: Full profile of Alice A
+sb->>sb: Verify, replace Alice B with Alice A
+sb->>ab: New account data
+sa->>sa: Deactivate Alice A's account
+sa->>sa: Setup redirect from Alice A to Alice B
 ```
 Fig. 7: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is reachable and cooperative.
 
 Alternatively, if Server A is offline or deemed uncooperative, the following sequence diagram depicts how the migration can be done without Server A's cooperation:
 
-```
-Server A     Alice A                                                                          Server B                                            Alice B 
-|            |                                                                                |                                                   |
-|            |                                                                                |      Migration Request (Signed, Alice A->Alice B) |
-|            |                                                                                |<--------------------------------------------------|
-|            |                                                                                |                                                   |
-|            | Migration Request (Signed, Alice A->Alice B)                                   |                                                   |
-|            |------------------------------------------------------------------------------->|                                                   |
-|            |                                                                                |                                                   |
-|       Fetch full profile of Alice A (Attached: Migration Request, Signed, Alice A->Alice B) |                                                   |
-|<--------------------------------------------------------------------------------------------|                                                   |
-|            |                                                                                |                                                   |
-|            |                                                                                | Wait for response...                              |
-|            |                                                                                |---------------------                              |
-|            |                                                                                |                    |                              |
-|            |                                                                                |<--------------------                              |
-|            |                                                                                |                                                   |
-|            |                       Server A offline/not cooperative, send profile or abort? |                                                   |
-|            |<-------------------------------------------------------------------------------|                                                   |
-|            |                                                                                |                                                   |
-|            | Full profile of Self                                                           |                                                   |
-|            |------------------------------------------------------------------------------->|                                                   |
-|            |                                                                                |                                                   |
-|            |                                                                                | Verify, replace Alice B profile with Alice A      |
-|            |                                                                                |---------------------------------------------      |
-|            |                                                                                |                                            |      |
-|            |                                                                                |<--------------------------------------------      |
-|            |                                                                                |                                                   |
-|            |                                                                                | New account data                                  |
-|            |                                                                                |-------------------------------------------------->|
-|            |                                                                                |                                                   |
+```mermaid
+sequenceDiagram
+
+actor aa as Alice A
+actor ab as Alice B
+participant sa as Server A
+participant sb as Server B
+
+ab->>sb: Migration request (Signed, Alice A->Alice B)
+aa->>sb: Migration request (Signed, Alice A->Alice B)
+sb->>sa: Fetch full profile of Alice A,<br />attached with migration request
+sa--xsb: Server A offline send profile or abort?
+aa->>sb: Full profile of Self
+sb->>sb: Verify, replace Alice B profile with Alice A
+sb->>ab: New account data
+
 ```
 Fig. 8: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is unreachable or uncooperative.
 
@@ -672,46 +553,22 @@ Fig. 8: Sequence diagram depicting a successful migration of Alice A's account t
 
 Transferring message ownership from an old to a new account, known as re-signing messages, necessitates coordination between the two accounts, initiated by the old account. To start, the old account sends an API request containing the new account's federation ID to the server where messages should be re-signed. The server responds with all public keys used for signing the old account's messages, along with one challenge string. The old account will then need to prove that it is in possession of the private keys that were used to sign the messages. This is done by signing a challenge string with the private keys. If the server verifies the challenge, it authorizes the new account to re-sign the old account's messages signed with the verified key. Instead of overwriting the message, a new message variant with the new signature is created.
 
-```
-Alice A                                              Server C                                                              Alice B                                                 
-|                                                    |                                                                     |                                                     
-| Request allow message re-signing for Alice B       |                                                                     |                                                     
-|--------------------------------------------------->|                                                                     |                                                     
-|                                                    |                                                                     |                                                     
-|          List of keys to verify + challenge string |                                                                     |                                                     
-|<---------------------------------------------------|                                                                     |                                                     
-|                                                    |                                                                     |                                                     
-| Completed challenge for each key on the list       |                                                                     |                                                     
-|--------------------------------------------------->|                                                                     |                                                     
-|                                                    |                                                                     |                                                     
-|                                                    | Verify challenge, unlock re-signing for Alice B                     |                                                     
-|                                                    |------------------------------------------------                     |                                                     
-|                                                    |                                               |                     |                                                     
-|                                                    |<-----------------------------------------------                     |                                                     
-|                                                    |                                                                     |                                                     
-|                                                    |                   Request message re-signing for Alice A's messages |                                                     
-|                                                    |<--------------------------------------------------------------------|                                                     
-|                                                    |                                                                     |                                                     
-|                                                    | List of old messages (including old signatures + certificates)      |                                                     
-|                                                    |-------------------------------------------------------------------->|                                                     
-|                                                    |                                                                     |                                                     
-|                                                    |                                                                     | Verify that Server C has not tampered with messages 
-|                                                    |                                                                     |---------------------------------------------------- 
-|                                                    |                                                                     |                                                   | 
-|                                                    |                                                                     |<--------------------------------------------------- 
-|                                                    |                                                                     |                                                     
-|                                                    |                                                                     | Re-sign messages with own keys                      
-|                                                    |                                                                     |-------------------------------                      
-|                                                    |                                                                     |                              |                      
-|                                                    |                                                                     |<------------------------------                      
-|                                                    |                                                                     |                                                     
-|                                                    |                                                        New messages |                                                     
-|                                                    |<--------------------------------------------------------------------|                                                     
-|                                                    |                                                                     |                                                     
-|                                                    | Verify that only FID and signature related fields have changed      |                                                     
-|                                                    |---------------------------------------------------------------      |                                                     
-|                                                    |                                                              |      |                                                     
-|                                                    |<--------------------------------------------------------------      |                                                     
-|                                                    |                                                                     |                                                     
+```mermaid
+sequenceDiagram
+
+actor aa as Alice A
+actor ab as Alice B
+participant sc as Server C
+
+aa->>sc: Request allow message re-signing for Alice B
+sc->>aa: List of keys to verify + challenge string
+aa->>sc: Completed challenge for each key on the list
+sc->>sc: Verify challenge, unlock re-signing for Alice B
+ab->>sc: Request message re-signing for Alice A's messages
+sc->>ab: List of old messages (including old signatures + certificates)
+ab->>ab: Verify that Server C has not tampered with messages
+ab->>ab: Re-sign messages with own keys
+ab->>sc: Send new messages
+sc->>sc: Verify that only FID and signature related fields have changed
 ```
 Fig. 9: Sequence diagram depicting the re-signing procedure.
