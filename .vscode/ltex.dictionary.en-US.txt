@@ -11,3 +11,4 @@ KeyPackage
 $ANYTHING
 cURL
 FIDs
+polyproto-protocol
