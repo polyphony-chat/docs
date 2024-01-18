@@ -108,6 +108,17 @@ Should you ever change your mind about your home server's trustworthiness, you c
 server while keeping the ownership status of your data on all servers you have sent data to, even if
 your home server is offline indefinitely.
 
+## Multi-use
+
+polyprotos' API definitions and specification document intentionally leave space for implementation-specific
+data to be sent, where it makes sense. Nothing about the core protocol makes polyproto inherently unsuitable
+for any purpose.
+
+## Federation
+
+Federation in polyproto means using one identity/client to interact with multiple servers at once.
+Implementing federation is really simple, and entirely seamless to use for end users.
+
 ## Technology
 
 Probably the most refreshing aspect about this new protocol is, that it is really boring. There is really
