@@ -2222,8 +2222,8 @@ actor ab as Alice B
 participant sa as Server A
 participant sb as Server B
 
-ab-&gt;&gt;sb: Migration request (signed, Alice A-&gt;Alice B)
-aa-&gt;&gt;sb: Migration request (signed, Alice A-&gt;Alice B)
+ab-&gt;&gt;sb: Migration request (signed, Alice B-&gt;Server B)
+aa-&gt;&gt;sb: Migration request (signed, Alice A-&gt;Server B)
 sb-&gt;&gt;sa: Fetch full profile of Alice A,&lt;br /&gt;attached with migration request
 sa-&gt;&gt;sa: Verify signed migration request
 sa-&gt;&gt;sb: Full profile of Alice A
@@ -2240,8 +2240,8 @@ actor ab as Alice B
 participant sa as Server A
 participant sb as Server B
 
-ab-&gt;&gt;sb: Migration request (Signed, Alice A-&gt;Alice B)
-aa-&gt;&gt;sb: Migration request (Signed, Alice A-&gt;Alice B)
+ab-&gt;&gt;sb: Migration request (Signed, Alice B-&gt;Server B)
+aa-&gt;&gt;sb: Migration request (Signed, Alice A-&gt;Server B)
 sb-&gt;&gt;sa: Fetch full profile of Alice A,&lt;br /&gt;attached with migration request
 sa--xsb: Server A offline send profile or abort?
 aa-&gt;&gt;sb: Full profile of Self
