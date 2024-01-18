@@ -508,8 +508,8 @@ actor ab as Alice B
 participant sa as Server A
 participant sb as Server B
 
-ab->>sb: Migration request (signed, Alice A->Alice B)
-aa->>sb: Migration request (signed, Alice A->Alice B)
+ab->>sb: Migration request (signed, Alice B->Server B)
+aa->>sb: Migration request (signed, Alice A->Server B)
 sb->>sa: Fetch full profile of Alice A,<br />attached with migration request
 sa->>sa: Verify signed migration request
 sa->>sb: Full profile of Alice A
@@ -530,8 +530,8 @@ actor ab as Alice B
 participant sa as Server A
 participant sb as Server B
 
-ab->>sb: Migration request (Signed, Alice A->Alice B)
-aa->>sb: Migration request (Signed, Alice A->Alice B)
+ab->>sb: Migration request (Signed, Alice B->Server B)
+aa->>sb: Migration request (Signed, Alice A->Server B)
 sb->>sa: Fetch full profile of Alice A,<br />attached with migration request
 sa--xsb: Server A offline send profile or abort?
 aa->>sb: Full profile of Self
