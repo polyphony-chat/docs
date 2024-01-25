@@ -1,7 +1,6 @@
 # polyproto Specification
 
-**v0.1.0**
-
+**v0.0.0** - Treat this as an unfinished draft.
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 
 - [polyproto Specification](#polyproto-specification)
