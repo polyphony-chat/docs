@@ -8,7 +8,7 @@
 
 ### 4.1 Direct messages
 
-Federating direct messages is relatively simple. When Alice sends a message to Bob, their client will send the message to Bob's home server via an API request. Bob's home server will then send the message to Bob's client via an established WebSocket connection, and vice versa.
+Federating direct messages is straightforward. When Alice sends a message to Bob, their client will send the message to Bob's home server via an API request. Bob's home server will then send the message to Bob's client via an established WebSocket connection, and vice versa.
 
 ### 4.2 Group messages
 
@@ -162,4 +162,4 @@ Regardless of channel or group permissions, a user join request from a new devic
 ### 6.5 Best practices
 
 - In case of encrypted guild channel join requests, it may be a good idea to treat multiple join requests from the same user with different clients as a single join request, when it comes to UI/UX.
-- Joining an encrypted channel, even from an already established member with a new device, should be an event clearly visible to all members of the channel. This is to prevent a malicious user from joining a channel without the other members noticing.
+- Joining an encrypted channel, even from an already established member with a new device, should be an event distinctly visible to all members of the channel. This is to prevent a malicious user from joining a channel without the other members noticing.

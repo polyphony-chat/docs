@@ -56,7 +56,7 @@ This request has no body.
 
 ---
 
-### <span class="request-h"><span class="request request-post">POST</span> Identify</span>
+### <span class="request-h"><span class="request request-post">`POST`</span> identify</span>
 
 `/p2core/session/identify`
 
@@ -68,7 +68,7 @@ This request has no body.
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `challenge`                                                                                                                                                                                                                     | String         | The [completed challenge string](../types.md#completed-challenge-string), signed with the client's private identity key.                                |
 | `id_cert`                                                                                                                                                                                                                       | String, Base64 | The client's [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert), encoded in Base64. |
-| `auth_payload` :material-help:{title="This field is optional."} :material-code-braces:{title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."} | JSON-Object    | n.A.                                                                                                                                                    |
+| `auth_payload` :material-help:{title="This field is optional."} :material-code-braces:{title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."} | JSON-Object    | n. A.                                                                                                                                                    |
 
 ```json
 {

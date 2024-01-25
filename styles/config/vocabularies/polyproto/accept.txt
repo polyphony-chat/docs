@@ -11,3 +11,5 @@ KeyPackage
 $ANYTHING
 cURL
 FIDs
+APIs
+unencrypted
