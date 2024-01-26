@@ -1322,7 +1322,7 @@
 </div>
 <h2 id="4-federating-directgroup-messages">4. Federating direct/group messages<a class="headerlink" href="#4-federating-directgroup-messages" title="Permanent link">&para;</a></h2>
 <h3 id="41-direct-messages">4.1 Direct messages<a class="headerlink" href="#41-direct-messages" title="Permanent link">&para;</a></h3>
-<p>Federating direct messages is relatively simple. When Alice sends a message to Bob, their client will send the message to Bob's home server via an API request. Bob's home server will then send the message to Bob's client via an established WebSocket connection, and vice versa.</p>
+<p>Federating direct messages is straightforward. When Alice sends a message to Bob, their client will send the message to Bob's home server via an API request. Bob's home server will then send the message to Bob's client via an established WebSocket connection, and vice versa.</p>
 <h3 id="42-group-messages">4.2 Group messages<a class="headerlink" href="#42-group-messages" title="Permanent link">&para;</a></h3>
 <p>Group messages work just like guilds, in the sense that data is stored by the home server of the group's creator, meaning that all group members will have to communicate with the group creator's home server. If the group creator leaves the group, the ownership of the group is transferred to another member. The group chat stays on the group creator's home server.</p>
 <!--Potential work could be done to think of a system which allows group chat members to vote for a migration of the conversation to another server. Consent is needed from all involved parties, because otherwise, data cannot ethically be transfered from one server to another another.-->
@@ -1456,7 +1456,7 @@ Fig. 5: Sequence diagram of a successful encrypted group creation with 3 members
 <h3 id="65-best-practices">6.5 Best practices<a class="headerlink" href="#65-best-practices" title="Permanent link">&para;</a></h3>
 <ul>
 <li>In case of encrypted guild channel join requests, it may be a good idea to treat multiple join requests from the same user with different clients as a single join request, when it comes to UI/UX.</li>
-<li>Joining an encrypted channel, even from an already established member with a new device, should be an event clearly visible to all members of the channel. This is to prevent a malicious user from joining a channel without the other members noticing.</li>
+<li>Joining an encrypted channel, even from an already established member with a new device, should be an event distinctly visible to all members of the channel. This is to prevent a malicious user from joining a channel without the other members noticing.</li>
 </ul>
 <h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
 <ul>

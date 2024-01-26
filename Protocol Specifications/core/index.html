@@ -1063,7 +1063,7 @@
           <li class="md-nav__item">
   <a href="#31-client-home-server-api" class="md-nav__link">
     <span class="md-ellipsis">
-      3.1 Client-Home server API
+      3.1 Client-home server API
     </span>
   </a>
   
@@ -1095,11 +1095,11 @@
         <li class="md-nav__item">
   <a href="#4-federated-identity" class="md-nav__link">
     <span class="md-ellipsis">
-      4. Federated Identity
+      4. Federated identity
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4. Federated Identity">
+    <nav class="md-nav" aria-label="4. Federated identity">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1474,7 +1474,7 @@
           <li class="md-nav__item">
   <a href="#31-client-home-server-api" class="md-nav__link">
     <span class="md-ellipsis">
-      3.1 Client-Home server API
+      3.1 Client-home server API
     </span>
   </a>
   
@@ -1506,11 +1506,11 @@
         <li class="md-nav__item">
   <a href="#4-federated-identity" class="md-nav__link">
     <span class="md-ellipsis">
-      4. Federated Identity
+      4. Federated identity
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4. Federated Identity">
+    <nav class="md-nav" aria-label="4. Federated identity">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1818,12 +1818,12 @@ The version number specified here also applies to the API documentation.</p>
 <li><a href="#1-terminology-used-in-this-document">1. Terminology used in this document</a></li>
 <li><a href="#2-trust-model">2. Trust model</a></li>
 <li><a href="#3-apis-and-communication-protocols">3. APIs and communication protocols</a><ul>
-<li><a href="#31-client-home-server-api">3.1 Client-Home server API</a></li>
+<li><a href="#31-client-home-server-api">3.1 Client-home server API</a></li>
 <li><a href="#32-client-foreign-server-api">3.2 Client-foreign server API</a></li>
 <li><a href="#33-websockets">3.3 WebSockets</a></li>
 </ul>
 </li>
-<li><a href="#4-federated-identity">4. Federated Identity</a><ul>
+<li><a href="#4-federated-identity">4. Federated identity</a><ul>
 <li><a href="#41-authentication">4.1 Authentication</a></li>
 <li><a href="#411-registering-a-new-user-on-a-polyproto-home-server">4.1.1 Registering a new user on a polyproto home server</a></li>
 <li><a href="#412-authenticating-a-new-client-on-a-polyproto-home-server">4.1.2 Authenticating a new client on a polyproto home server</a></li>
@@ -1857,19 +1857,19 @@ The version number specified here also applies to the API documentation.</p>
 </ul>
 </li>
 </ul>
-<p>The polyproto protocol is a home-server-based federation protocol specification intended for use in applications where a user identity is needed. polyproto focuses on federated identity, and apart from the usage of MLS for encryption, does not specify any application-specific features. It is intended to be used as a base for application implementations and other protocols, such as polyproto-chat, which is a chat protocol built on top of polyproto. Any specific polyproto user identity can be used for multiple applications, as long as the applications support polyproto. </p>
+<p>The polyproto protocol is a home-server-based federation protocol specification intended for use in applications where a user identity is needed. polyproto focuses on federated identity, and apart from the usage of MLS for encryption, does not specify any application-specific features. It is intended to be used as a base for application implementations and other protocols, such as polyproto-chat, which is a chat protocol built on top of polyproto. Any specific polyproto user identity can be used for many applications, if the applications support polyproto. </p>
 <p>No part of polyproto is considered less important than any other part, and all parts of polyproto are required for a polyproto implementation to be considered compliant with the polyproto specification. The only exception to this is the encryption part of polyproto, which is optional, as the necessity of encryption depends on the specific implementation.</p>
-<p>This document is intended to be used as a starting point for developers wanting to develop software which can interoperate with other polyproto implementations.</p>
+<p>This document is intended to be used as a starting point for developers wanting to develop software, which can operate with other polyproto implementations.</p>
 <h2 id="1-terminology-used-in-this-document">1. Terminology used in this document<a class="headerlink" href="#1-terminology-used-in-this-document" title="Permanent link">&para;</a></h2>
 <p>In addition to the terminology found in the glossary located at the end of this document, the following terminology is used throughout this document:</p>
 <ul>
-<li><strong>Message, Messages</strong>: In the context of this protocol specification, a <strong>message</strong> is any piece of data sent by a client that is intended to be identifiable as being sent by a specific user. To qualify as a "message", this piece of data must also, at any point in time, and also if only briefly, be visible to other users and/or the unauthenticated public. Examples of things that would qualify as messages include:<ul>
+<li><strong>Message, Messages</strong>: In the context of this protocol specification, a <strong>message</strong> is any piece of data sent by a client that is intended to be identifiable as being sent by a specific user. To qualify as a "message", this piece of data must also, at any point in time, and also if only briefly, be visible to other users or to the unauthenticated public. Examples of things that would qualify as messages include:<ul>
 <li>A message sent to another user in a chat application</li>
 <li>A post on a social media platform</li>
 <li>A "like" interaction on a social media platform</li>
 <li>Reaction emojis in Discord-like chat applications</li>
-<li>Group join/leave messages</li>
-<li>Reporting a post/user, if the report is not anonymous</li>
+<li>Group join or leave messages</li>
+<li>Reporting a post or user, if the report is not anonymous</li>
 </ul>
 </li>
 </ul>
@@ -1881,20 +1881,20 @@ The version number specified here also applies to the API documentation.</p>
 <li>Users only distrust their home servers in case of irregularities or conflicting information.</li>
 <li>In a federated context, users trust foreign servers with all unencrypted data.</li>
 <li>Users trust MLS channel members with their data and attached metadata.</li>
-<li>Foreign servers can't impersonate users without explicit consent.</li>
+<li>Foreign servers cannot impersonate users without explicit consent.</li>
 <li>Users rely on their home servers for identity key certification, without the home servers possessing the identity.</li>
 </ol>
 <h2 id="3-apis-and-communication-protocols">3. APIs and communication protocols<a class="headerlink" href="#3-apis-and-communication-protocols" title="Permanent link">&para;</a></h2>
 <p>The polyproto specification defines a set of APIs, namely the Client-Home server and Client-Foreign server APIs. 
 In addition to these REST APIs, polyproto employs WebSockets for real-time communication between clients and servers.</p>
-<h3 id="31-client-home-server-api">3.1 Client-Home server API<a class="headerlink" href="#31-client-home-server-api" title="Permanent link">&para;</a></h3>
-<p>The <a href="./docs/APIs/Core/Client-Home%20Server%20API/index.md"><em>Client-Home server</em></a> API of polyproto is concerned with authentication- and federation-related issues between a client and its home server.
-A client in this context is expected to be a user/bot session.</p>
+<h3 id="31-client-home-server-api">3.1 Client-home server API<a class="headerlink" href="#31-client-home-server-api" title="Permanent link">&para;</a></h3>
+<p>The <a href="./docs/APIs/Core/Client-Home%20Server%20API/index.md"><em>Client-home server</em></a> API of polyproto is concerned with authentication- and federation-related issues between a client and its home server.
+A client in this context is expected to be a user or bot session.</p>
 <h3 id="32-client-foreign-server-api">3.2 Client-foreign server API<a class="headerlink" href="#32-client-foreign-server-api" title="Permanent link">&para;</a></h3>
 <p>The <a href="./docs/APIs/Core/Client-Foreign%20Server%20API/index.md"><em>Client-foreign server</em></a> API of polyproto is used for tasks such as requesting the servers' or a users' public key(s) or migrating a user account.
-The definition of "client" in this context is broader, since it includes both users/bots and other polyproto servers.</p>
+The definition of "client" in this context is broader, since it includes both users or bots and other polyproto servers.</p>
 <h3 id="33-websockets">3.3 WebSockets<a class="headerlink" href="#33-websockets" title="Permanent link">&para;</a></h3>
-<p>In polyproto, WebSockets facilitate real-time communication between user/bot clients and servers, and they are employed in both Client-Home Server and Client-Foreign Server communication.</p>
+<p>In polyproto, WebSockets facilitate real-time communication between user or bot clients and servers, and they are employed in both Client-Home Server and Client-Foreign Server communication.</p>
 <p>WebSocket connections to polyproto servers consist of the following cycle:</p>
 <pre class="mermaid"><code>sequenceDiagram
 
@@ -1930,12 +1930,12 @@ end
 <p class="admonition-title">Info</p>
 <p>To learn more about polyproto WebSockets and WebSocket Events, consult the <a href="/docs/APIs/Core/WebSockets/index.md">WebSockets documentation</a>.</p>
 </div>
-<h2 id="4-federated-identity">4. Federated Identity<a class="headerlink" href="#4-federated-identity" title="Permanent link">&para;</a></h2>
+<h2 id="4-federated-identity">4. Federated identity<a class="headerlink" href="#4-federated-identity" title="Permanent link">&para;</a></h2>
 <p>The federation of user identities allows users to engage with foreign servers as if they were their home servers.
 For instance, in polyproto-chat, a user can send direct messages to users from a different server or join the Guilds of other servers.</p>
 <p>Identity certificates defined in sections <a href="#7-keys-and-signatures">#7. Keys and signatures</a> and <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">#7.1 Home server signed certificates for public client identity keys (ID-Cert)</a> are employed to sign messages that the user sends to other servers.</p>
 <div class="admonition note">
-<p class="admonition-title">Using one identity for multiple polyproto implementations</p>
+<p class="admonition-title">Using one identity for several polyproto implementations</p>
 <p>A user can choose to use the same identity for multiple polyproto implementations. If section <a href="#413-authenticating-on-a-foreign-server">4.1.3</a> is implemented correctly, this should not be a problem.</p>
 </div>
 <div class="admonition info">
@@ -1945,7 +1945,7 @@ For instance, in polyproto-chat, a user can send direct messages to users from a
 <h3 id="41-authentication">4.1 Authentication<a class="headerlink" href="#41-authentication" title="Permanent link">&para;</a></h3>
 <h4 id="411-registering-a-new-user-on-a-polyproto-home-server">4.1.1 Registering a new user on a polyproto home server<a class="headerlink" href="#411-registering-a-new-user-on-a-polyproto-home-server" title="Permanent link">&para;</a></h4>
 <p>Registering a new user in the context of polyproto is done through an API route defined in the polyproto Client-Home server API documentation.</p>
-<p>To register, the client sends the necessary information to their home server. The server verifies the data, checks username availability, and responds with HTTP 201 and the new identity's federation ID, if successful. However, a session token isn't provided until the user authenticates a client, as detailed in section <a href="#412-authenticating-a-new-client-on-a-polyproto-home-server">4.1.2</a>.</p>
+<p>To register, the client sends the necessary information to their home server. The server verifies the data, checks username availability, and responds with HTTP 201 and the new identity's federation ID, if successful. However, a session token is not provided until the user authenticates a client, as detailed in section <a href="#412-authenticating-a-new-client-on-a-polyproto-home-server">4.1.2</a>.</p>
 <p><pre class="mermaid"><code>sequenceDiagram
 
 actor c as Client
@@ -1987,8 +1987,8 @@ Fig. 3: Sequence diagram of a successful client authentication process.</p>
 <p>Authenticating on a foreign server requires the user to sign a challenge string with their private identity key and send it, along with their ID-Cert, to the server. The server then validates the ID-Cert's origin, the challenge string's signature, and the ID-Cert's validity.</p>
 <p>If the verification is successful, the foreign server can issue a session token to the user.</p>
 <p><strong>Example:</strong>
-Say that Alice is on server A, and would like to authenticate on Server B using her existing identity.</p>
-<p>Alice's client sends a request to Server B for a challenge string. Upon receiving a response, Alice signs this challenge string with their ID-Cert and sends the signature and her ID-Cert to Server B. Server B can now verify, that it was actually Alice who signed the string, and not a malicious outsider. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B using this token.</p>
+Say that Alice is on server A, and wants to authenticate on Server B, using her existing identity.</p>
+<p>Alice's client sends a request to Server B for a challenge string. Upon receiving a response, Alice signs this challenge string with their ID-Cert and sends the signature and her ID-Cert to Server B. Server B can now verify that it was actually Alice who signed the string, and not a malicious outsider. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B by using this token.</p>
 <p><pre class="mermaid"><code>sequenceDiagram
 
 actor a as Alice
@@ -2002,7 +2002,7 @@ sb-&gt;&gt;a: Get public key
 sa-&gt;&gt;sb: Send public key
 sb-&gt;&gt;a: Session token, optional payload</code></pre>
 Fig. 4: Sequence diagram of a successful identity verification.</p>
-<p>In the diagram, Alice's "optional payload" is extra data that may be requested by servers. This is useful when using a single identity across various polyproto implementations, due to differing information needs. The payload is signed with the user's private identity key.</p>
+<p>In the diagram, Alice's "optional payload" is extra data that might be requested by servers. This is useful when using a single identity across various polyproto implementations, due to differing information needs. The payload is signed with the user's private identity key.</p>
 <p>Likewise, the "optional payload" sent by the server in the above diagram can be used by implementations to send additional information to the client. An example might be initial account information.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
@@ -2041,9 +2041,9 @@ session cannot decrypt any messages sent before its' join epoch. If secrecy or c
 are of concern, users should host their own home server and use end-to-end encryption.</p>
 </div>
 <h2 id="5-users">5. Users<a class="headerlink" href="#5-users" title="Permanent link">&para;</a></h2>
-<p>Every client requires an associated user identity. Users are distinguished by a unique federation ID (FID), comprised of their username, which is unique per instance, and the instance's root domain. This combination ensures global uniqueness.</p>
+<p>Every client requires an associated user identity. Users are distinguished by a unique federation ID (FID), consist of their username, which is unique per instance, and the instance's root domain. This combination ensures global uniqueness.</p>
 <p>FIDs used in public contexts are formatted as <code>user@optionalsubdomain.domain.tld</code>, and are case-insensitive.</p>
-<p>The following regex can be used to validate user IDs: <code>\b([A-Z0-9._%+-]+)@([A-Z0-9.-]+\.[A-Z]{2,})\b</code>.</p>
+<p>The following regular expression can be used to validate user IDs: <code>\b([A-Z0-9._%+-]+)@([A-Z0-9.-]+\.[A-Z]{2,})\b</code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Validating a federation ID with the above regex does not guarantee that the ID is valid. It only
