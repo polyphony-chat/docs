@@ -2,6 +2,7 @@
 
 **v0.0.0** - Treat this as an unfinished draft.
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
+The version number specified here also applies to the API documentation.
 
 - [polyproto Specification](#polyproto-specification)
   - [1. Terminology used in this document](#1-terminology-used-in-this-document)
@@ -276,7 +277,7 @@ Polyproto servers need to inform users of new session tokens. This visibility ha
 
 Every client requires an associated user identity. Users are distinguished by a unique federation ID (FID), consist of their username, which is unique per instance, and the instance's root domain. This combination ensures global uniqueness.
 
-FIDs are formatted as `user@optionalsubdomain.domain.tld`, and are case-insensitive.
+FIDs used in public contexts are formatted as `user@optionalsubdomain.domain.tld`, and are case-insensitive.
 
 The following regular expression can be used to validate user IDs: `\b([A-Z0-9._%+-]+)@([A-Z0-9.-]+\.[A-Z]{2,})\b`.
 
@@ -284,6 +285,10 @@ The following regular expression can be used to validate user IDs: `\b([A-Z0-9._
 
     Validating a federation ID with the above regex does not guarantee that the ID is valid. It only
     indicates that the federation ID is formatted correctly.
+
+For all intents and purposes, a federation ID is a display of identity. However, verifying identity
+claims is crucial. See [Section #7.1](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
+and [Section #7.2.2](#722-message-verification) for more information.
 
 ## 6. Encryption
 
