@@ -2,6 +2,7 @@
 
 **v0.0.0** - Treat this as an unfinished draft.
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
+The version number specified here also applies to the API documentation.
 
 - [polyproto Specification](#polyproto-specification)
   - [1. Terminology used in this document](#1-terminology-used-in-this-document)
