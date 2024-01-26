@@ -56,7 +56,7 @@ This request has no body.
 
 ---
 
-### <span class="request-h"><span class="request request-post">`POST`</span> identify</span>
+### <span class="request-h"><span class="request request-post">POST</span> Identify</span>
 
 `/p2core/session/identify`
 

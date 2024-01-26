@@ -8,10 +8,10 @@ The version number specified here also applies to the API documentation.
   - [1. Terminology used in this document](#1-terminology-used-in-this-document)
   - [2. Trust model](#2-trust-model)
   - [3. APIs and communication protocols](#3-apis-and-communication-protocols)
-    - [3.1 Client-Home server API](#31-client-home-server-api)
+    - [3.1 Client-home server API](#31-client-home-server-api)
     - [3.2 Client-foreign server API](#32-client-foreign-server-api)
     - [3.3 WebSockets](#33-websockets)
-  - [4. Federated Identity](#4-federated-identity)
+  - [4. Federated identity](#4-federated-identity)
     - [4.1 Authentication](#41-authentication)
       - [4.1.1 Registering a new user on a polyproto home server](#411-registering-a-new-user-on-a-polyproto-home-server)
       - [4.1.2 Authenticating a new client on a polyproto home server](#412-authenticating-a-new-client-on-a-polyproto-home-server)
@@ -205,7 +205,7 @@ Authenticating on a foreign server requires the user to sign a challenge string 
 If the verification is successful, the foreign server can issue a session token to the user.
 
 **Example:**
-Say that Alice is on server A, and want to authenticate on Server B that uses her existing identity.
+Say that Alice is on server A, and wants to authenticate on Server B, using her existing identity.
 
 Alice's client sends a request to Server B for a challenge string. Upon receiving a response, Alice signs this challenge string with their ID-Cert and sends the signature and her ID-Cert to Server B. Server B can now verify that it was actually Alice who signed the string, and not a malicious outsider. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B by using this token.
 
@@ -452,7 +452,7 @@ b->>b: Verify signature of Alice's message
 ```
 Fig. 6: Sequence diagram of a successful message signature verification.
 
-Bob's client should now cache Server A's public identity key and Alice's ID-Cert, to avoid having to request them again for if the ID-Cert/Server public key do not change, and are not expired.
+Bob's client should now cache Server A's public identity key and Alice's ID-Cert, to avoid having to request them again for as long as the ID-Cert/Server public key do not change, and are not expired.
 
 If the verification fails, Bob's client should try to re-request the key from Server B first. Should the verification fail again, Bob's client may try to request Alice's public identity key and certificate from Server A (Alice's home server), and try to verify the signature again. Should the verification still not succeed, the message should be treated with extreme caution.
 
@@ -475,7 +475,7 @@ If the verification fails, Bob's client should try to re-request the key from Se
 
 - User/client signing keys should be rotated regularly (every 20-60 days). This is to ensure that a compromised key can only be used for a limited amount of time. Server identity keys should be rotated way less frequently (every 1-5 years), and perhaps only when a leak is suspected.
 - When a server is asked to generate a new ID-Cert for a user, it must make sure that the CSR is valid and, if set, has an expiry date which is less than or equal to the expiry date of the server's own ID-Cert.
-- Due to the fact that a `SERVER_KEY_CHANGE` gateway event is bound to generate much traffic, servers should only manually generate a new identity key pair when absolutely necessary and instead choose a fitting expiry date interval for their identity key certificates. It might also be a good idea to stagger the sending of `SERVER_KEY_CHANGE` gateway events, to prevent a server from initiating a DDoS attack on itself.
+- Due to the fact that a `SERVER_KEY_CHANGE` gateway event is bound to generate a lot of traffic, servers should only manually generate a new identity key pair when absolutely necessary and instead choose a fitting expiry date interval for their identity key certificates. It might also be a good idea to stagger the sending of `SERVER_KEY_CHANGE` gateway events, to prevent a server from initiating a DDoS attack on itself.
 - When a client or server receives the information that a user clients' identity key has been changed, the client/server in question should update their cached ID-Cert for the user in question, taking into account the session ID of the new identity key pair.
 
 #### 7.4.2 Home server operation and design
