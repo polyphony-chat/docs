@@ -126,7 +126,7 @@ nothing new about any given atomic aspect of polyproto. Polyproto uses well-know
 technologies, like asymmetric encryption, public key infrastructure, public key certificates, digital signatures,
 JSON over REST and other, already well established technologies like WebSockets.
 
-polyproto should be easy - both for developers and for end users, who, ideally, should never have to
+polyproto should be effortless - both for developers and for end users, who, ideally, should never have to
 notice any of the technical stuff going on in the background.
 
 ## **Conclusion**

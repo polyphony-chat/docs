@@ -8,10 +8,10 @@ The version number specified here also applies to the API documentation.
   - [1. Terminology used in this document](#1-terminology-used-in-this-document)
   - [2. Trust model](#2-trust-model)
   - [3. APIs and communication protocols](#3-apis-and-communication-protocols)
-    - [3.1 Client-Home server API](#31-client-home-server-api)
+    - [3.1 Client-home server API](#31-client-home-server-api)
     - [3.2 Client-foreign server API](#32-client-foreign-server-api)
     - [3.3 WebSockets](#33-websockets)
-  - [4. Federated Identity](#4-federated-identity)
+  - [4. Federated identity](#4-federated-identity)
     - [4.1 Authentication](#41-authentication)
       - [4.1.1 Registering a new user on a polyproto home server](#411-registering-a-new-user-on-a-polyproto-home-server)
       - [4.1.2 Authenticating a new client on a polyproto home server](#412-authenticating-a-new-client-on-a-polyproto-home-server)
@@ -38,23 +38,23 @@ The version number specified here also applies to the API documentation.
     - [8.2 Re-signing messages](#82-re-signing-messages)
 
 
-The polyproto protocol is a home-server-based federation protocol specification intended for use in applications where a user identity is needed. polyproto focuses on federated identity, and apart from the usage of MLS for encryption, does not specify any application-specific features. It is intended to be used as a base for application implementations and other protocols, such as polyproto-chat, which is a chat protocol built on top of polyproto. Any specific polyproto user identity can be used for multiple applications, as long as the applications support polyproto. 
+The polyproto protocol is a home-server-based federation protocol specification intended for use in applications where a user identity is needed. polyproto focuses on federated identity, and apart from the usage of MLS for encryption, does not specify any application-specific features. It is intended to be used as a base for application implementations and other protocols, such as polyproto-chat, which is a chat protocol built on top of polyproto. Any specific polyproto user identity can be used for many applications, if the applications support polyproto. 
 
 No part of polyproto is considered less important than any other part, and all parts of polyproto are required for a polyproto implementation to be considered compliant with the polyproto specification. The only exception to this is the encryption part of polyproto, which is optional, as the necessity of encryption depends on the specific implementation.
 
-This document is intended to be used as a starting point for developers wanting to develop software which can interoperate with other polyproto implementations.
+This document is intended to be used as a starting point for developers wanting to develop software, which can operate with other polyproto implementations.
 
 ## 1. Terminology used in this document
 
 In addition to the terminology found in the glossary located at the end of this document, the following terminology is used throughout this document:
 
-- **Message, Messages**: In the context of this protocol specification, a **message** is any piece of data sent by a client that is intended to be identifiable as being sent by a specific user. To qualify as a "message", this piece of data must also, at any point in time, and also if only briefly, be visible to other users and/or the unauthenticated public. Examples of things that would qualify as messages include:
+- **Message, Messages**: In the context of this protocol specification, a **message** is any piece of data sent by a client that is intended to be identifiable as being sent by a specific user. To qualify as a "message", this piece of data must also, at any point in time, and also if only briefly, be visible to other users or to the unauthenticated public. Examples of things that would qualify as messages include:
     - A message sent to another user in a chat application
     - A post on a social media platform
     - A "like" interaction on a social media platform
     - Reaction emojis in Discord-like chat applications
-    - Group join/leave messages
-    - Reporting a post/user, if the report is not anonymous
+    - Group join or leave messages
+    - Reporting a post or user, if the report is not anonymous
 
 Terminology not specified in this section or in the glossary has been defined somewhere else in this document.
 
@@ -66,7 +66,7 @@ polyproto operates under the following trust assumptions:
 2. Users only distrust their home servers in case of irregularities or conflicting information.
 3. In a federated context, users trust foreign servers with all unencrypted data.
 4. Users trust MLS channel members with their data and attached metadata.
-5. Foreign servers can't impersonate users without explicit consent.
+5. Foreign servers cannot impersonate users without explicit consent.
 6. Users rely on their home servers for identity key certification, without the home servers possessing the identity.
 
 ## 3. APIs and communication protocols
@@ -74,19 +74,19 @@ polyproto operates under the following trust assumptions:
 The polyproto specification defines a set of APIs, namely the Client-Home server and Client-Foreign server APIs. 
 In addition to these REST APIs, polyproto employs WebSockets for real-time communication between clients and servers.
 
-### 3.1 Client-Home server API
+### 3.1 Client-home server API
 
-The [*Client-Home server*](./docs/APIs/Core/Client-Home%20Server%20API/index.md) API of polyproto is concerned with authentication- and federation-related issues between a client and its home server.
-A client in this context is expected to be a user/bot session.
+The [*Client-home server*](./docs/APIs/Core/Client-Home%20Server%20API/index.md) API of polyproto is concerned with authentication- and federation-related issues between a client and its home server.
+A client in this context is expected to be a user or bot session.
 
 ### 3.2 Client-foreign server API
 
 The [*Client-foreign server*](./docs/APIs/Core/Client-Foreign%20Server%20API/index.md) API of polyproto is used for tasks such as requesting the servers' or a users' public key(s) or migrating a user account.
-The definition of "client" in this context is broader, since it includes both users/bots and other polyproto servers.
+The definition of "client" in this context is broader, since it includes both users or bots and other polyproto servers.
 
 ### 3.3 WebSockets
 
-In polyproto, WebSockets facilitate real-time communication between user/bot clients and servers, and they are employed in both Client-Home Server and Client-Foreign Server communication.
+In polyproto, WebSockets facilitate real-time communication between user or bot clients and servers, and they are employed in both Client-Home Server and Client-Foreign Server communication.
 
 WebSocket connections to polyproto servers consist of the following cycle:
 
@@ -128,14 +128,14 @@ Fig. 1: Sequence diagram of a WebSocket connection to a polyproto server.
 
     To learn more about polyproto WebSockets and WebSocket Events, consult the [WebSockets documentation](/docs/APIs/Core/WebSockets/index.md).
 
-## 4. Federated Identity
+## 4. Federated identity
 
 The federation of user identities allows users to engage with foreign servers as if they were their home servers.
 For instance, in polyproto-chat, a user can send direct messages to users from a different server or join the Guilds of other servers.
 
 Identity certificates defined in sections [#7. Keys and signatures](#7-keys-and-signatures) and [#7.1 Home server signed certificates for public client identity keys (ID-Cert)](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) are employed to sign messages that the user sends to other servers.
 
-!!! note "Using one identity for multiple polyproto implementations"
+!!! note "Using one identity for several polyproto implementations"
 
     A user can choose to use the same identity for multiple polyproto implementations. If section [4.1.3](#413-authenticating-on-a-foreign-server) is implemented correctly, this should not be a problem.
 
@@ -150,7 +150,7 @@ Identity certificates defined in sections [#7. Keys and signatures](#7-keys-and-
 
 Registering a new user in the context of polyproto is done through an API route defined in the polyproto Client-Home server API documentation.
 
-To register, the client sends the necessary information to their home server. The server verifies the data, checks username availability, and responds with HTTP 201 and the new identity's federation ID, if successful. However, a session token isn't provided until the user authenticates a client, as detailed in section [4.1.2](#412-authenticating-a-new-client-on-a-polyproto-home-server).
+To register, the client sends the necessary information to their home server. The server verifies the data, checks username availability, and responds with HTTP 201 and the new identity's federation ID, if successful. However, a session token is not provided until the user authenticates a client, as detailed in section [4.1.2](#412-authenticating-a-new-client-on-a-polyproto-home-server).
 
 ```mermaid
 sequenceDiagram
@@ -205,9 +205,9 @@ Authenticating on a foreign server requires the user to sign a challenge string 
 If the verification is successful, the foreign server can issue a session token to the user.
 
 **Example:**
-Say that Alice is on server A, and would like to authenticate on Server B using her existing identity.
+Say that Alice is on server A, and wants to authenticate on Server B, using her existing identity.
 
-Alice's client sends a request to Server B for a challenge string. Upon receiving a response, Alice signs this challenge string with their ID-Cert and sends the signature and her ID-Cert to Server B. Server B can now verify, that it was actually Alice who signed the string, and not a malicious outsider. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B using this token.
+Alice's client sends a request to Server B for a challenge string. Upon receiving a response, Alice signs this challenge string with their ID-Cert and sends the signature and her ID-Cert to Server B. Server B can now verify that it was actually Alice who signed the string, and not a malicious outsider. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B by using this token.
 
 
 ```mermaid
@@ -226,7 +226,7 @@ sb->>a: Session token, optional payload
 ```
 Fig. 4: Sequence diagram of a successful identity verification.
 
-In the diagram, Alice's "optional payload" is extra data that may be requested by servers. This is useful when using a single identity across various polyproto implementations, due to differing information needs. The payload is signed with the user's private identity key.
+In the diagram, Alice's "optional payload" is extra data that might be requested by servers. This is useful when using a single identity across various polyproto implementations, due to differing information needs. The payload is signed with the user's private identity key.
 
 Likewise, the "optional payload" sent by the server in the above diagram can be used by implementations to send additional information to the client. An example might be initial account information.
 
@@ -275,11 +275,11 @@ Polyproto servers need to inform users of new session tokens. This visibility ha
 
 ## 5. Users
 
-Every client requires an associated user identity. Users are distinguished by a unique federation ID (FID), comprised of their username, which is unique per instance, and the instance's root domain. This combination ensures global uniqueness.
+Every client requires an associated user identity. Users are distinguished by a unique federation ID (FID), consist of their username, which is unique per instance, and the instance's root domain. This combination ensures global uniqueness.
 
 FIDs used in public contexts are formatted as `user@optionalsubdomain.domain.tld`, and are case-insensitive.
 
-The following regex can be used to validate user IDs: `\b([A-Z0-9._%+-]+)@([A-Z0-9.-]+\.[A-Z]{2,})\b`.
+The following regular expression can be used to validate user IDs: `\b([A-Z0-9._%+-]+)@([A-Z0-9.-]+\.[A-Z]{2,})\b`.
 
 !!! note
 
