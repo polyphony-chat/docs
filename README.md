@@ -24,3 +24,6 @@ You will need the following things installed on your computer:
 - `git`
 
 Optionally, you can install [`vale`](https://vale.sh/) for spell-/grammar checking.
+
+Use `pip install -r requirements.txt` to install the required dependencies, and `mkdocs build` or
+`mkdocs serve` to build the project or serve it on localhost.
