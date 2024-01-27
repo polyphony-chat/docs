@@ -10,6 +10,17 @@ The `/snippets` folder has snippets of text used in many places in the documenta
 
 ## Contributing
 
-The best way to contribute is to open an issue if you find any problems with the documentation. Creating an issue is generally the best way to contribute to any open source project, as it allows the maintainers to discuss the issue and come to a consensus on how to fix it.
+The best way to contribute is to open an issue if you find any problems with the documentation. Creating an issue is generally the best way to contribute to any open source project. Issues allow for an exchange between contributors and maintainers to discuss the viability of implementing an issue, usually minimizing frustration.
 
 You should also read our [Code of Conduct](https://github.com/polyphony-chat/.github/blob/main/CODE_OF_CONDUCT.md) and [Contributing Guidelines](https://github.com/polyphony-chat/.github/blob/main/CONTRIBUTION_GUIDELINES.md) before contributing.
+
+## Setting up a development environment
+
+You will need the following things installed on your computer:
+
+- `python3.10`
+- `pip`
+- Any sort of python virtual environment manager - use `venv` if in doubt
+- `git`
+
+Optionally, you can install [`vale`](https://vale.sh/) for spell-/grammar checking.
