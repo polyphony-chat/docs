@@ -1,4 +1,5 @@
-# docs
+# Documentation
+
 Specification documents and API documentation for the polyproto federated messaging protocol
 Built with mkdocs-material and python3.10
 
