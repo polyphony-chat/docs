@@ -1930,6 +1930,15 @@ end
 <p class="admonition-title">Info</p>
 <p>To learn more about polyproto WebSockets and WebSocket Events, consult the <a href="/docs/APIs/Core/WebSockets/index.md">WebSockets documentation</a>.</p>
 </div>
+<p>For some implementation contexts, a constant WebSocket connection might not be wanted. A client can
+instead opt to query an API endpoint to receive updates, which would normally be sent through the WebSocket
+connection. Concrete polyproto-implementations and extensions can dictate whether this alternative
+behaviour is acceptable.</p>
+<p>Querying <a href="/APIs/Core/Client-Foreign%20Server%20API/#get-events">this endpoint</a> yields a JSON-Array
+containing either all events the session has missed since disconnecting from the WebSocket, or all events
+the session has missed since last querying the endpoint. Depending on how many events the session has
+missed, the earliest events might be excluded from the response to limit the response bodies size. This
+behaviour should be explicitly documented in implementations or extensions of polyproto.</p>
 <h2 id="4-federated-identity">4. Federated identity<a class="headerlink" href="#4-federated-identity" title="Permanent link">&para;</a></h2>
 <p>The federation of user identities allows users to engage with foreign servers as if they were their home servers.
 For instance, in polyproto-chat, a user can send direct messages to users from a different server or join the Guilds of other servers.</p>

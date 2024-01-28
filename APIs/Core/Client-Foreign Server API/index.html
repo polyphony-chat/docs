@@ -1348,6 +1348,54 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#other" class="md-nav__link">
+    <span class="md-ellipsis">
+      Other
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Other">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      GET Events 
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GET Events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#request_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Request
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Response
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#glossary" class="md-nav__link">
     <span class="md-ellipsis">
       Glossary
@@ -1377,9 +1425,9 @@
   <h1>Client-Foreign Server API Routes</h1>
 
 <p>All API endpoints needed for Client-Home Server communication.
-A "Client" in this context is a user/bot client, an authenticated user or another server.
+A "Client" in this context is a user or bot client, an authenticated user or another server.
 This Page only includes routes, for which a client does not need a "Client-Home Server relationship" with the server.
-If you'd like to see the routes, which require such a relationship, see the <a href="../Client-Home%20Server%20API/">Client-Home Server API documentation</a></p>
+Routes explicitly requiring a Client-&gt;Home Server relationship are documented <a href="../Client-Home%20Server%20API/">here</a></p>
 <div class="admonition bug">
 <p class="admonition-title">Unfinished section</p>
 <p>TODO: This section is not yet finished. It is missing descriptions for most routes, some error-code responses, etc.</p>
@@ -1419,6 +1467,7 @@ If you'd like to see the routes, which require such a relationship, see the <a h
 <hr />
 <h3 id="post-identify"><span class="request-h"><span class="request request-post">POST</span> Identify</span><a class="headerlink" href="#post-identify" title="Permanent link">&para;</a></h3>
 <p><code>/p2core/session/identify</code></p>
+<p>Identify on a foreign server and receive a session token.</p>
 <h4 id="request_1">Request<a class="headerlink" href="#request_1" title="Permanent link">&para;</a></h4>
 <h5 id="body_1">Body<a class="headerlink" href="#body_1" title="Permanent link">&para;</a></h5>
 <table>
@@ -1719,6 +1768,41 @@ If you'd like to see the routes, which require such a relationship, see the <a h
 </div>
 </div>
 <hr />
+<h2 id="other"><span class="group-h">Other</span><a class="headerlink" href="#other" title="Permanent link">&para;</a></h2>
+<p>Routes not fitting into another category.</p>
+<hr />
+<h3 id="get-events"><span class="request-h"><span class="request request-get">GET</span> Events <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a></span><a class="headerlink" href="#get-events" title="Permanent link">&para;</a></h3>
+<p><code>/p2core/events</code></p>
+<h4 id="request_7">Request<a class="headerlink" href="#request_7" title="Permanent link">&para;</a></h4>
+<h5 id="body_13">Body<a class="headerlink" href="#body_13" title="Permanent link">&para;</a></h5>
+<p>This request has no body.</p>
+<h4 id="response_7">Response<a class="headerlink" href="#response_7" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:2"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">200 OK</label><label for="__tabbed_7_2">409 No Content</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<h5 id="body_14">Body<a class="headerlink" href="#body_14" title="Permanent link">&para;</a></h5>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JSON-Array of <a href="../types/#event">Events</a></td>
+<td>All WebSocket Events this session has missed since disconnecting from the WebSocket, or since last querying this endpoint.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<p>Returned if there are no events to inform the client about.</p>
+<h5 id="body_15">Body<a class="headerlink" href="#body_15" title="Permanent link">&para;</a></h5>
+<p>This response has no body.</p>
+</div>
+</div>
+</div>
 <h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Client</strong> - A device or application used by a user or bot to connect to a server.</li>
@@ -1757,7 +1841,7 @@ If you'd like to see the routes, which require such a relationship, see the <a h
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-01-26T11:10:42+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-01-26</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-01-28T21:58:50+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-01-28</span>
   </span>
 
     
