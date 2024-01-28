@@ -399,8 +399,13 @@ As briefly mentioned section [#4](#4-federated-identity), users must hold on to 
 
 #### 7.2.1 Key rotation
 
-A client may choose to rotate their identity key at any time. This is done by generating a new identity key pair, and sending the new public identity key to their home server, as part of a new Certificate Signing Request, at least one new KeyPackage and one corresponding 'last resort' KeyPackage. The home server will then generate the new ID-Cert, send it to the client, and let all associated clients know, that this clients' public identity key has changed. The server does this by sending a [`CLIENT_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#client_key_change) gateway event to those clients. For example, in the context of a chat application built with polyproto-chat, an associating relationship between two clients exists, if the two clients share a guild, a group or a direct message channel, if they are friends, or if they have a pending friend request between each other.
+A session may choose to rotate their ID-Cert at any time. This is done by generating a new identity key pair, using the new private key to generate a new CSR, and sending the new Certificate Signing Request to the home server, along with at least one new KeyPackage and a corresponding 'last resort' KeyPackage. The home server will then generate the new ID-Cert, send it to the client, and let all associated clients know that this clients' public identity key has changed. The server does this by sending a [`CLIENT_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#client_key_change) gateway event to those clients.
 
+For example, in the context of a chat application built with polyproto-chat, an associating relationship between two clients exists, if:
+
+- the two clients share a guild, a group or a direct message channel
+- they are friends
+- they have a pending friend request between each other.
 
 Before sending any messages to a server, a client that performed a key rotation should inform the server of that change, to ensure that the server has the correct ID-Cert cached for the client.
 
