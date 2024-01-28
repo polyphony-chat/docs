@@ -407,9 +407,12 @@ For example, in the context of a chat application built with polyproto-chat, an 
 - they are friends
 - they have a pending friend request between each other.
 
-Before sending any messages to a server, a client that performed a key rotation should inform the server of that change, to ensure that the server has the correct ID-Cert cached for the client.
+Rotating keys is done by using an API route which requires authorization. It is important that sessions
+can only request a new ID-Cert for the session associated with the session token used as authorization.
 
-Home servers must keep track of the ID-Certs of all users (and their clients) registered on them, and must be able to provide a clients' ID-Cert for a given timestamp on request. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of a user may change over time and users must sign all messages they send to servers. Likewise, a client should also keep all of its own ID-Certs stored perpetually, to potentially verify its identity in case of a migration.
+Before sending any messages to a server, a client that performed a key rotation should inform the server of that change. This is to ensure that the server has cached the correct ID-Cert for this session.
+
+Home servers must keep track of the ID-Certs of all users (and their clients) registered on them, and must provide a clients' ID-Cert for a given timestamp on request. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of a user likely changes over time and users must sign all messages they send to servers. Likewise, a client should also keep all of its own ID-Certs stored perpetually, to potentially verify its identity in case of a migration.
 
 ```mermaid
 sequenceDiagram
@@ -428,7 +431,7 @@ Note right of s: Send CLIENT_KEY_CHANGE to associated clients
 ```
 Fig. 5: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert from their home server.
 
-If a server's identity key lifetime unexpectedly ends, perhaps due to a leak necessitating rotation, the server should generate a new identity key pair and broadcast [`SERVER_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#server_key_change) and [`LOW_KEY_PACKAGES`](/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages) gateway events to all clients. Clients should regenerate their identity keys, request a new ID-Cert (via a CSR), and respond appropriately to the [`LOW_KEY_PACKAGES`](/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages) event. Should a client be offline at the time of the key change, it must be informed of the change upon reconnection.
+A server identity key's lifetime might come to an early or unexpected end, perhaps due to some sort of leak of the corresponding private key. When this happens, the server should generate a new identity key pair and broadcast the [`SERVER_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#server_key_change) and [`LOW_KEY_PACKAGES`](/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages) gateway events to all clients. Clients should regenerate their identity keys, request a new ID-Cert (through a CSR), and respond appropriately to the [`LOW_KEY_PACKAGES`](/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages) event. Should a client be offline at the time of the key change, it must be informed of the change upon reconnection.
 
 !!! note
 
@@ -486,7 +489,7 @@ If the verification fails, Bob's client should try to re-request the key from Se
 
 #### 7.4.2 Home server operation and design
 
-- Employ a caching layer for your home server to handle the potentially large amount of requests for public key certificates without putting unnecessary strain on the database.
+- Use a caching layer for your home server to handle the potentially large amount of requests for public key certificates without putting unnecessary strain on the database.
 
 ## 8. Account migration
 
