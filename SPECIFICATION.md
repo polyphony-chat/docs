@@ -128,6 +128,17 @@ Fig. 1: Sequence diagram of a WebSocket connection to a polyproto server.
 
     To learn more about polyproto WebSockets and WebSocket Events, consult the [WebSockets documentation](/docs/APIs/Core/WebSockets/index.md).
 
+For some implementation contexts, a constant WebSocket connection might not be wanted. A client can
+instead opt to query an API endpoint to receive updates, which would normally be sent through the WebSocket
+connection. Concrete polyproto-implementations and extensions can dictate whether this alternative
+behaviour is acceptable.
+
+Querying [this endpoint](/APIs/Core/Client-Foreign%20Server%20API/#get-events) yields a JSON-Array
+containing either all events the session has missed since disconnecting from the WebSocket, or all events
+the session has missed since last querying the endpoint. Depending on how many events the session has
+missed, the earliest events might be excluded from the response to limit the response bodies size. This
+behaviour should be explicitly documented in implementations or extensions of polyproto.
+
 ## 4. Federated identity
 
 The federation of user identities allows users to engage with foreign servers as if they were their home servers.

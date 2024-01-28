@@ -4,9 +4,9 @@ weight: -900
 ---
 
 All API endpoints needed for Client-Home Server communication.
-A "Client" in this context is a user/bot client, an authenticated user or another server.
+A "Client" in this context is a user or bot client, an authenticated user or another server.
 This Page only includes routes, for which a client does not need a "Client-Home Server relationship" with the server.
-If you'd like to see the routes, which require such a relationship, see the [Client-Home Server API documentation](../Client-Home%20Server%20API/index.md)
+Routes explicitly requiring a Client->Home Server relationship are documented [here](../Client-Home%20Server%20API/index.md)
 
 !!! bug "Unfinished section"
 
@@ -59,6 +59,8 @@ This request has no body.
 ### <span class="request-h"><span class="request request-post">POST</span> Identify</span>
 
 `/p2core/session/identify`
+
+Identify on a foreign server and receive a session token.
 
 #### Request
 
@@ -279,6 +281,40 @@ This request has no body.
     ```
 
 ---
+
+## <span class="group-h">Other</span>
+
+Routes not fitting into another category.
+
+---
+
+### <span class="request-h"><span class="request request-get">GET</span> Events [:material-lock-outline:](#authorization "Authorization required")</span>
+
+`/p2core/events`
+
+#### Request
+
+##### Body
+
+This request has no body.
+
+#### Response
+
+=== "200 OK"
+
+    ##### Body
+
+    | Type                                      | Description                                                                                                                |
+    | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+    | JSON-Array of [Events](../types.md#event) | All WebSocket Events this session has missed since disconnecting from the WebSocket, or since last querying this endpoint. |
+
+=== "409 No Content"
+
+    Returned if there are no events to inform the client about.
+
+    ##### Body
+
+    This response has no body.
 
 --8<-- "snippets/glossary.md"
 

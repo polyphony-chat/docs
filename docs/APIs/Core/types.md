@@ -6,6 +6,10 @@ weight: -700
 
 Type definitions required for using the polyproto-core API.
 
+## Event
+
+TODO
+
 ## Snowflake
 
 TODO
