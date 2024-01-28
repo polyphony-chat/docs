@@ -27,6 +27,8 @@ Authentication endpoints, such as creating an identity and authenticating a clie
 
 `/p2core/identity`
 
+Creates an identity on a given server.
+
 #### Request
 
 ##### Body
@@ -68,6 +70,8 @@ Authentication endpoints, such as creating an identity and authenticating a clie
 
 === "409 Conflict"
 
+    Returned when the requested username is already taken within the namespace.
+
     ##### Body
 
     ```json
@@ -82,6 +86,8 @@ Authentication endpoints, such as creating an identity and authenticating a clie
 ### <span class="request-h"><span class="request request-post">POST</span> Authenticate new Session</span>
 
 `/p2core/session/trust`
+
+Creates a new `id_cert` and a session token from a `csr`.
 
 #### Request
 
@@ -103,29 +109,22 @@ Authentication endpoints, such as creating an identity and authenticating a clie
     | Name      | Type           | Description                                                                                                                                                             |
     | --------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
     | `id_cert` | String, Base64 | The [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) for this unique Identity-Session combination |
-
-=== "409 Conflict"
-
-    ##### Body
-
-    ```json
-    {
-        "errcode": 409,
-        "error": "P2CORE_SESSION_ID_TAKEN"
-    }
-    ```
+    | `token`   | String         | An authorization secret, called a "token", valid for this `id_cert`. |
 
 ---
 
 ## <span class="group-h">Federated Identity</span>
 
-Client-Home Server API endpoints which are concerned with Federated Identity, managing keys, etc.
+Client-Home Server API endpoints concerned with Federated Identity and managing ID-Certs.
 
 ---
 
 ### <span class="request-h"><span class="request request-post">POST</span> Rotate session ID-Cert [:material-lock-outline:](#authorization "Authorization required")</span>
 
 `/p2core/session/idcert`
+
+Rotate your keys for a given ID-Cert. The `session_id` in the supplied `csr` must correspond to the
+session token used in the `authorization`-Header.
 
 #### Request
 
@@ -145,15 +144,19 @@ Client-Home Server API endpoints which are concerned with Federated Identity, ma
 
 === "201 Created"
 
+    Contains your new ID-Cert, along with a new session token.
+
     ##### Body
 
-    | Name      | Type           | Description            |
-    | --------- | -------------- | ---------------------- |
+    | Name      | Type           | Description                                                                                                                           |
+    | --------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
     | `id_cert` | String, Base64 | The generated [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert). |
+    | `token`   | String         | An authorization secret, called a "token", valid for this `id_cert`. |
 
     ```json
     { 
-        "id_cert": "LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWS0tLS0tCk1JSUJqRENDQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYm..."
+        "id_cert": "LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWS0tLS0tCk1JSUJqRENDQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYm...",
+        "token": "Afnaopgi7BXVafjkl34ulvkc..."
     }
     ```
 
@@ -161,13 +164,16 @@ Client-Home Server API endpoints which are concerned with Federated Identity, ma
 
 ## <span class="group-h">Encryption</span>
 
-Client-Home Server API endpoints which are concerned with encryption, such as KeyPackage management.
+Client-Home Server API endpoints concerned with encryption, such as KeyPackage management.
 
 ---
 
 ### <span class="request-h"><span class="request request-post">POST</span> Add KeyPackage [:material-lock-outline:](#authorization "Authorization required")</span>
 
 `/p2core/keypackage/@me`
+
+Add a KeyPackage to your KeyPackage store on the server. Only adds KeyPackages to the ID-Cert corresponding
+to the session token used in the `authorization`-Header.
 
 #### Request
 
@@ -194,6 +200,9 @@ Client-Home Server API endpoints which are concerned with encryption, such as Ke
 ### <span class="request-h"><span class="request request-put">PUT</span> Replace Last Resort KeyPackage [:material-lock-outline:](#authorization "Authorization required")</span>
 
 `/p2core/keypackage_lr`
+
+Replace a Last Resort KeyPackage with a new one. Only manipulates Last Resort KeyPackages for the ID-Cert
+corresponding to the session token used in the `authorization`-Header.
 
 #### Request
 
