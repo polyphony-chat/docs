@@ -174,7 +174,7 @@ Fig. 2: Sequence diagram of a successful identity creation process.
 
 #### 4.1.2 Authenticating a new client on a polyproto home server
 
-To access their account from a new device, a user authenticates the session with their home server by sending authentication information and a [certificate signing request (CSR)](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) for the new client. If verified successfully, the server signs the CSR and responds with the newly generated ID-Cert and a session token.
+To access their account from a new device, a user authenticates the session with their home server by sending authentication information and a [certificate signing request (CSR)](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) for the new client. If verified successfully, the server signs the CSR and responds with the newly generated ID-Cert and a session token corresponding to this ID-Cert.
 
 ```mermaid
 sequenceDiagram
