@@ -1611,19 +1611,19 @@ corresponding to the session token used in the <code>authorization</code>-Header
 <hr />
 <h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Client</strong> - A device or application used by a user or bot to connect to a server.</li>
+<li><strong>Actor</strong> - An entity represented by a federation ID, registered on a home server. Actors can be users, bots, or any other entity with an identity.</li>
+<li><strong>Client</strong> - Any application used by an actor to connect to a server.</li>
 <li><strong>Federation ID</strong> - A unique identifier; In public contexts, usually <code>username@optionalsubdomain.domain.tld</code></li>
 <li><strong>Foreign client</strong> - Any client authenticated on a server that is not its home server.</li>
-<li><strong>Foreign server</strong> - A server that a user is not registered on; essentially a third party.</li>
+<li><strong>Foreign server</strong> - A server that an actor is not registered on; essentially a third party.</li>
 <li><strong>Home client</strong> - Any client registered and authenticated on its home server.</li>
-<li><strong>Home server</strong> - The server that a user is registered on. Any polyproto-core compliant server hosted on the same domain is also considered a home server.</li>
+<li><strong>Home server</strong> - The server that an actor is registered on. Any polyproto-core compliant server hosted on the same domain is also considered a home server.</li>
 <li><strong>Identity</strong> - A unique Federation ID.</li>
-<li><strong>Identity Key</strong> - A key pair representing a user's identity in a session, used for signing and encrypting messages.</li>
+<li><strong>Identity Key</strong> - A key pair representing an actor's identity in a session, used for signing and encrypting messages.</li>
 <li><strong>Instance</strong> - A server hosting polyproto compliant software for clients.</li>
 <li><strong>polyproto-chat</strong> - The chat-API used by Polyphony. An extension of the polyproto protocol, defining the routes and capabilities of the chat-API used by Polyphony.</li>
 <li><strong>polyproto</strong> - The core federation protocol and APIs of polyproto, enabling identification and authorization on 'foreign' servers. It is independent of the chat-API used.</li>
 <li><strong>Session</strong> - A specific period of interaction between a client and a server, typically identified and authenticated by the use of an identity key. The session begins when the client connects to the server and ends when the client disconnects. During a session, the client can interact with the server (e.g., send messages, make requests) under the identity associated with the session.</li>
-<li><strong>User</strong> - An entity represented by a federation ID, registered on a home server.</li>
 </ul>
 
 
