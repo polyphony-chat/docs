@@ -1085,6 +1085,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="3.3 WebSockets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#331-events-over-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3.1 Events over REST
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -1496,6 +1511,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="3.3 WebSockets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#331-events-over-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3.1 Events over REST
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -1821,6 +1851,7 @@ The version number specified here also applies to the API documentation.</p>
 <li><a href="#31-client-home-server-api">3.1 Client-home server API</a></li>
 <li><a href="#32-client-foreign-server-api">3.2 Client-foreign server API</a></li>
 <li><a href="#33-websockets">3.3 WebSockets</a></li>
+<li><a href="#331-events-over-rest">3.3.1 Events over REST</a></li>
 </ul>
 </li>
 <li><a href="#4-federated-identity">4. Federated identity</a><ul>
@@ -1930,15 +1961,35 @@ end
 <p class="admonition-title">Info</p>
 <p>To learn more about polyproto WebSockets and WebSocket Events, consult the <a href="/docs/APIs/Core/WebSockets/index.md">WebSockets documentation</a>.</p>
 </div>
+<h4 id="331-events-over-rest">3.3.1 Events over REST<a class="headerlink" href="#331-events-over-rest" title="Permanent link">&para;</a></h4>
 <p>For some implementation contexts, a constant WebSocket connection might not be wanted. A client can
-instead opt to query an API endpoint to receive updates, which would normally be sent through the WebSocket
-connection. Concrete polyproto-implementations and extensions can dictate whether this alternative
-behaviour is acceptable.</p>
+instead opt to query an API endpoint to receive events, which would normally be sent through the WebSocket
+connection. Concrete polyproto-implementations and extensions can decide whether this alternative
+behaviour is supported. </p>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p>An example of an implementation context where having a constant WebSocket might not be wanted would
+be Urban IoT devices, or devices with a limited or only periodically available internet connection. </p>
+</div>
 <p>Querying <a href="/APIs/Core/Client-Foreign%20Server%20API/#get-events">this endpoint</a> yields a JSON-Array
 containing either all events the session has missed since disconnecting from the WebSocket, or all events
-the session has missed since last querying the endpoint. Depending on how many events the session has
+the session has missed since last querying the endpoint.</p>
+<p>Depending on how many events the session has
 missed, the earliest events might be excluded from the response to limit the response bodies size. This
 behaviour should be explicitly documented in implementations or extensions of polyproto.</p>
+<p>Due to the
+intended use cases for retrieving events through REST rather than WebSockets, this endpoint is not
+a long-polling endpoint.</p>
+<p>There are three intended, main modes for retrieving events in polyproto</p>
+<ol>
+<li>Keep a constant WebSocket connection whenever possible</li>
+<li>Keep a semi-constant WebSocket connection, perhaps connecting every x minutes for a set period of
+   time</li>
+<li>Do not use WebSockets and only query the REST API</li>
+</ol>
+<p>Polling a REST endpoint is inherently inefficient and therefore should only be done with a high interval,
+ranging from a few minutes to a few days. If a client requires information more often than that,
+then a WebSocket connection should be considered.</p>
 <h2 id="4-federated-identity">4. Federated identity<a class="headerlink" href="#4-federated-identity" title="Permanent link">&para;</a></h2>
 <p>The federation of user identities allows users to engage with foreign servers as if they were their home servers.
 For instance, in polyproto-chat, a user can send direct messages to users from a different server or join the Guilds of other servers.</p>
