@@ -87,7 +87,7 @@ The definition of "client" in this context is broader, since it includes both us
 
 ### 3.3 WebSockets
 
-In polyproto, WebSockets enable real-time communication between actor or bot clients and servers, and they are employed in both Client-Home Server and Client-Foreign Server communication.
+In polyproto, WebSockets enable real-time communication between actor clients and servers, and they are employed in both Client-Home Server and Client-Foreign Server communication.
 
 WebSocket connections to polyproto servers consist of the following cycle:
 
