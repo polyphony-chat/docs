@@ -11,6 +11,7 @@ The version number specified here also applies to the API documentation.
     - [3.1 Client-home server API](#31-client-home-server-api)
     - [3.2 Client-foreign server API](#32-client-foreign-server-api)
     - [3.3 WebSockets](#33-websockets)
+      - [3.3.1 Events over REST](#331-events-over-rest)
   - [4. Federated identity](#4-federated-identity)
     - [4.1 Authentication](#41-authentication)
       - [4.1.1 Registering a new user on a polyproto home server](#411-registering-a-new-user-on-a-polyproto-home-server)
@@ -128,16 +129,40 @@ Fig. 1: Sequence diagram of a WebSocket connection to a polyproto server.
 
     To learn more about polyproto WebSockets and WebSocket Events, consult the [WebSockets documentation](/docs/APIs/Core/WebSockets/index.md).
 
+#### 3.3.1 Events over REST
+
 For some implementation contexts, a constant WebSocket connection might not be wanted. A client can
-instead opt to query an API endpoint to receive updates, which would normally be sent through the WebSocket
-connection. Concrete polyproto-implementations and extensions can dictate whether this alternative
-behaviour is acceptable.
+instead opt to query an API endpoint to receive events, which would normally be sent through the WebSocket
+connection. Concrete polyproto-implementations and extensions can decide whether this alternative
+behaviour is supported. 
+
+!!! example
+
+    An example of an implementation context where having a constant WebSocket might not be wanted would
+    be Urban IoT devices, or devices with a limited or only periodically available internet connection. 
 
 Querying [this endpoint](/APIs/Core/Client-Foreign%20Server%20API/#get-events) yields a JSON-Array
 containing either all events the session has missed since disconnecting from the WebSocket, or all events
-the session has missed since last querying the endpoint. Depending on how many events the session has
+the session has missed since last querying the endpoint.
+
+Depending on how many events the session has
 missed, the earliest events might be excluded from the response to limit the response bodies size. This
 behaviour should be explicitly documented in implementations or extensions of polyproto.
+
+Due to the
+intended use cases for retrieving events through REST rather than WebSockets, this endpoint is not
+a long-polling endpoint.
+
+There are three intended, main modes for retrieving events in polyproto
+
+1. Keep a constant WebSocket connection whenever possible
+2. Keep a semi-constant WebSocket connection, perhaps connecting every x minutes for a set period of
+   time
+3. Do not use WebSockets and only query the REST API
+
+Polling a REST endpoint is inherently inefficient and therefore should only be done with a high interval,
+ranging from a few minutes to a few days. If a client requires information more often than that,
+then a WebSocket connection should be considered.
 
 ## 4. Federated identity
 
