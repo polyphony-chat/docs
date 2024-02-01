@@ -187,16 +187,16 @@ Request the server's public identity key.
 
 `/p2core/key/user/:user_id`
 
-Request the ID-Cert or ID-Certs of a specific user. The specified user must be registered on this
-server
+Request the ID-Certs of a specific user. The specified user must be registered on this
+server.
 
 #### Request
 
 ##### Parameters
 
-| Name      | Type      | Description                                                                 |
-| --------- | --------- | --------------------------------------------------------------------------- |
-| `user_id` | Snowflake | The ID of the user whose ID-Cert(s) should be returned.                     |
+| Name      | Type                  | Description                                             |
+| --------- | --------------------- | ------------------------------------------------------- |
+| `user_id` | String, Federation ID | The ID of the user whose ID-Cert(s) should be returned. |
 
 ##### Body
 
@@ -266,9 +266,9 @@ Client-Foreign Server API endpoints which are concerned with encryption related 
 
 ##### Parameters
 
-| Name      | Type      | Description                                                                 |
-| --------- | --------- | --------------------------------------------------------------------------- |
-| `user_id` | Snowflake | The ID of the user whose KeyPackage(s) should be returned.                  |
+| Name      | Type                  | Description                                                |
+| --------- | --------------------- | ---------------------------------------------------------- |
+| `user_id` | String, Federation ID | The ID of the user whose KeyPackage(s) should be returned. |
 
 ##### Body
 
