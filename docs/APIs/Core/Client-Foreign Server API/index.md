@@ -28,7 +28,8 @@ Routes concerning authentication.
 
 `/p2core/challenge`
 
-Request a challenge string. See [the type definition](../types.md#challenge-string) or the corresponding [protocol definition chapter](/Protocol%20Specifications/core/#)
+Request a challenge string. See [the type definition](../types.md#challenge-string) or the corresponding
+[protocol definition chapter](/Protocol%20Specifications/core/#) for more information.
 
 #### Request
 
@@ -117,6 +118,8 @@ Routes concerning federated identities, such as authentication and ID-Cert manag
 
 `/p2core/key/server`
 
+Rotate the server's identity key.
+
 #### Request
 
 ##### Body
@@ -144,9 +147,11 @@ This request has no body.
 
 ---
 
-### <span class="request-h"><span class="request request-get">GET</span> Server ID-Cert</span>
+### <span class="request-h"><span class="request request-get">GET</span> Server Public Identity Key</span>
 
 `/p2core/key/server`
+
+Request the server's public identity key.
 
 #### Request
 
@@ -181,6 +186,9 @@ This request has no body.
 ### <span class="request-h"><span class="request request-get">GET</span> User ID-Cert(s)</span>
 
 `/p2core/key/user/:user_id`
+
+Request the ID-Cert or ID-Certs of a specific user. The specified user must be registered on this
+server
 
 #### Request
 
