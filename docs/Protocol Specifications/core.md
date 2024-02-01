@@ -1,5 +1,5 @@
 ---
-title: polyproto-core
+title: polyproto
 weight: 0
 ---
 
