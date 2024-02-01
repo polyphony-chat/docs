@@ -226,9 +226,11 @@ server.
 
 ---
 
-### <span class="request-h"><span class="request request-post">POST</span> Rotate session ID-Cert [:material-lock-outline:](#authorization "Authorization required")</span>
+### <span class="request-h"><span class="request request-post">POST</span> Update session ID-Cert [:material-lock-outline:](#authorization "Authorization required")</span>
 
 `/p2core/session/idcert/extern`
+
+Lets a foreign server know that the ID-Cert of this session has changed.
 
 #### Request
 
@@ -254,13 +256,16 @@ server.
 
 ## <span class="group-h">Encryption</span>
 
-Client-Foreign Server API endpoints which are concerned with encryption related tasks.
+Client-Foreign Server API endpoints concerned with encryption related tasks.
 
 ---
 
-### <span class="request-h"><span class="request request-get">GET</span> KeyPackage(s) [:material-lock-outline:](#authorization "Authorization required")</span>
+### <span class="request-h"><span class="request request-get">GET</span> KeyPackage(s) [:material-lock-outline:](#authorization "Authorization required") :material-file-question-outline:{title="This route is optional. Consult the documentation of a specific polyproto extension to check whether it exists."}</span>
 
 `/p2core/keypackage/:user_id`
+
+Request KeyPackages - initial encryption keying material - for a specific user from the server.
+The requested user must be registered on this server.
 
 #### Request
 
@@ -282,7 +287,7 @@ This request has no body.
 
     | Type                                | Description                                                                                                                                   |
     | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-    | JSON-Array of KeyPackage(s), Binary | The user's KeyPackage(s), in binary format. Each entry in the array corresponds to a different client the requested user is authenticated on. |
+    | JSON-Array of KeyPackage(s), Base64 | The user's KeyPackage(s), Base64 encoded. Each entry in the array corresponds to a different client the requested user is authenticated on. |
 
     ```json
     [...]
@@ -296,9 +301,11 @@ Routes not fitting into another category.
 
 ---
 
-### <span class="request-h"><span class="request request-get">GET</span> Events [:material-lock-outline:](#authorization "Authorization required")</span>
+### <span class="request-h"><span class="request request-get">GET</span> Events [:material-lock-outline:](#authorization "Authorization required") :material-file-question-outline:{title="This route is optional. Consult the documentation of a specific polyproto extension to check whether it exists."}</span>
 
 `/p2core/events`
+
+Fetch Gateway events via REST.
 
 #### Request
 
@@ -323,6 +330,8 @@ This request has no body.
     ##### Body
 
     This response has no body.
+
+---
 
 --8<-- "snippets/glossary.md"
 

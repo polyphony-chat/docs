@@ -168,7 +168,7 @@ Client-Home Server API endpoints concerned with encryption, such as KeyPackage m
 
 ---
 
-### <span class="request-h"><span class="request request-post">POST</span> Add KeyPackage [:material-lock-outline:](#authorization "Authorization required")</span>
+### <span class="request-h"><span class="request request-post">POST</span> Add KeyPackage [:material-lock-outline:](#authorization "Authorization required") :material-file-question-outline:{title="This route is optional. Consult the documentation of a specific polyproto extension to check whether it exists."}</span>
 
 `/p2core/keypackage/@me`
 
@@ -197,7 +197,7 @@ to the session token used in the `authorization`-Header.
 
 ---
 
-### <span class="request-h"><span class="request request-put">PUT</span> Replace Last Resort KeyPackage [:material-lock-outline:](#authorization "Authorization required")</span>
+### <span class="request-h"><span class="request request-put">PUT</span> Replace Last Resort KeyPackage [:material-lock-outline:](#authorization "Authorization required") :material-file-question-outline:{title="This route is optional. Consult the documentation of a specific polyproto extension to check whether it exists."}</span>
 
 `/p2core/keypackage_lr`
 
