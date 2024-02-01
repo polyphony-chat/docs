@@ -169,6 +169,29 @@ Identify on a foreign server and receive a session token.
 
 ---
 
+### <span class="request-h"><span class="request request-put">PUT</span> Revoke session authentication [:material-lock-outline:](#authorization "Authorization required")</span>
+
+`/p2core/session/revoke`
+
+Revoke the current session's authentication by having the server invalidate the session token.
+
+#### Request
+
+##### Body
+
+This request has no body.
+
+#### Response
+
+=== "204 No Content"
+
+    ##### Body
+
+    This response has no body.
+
+
+---
+
 ## <span class="group-h">Federated Identity</span>
 
 Routes concerning federated identities, such as authentication and ID-Cert management.
