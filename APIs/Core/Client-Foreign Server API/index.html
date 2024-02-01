@@ -1196,13 +1196,13 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#get-server-id-cert" class="md-nav__link">
+  <a href="#get-server-public-identity-key" class="md-nav__link">
     <span class="md-ellipsis">
-      GET Server ID-Cert
+      GET Server Public Identity Key
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="GET Server ID-Cert">
+    <nav class="md-nav" aria-label="GET Server Public Identity Key">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1443,7 +1443,8 @@ Routes explicitly requiring a Client-&gt;Home Server relationship are documented
 <hr />
 <h3 id="get-challenge-string"><span class="request-h"><span class="request request-get">GET</span> Challenge string</span><a class="headerlink" href="#get-challenge-string" title="Permanent link">&para;</a></h3>
 <p><code>/p2core/challenge</code></p>
-<p>Request a challenge string. See <a href="../types/#challenge-string">the type definition</a> or the corresponding <a href="/Protocol%20Specifications/core/#">protocol definition chapter</a></p>
+<p>Request a challenge string. See <a href="../types/#challenge-string">the type definition</a> or the corresponding
+<a href="/Protocol%20Specifications/core/#">protocol definition chapter</a> for more information.</p>
 <h4 id="request">Request<a class="headerlink" href="#request" title="Permanent link">&para;</a></h4>
 <h5 id="body">Body<a class="headerlink" href="#body" title="Permanent link">&para;</a></h5>
 <p>This request has no body.</p>
@@ -1549,6 +1550,7 @@ Routes explicitly requiring a Client-&gt;Home Server relationship are documented
 <hr />
 <h3 id="put-rotate-server-identity-key"><span class="request-h"><span class="request request-put">PUT</span> Rotate Server Identity Key <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a> <a href="" title="This route is only available to server administrators"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 1 9 4v6c0 5.55-3.84 10.74-9 12-5.16-1.26-9-6.45-9-12V5l9-4m0 2.18L5 6.3v4.92C5 15.54 8.25 20 12 21c3.75-1 7-5.46 7-9.78V6.3l-7-3.12M16 14v1.59c-.04.22-.22.37-.47.41H8.47c-.25-.04-.43-.19-.47-.41V14h8m1-6-1 5H8L7 8l2.67 2.67L12 8.34l2.33 2.33L17 8Z"/></svg></span></a></span><a class="headerlink" href="#put-rotate-server-identity-key" title="Permanent link">&para;</a></h3>
 <p><code>/p2core/key/server</code></p>
+<p>Rotate the server's identity key.</p>
 <h4 id="request_2">Request<a class="headerlink" href="#request_2" title="Permanent link">&para;</a></h4>
 <h5 id="body_3">Body<a class="headerlink" href="#body_3" title="Permanent link">&para;</a></h5>
 <p>This request has no body.</p>
@@ -1582,8 +1584,9 @@ Routes explicitly requiring a Client-&gt;Home Server relationship are documented
 </div>
 </div>
 <hr />
-<h3 id="get-server-id-cert"><span class="request-h"><span class="request request-get">GET</span> Server ID-Cert</span><a class="headerlink" href="#get-server-id-cert" title="Permanent link">&para;</a></h3>
+<h3 id="get-server-public-identity-key"><span class="request-h"><span class="request request-get">GET</span> Server Public Identity Key</span><a class="headerlink" href="#get-server-public-identity-key" title="Permanent link">&para;</a></h3>
 <p><code>/p2core/key/server</code></p>
+<p>Request the server's public identity key.</p>
 <h4 id="request_3">Request<a class="headerlink" href="#request_3" title="Permanent link">&para;</a></h4>
 <h5 id="body_5">Body<a class="headerlink" href="#body_5" title="Permanent link">&para;</a></h5>
 <table>
@@ -1624,6 +1627,8 @@ Routes explicitly requiring a Client-&gt;Home Server relationship are documented
 <hr />
 <h3 id="get-user-id-certs"><span class="request-h"><span class="request request-get">GET</span> User ID-Cert(s)</span><a class="headerlink" href="#get-user-id-certs" title="Permanent link">&para;</a></h3>
 <p><code>/p2core/key/user/:user_id</code></p>
+<p>Request the ID-Cert or ID-Certs of a specific user. The specified user must be registered on this
+server</p>
 <h4 id="request_4">Request<a class="headerlink" href="#request_4" title="Permanent link">&para;</a></h4>
 <h5 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h5>
 <table>
@@ -1841,7 +1846,7 @@ Routes explicitly requiring a Client-&gt;Home Server relationship are documented
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-01-28T21:58:50+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-01-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-02-01T12:47:59+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-02-01</span>
   </span>
 
     
