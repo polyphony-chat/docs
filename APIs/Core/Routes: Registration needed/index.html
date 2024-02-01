@@ -12,7 +12,7 @@
         <link rel="prev" href="../../">
       
       
-        <link rel="next" href="../Client-Foreign%20Server%20API/">
+        <link rel="next" href="../Routes%3A%20No%20registration%20needed/">
       
       
       <link rel="icon" href="../../../assets/lines.png">
@@ -685,7 +685,7 @@
               
   
   <span class="md-ellipsis">
-    Client Home Server API
+    Routes: Registration needed
   </span>
   
 
@@ -696,7 +696,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4_2_1">
             <span class="md-nav__icon md-icon"></span>
-            Client Home Server API
+            Routes: Registration needed
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -739,11 +739,11 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../Client-Foreign%20Server%20API/" class="md-nav__link ">
+            <a href="../Routes%3A%20No%20registration%20needed/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
-    Client Foreign Server API
+    Routes: No registration needed
   </span>
   
 
@@ -754,7 +754,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_2_2">
             <span class="md-nav__icon md-icon"></span>
-            Client Foreign Server API
+            Routes: No registration needed
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1008,13 +1008,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#post-create-identity" class="md-nav__link">
+  <a href="#post-authenticate-new-session" class="md-nav__link">
     <span class="md-ellipsis">
-      POST Create Identity
+      POST Authenticate new Session
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="POST Create Identity">
+    <nav class="md-nav" aria-label="POST Authenticate new Session">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1028,39 +1028,6 @@
         
           <li class="md-nav__item">
   <a href="#response" class="md-nav__link">
-    <span class="md-ellipsis">
-      Response
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#post-authenticate-new-session" class="md-nav__link">
-    <span class="md-ellipsis">
-      POST Authenticate new Session
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="POST Authenticate new Session">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#request_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Request
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#response_1" class="md-nav__link">
     <span class="md-ellipsis">
       Response
     </span>
@@ -1099,7 +1066,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#request_2" class="md-nav__link">
+  <a href="#request_1" class="md-nav__link">
     <span class="md-ellipsis">
       Request
     </span>
@@ -1108,7 +1075,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#response_2" class="md-nav__link">
+  <a href="#response_1" class="md-nav__link">
     <span class="md-ellipsis">
       Response
     </span>
@@ -1147,7 +1114,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#request_3" class="md-nav__link">
+  <a href="#request_2" class="md-nav__link">
     <span class="md-ellipsis">
       Request
     </span>
@@ -1156,7 +1123,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#response_3" class="md-nav__link">
+  <a href="#response_2" class="md-nav__link">
     <span class="md-ellipsis">
       Response
     </span>
@@ -1180,7 +1147,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#request_4" class="md-nav__link">
+  <a href="#request_3" class="md-nav__link">
     <span class="md-ellipsis">
       Request
     </span>
@@ -1189,7 +1156,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#response_4" class="md-nav__link">
+  <a href="#response_3" class="md-nav__link">
     <span class="md-ellipsis">
       Response
     </span>
@@ -1237,10 +1204,9 @@
   <h1>Client-Home Server API Routes</h1>
 
 <p>All API endpoints needed for Client-Home Server communication.
-A "Client" in this context is a user or bot client.
 This Page only includes routes which a client can request from its home server. For routes which
 can also be accessed from a foreign server, or with no authentication at all, see the
-<a href="../Client-Foreign%20Server%20API/">Client-Foreign Server API documentation</a></p>
+<a href="../Client-Foreign%20Server%20API/index.md">Client-Foreign Server API documentation</a></p>
 <div class="admonition bug">
 <p class="admonition-title">Unfinished section</p>
 <p>TODO: This section is not yet finished. It is missing descriptions for most routes, some error-code responses, etc.</p>
@@ -1253,9 +1219,9 @@ can also be accessed from a foreign server, or with no authentication at all, se
 <h2 id="authentication"><span class="group-h">Authentication</span><a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
 <p>Authentication endpoints, such as creating an identity and authenticating a client with an identity.</p>
 <hr />
-<h3 id="post-create-identity"><span class="request-h"><span class="request request-post">POST</span> Create Identity</span><a class="headerlink" href="#post-create-identity" title="Permanent link">&para;</a></h3>
-<p><code>/p2core/identity</code></p>
-<p>Creates an identity on a given server.</p>
+<h3 id="post-authenticate-new-session"><span class="request-h"><span class="request request-post">POST</span> Authenticate new Session</span><a class="headerlink" href="#post-authenticate-new-session" title="Permanent link">&para;</a></h3>
+<p><code>/p2core/session/trust</code></p>
+<p>Creates a new <code>id_cert</code> and a session token from a <code>csr</code>.</p>
 <h4 id="request">Request<a class="headerlink" href="#request" title="Permanent link">&para;</a></h4>
 <h5 id="body">Body<a class="headerlink" href="#body" title="Permanent link">&para;</a></h5>
 <table>
@@ -1268,95 +1234,9 @@ can also be accessed from a foreign server, or with no authentication at all, se
 </thead>
 <tbody>
 <tr>
-<td><code>username</code></td>
+<td><code>actor_name</code></td>
 <td>String</td>
-<td>The preferred username for this new identity.</td>
-</tr>
-<tr>
-<td><code>password</code> <span class="twemoji" title="This field is optional."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 19h3v3h-3v-3m2-17c5.35.22 7.68 5.62 4.5 9.67-.83 1-2.17 1.66-2.83 2.5C13 15 13 16 13 17h-3c0-1.67 0-3.08.67-4.08.66-1 2-1.59 2.83-2.25C15.92 8.43 15.32 5.26 12 5a3 3 0 0 0-3 3H6a6 6 0 0 1 6-6Z"/></svg></span></td>
-<td>String</td>
-<td>The password for this new identity.</td>
-</tr>
-<tr>
-<td><code>auth_payload</code> <span class="twemoji" title="This field is optional."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 19h3v3h-3v-3m2-17c5.35.22 7.68 5.62 4.5 9.67-.83 1-2.17 1.66-2.83 2.5C13 15 13 16 13 17h-3c0-1.67 0-3.08.67-4.08.66-1 2-1.59 2.83-2.25C15.92 8.43 15.32 5.26 12 5a3 3 0 0 0-3 3H6a6 6 0 0 1 6-6Z"/></svg></span> <span class="twemoji" title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 3a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2H3v2h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h2v-2H8v-5a2 2 0 0 0-2-2 2 2 0 0 0 2-2V5h2V3m6 0a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1v2h-1a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-2v-2h2v-5a2 2 0 0 1 2-2 2 2 0 0 1-2-2V5h-2V3h2Z"/></svg></span></td>
-<td>JSON-Object</td>
-<td>n. A.</td>
-</tr>
-</tbody>
-</table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;alice&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3cr3t&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">&quot;auth_payload&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">        </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;alice@example.com&quot;</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">}</span>
-</code></pre></div>
-<h4 id="response">Response<a class="headerlink" href="#response" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">201 Created</label><label for="__tabbed_1_2">409 Conflict</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<h5 id="body_1">Body<a class="headerlink" href="#body_1" title="Permanent link">&para;</a></h5>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>fid</code></td>
-<td>String</td>
-<td>The <a href="../../Glossary.md#federation-id">Federation ID</a> of the new identity.</td>
-</tr>
-<tr>
-<td><code>payload</code> <span class="twemoji" title="This field is optional."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 19h3v3h-3v-3m2-17c5.35.22 7.68 5.62 4.5 9.67-.83 1-2.17 1.66-2.83 2.5C13 15 13 16 13 17h-3c0-1.67 0-3.08.67-4.08.66-1 2-1.59 2.83-2.25C15.92 8.43 15.32 5.26 12 5a3 3 0 0 0-3 3H6a6 6 0 0 1 6-6Z"/></svg></span> <span class="twemoji" title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 3a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2H3v2h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h2v-2H8v-5a2 2 0 0 0-2-2 2 2 0 0 0 2-2V5h2V3m6 0a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1v2h-1a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-2v-2h2v-5a2 2 0 0 1 2-2 2 2 0 0 1-2-2V5h-2V3h2Z"/></svg></span></td>
-<td>JSON-Object</td>
-<td>n.A.</td>
-</tr>
-</tbody>
-</table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nt">&quot;fid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xenia@example.com&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">&quot;payload&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">        </span><span class="nt">&quot;some_account_information&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;important information&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">        </span><span class="nt">&quot;is_awesome&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">}</span>
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<p>Returned when the requested username is already taken within the namespace.</p>
-<h5 id="body_2">Body<a class="headerlink" href="#body_2" title="Permanent link">&para;</a></h5>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nt">&quot;errcode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">409</span><span class="p">,</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;P2CORE_FEDERATION_ID_TAKEN&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">}</span>
-</code></pre></div>
-</div>
-</div>
-</div>
-<hr />
-<h3 id="post-authenticate-new-session"><span class="request-h"><span class="request request-post">POST</span> Authenticate new Session</span><a class="headerlink" href="#post-authenticate-new-session" title="Permanent link">&para;</a></h3>
-<p><code>/p2core/session/trust</code></p>
-<p>Creates a new <code>id_cert</code> and a session token from a <code>csr</code>.</p>
-<h4 id="request_1">Request<a class="headerlink" href="#request_1" title="Permanent link">&para;</a></h4>
-<h5 id="body_3">Body<a class="headerlink" href="#body_3" title="Permanent link">&para;</a></h5>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>username</code></td>
-<td>String</td>
-<td>The username of the identity to authenticate.</td>
+<td>The actor name of the identity to authenticate as.</td>
 </tr>
 <tr>
 <td><code>csr</code></td>
@@ -1375,11 +1255,11 @@ can also be accessed from a foreign server, or with no authentication at all, se
 </tr>
 </tbody>
 </table>
-<h4 id="response_1">Response<a class="headerlink" href="#response_1" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">201 Created</label></div>
+<h4 id="response">Response<a class="headerlink" href="#response" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">201 Created</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<h5 id="body_4">Body<a class="headerlink" href="#body_4" title="Permanent link">&para;</a></h5>
+<h5 id="body_1">Body<a class="headerlink" href="#body_1" title="Permanent link">&para;</a></h5>
 <table>
 <thead>
 <tr>
@@ -1412,8 +1292,8 @@ can also be accessed from a foreign server, or with no authentication at all, se
 <p><code>/p2core/session/idcert</code></p>
 <p>Rotate your keys for a given ID-Cert. The <code>session_id</code> in the supplied <code>csr</code> must correspond to the
 session token used in the <code>authorization</code>-Header.</p>
-<h4 id="request_2">Request<a class="headerlink" href="#request_2" title="Permanent link">&para;</a></h4>
-<h5 id="body_5">Body<a class="headerlink" href="#body_5" title="Permanent link">&para;</a></h5>
+<h4 id="request_1">Request<a class="headerlink" href="#request_1" title="Permanent link">&para;</a></h4>
+<h5 id="body_2">Body<a class="headerlink" href="#body_2" title="Permanent link">&para;</a></h5>
 <table>
 <thead>
 <tr>
@@ -1430,16 +1310,16 @@ session token used in the <code>authorization</code>-Header.</p>
 </tr>
 </tbody>
 </table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="nt">&quot;csr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mQINBGSDs58BEADCXP1ArorBtOvGnQdAD26gsOMasyLMqnJyUp8XXCdmTx5...&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">}</span>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">&quot;csr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mQINBGSDs58BEADCXP1ArorBtOvGnQdAD26gsOMasyLMqnJyUp8XXCdmTx5...&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">}</span>
 </code></pre></div>
-<h4 id="response_2">Response<a class="headerlink" href="#response_2" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="3:1"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">201 Created</label></div>
+<h4 id="response_1">Response<a class="headerlink" href="#response_1" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">201 Created</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Contains your new ID-Cert, along with a new session token.</p>
-<h5 id="body_6">Body<a class="headerlink" href="#body_6" title="Permanent link">&para;</a></h5>
+<h5 id="body_3">Body<a class="headerlink" href="#body_3" title="Permanent link">&para;</a></h5>
 <table>
 <thead>
 <tr>
@@ -1461,10 +1341,10 @@ session token used in the <code>authorization</code>-Header.</p>
 </tr>
 </tbody>
 </table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span><span class="w"> </span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="nt">&quot;id_cert&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWS0tLS0tCk1JSUJqRENDQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYm...&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">&quot;token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Afnaopgi7BXVafjkl34ulvkc...&quot;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">}</span>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span><span class="w"> </span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nt">&quot;id_cert&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWS0tLS0tCk1JSUJqRENDQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYm...&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">&quot;token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Afnaopgi7BXVafjkl34ulvkc...&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">}</span>
 </code></pre></div>
 </div>
 </div>
@@ -1477,8 +1357,8 @@ session token used in the <code>authorization</code>-Header.</p>
 <p><code>/p2core/keypackage/@me</code></p>
 <p>Add a KeyPackage to your KeyPackage store on the server. Only adds KeyPackages to the ID-Cert corresponding
 to the session token used in the <code>authorization</code>-Header.</p>
-<h4 id="request_3">Request<a class="headerlink" href="#request_3" title="Permanent link">&para;</a></h4>
-<h5 id="body_7">Body<a class="headerlink" href="#body_7" title="Permanent link">&para;</a></h5>
+<h4 id="request_2">Request<a class="headerlink" href="#request_2" title="Permanent link">&para;</a></h4>
+<h5 id="body_4">Body<a class="headerlink" href="#body_4" title="Permanent link">&para;</a></h5>
 <table>
 <thead>
 <tr>
@@ -1489,17 +1369,17 @@ to the session token used in the <code>authorization</code>-Header.</p>
 <tbody>
 <tr>
 <td>JSON-Array of KeyPackages</td>
-<td>One or more KeyPackages to add to the available KeyPackages for this user.</td>
+<td>One or more KeyPackages to add to the available KeyPackages for this actor.</td>
 </tr>
 </tbody>
 </table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">}</span><span class="w"> </span><span class="p">]</span>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">}</span><span class="w"> </span><span class="p">]</span>
 </code></pre></div>
-<h4 id="response_3">Response<a class="headerlink" href="#response_3" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="4:1"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">201 Created</label></div>
+<h4 id="response_2">Response<a class="headerlink" href="#response_2" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:1"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">201 Created</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<h5 id="body_8">Body<a class="headerlink" href="#body_8" title="Permanent link">&para;</a></h5>
+<h5 id="body_5">Body<a class="headerlink" href="#body_5" title="Permanent link">&para;</a></h5>
 <p>This response has no body.</p>
 </div>
 </div>
@@ -1509,8 +1389,8 @@ to the session token used in the <code>authorization</code>-Header.</p>
 <p><code>/p2core/keypackage_lr</code></p>
 <p>Replace a Last Resort KeyPackage with a new one. Only manipulates Last Resort KeyPackages for the ID-Cert
 corresponding to the session token used in the <code>authorization</code>-Header.</p>
-<h4 id="request_4">Request<a class="headerlink" href="#request_4" title="Permanent link">&para;</a></h4>
-<h5 id="body_9">Body<a class="headerlink" href="#body_9" title="Permanent link">&para;</a></h5>
+<h4 id="request_3">Request<a class="headerlink" href="#request_3" title="Permanent link">&para;</a></h4>
+<h5 id="body_6">Body<a class="headerlink" href="#body_6" title="Permanent link">&para;</a></h5>
 <table>
 <thead>
 <tr>
@@ -1525,13 +1405,13 @@ corresponding to the session token used in the <code>authorization</code>-Header
 </tr>
 </tbody>
 </table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span><span class="err">...</span><span class="p">}</span>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span><span class="err">...</span><span class="p">}</span>
 </code></pre></div>
-<h4 id="response_4">Response<a class="headerlink" href="#response_4" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="5:1"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">204 No Content</label></div>
+<h4 id="response_3">Response<a class="headerlink" href="#response_3" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:1"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">204 No Content</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<h5 id="body_10">Body<a class="headerlink" href="#body_10" title="Permanent link">&para;</a></h5>
+<h5 id="body_7">Body<a class="headerlink" href="#body_7" title="Permanent link">&para;</a></h5>
 <p>This response has no body.</p>
 </div>
 </div>
@@ -1575,7 +1455,7 @@ corresponding to the session token used in the <code>authorization</code>-Header
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-02-01T15:03:42+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-02-01</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-02-01T16:02:07+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-02-01</span>
   </span>
 
     
