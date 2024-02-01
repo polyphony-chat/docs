@@ -41,10 +41,11 @@ Creates an identity on a given server.
 
 ```json
 {
-  "username": "alice",
-  "password": "s3cr3t",
-  "auth_payload": {
-    "email": "alice@example.com"
+    "username": "alice",
+    "password": "s3cr3t",
+    "auth_payload": {
+        "email": "alice@example.com"
+    }
 }
 ```
 
@@ -61,10 +62,11 @@ Creates an identity on a given server.
 
     ```json
     {
-    "fid": "xenia@example.com",
-    "payload": {
-        "some_account_information": "important information"
-    }
+        "fid": "xenia@example.com",
+        "payload": {
+            "some_account_information": "important information",
+            "is_awesome": true
+        }
     }
     ```
 
