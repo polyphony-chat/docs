@@ -4,7 +4,6 @@ weight: -1000
 ---
 
 All API endpoints needed for Client-Home Server communication.
-A "Client" in this context is a user or bot client.
 This Page only includes routes which a client can request from its home server. For routes which
 can also be accessed from a foreign server, or with no authentication at all, see the
 [Client-Foreign Server API documentation](../Client-Foreign%20Server%20API/index.md)
@@ -23,68 +22,6 @@ Authentication endpoints, such as creating an identity and authenticating a clie
 
 ---
 
-### <span class="request-h"><span class="request request-post">POST</span> Create Identity</span>
-
-`/p2core/identity`
-
-Creates an identity on a given server.
-
-#### Request
-
-##### Body
-
-| Name                                                                                                                                                                                                                           | Type        | Description                                   |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- | --------------------------------------------- |
-| `username`                                                                                                                                                                                                                     | String      | The preferred username for this new identity. |
-| `password` :material-help:{title="This field is optional."}                                                                                                                                                                    | String      | The password for this new identity.           |
-| `auth_payload` :material-help:{title="This field is optional."} :material-code-braces:{title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."} | JSON-Object | n. A.                                              |
-
-```json
-{
-    "username": "alice",
-    "password": "s3cr3t",
-    "auth_payload": {
-        "email": "alice@example.com"
-    }
-}
-```
-
-#### Response
-
-=== "201 Created"
-
-    ##### Body
-
-    | Name                                                                                                                                                                                                                       | Type        | Description                                                               |
-    | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------- |
-    | `fid`                                                                                                                                                                                                                      | String      | The [Federation ID](../../Glossary.md#federation-id) of the new identity. |
-    | `payload` :material-help:{title="This field is optional."} :material-code-braces:{title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."} | JSON-Object | n.A. |
-
-    ```json
-    {
-        "fid": "xenia@example.com",
-        "payload": {
-            "some_account_information": "important information",
-            "is_awesome": true
-        }
-    }
-    ```
-
-=== "409 Conflict"
-
-    Returned when the requested username is already taken within the namespace.
-
-    ##### Body
-
-    ```json
-    {
-        "errcode": 409,
-        "error": "P2CORE_FEDERATION_ID_TAKEN"
-    }
-    ```
-
----
-
 ### <span class="request-h"><span class="request request-post">POST</span> Authenticate new Session</span>
 
 `/p2core/session/trust`
@@ -97,7 +34,7 @@ Creates a new `id_cert` and a session token from a `csr`.
 
 | Name                                                                                                                                                                                                                            | Type           | Description                                                                                                                         |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `username`                                                                                                                                                                                                                      | String         | The username of the identity to authenticate.                                                                                       |
+| `actor_name`                                                                                                                                                                                                                      | String         | The actor name of the identity to authenticate as.                                                                                       |
 | `csr`                                                                                                                                                                                                                           | String, Base64 | A [certificate signing request (CSR)](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) |
 | `password` :material-help:{title="This field is optional."}                                                                                                                                                                     | String         | The password for this identity.                                                                                                     |
 | `auth_payload` :material-help:{title="This field is optional."} :material-code-braces:{title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."} | JSON-Object    | n. A.                                                                                                                                |
@@ -183,7 +120,7 @@ to the session token used in the `authorization`-Header.
 
 | Type                      | Description                                                                |
 | ------------------------- | -------------------------------------------------------------------------- |
-| JSON-Array of KeyPackages | One or more KeyPackages to add to the available KeyPackages for this user. |
+| JSON-Array of KeyPackages | One or more KeyPackages to add to the available KeyPackages for this actor. |
 
 ```json
 [ {...}, {...} ]

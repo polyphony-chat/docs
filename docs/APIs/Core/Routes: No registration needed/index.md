@@ -4,7 +4,6 @@ weight: -900
 ---
 
 All API endpoints needed for Client-Home Server communication.
-A "Client" in this context is a user or bot client, an authenticated user or another server.
 This Page only includes routes, for which a client does not need a "Client-Home Server relationship" with the server.
 Routes explicitly requiring a Client->Home Server relationship are documented [here](../Client-Home%20Server%20API/index.md)
 
@@ -21,6 +20,68 @@ Routes explicitly requiring a Client->Home Server relationship are documented [h
 ## <span class="group-h">Authentication</span>
 
 Routes concerning authentication.
+
+---
+
+### <span class="request-h"><span class="request request-post">POST</span> Create Identity</span>
+
+`/p2core/register`
+
+Creates an identity on a given server.
+
+#### Request
+
+##### Body
+
+| Name                                                                                                                                                                                                                           | Type        | Description                                   |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- | --------------------------------------------- |
+| `actor_name`                                                                                                                                                                                                                     | String      | The preferred name for this new identity. |
+| `password` :material-help:{title="This field is optional."}                                                                                                                                                                    | String      | The password for this new identity.           |
+| `auth_payload` :material-help:{title="This field is optional."} :material-code-braces:{title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."} | JSON-Object | n. A.                                              |
+
+```json
+{
+    "actor_name": "alice",
+    "password": "s3cr3t",
+    "auth_payload": {
+        "email": "alice@example.com"
+    }
+}
+```
+
+#### Response
+
+=== "201 Created"
+
+    ##### Body
+
+    | Name                                                                                                                                                                                                                       | Type        | Description                                                               |
+    | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------- |
+    | `fid`                                                                                                                                                                                                                      | String      | The [Federation ID](../../Glossary.md#federation-id) of the new identity. |
+    | `payload` :material-help:{title="This field is optional."} :material-code-braces:{title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."} | JSON-Object | n.A. |
+
+    ```json
+    {
+        "fid": "xenia@example.com",
+        "payload": {
+            "some_account_information": "important information",
+            "is_awesome": true
+        }
+    }
+    ```
+
+=== "409 Conflict"
+
+    Returned when the requested actor name is already taken within the namespace.
+
+    ##### Body
+
+    ```json
+    {
+        "errcode": 409,
+        "error": "P2CORE_FEDERATION_ID_TAKEN"
+    }
+    ```
 
 ---
 
@@ -183,26 +244,26 @@ Request the server's public identity key.
 
 ---
 
-### <span class="request-h"><span class="request request-get">GET</span> User ID-Cert(s)</span>
+### <span class="request-h"><span class="request request-get">GET</span> Actor ID-Cert(s)</span>
 
-`/p2core/key/user/:user_id`
+`/p2core/key/actor/:fid`
 
-Request the ID-Certs of a specific user. The specified user must be registered on this
+Request the ID-Certs of a specific actor. The specified actor must be registered on this
 server.
 
 #### Request
 
 ##### Parameters
 
-| Name      | Type                  | Description                                             |
-| --------- | --------------------- | ------------------------------------------------------- |
-| `user_id` | String, Federation ID | The ID of the user whose ID-Cert(s) should be returned. |
+| Name  | Type                  | Description                                              |
+| ----- | --------------------- | -------------------------------------------------------- |
+| `fid` | String, Federation ID | The ID of the actor whose ID-Cert(s) should be returned. |
 
 ##### Body
 
 | Name                                                         | Type   | Description                                                                                                  |
 | ------------------------------------------------------------ | ------ | ------------------------------------------------------------------------------------------------------------ |
-| `timestamp` :material-help:{title="This field is optional."} | String | UNIX-Timestamp. If specified, the server will return the ID-Cert(s) which the user had at the specified time |
+| `timestamp` :material-help:{title="This field is optional."} | String | UNIX-Timestamp. If specified, the server will return the ID-Cert(s) which the actor had at the specified time |
 
 ```json
 {
@@ -218,7 +279,7 @@ server.
 
     | Type                           | Description                                                   |
     | ------------------------------ | ------------------------------------------------------------- |
-    | JSON-Array of Strings (Base64) | The user's public identity certificate(s), encoded in Base64. |
+    | JSON-Array of Strings (Base64) | The actor's public identity certificate(s), encoded in Base64. |
 
     ```json
     [...]
@@ -262,18 +323,18 @@ Client-Foreign Server API endpoints concerned with encryption related tasks.
 
 ### <span class="request-h"><span class="request request-get">GET</span> KeyPackage(s) [:material-lock-outline:](#authorization "Authorization required") :material-file-question-outline:{title="This route is optional. Consult the documentation of a specific polyproto extension to check whether it exists."}</span>
 
-`/p2core/keypackage/:user_id`
+`/p2core/keypackage/:fid`
 
-Request KeyPackages - initial encryption keying material - for a specific user from the server.
-The requested user must be registered on this server.
+Request KeyPackages - initial encryption keying material - for a specific actor from the server.
+The requested actor must be registered on this server.
 
 #### Request
 
 ##### Parameters
 
-| Name      | Type                  | Description                                                |
-| --------- | --------------------- | ---------------------------------------------------------- |
-| `user_id` | String, Federation ID | The ID of the user whose KeyPackage(s) should be returned. |
+| Name  | Type                  | Description                                                            |
+| ----- | --------------------- | ---------------------------------------------------------------------- |
+| `fid` | String, Federation ID | The Federation ID of the actor whose KeyPackage(s) should be returned. |
 
 ##### Body
 
@@ -287,7 +348,7 @@ This request has no body.
 
     | Type                                | Description                                                                                                                                   |
     | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-    | JSON-Array of KeyPackage(s), Base64 | The user's KeyPackage(s), Base64 encoded. Each entry in the array corresponds to a different client the requested user is authenticated on. |
+    | JSON-Array of KeyPackage(s), Base64 | The actor's KeyPackage(s), Base64 encoded. Each entry in the array corresponds to a different client the requested actor is authenticated on. |
 
     ```json
     [...]
