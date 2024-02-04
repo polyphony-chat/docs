@@ -37,7 +37,7 @@ The version number specified here also applies to the API documentation.
     - [8.2 Re-signing messages](#82-re-signing-messages)
 
 
-The polyproto protocol is a home-server-based federation protocol specification intended for use in applications where actor identity is needed. polyproto focuses on federated identity, and apart from the usage of Messaging Layer Security (MLS) for encryption, does not specify any application-specific features. It is intended to be used as a base for application implementations and other protocols, such as polyproto-chat, which is a chat protocol built on top of polyproto. Any specific polyproto actor identity can be used for many applications, if the applications support polyproto. 
+The polyproto protocol is a home-server-based identity federation protocol specification intended for use in applications where actor identity is needed. polyproto focuses on federated identity, and apart from the usage of Messaging Layer Security (MLS) for encryption, does not specify any application-specific features. Instead, it is intended to be used as a base for application implementations and other protocols, such as `polyproto-chat` - a chat protocol built on top of polyproto. Through a shared "base layer", polyproto implementations are intercompatible in a way where one identity can be used across various polyproto implementations.
 
 No part of polyproto is considered less important than any other part, and all parts of polyproto are required for a polyproto implementation to be considered compliant with the polyproto specification. The only exception to this is the encryption part of polyproto, which is optional, as the necessity of encryption depends on the specific implementation.
 

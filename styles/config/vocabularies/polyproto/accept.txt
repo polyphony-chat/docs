@@ -13,3 +13,4 @@ cURL
 FIDs
 APIs
 unencrypted
+intercompatible
