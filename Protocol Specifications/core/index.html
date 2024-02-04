@@ -1974,18 +1974,25 @@ Fig. 3: Sequence diagram of a successful client authentication process.</p>
 <p>If the verification is successful, the foreign server can issue a session token to the actor.</p>
 <p><strong>Example:</strong>
 Say that Alice is on server A, and wants to authenticate on Server B, using her existing identity.</p>
-<p>Alice's client sends a request to Server B for a challenge string. Upon receiving a response, Alice signs this challenge string with their ID-Cert and sends the signature and her ID-Cert to Server B. Server B can now verify that it was actually Alice who signed the string, and not a malicious outsider. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B by using this token.</p>
+<p>Alice's client sends a request to Server B for a challenge string, telling Server B the session ID
+they are communicating from in the process. Upon receiving a response, Alice signs this challenge
+string with the correct private key. They then send the signature to Server B. Server B can now
+verify that it was actually Alice who signed the string, and not a malicious outsider. Server B does
+this by requesting Alice's ID-Cert, specifically the ID-Cert matching the session ID Alice
+identified with to Server B. If all goes well, server B will send a newly generated session token
+back to Alice's client. Alice's client can then authenticate with server B by using this token.</p>
 <p><pre class="mermaid"><code>sequenceDiagram
 
 actor a as Alice
-participant sa as Server A
 participant sb as Server B
+participant sa as Server A
 
-a-&gt;&gt;sa: Challenge string request
-sa-&gt;&gt;a: Challenge string
+a-&gt;&gt;sb: Challenge string request including current Session ID
+sb-&gt;&gt;a: Challenge string
 a-&gt;&gt;sb: Signed challenge, ID-Cert, optional payload
-sb-&gt;&gt;a: Get public key
-sa-&gt;&gt;sb: Send public key
+sb-&gt;&gt;sa: Get Server A Public Certificate
+sa-&gt;&gt;sb: Send Public Certificate
+sb-&gt;&gt;sb: Verify signature of challenge string
 sb-&gt;&gt;a: Session token, optional payload</code></pre>
 Fig. 4: Sequence diagram of a successful identity verification.</p>
 <p>In the diagram, Alice's "optional payload" is extra data that might be requested by servers. This is useful when using a single identity across various polyproto implementations, due to differing information needs. The payload is signed with the actor's private identity key.</p>
