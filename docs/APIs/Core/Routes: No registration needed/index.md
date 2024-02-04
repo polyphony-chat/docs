@@ -98,7 +98,7 @@ Request a challenge string. See [the type definition](../types.md#challenge-stri
 
 | Name       | Type   | Description                                                                |
 | ---------- | ------ | -------------------------------------------------------------------------- |
-| session_id | String | The session ID of the session for which the challenge should be generated. |
+| `session_id` | String | The session ID of the session for which the challenge should be generated. |
 
 ```json
 {
