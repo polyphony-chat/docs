@@ -8,8 +8,6 @@ The version number specified here also applies to the API documentation.
   - [1. Terminology used in this document](#1-terminology-used-in-this-document)
   - [2. Trust model](#2-trust-model)
   - [3. APIs and communication protocols](#3-apis-and-communication-protocols)
-    - [3.1 Client-home server API](#31-client-home-server-api)
-    - [3.2 Client-foreign server API](#32-client-foreign-server-api)
     - [3.3 WebSockets](#33-websockets)
       - [3.3.1 Events over REST](#331-events-over-rest)
   - [4. Federated identity](#4-federated-identity)
@@ -72,22 +70,12 @@ polyproto operates under the following trust assumptions:
 
 ## 3. APIs and communication protocols
 
-The polyproto specification defines a set of APIs, namely the Client-Home server and Client-Foreign server APIs. 
+The polyproto specification defines a set of [APIs](/APIs).
 In addition to these REST APIs, polyproto employs WebSockets for real-time communication between clients and servers.
-
-### 3.1 Client-home server API
-
-The [*Client-home server*](./docs/APIs/Core/Client-Home%20Server%20API/index.md) API of polyproto is concerned with authentication- and federation-related issues between a client and its home server.
-A client in this context is expected to be an actor.
-
-### 3.2 Client-foreign server API
-
-The [*Client-foreign server*](./docs/APIs/Core/Client-Foreign%20Server%20API/index.md) API of polyproto is used for tasks such as requesting server or actor public key(s)/ID-Certs or migrating an actors' account.
-The definition of "client" in this context is broader, since it includes both users or bots and other polyproto servers.
 
 ### 3.3 WebSockets
 
-In polyproto, WebSockets enable real-time communication between actor clients and servers, and they are employed in both Client-Home Server and Client-Foreign Server communication.
+WebSockets enable real-time communication between actor clients and servers.
 
 WebSocket connections to polyproto servers consist of the following cycle:
 
@@ -141,7 +129,7 @@ behaviour is supported.
     An example of an implementation context where having a constant WebSocket might not be wanted would
     be Urban IoT devices, or devices with a limited or only periodically available internet connection. 
 
-Querying [this endpoint](/APIs/Core/Client-Foreign%20Server%20API/#get-events) yields a JSON-Array
+Querying [this endpoint](/APIs/Core/Routes%3A No registration needed/#get-events) yields a JSON-Array
 containing either all events the session has missed since disconnecting from the WebSocket, or all events
 the session has missed since last querying the endpoint.
 
@@ -184,7 +172,7 @@ Identity certificates defined in sections [#7. Keys and signatures](#7-keys-and-
 
 #### 4.1.1 Registering a new actor on a polyproto home server
 
-Registering a new actor in the context of polyproto is done through an API route defined in the polyproto Client-Home server API documentation.
+Registering a new actor in the context of polyproto is done through an API route defined in the polyproto ["No registration needed" API](/APIs/Core/Routes%3A No registration needed/#post-create-identity) documentation.
 
 To register, the client sends the necessary information to their home server. The server verifies the data, checks username availability, and responds with HTTP 201 and the new identity's federation ID, if successful. However, a session token is not provided until the actor authenticates a client, as detailed in section [4.1.2](#412-authenticating-a-new-client-on-a-polyproto-home-server).
 
@@ -375,7 +363,7 @@ A KeyPackage is supposed to be used only once. Servers must ensure the following
 -  That the `init_key` values of all KeyPackages are unique, as the `init_key` is what makes the KeyPackage one-time use.
 -  That the contents of the `LeafNode` and the `init_key` were signed by the actor who submitted the KeyPackage.
 
-Because KeyPackages are supposed to be used only once, servers should retain multiple valid KeyPackages for each actor, alerting clients when their stock is running low. Consult the Client-Server-API for more information about how servers should request new KeyPackages from clients. Servers should delete KeyPackages when their validity lapses.
+Because KeyPackages are supposed to be used only once, servers should retain multiple valid KeyPackages for each actor, alerting clients when their stock is running low. Consult the ["Registration needed"-API](/APIs/Core/Routes%3A Registration needed) for more information about how servers should request new KeyPackages from clients. Servers should delete KeyPackages when their validity lapses.
 
 Servers only store KeyPackages for home server users, not for foreign users.
 
