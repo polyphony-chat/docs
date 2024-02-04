@@ -127,7 +127,7 @@ Implementing federation is really simple, and entirely seamless to use for end u
 
 Probably the most refreshing aspect about this new protocol is, that it is really boring. There is really
 nothing new about any given atomic aspect of polyproto. Polyproto uses well-known, tried and battle-tested
-technologies, like asymmetric encryption, public key infrastructure, public key certificates, digital signatures,
+technologies, such as asymmetric encryption, X.509-based public key infrastructure and -certificates, digital signatures,
 JSON over REST and other, already well established technologies like WebSockets.
 
 polyproto should be effortless - both for developers and for end users, who, ideally, should never have to
