@@ -421,6 +421,11 @@ The resulting ID-Cert then holds the following information:
 | The public key algorithm used to generate the client's public identity key.                  |                                                                                                 | Subject Public Key Info: Public Key Algorithm            |
 | The session ID of the client.                                                                | No two valid certificates for one session ID can exist. Session IDs have to be unique per user. | Subject Unique Identifier                                |
 
+!!! bug "TODO"
+
+    TODO:
+
+    - Add a section about the concrete structure of an X.509 ID-Cert
 
 #### 7.1.1 Necessity of ID-Certs
 
