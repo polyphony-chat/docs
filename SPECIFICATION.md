@@ -243,21 +243,28 @@ If the verification is successful, the foreign server can issue a session token 
 **Example:**
 Say that Alice is on server A, and wants to authenticate on Server B, using her existing identity.
 
-Alice's client sends a request to Server B for a challenge string. Upon receiving a response, Alice signs this challenge string with their ID-Cert and sends the signature and her ID-Cert to Server B. Server B can now verify that it was actually Alice who signed the string, and not a malicious outsider. If all goes well, server B will send a newly generated session token back to Alice's client. Alice's client can then authenticate with server B by using this token.
+Alice's client sends a request to Server B for a challenge string, telling Server B the session ID
+they are communicating from in the process. Upon receiving a response, Alice signs this challenge
+string with the correct private key. They then send the signature to Server B. Server B can now
+verify that it was actually Alice who signed the string, and not a malicious outsider. Server B does
+this by requesting Alice's ID-Cert, specifically the ID-Cert matching the session ID Alice
+identified with to Server B. If all goes well, server B will send a newly generated session token
+back to Alice's client. Alice's client can then authenticate with server B by using this token.
 
 
 ```mermaid
 sequenceDiagram
 
 actor a as Alice
-participant sa as Server A
 participant sb as Server B
+participant sa as Server A
 
-a->>sa: Challenge string request
-sa->>a: Challenge string
+a->>sb: Challenge string request including current Session ID
+sb->>a: Challenge string
 a->>sb: Signed challenge, ID-Cert, optional payload
-sb->>a: Get public key
-sa->>sb: Send public key
+sb->>sa: Get Server A Public Certificate
+sa->>sb: Send Public Certificate
+sb->>sb: Verify signature of challenge string
 sb->>a: Session token, optional payload
 ```
 Fig. 4: Sequence diagram of a successful identity verification.
