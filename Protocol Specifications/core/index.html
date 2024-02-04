@@ -571,24 +571,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#31-client-home-server-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      3.1 Client-home server API
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#32-client-foreign-server-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      3.2 Client-foreign server API
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#33-websockets" class="md-nav__link">
     <span class="md-ellipsis">
       3.3 WebSockets
@@ -1413,24 +1395,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#31-client-home-server-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      3.1 Client-home server API
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#32-client-foreign-server-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      3.2 Client-foreign server API
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#33-websockets" class="md-nav__link">
     <span class="md-ellipsis">
       3.3 WebSockets
@@ -1774,8 +1738,6 @@ The version number specified here also applies to the API documentation.</p>
 <li><a href="#1-terminology-used-in-this-document">1. Terminology used in this document</a></li>
 <li><a href="#2-trust-model">2. Trust model</a></li>
 <li><a href="#3-apis-and-communication-protocols">3. APIs and communication protocols</a><ul>
-<li><a href="#31-client-home-server-api">3.1 Client-home server API</a></li>
-<li><a href="#32-client-foreign-server-api">3.2 Client-foreign server API</a></li>
 <li><a href="#33-websockets">3.3 WebSockets</a></li>
 <li><a href="#331-events-over-rest">3.3.1 Events over REST</a></li>
 </ul>
@@ -1842,16 +1804,10 @@ The version number specified here also applies to the API documentation.</p>
 <li>Users rely on their home servers for identity key certification, without the home servers possessing the identity.</li>
 </ol>
 <h2 id="3-apis-and-communication-protocols">3. APIs and communication protocols<a class="headerlink" href="#3-apis-and-communication-protocols" title="Permanent link">&para;</a></h2>
-<p>The polyproto specification defines a set of APIs, namely the Client-Home server and Client-Foreign server APIs. 
+<p>The polyproto specification defines a set of <a href="/APIs">APIs</a>.
 In addition to these REST APIs, polyproto employs WebSockets for real-time communication between clients and servers.</p>
-<h3 id="31-client-home-server-api">3.1 Client-home server API<a class="headerlink" href="#31-client-home-server-api" title="Permanent link">&para;</a></h3>
-<p>The <a href="./docs/APIs/Core/Client-Home%20Server%20API/index.md"><em>Client-home server</em></a> API of polyproto is concerned with authentication- and federation-related issues between a client and its home server.
-A client in this context is expected to be an actor.</p>
-<h3 id="32-client-foreign-server-api">3.2 Client-foreign server API<a class="headerlink" href="#32-client-foreign-server-api" title="Permanent link">&para;</a></h3>
-<p>The <a href="./docs/APIs/Core/Client-Foreign%20Server%20API/index.md"><em>Client-foreign server</em></a> API of polyproto is used for tasks such as requesting server or actor public key(s)/ID-Certs or migrating an actors' account.
-The definition of "client" in this context is broader, since it includes both users or bots and other polyproto servers.</p>
 <h3 id="33-websockets">3.3 WebSockets<a class="headerlink" href="#33-websockets" title="Permanent link">&para;</a></h3>
-<p>In polyproto, WebSockets enable real-time communication between actor clients and servers, and they are employed in both Client-Home Server and Client-Foreign Server communication.</p>
+<p>WebSockets enable real-time communication between actor clients and servers.</p>
 <p>WebSocket connections to polyproto servers consist of the following cycle:</p>
 <pre class="mermaid"><code>sequenceDiagram
 
@@ -1897,7 +1853,7 @@ behaviour is supported. </p>
 <p>An example of an implementation context where having a constant WebSocket might not be wanted would
 be Urban IoT devices, or devices with a limited or only periodically available internet connection. </p>
 </div>
-<p>Querying <a href="/APIs/Core/Client-Foreign%20Server%20API/#get-events">this endpoint</a> yields a JSON-Array
+<p>Querying <a href="/APIs/Core/Routes%3A No registration needed/#get-events">this endpoint</a> yields a JSON-Array
 containing either all events the session has missed since disconnecting from the WebSocket, or all events
 the session has missed since last querying the endpoint.</p>
 <p>Depending on how many events the session has
@@ -1930,7 +1886,7 @@ For instance, in polyproto-chat, an actor can send direct messages to users from
 </div>
 <h3 id="41-authentication">4.1 Authentication<a class="headerlink" href="#41-authentication" title="Permanent link">&para;</a></h3>
 <h4 id="411-registering-a-new-actor-on-a-polyproto-home-server">4.1.1 Registering a new actor on a polyproto home server<a class="headerlink" href="#411-registering-a-new-actor-on-a-polyproto-home-server" title="Permanent link">&para;</a></h4>
-<p>Registering a new actor in the context of polyproto is done through an API route defined in the polyproto Client-Home server API documentation.</p>
+<p>Registering a new actor in the context of polyproto is done through an API route defined in the polyproto <a href="/APIs/Core/Routes%3A No registration needed/#post-create-identity">"No registration needed" API</a> documentation.</p>
 <p>To register, the client sends the necessary information to their home server. The server verifies the data, checks username availability, and responds with HTTP 201 and the new identity's federation ID, if successful. However, a session token is not provided until the actor authenticates a client, as detailed in section <a href="#412-authenticating-a-new-client-on-a-polyproto-home-server">4.1.2</a>.</p>
 <p><pre class="mermaid"><code>sequenceDiagram
 
@@ -2079,7 +2035,7 @@ Please read and understand the MLS specification (RFC9420) to implement polyprot
 -  That any KeyPackage is not given out to clients more than once.
 -  That the <code>init_key</code> values of all KeyPackages are unique, as the <code>init_key</code> is what makes the KeyPackage one-time use.
 -  That the contents of the <code>LeafNode</code> and the <code>init_key</code> were signed by the actor who submitted the KeyPackage.</p>
-<p>Because KeyPackages are supposed to be used only once, servers should retain multiple valid KeyPackages for each actor, alerting clients when their stock is running low. Consult the Client-Server-API for more information about how servers should request new KeyPackages from clients. Servers should delete KeyPackages when their validity lapses.</p>
+<p>Because KeyPackages are supposed to be used only once, servers should retain multiple valid KeyPackages for each actor, alerting clients when their stock is running low. Consult the <a href="/APIs/Core/Routes%3A Registration needed">"Registration needed"-API</a> for more information about how servers should request new KeyPackages from clients. Servers should delete KeyPackages when their validity lapses.</p>
 <p>Servers only store KeyPackages for home server users, not for foreign users.</p>
 <div class="admonition note">
 <p class="admonition-title">About keys</p>
@@ -2138,12 +2094,12 @@ Please read and understand the MLS specification (RFC9420) to implement polyprot
 </tr>
 <tr>
 <td>The expiry date of the certificate.</td>
-<td>Time must not be after expiry date of the home server's public key</td>
+<td>Time must not be after expiry date of the home server's root certificate</td>
 <td>Validity period: Not After</td>
 </tr>
 <tr>
 <td>Certificate validity period starting date</td>
-<td>Time must not be before the home server's public key was generated</td>
+<td>Time must not be before the home server's root certificate was generated</td>
 <td>Validity period: Not Before</td>
 </tr>
 <tr>
@@ -2176,7 +2132,7 @@ Please read and understand the MLS specification (RFC9420) to implement polyprot
 </div>
 <p>The above scenario is not possible with home server issued identity key certificates, as the malicious server cannot generate an identity key pair for Alice, which is signed by Server A.</p>
 <h3 id="72-actor-identity-keys-and-message-signing">7.2 Actor identity keys and message signing<a class="headerlink" href="#72-actor-identity-keys-and-message-signing" title="Permanent link">&para;</a></h3>
-<p>As briefly mentioned section <a href="#4-federated-identity">#4</a>, users must hold on to an identity key pair at all times. This key pair is used to represent an actor's identity and to verify message integrity, by having an actor sign all messages they send with their private identity key. The key pair is generated by the actor. An actor-generated identity key certificate signing request (CSR) is sent to the actor's home server when first connecting to the server with a new session, or when rotating keys. The key is stored in the client's local storage. Upon receiving a new identity key CSR, a home server will sign this CSR and send the resulting public key certificate to the client. This certificate is proof that the home server attests to the clients key. Read section <a href="#73-home-server-generated-certificates-for-public-client-identity-keys-id-cert">7.3</a> for more information on the certificate.</p>
+<p>As briefly mentioned section <a href="#4-federated-identity">#4</a>, users must hold on to an identity key pair at all times. This key pair is used to represent an actor's identity and to verify message integrity, by having an actor sign all messages they send with their private identity key. The key pair is generated by the actor. An actor-generated identity key certificate signing request (CSR) is sent to the actor's home server when first connecting to the server with a new session, or when rotating keys. The key is stored in the client's local storage. Upon receiving a new identity key CSR, a home server will sign this CSR and send the resulting ID-Cert to the client. This certificate is proof that the home server attests to the clients key. Read section <a href="#73-home-server-generated-certificates-for-public-client-identity-keys-id-cert">7.3</a> for more information on the certificate.</p>
 <h4 id="721-key-rotation">7.2.1 Key rotation<a class="headerlink" href="#721-key-rotation" title="Permanent link">&para;</a></h4>
 <p>A session may choose to rotate their ID-Cert at any time. This is done by generating a new identity key pair, using the new private key to generate a new CSR, and sending the new Certificate Signing Request to the home server, along with at least one new KeyPackage and a corresponding 'last resort' KeyPackage. The home server will then generate the new ID-Cert, send it to the client, and let all associated clients know that this clients' public identity key has changed. The server does this by sending a <a href="/docs/APIs/Core/WebSockets/gateway_events.md#client_key_change"><code>CLIENT_KEY_CHANGE</code></a> gateway event to those clients.</p>
 <p>For example, in the context of a chat application built with polyproto-chat, an associating relationship between two clients exists, if:</p>
@@ -2209,7 +2165,7 @@ Fig. 5: Sequence diagram depicting the process of a client using a CSR to reques
 <p>A <code>LOW_KEY_PACKAGES</code> event is only sent by servers which use MLS encryption. Server/Clients not implementing MLS encryption can safely ignore this event.</p>
 </div>
 <h4 id="722-message-verification">7.2.2 Message verification<a class="headerlink" href="#722-message-verification" title="Permanent link">&para;</a></h4>
-<p>To ensure message integrity via signing, clients and servers must verify message signatures. This involves cross-checking the message signature against the sender's ID-Cert and the senders' home server's public key, while also confirming the validity of the ID-Cert attached to the message and ensuring its public key matches the sender's.</p>
+<p>To ensure message integrity via signing, clients and servers must verify message signatures. This involves cross-checking the message signature against the sender's ID-Cert and the senders' home server's root certificate, while also confirming the validity of the ID-Cert attached to the message and ensuring its public key matches the sender's.</p>
 <p><strong>Example:</strong> Given a signed message from Alice, such as Bob would receive from Server B in <a href="#fig-3">Fig. 3</a>, Bob's client would verify the signature of the message like this:</p>
 <p><pre class="mermaid"><code>sequenceDiagram
 
@@ -2226,7 +2182,7 @@ b-&gt;&gt;b: Verify signature of Alice's message
 </code></pre>
 Fig. 6: Sequence diagram of a successful message signature verification.</p>
 <p>Bob's client should now cache Server A's public identity key and Alice's ID-Cert, to avoid having to request them again.
-The cache stays valid until the Actor ID-Cert and Server public key change or expire.</p>
+The cache stays valid until the Actor ID-Cert and Server root certificate change or expire.</p>
 <p>If the verification fails, Bob's client should try to re-request the key from Server B first. Should the verification fail again, Bob's client can try to request Alice's public identity key and ID-Cert from Server A (Alice's home server). The signature verification process should then be re-tried. Should the verification still not succeed, the message should be treated with extreme caution.</p>
 <div class="admonition question">
 <p class="admonition-title">Why does Bob's client not request Alice's public identity key from Server A?</p>
@@ -2251,7 +2207,7 @@ The cache stays valid until the Actor ID-Cert and Server public key change or ex
 </ul>
 <h4 id="742-home-server-operation-and-design">7.4.2 Home server operation and design<a class="headerlink" href="#742-home-server-operation-and-design" title="Permanent link">&para;</a></h4>
 <ul>
-<li>Use a caching layer for your home server to handle the potentially large amount of requests for public key certificates without putting unnecessary strain on the database.</li>
+<li>Use a caching layer for your home server to handle the potentially large amount of requests for ID-Certs without putting unnecessary strain on the database.</li>
 </ul>
 <h2 id="8-account-migration">8. Account migration<a class="headerlink" href="#8-account-migration" title="Permanent link">&para;</a></h2>
 <p>Account migration allows users to move their account and associated data to another identity.
@@ -2316,7 +2272,7 @@ regarding the old account to the new server, which makes the process more seamle
 users. The "non-cooperative homeserver migration method" is only a last resort.</p>
 </div>
 <h3 id="82-re-signing-messages">8.2 Re-signing messages<a class="headerlink" href="#82-re-signing-messages" title="Permanent link">&para;</a></h3>
-<p>Transferring message ownership from an old to a new account, known as re-signing messages, necessitates coordination between the two accounts, initiated by the old account. To start, the old account sends an API request containing the new account's federation ID to the server where messages should be re-signed. The server responds with all public keys used for signing the old account's messages, along with one challenge string. The old account will then need to prove that it is in possession of the private keys that were used to sign the messages. This is done by signing a challenge string with the private keys. If the server verifies the challenge, it authorizes the new account to re-sign the old account's messages signed with the verified key. Instead of overwriting the message, a new message variant with the new signature is created.</p>
+<p>Transferring message ownership from an old to a new account, known as re-signing messages, necessitates coordination between the two accounts, initiated by the old account. To start, the old account sends an API request containing the new account's federation ID to the server where messages should be re-signed. The server responds with all ID-Certs used for signing the old account's messages, along with one challenge string. The old account will then need to prove that it is in possession of the private keys that were used to sign the messages. This is done by signing a challenge string with the private keys. If the server verifies the challenge, it authorizes the new account to re-sign the old account's messages signed with the verified key. Instead of overwriting the message, a new message variant with the new signature is created.</p>
 <p><pre class="mermaid"><code>sequenceDiagram
 
 actor aa as Alice A
