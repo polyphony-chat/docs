@@ -2039,7 +2039,8 @@ Please read and understand the MLS specification (RFC9420) to implement polyprot
 <p>Servers only store KeyPackages for home server users, not for foreign users.</p>
 <div class="admonition note">
 <p class="admonition-title">About keys</p>
-<p>It is recommended that keys are to be generated using the <code>EdDSA</code> signature scheme, however, other signature schemes may be used as well.</p>
+<p>It is recommended that keys are generated using the <code>EdDSA</code> signature scheme, however, other signature schemes may be used as well.
+Consider, that intercompatibility can only be guaranteed if all communicating parties have an overlapping set of supported signature schemes.</p>
 </div>
 <h4 id="611-last-resort-keypackages">6.1.1 Last resort KeyPackages<a class="headerlink" href="#611-last-resort-keypackages" title="Permanent link">&para;</a></h4>
 <p>A "last resort" KeyPackage, which, contrasting regular KeyPackages, is reusable, is issued when a server runs out of regular KeyPackages for an actor. This is to prevent <code>DoS</code> attacks, where malicious clients deplete all KeyPackages for a given actor, blocking that actor's inclusion into encrypted groups or guild channels.</p>
