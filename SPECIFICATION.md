@@ -369,7 +369,8 @@ Servers only store KeyPackages for home server users, not for foreign users.
 
 !!! note "About keys"
 
-    It is recommended that keys are to be generated using the `EdDSA` signature scheme, however, other signature schemes may be used as well.
+    It is recommended that keys are generated using the `EdDSA` signature scheme, however, other signature schemes may be used as well.
+    Consider, that intercompatibility can only be guaranteed if all communicating parties have an overlapping set of supported signature schemes.
 
 #### 6.1.1 Last resort KeyPackages
 

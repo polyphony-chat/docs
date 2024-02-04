@@ -182,6 +182,7 @@ Identify on a foreign server and receive a session token.
 `/p2core/session/revoke`
 
 Revoke the current session's authentication by having the server invalidate the session token.
+Can also be seen as a "logout" operation.
 
 #### Request
 
