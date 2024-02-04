@@ -96,7 +96,15 @@ Request a challenge string. See [the type definition](../types.md#challenge-stri
 
 ##### Body
 
-This request has no body.
+| Name       | Type   | Description                                                                |
+| ---------- | ------ | -------------------------------------------------------------------------- |
+| session_id | String | The session ID of the session for which the challenge should be generated. |
+
+```json
+{
+    "session_id": "G5a6hjv2ijcnr3ghjHV74jahUH675678rbnFGNHJV..."
+}
+```
 
 #### Response
 
@@ -131,7 +139,7 @@ Identify on a foreign server and receive a session token.
 | Name                                                                                                                                                                                                                            | Type           | Description                                                                                                                                             |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `challenge`                                                                                                                                                                                                                     | String         | The [completed challenge string](../types.md#completed-challenge-string), signed with the client's private identity key.                                |
-| `id_cert`                                                                                                                                                                                                                       | String, Base64 | The client's [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert), encoded in Base64. |
+| `id_cert`                                                                                                                                                                                                                       | String, PEM, Base64 | The client's [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert), encoded in PEM & Base64. |
 | `auth_payload` :material-help:{title="This field is optional."} :material-code-braces:{title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."} | JSON-Object    | n. A.                                                                                                                                                    |
 
 ```json
@@ -259,7 +267,7 @@ Request the server's public identity key.
 
     | Type             | Description                                                    |
     | ---------------- | -------------------------------------------------------------- |
-    | String, Base64  | The servers' public [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert).     |
+    | String, PEM, Base64  | The servers' public [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert).     |
 
     ```json
     [...]
@@ -284,13 +292,15 @@ server.
 
 ##### Body
 
-| Name                                                         | Type   | Description                                                                                                  |
-| ------------------------------------------------------------ | ------ | ------------------------------------------------------------------------------------------------------------ |
-| `timestamp` :material-help:{title="This field is optional."} | String | UNIX-Timestamp. If specified, the server will return the ID-Cert(s) which the actor had at the specified time |
+| Name                                                          | Type   | Description                                                                                                   |
+| ------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------- |
+| `timestamp` :material-help:{title="This field is optional."}  | String | UNIX-Timestamp. If specified, the server will return the ID-Cert(s) which the actor had at the specified time |
+| `session_id` :material-help:{title="This field is optional."} | String | Request the ID-Cert for a specific session ID.                                                                |
 
 ```json
 {
-    "timestamp": "1620000000"
+    "timestamp": "1620000000",
+    "session_id": "593b30d8-0c98-4393-9331-988281b46782"
 }
 ```
 
@@ -300,9 +310,9 @@ server.
 
     ##### Body
 
-    | Type                           | Description                                                   |
-    | ------------------------------ | ------------------------------------------------------------- |
-    | JSON-Array of Strings (Base64) | The actor's public identity certificate(s), encoded in Base64. |
+    | Type                                | Description                                                          |
+    | ----------------------------------- | -------------------------------------------------------------------- |
+    | JSON-Array of Strings (PEM, Base64) | The actor's public identity certificate(s), encoded in PEM (Base64). |
 
     ```json
     [...]
@@ -320,9 +330,9 @@ Lets a foreign server know that the ID-Cert of this session has changed.
 
 ##### Body
 
-| Type           | Description                                                                                                                                         |
-| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| String, Base64 | The new [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) for this session ID. |
+| Type                | Description                                                                                                                                         |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| String, PEM, Base64 | The new [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) for this session ID. |
 
 ```json
 [...]
