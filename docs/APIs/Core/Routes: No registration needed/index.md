@@ -33,6 +33,8 @@ Creates an identity on a given server.
 
 ##### Body
 
+TODO: Re-evaluate if `auth_payload` is needed here.
+
 | Name                                                                                                                                                                                                                           | Type        | Description                                   |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- | --------------------------------------------- |
 | `actor_name`                                                                                                                                                                                                                     | String      | The preferred name for this new identity. |
