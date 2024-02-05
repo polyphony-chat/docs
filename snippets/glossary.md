@@ -12,4 +12,5 @@
 - **Instance** - A server hosting polyproto compliant software for clients.
 - **polyproto-chat** - The chat-API used by Polyphony. An extension of the polyproto protocol, defining the routes and capabilities of the chat-API used by Polyphony.
 - **polyproto** - The core federation protocol and APIs of polyproto, enabling identification and authorization on 'foreign' servers. It is independent of the chat-API used.
+- **Root Certificate** - A certificate used to sign other certificates, establishing a chain of trust. In polyproto, only home servers have root certificates.
 - **Session** - A specific period of interaction between a client and a server, typically identified and authenticated by the use of an identity key. The session begins when the client connects to the server and ends when the client disconnects. During a session, the client can interact with the server (e.g., send messages, make requests) under the identity associated with the session.
