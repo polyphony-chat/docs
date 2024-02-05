@@ -120,8 +120,8 @@ for any purpose.
 
 ## Federation
 
-Federation in polyproto means using one identity/client to interact with multiple servers at once.
-Implementing federation is really simple, and entirely seamless to use for end users.
+Federation in polyproto means using one identity or client to interact with multiple servers or even
+services at once. Implementing federation is straightforward, and entirely seamless to use for end users.
 
 ## Technology
 
