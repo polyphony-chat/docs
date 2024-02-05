@@ -761,9 +761,18 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#711-necessity-of-id-certs" class="md-nav__link">
+  <a href="#711-structure-of-an-id-cert" class="md-nav__link">
     <span class="md-ellipsis">
-      7.1.1 Necessity of ID-Certs
+      7.1.1 Structure of an ID-Cert
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#712-necessity-of-id-certs" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1.2 Necessity of ID-Certs
     </span>
   </a>
   
@@ -1585,9 +1594,18 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#711-necessity-of-id-certs" class="md-nav__link">
+  <a href="#711-structure-of-an-id-cert" class="md-nav__link">
     <span class="md-ellipsis">
-      7.1.1 Necessity of ID-Certs
+      7.1.1 Structure of an ID-Cert
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#712-necessity-of-id-certs" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1.2 Necessity of ID-Certs
     </span>
   </a>
   
@@ -1761,7 +1779,12 @@ The version number specified here also applies to the API documentation.</p>
 </li>
 <li><a href="#7-keys-and-signatures">7. Keys and signatures</a><ul>
 <li><a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">7.1 Home server signed certificates for public client identity keys (ID-Cert)</a></li>
-<li><a href="#711-necessity-of-id-certs">7.1.1 Necessity of ID-Certs</a></li>
+<li><a href="#711-structure-of-an-id-cert">7.1.1 Structure of an ID-Cert</a><ul>
+<li><a href="#7111-distinguished-names-dns">7.1.1.1 Distinguished Names (<code>DNs</code>)</a></li>
+<li><a href="#7112-extensions-and-constraints">7.1.1.2 Extensions and constraints</a></li>
+</ul>
+</li>
+<li><a href="#712-necessity-of-id-certs">7.1.2 Necessity of ID-Certs</a></li>
 <li><a href="#72-actor-identity-keys-and-message-signing">7.2 Actor identity keys and message signing</a></li>
 <li><a href="#721-key-rotation">7.2.1 Key rotation</a></li>
 <li><a href="#722-message-verification">7.2.2 Message verification</a></li>
@@ -2054,7 +2077,9 @@ Consider, that intercompatibility can only be guaranteed if all communicating pa
 <h3 id="71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">7.1 Home server signed certificates for public client identity keys (ID-Cert)<a class="headerlink" href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert" title="Permanent link">&para;</a></h3>
 <p>The ID-Cert, a <a href="https://en.wikipedia.org/wiki/X.509">X.509</a> certificate, validates a public actor identity key. It is an actor-generated CSR (<a href="https://en.wikipedia.org/wiki/Certificate_signing_request">Certificate Signing Request</a>), signed by a home server, encompassing actor identity information and the client's public identity key. Clients can get an ID-Cert in return for a valid and well-formed CSR.</p>
 <p>All ID-Certs are valid X.509 certificates. However, not all X.509 certificates are valid ID-Certs.</p>
-<p>ID-Certs form the basis of message signing, verification and encryption in polyproto. They are used to verify the identity of a client, and to verify the integrity of messages sent by a client.</p>
+<p>ID-Certs form the basis of message signing and verification in polyproto.
+They are used to verify the identity of a client, and to verify the integrity of messages sent by a
+client.</p>
 <p>A CSR includes the following information, according to the X.509 standard:</p>
 <ul>
 <li>The public identity key of the client.</li>
@@ -2063,6 +2088,12 @@ Consider, that intercompatibility can only be guaranteed if all communicating pa
 <li>Optionally, an expiry date for the certificate. This expiry date must be less than or equal to the expiry date of the home servers' public identity key certificate.</li>
 </ul>
 <p>When signing a CSR, the home server must verify the correctness of all claims presented in the CSR.</p>
+<div class="admonition warning">
+<p class="admonition-title">Important</p>
+<p>All entities receiving an ID-Cert must inspect the certificate for correctness and validity. 
+This includes checking the signature, the certificate's validity period, the certificate's issuer
+and <strong>all</strong> other claims presented in the certificate.</p>
+</div>
 <p>The resulting ID-Cert then holds the following information:</p>
 <table>
 <thead>
@@ -2075,8 +2106,13 @@ Consider, that intercompatibility can only be guaranteed if all communicating pa
 <tbody>
 <tr>
 <td>The home servers' fully qualified domain name.</td>
-<td></td>
+<td><a href="#7111-distinguished-names-dns">Distinguished Name</a></td>
 <td>Issuer Name</td>
+</tr>
+<tr>
+<td>The federation ID of the actor.</td>
+<td><a href="#7111-distinguished-names-dns">Distinguished Name</a>, Must be unique across all actors on the home server.</td>
+<td>Subject Name</td>
 </tr>
 <tr>
 <td>A unique identifier for the certificate.</td>
@@ -2123,16 +2159,44 @@ Consider, that intercompatibility can only be guaranteed if all communicating pa
 <td>No two valid certificates for one session ID can exist. Session IDs have to be unique per user.</td>
 <td>Subject Unique Identifier</td>
 </tr>
+<tr>
+<td>Extensions</td>
+<td></td>
+<td>Extensions</td>
+</tr>
 </tbody>
 </table>
 <div class="admonition bug">
 <p class="admonition-title">TODO</p>
 <p>TODO:</p>
 <ul>
-<li>Add a section about the concrete structure of an X.509 ID-Cert</li>
+<li>Add section about cRLs (Certificate Revocation Lists)</li>
 </ul>
 </div>
-<h4 id="711-necessity-of-id-certs">7.1.1 Necessity of ID-Certs<a class="headerlink" href="#711-necessity-of-id-certs" title="Permanent link">&para;</a></h4>
+<h4 id="711-structure-of-an-id-cert">7.1.1 Structure of an ID-Cert<a class="headerlink" href="#711-structure-of-an-id-cert" title="Permanent link">&para;</a></h4>
+<p>The ID-Cert is a valid X.509 certificate, and as such, it has a specific structure. The structure of
+an X.509 certificate is defined in <a href="https://tools.ietf.org/html/rfc5280">RFC5280</a>.
+ID-Certs encompass a subset of the structure of an X.509 certificate.</p>
+<h5 id="7111-distinguished-names-dns">7.1.1.1 Distinguished Names (<code>DNs</code>)<a class="headerlink" href="#7111-distinguished-names-dns" title="Permanent link">&para;</a></h5>
+<p>The Distinguished Names (<code>DNs</code>), according to the <a href="https://en.wikipedia.org/wiki/LDAP_Data_Interchange_Format">LDAP Data Interchange Format (LDIF)</a>. The <code>DN</code> is a sequence of relative distinguished names (<code>RDNs</code>).</p>
+<p>The distinguished name must be unique for each certificate issued by a home server. The <code>DN</code> of an ID-Cert
+must include the following fields:</p>
+<div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>dn: cn=&lt;actor or home server name&gt;, dc=&lt;home server subdomain, if any&gt;, dc=&lt;home server domain&gt;, dc=&lt;home server tld&gt;
+</code></pre></div>
+<p>If the home server does not have a subdomain, the <code>dc</code> field for the subdomain should be omitted.</p>
+<p>Optionally, the <code>DN</code> can include an <code>ou</code> field, representing the organizational unit of the actor.</p>
+<h5 id="7112-extensions-and-constraints">7.1.1.2 Extensions and constraints<a class="headerlink" href="#7112-extensions-and-constraints" title="Permanent link">&para;</a></h5>
+<p>The following constraints must be met by ID-Certs:</p>
+<ul>
+<li>If the ID-Cert is a root certificate</li>
+<li>It must have the <code>CA</code> flag set to <code>true</code>. The path length constraint must be set to <code>0</code>.</li>
+<li>It must have the <code>keyCertSign</code> and <code>cRLSign</code> key usage flags set to <code>true</code>.</li>
+<li>If the ID-Cert is an actor certificate</li>
+<li>It must have the <code>CA</code> flag set to <code>false</code>.</li>
+<li>It must have the <code>keyCertSign</code> and <code>cRLSign</code> key usage flags set to <code>false</code>.</li>
+<li>It must have the <code>digitalSignature</code> key usage flag set to <code>true</code>.</li>
+</ul>
+<h4 id="712-necessity-of-id-certs">7.1.2 Necessity of ID-Certs<a class="headerlink" href="#712-necessity-of-id-certs" title="Permanent link">&para;</a></h4>
 <p>The addition of a certificate might seem ubiquitous, but it is necessary to prevent a malicious foreign server from abusing public identity key caching to impersonate an actor. Consider the following example which employs foreign server public identity key caching, but no home server issued identity key certificates:</p>
 <div class="admonition example">
 <p class="admonition-title">Potential abuse scenario</p>
@@ -2140,7 +2204,7 @@ Consider, that intercompatibility can only be guaranteed if all communicating pa
 </div>
 <p>The above scenario is not possible with home server issued identity key certificates, as the malicious server cannot generate an identity key pair for Alice, which is signed by Server A.</p>
 <h3 id="72-actor-identity-keys-and-message-signing">7.2 Actor identity keys and message signing<a class="headerlink" href="#72-actor-identity-keys-and-message-signing" title="Permanent link">&para;</a></h3>
-<p>As briefly mentioned section <a href="#4-federated-identity">#4</a>, users must hold on to an identity key pair at all times. This key pair is used to represent an actor's identity and to verify message integrity, by having an actor sign all messages they send with their private identity key. The key pair is generated by the actor. An actor-generated identity key certificate signing request (CSR) is sent to the actor's home server when first connecting to the server with a new session, or when rotating keys. The key is stored in the client's local storage. Upon receiving a new identity key CSR, a home server will sign this CSR and send the resulting ID-Cert to the client. This certificate is proof that the home server attests to the clients key. Read section <a href="#73-home-server-generated-certificates-for-public-client-identity-keys-id-cert">7.3</a> for more information on the certificate.</p>
+<p>As briefly mentioned section <a href="#4-federated-identity">#4</a>, users must hold on to an identity key pair at all times. This key pair is used to represent an actor's identity and to verify message integrity, by having an actor sign all messages they send with their private identity key. The key pair is generated by the actor. An actor-generated identity key certificate signing request (CSR) is sent to the actor's home server when first connecting to the server with a new session, or when rotating keys. The key is stored in the client's local storage. Upon receiving a new identity key CSR, a home server will sign this CSR and send the resulting ID-Cert to the client. This certificate is proof that the home server attests to the clients key. Read <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">section 7.1</a> for more information on the certificate.</p>
 <h4 id="721-key-rotation">7.2.1 Key rotation<a class="headerlink" href="#721-key-rotation" title="Permanent link">&para;</a></h4>
 <p>A session may choose to rotate their ID-Cert at any time. This is done by generating a new identity key pair, using the new private key to generate a new CSR, and sending the new Certificate Signing Request to the home server, along with at least one new KeyPackage and a corresponding 'last resort' KeyPackage. The home server will then generate the new ID-Cert, send it to the client, and let all associated clients know that this clients' public identity key has changed. The server does this by sending a <a href="/docs/APIs/Core/WebSockets/gateway_events.md#client_key_change"><code>CLIENT_KEY_CHANGE</code></a> gateway event to those clients.</p>
 <p>For example, in the context of a chat application built with polyproto-chat, an associating relationship between two clients exists, if:</p>
@@ -2312,6 +2376,7 @@ Fig. 9: Sequence diagram depicting the re-signing procedure.</p>
 <li><strong>Instance</strong> - A server hosting polyproto compliant software for clients.</li>
 <li><strong>polyproto-chat</strong> - The chat-API used by Polyphony. An extension of the polyproto protocol, defining the routes and capabilities of the chat-API used by Polyphony.</li>
 <li><strong>polyproto</strong> - The core federation protocol and APIs of polyproto, enabling identification and authorization on 'foreign' servers. It is independent of the chat-API used.</li>
+<li><strong>Root Certificate</strong> - A certificate used to sign other certificates, establishing a chain of trust. In polyproto, only home servers have root certificates.</li>
 <li><strong>Session</strong> - A specific period of interaction between a client and a server, typically identified and authenticated by the use of an identity key. The session begins when the client connects to the server and ends when the client disconnects. During a session, the client can interact with the server (e.g., send messages, make requests) under the identity associated with the session.</li>
 </ul>
 <p><strong>The below creation- and update-times are not accurate. This is only an issue on this page. Please have a look at the <a href="https://github.com/polyphony-chat/polyproto/commits/main/SPECIFICATION.md">commit history</a> to view when this document was last updated.</strong></p>
