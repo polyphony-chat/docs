@@ -30,7 +30,7 @@ The version number specified here also applies to the API documentation.
         - [7.1.1.2 Extensions and constraints](#7112-extensions-and-constraints)
       - [7.1.2 Necessity of ID-Certs](#712-necessity-of-id-certs)
       - [7.1.3 Key rotation](#713-key-rotation)
-        - [7.1.3.1 A note about CRLs (Certificate Revocation Lists)](#7131-a-note-about-crls-certificate-revocation-lists)
+        - [7.1.3.1 A note about CRLs (Certificate revocation lists)](#7131-a-note-about-crls-certificate-revocation-lists)
     - [7.2 Actor identity keys and message signing](#72-actor-identity-keys-and-message-signing)
       - [7.2.2 Message verification](#722-message-verification)
     - [7.3 Best practices](#73-best-practices)
@@ -532,11 +532,25 @@ A server identity key's lifetime might come to an early or unexpected end, perha
 
     A `LOW_KEY_PACKAGES` event is only sent by servers which use MLS encryption. Server/Clients not implementing MLS encryption can safely ignore this event.
 
-##### 7.1.3.1 A note about CRLs (Certificate Revocation Lists)
+##### 7.1.3.1 A note about CRLs (Certificate revocation lists)
 
-TODO
+It is common for systems relying on X.509 certificates for user authentication to use Certificate
+Revocation Lists (CRLs) to keep track of which certificates are no longer valid. This is done to
+prevent a user from using a certificate that has been revoked.
 
-It is common for systems relying on X.509 certificates for user authentication to use Certificate Revocation Lists (CRLs) to keep track of which certificates are no longer valid. This is done to prevent a user from using a certificate that has been revoked. However, in the context of polyproto, CRLs are not used. This is because the home server is the only entity that can issue ID-Certs, and the home server is the only entity that can verify the validity of an ID-Cert. This means that the home server can simply refuse to issue a new ID-Cert to a client if the client's old ID-Cert is no longer valid. This is a much simpler and more efficient way of handling the revocation of ID-Certs.
+In the context of polyproto, CRLs are not used.
+CRLs are difficult to implement well, often requiring many resources to keep up to date, and
+are also not always reliable. OCSP (Online Certificate Status Protocol) is a more modern alternative,
+which is more reliable and easier to implement. Still, it potentially requires many resources to
+keep up with demand, while also introducing a more immediate single point of failure, along with potential
+privacy concern.
+
+polyproto inherently mitigates some of the possible misuse of a revoked certificate, as the validity
+of a certificate is usually checked by many parties. Especially, if the revocation process is
+initiated by the actor themselves, the actor already lets all servers they are connected to know that
+the certificate in question is no longer valid.
+
+Extensions to the protocol are free to implement CRLs or OCSP, should they want to do so.
 
 ### 7.2 Actor identity keys and message signing
 
@@ -565,8 +579,8 @@ b->>b: Verify signature of Alice's message
 ```
 Fig. 6: Sequence diagram of a successful message signature verification.
 
-Bob's client should now cache Server A's public identity key and Alice's ID-Cert, to avoid having to request them again.
-The cache stays valid until the Actor ID-Cert and Server root certificate change or expire.
+Bob's client and Server B should now cache Server A's public identity key and Alice's ID-Cert,
+to avoid having to request them again.
 
 If the verification fails, Bob's client should try to re-request the key from Server B first. Should the verification fail again, Bob's client can try to request Alice's public identity key and ID-Cert from Server A (Alice's home server). The signature verification process should then be re-tried. Should the verification still not succeed, the message should be treated with extreme caution.
 
@@ -594,7 +608,8 @@ If the verification fails, Bob's client should try to re-request the key from Se
 
 #### 7.3.2 Home server operation and design
 
-- Use a caching layer for your home server to handle the potentially large amount of requests for ID-Certs without putting unnecessary strain on the database.
+- Use a caching layer for your home server to handle the potentially large amount of requests for
+  ID-Certs without putting unnecessary strain on the database.
 
 ## 8. Account migration
 
