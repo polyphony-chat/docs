@@ -9,28 +9,26 @@
       
       
       
-        <link rel="prev" href="../types/">
+        <link rel="prev" href="../../../../2023/11/23/porting-chorus-to-webassembly--client-update/">
       
       
-        <link rel="next" href="../rate-limits/">
       
+        <link rel="alternate" type="application/rss+xml" title="RSS feed" href="../../../../../feed_rss_created.xml">
+        <link rel="alternate" type="application/rss+xml" title="RSS feed of updated content" href="../../../../../feed_rss_updated.xml">
       
-        <link rel="alternate" type="application/rss+xml" title="RSS feed" href="../../../feed_rss_created.xml">
-        <link rel="alternate" type="application/rss+xml" title="RSS feed of updated content" href="../../../feed_rss_updated.xml">
-      
-      <link rel="icon" href="../../../assets/lines.png">
+      <link rel="icon" href="../../../../../assets/lines.png">
       <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.3">
     
     
       
-        <title>Errors - Polyphony</title>
+        <title>Account migration in polyproto - Polyphony</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.50c56a3b.min.css">
+      <link rel="stylesheet" href="../../../../../assets/stylesheets/main.50c56a3b.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../../../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -44,16 +42,16 @@
         
         
         
-        <link rel="stylesheet" href="../../../assets/external/fonts.googleapis.com/css.49ea35f2.css">
+        <link rel="stylesheet" href="../../../../../assets/external/fonts.googleapis.com/css.49ea35f2.css">
         <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
     
-      <link rel="stylesheet" href="../../../css/timeago.css">
+      <link rel="stylesheet" href="../../../../../css/timeago.css">
     
-      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../../../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -79,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#errors" class="md-skip">
+        <a href="#account-migration-in-polyproto" class="md-skip">
           Skip to content
         </a>
       
@@ -95,9 +93,9 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="Polyphony" class="md-header__button md-logo" aria-label="Polyphony" data-md-component="logo">
+    <a href="../../../../.." title="Polyphony" class="md-header__button md-logo" aria-label="Polyphony" data-md-component="logo">
       
-  <img src="../../../assets/lines.png" alt="logo">
+  <img src="../../../../../assets/lines.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -114,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Errors
+              Account migration in polyproto
             
           </span>
         </div>
@@ -227,7 +225,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../.." class="md-tabs__link">
+      <a href="../../../../.." class="md-tabs__link">
         
   
     
@@ -242,11 +240,13 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../../blog/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../../" class="md-tabs__link">
           
   
     
@@ -266,7 +266,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../Overviews/core/" class="md-tabs__link">
+        <a href="../../../../../Overviews/core/" class="md-tabs__link">
           
   
     
@@ -286,7 +286,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../Protocol%20Specifications/core/" class="md-tabs__link">
+        <a href="../../../../../Protocol%20Specifications/core/" class="md-tabs__link">
           
   
     
@@ -302,13 +302,11 @@
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../../../../APIs/" class="md-tabs__link">
           
   
     
@@ -338,7 +336,9 @@
           
             
               
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -349,9 +349,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="Polyphony" class="md-nav__button md-logo" aria-label="Polyphony" data-md-component="logo">
+    <a href="../../../../.." title="Polyphony" class="md-nav__button md-logo" aria-label="Polyphony" data-md-component="logo">
       
-  <img src="../../../assets/lines.png" alt="logo">
+  <img src="../../../../../assets/lines.png" alt="logo">
 
     </a>
     Polyphony
@@ -378,7 +378,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href="../../../../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -395,6 +395,8 @@
       
   
   
+    
+  
   
   
     
@@ -415,19 +417,17 @@
       
       
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../blog/" class="md-nav__link ">
+            <a href="../../../../" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -444,7 +444,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Blog
@@ -507,7 +507,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../blog/archive/2024/" class="md-nav__link">
+      <a href="../../../../archive/2024/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -530,7 +530,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../blog/archive/2023/" class="md-nav__link">
+      <a href="../../../../archive/2023/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -608,7 +608,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../blog/category/chorus/" class="md-nav__link">
+      <a href="../../../../category/chorus/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -631,7 +631,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../blog/category/polyphony/" class="md-nav__link">
+      <a href="../../../../category/polyphony/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -654,7 +654,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../blog/category/polyproto/" class="md-nav__link">
+      <a href="../../../../category/polyproto/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -736,7 +736,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../Overviews/core/" class="md-nav__link">
+      <a href="../../../../../Overviews/core/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -812,7 +812,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../Protocol%20Specifications/core/" class="md-nav__link">
+      <a href="../../../../../Protocol%20Specifications/core/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -833,7 +833,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../Protocol%20Specifications/chat/" class="md-nav__link">
+      <a href="../../../../../Protocol%20Specifications/chat/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -858,8 +858,6 @@
       
   
   
-    
-  
   
   
     
@@ -878,17 +876,19 @@
       
       
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../" class="md-nav__link ">
+            <a href="../../../../../APIs/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -905,7 +905,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             APIs
@@ -918,10 +918,8 @@
                 
   
   
-    
   
   
-  
     
     
       
@@ -941,12 +939,14 @@
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
         
           
           <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
@@ -960,7 +960,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_2">
             <span class="md-nav__icon md-icon"></span>
             Core
@@ -996,7 +996,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../Routes%3A%20Registration%20needed/" class="md-nav__link ">
+            <a href="../../../../../APIs/Core/Routes%3A%20Registration%20needed/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1054,7 +1054,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../Routes%3A%20No%20registration%20needed/" class="md-nav__link ">
+            <a href="../../../../../APIs/Core/Routes%3A%20No%20registration%20needed/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1116,7 +1116,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../WebSockets/" class="md-nav__link ">
+            <a href="../../../../../APIs/Core/WebSockets/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1149,7 +1149,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../WebSockets/gateway/" class="md-nav__link">
+      <a href="../../../../../APIs/Core/WebSockets/gateway/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1170,7 +1170,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../WebSockets/gateway_events/" class="md-nav__link">
+      <a href="../../../../../APIs/Core/WebSockets/gateway_events/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1199,7 +1199,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../types/" class="md-nav__link">
+      <a href="../../../../../APIs/Core/types/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1217,30 +1217,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Errors
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../../../../APIs/Core/errors/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1249,59 +1229,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#error-codes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Error Codes
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Error Codes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#p2core_federation_id_taken" class="md-nav__link">
-    <span class="md-ellipsis">
-      P2CORE_FEDERATION_ID_TAKEN
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#p2core_session_id_taken" class="md-nav__link">
-    <span class="md-ellipsis">
-      P2CORE_SESSION_ID_TAKEN
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1314,7 +1241,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../rate-limits/" class="md-nav__link">
+      <a href="../../../../../APIs/Core/rate-limits/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1351,6 +1278,8 @@
             
             
               
+                
+              
               <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
@@ -1370,28 +1299,46 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#error-codes" class="md-nav__link">
+  <a href="#the-problem" class="md-nav__link">
     <span class="md-ellipsis">
-      Error Codes
+      The problem
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Error Codes">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-polyproto-works-briefly" class="md-nav__link">
+    <span class="md-ellipsis">
+      How polyproto works, briefly
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migrating-an-account-on-polyproto" class="md-nav__link">
+    <span class="md-ellipsis">
+      Migrating an account on polyproto
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Migrating an account on polyproto">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#p2core_federation_id_taken" class="md-nav__link">
+  <a href="#low-data-centralization" class="md-nav__link">
     <span class="md-ellipsis">
-      P2CORE_FEDERATION_ID_TAKEN
+      Low data centralization
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#p2core_session_id_taken" class="md-nav__link">
+  <a href="#moving-data" class="md-nav__link">
     <span class="md-ellipsis">
-      P2CORE_SESSION_ID_TAKEN
+      Moving data
     </span>
   </a>
   
@@ -1399,6 +1346,15 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
   
 </li>
       
@@ -1411,23 +1367,196 @@
             
           
           
-            <div class="md-content" data-md-component="content">
-              <article class="md-content__inner md-typeset">
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../../../../" class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+                  <span class="md-ellipsis">
+                    Back to index
+                  </span>
+                </a>
+              </div>
+            </div>
+            
+              <div class="md-post__authors md-typeset">
                 
-                  
+                  <div class="md-profile md-post__profile">
+                    <span class="md-author md-author--long">
+                      <img src="../../../../../assets/external/avatars.githubusercontent.com/u/39242991.e0565dbb.png" alt="bitfl0wer">
+                    </span>
+                    <span class="md-profile__description">
+                      <strong>
+                        
+                          bitfl0wer
+                        
+                      </strong>
+                      <br>
+                      Lead silly individual
+                    </span>
+                  </div>
+                
+              </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    Metadata
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5v-5Z"/></svg>
+                        <time datetime="2024-02-07 00:00:00" class="md-ellipsis">February 7, 2024</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3H9m3 2 4 13 3-1-4-13-3 1M5 5v13h3V5H5M3 19v2h18v-2H3Z"/></svg>
+                          <span class="md-ellipsis">
+                            in
+                            
+                              <a href="../../../../category/polyproto/">polyproto</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7h1.5Z"/></svg>
+                          <span class="md-ellipsis">
+                            
+                              5 min read
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+          </nav>
+          
+        </div>
+      </div>
+    </div>
+    <article class="md-content__inner md-typeset">
+      
+        
 
   
   
 
 
-<h1 id="errors">Errors<a class="headerlink" href="#errors" title="Permanent link">&para;</a></h1>
-<p>TODO</p>
-<h2 id="error-codes">Error Codes<a class="headerlink" href="#error-codes" title="Permanent link">&para;</a></h2>
-<p>TODO</p>
-<h3 id="p2core_federation_id_taken">P2CORE_FEDERATION_ID_TAKEN<a class="headerlink" href="#p2core_federation_id_taken" title="Permanent link">&para;</a></h3>
-<p>TODO</p>
-<h3 id="p2core_session_id_taken">P2CORE_SESSION_ID_TAKEN<a class="headerlink" href="#p2core_session_id_taken" title="Permanent link">&para;</a></h3>
-<p>TODO</p>
+<p>Account migration is an important and difficult thing to get right in federated systems. In this blog
+post, I will outline how I imagine account migration to work in polyproto, and what benefits this
+approach brings.</p>
+<!-- more -->
+
+<h1 id="account-migration-in-polyproto">Account migration in polyproto<a class="headerlink" href="#account-migration-in-polyproto" title="Permanent link">&para;</a></h1>
+<p>It seems that striking a good balance between user experience, convenience and privacy
+has been a difficult task for many federated systems, when it comes to account migration.
+polyprotos' approach to how data is distributed and stored, and how identities are managed, makes it
+possible to have a very smooth and secure account migration process.</p>
+<h2 id="the-problem">The problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
+<p>Using Mastodon as an example;
+When a user wants to move from one instance to another, they have to
+create a new account on the new instance, and follow all the people they were following on the
+old account. All the toots and other data from the old account are left behind, and you do not have a
+way of porting them over to the new account. This is a problem that has been around for a long time,
+and it is not just a problem with Mastodon, but with many other federated systems as well.</p>
+<h2 id="how-polyproto-works-briefly">How polyproto works, briefly<a class="headerlink" href="#how-polyproto-works-briefly" title="Permanent link">&para;</a></h2>
+<p>In polyproto, your federation ID, e.g. <code>xenia@example.com</code>, is what identifies you. If you want to 
+use this identity on a client, your client will generate a key pair for a certificate signing request,
+and send this request to your home server. Given that you didn't provide any invalid data, your home
+server will sign the certificate, and send it back to you.</p>
+<p>Any data you send to anyone - be it a chat message, a social media post, or anything else - is signed
+using your private key. This signature can be verified by anyone using your public key, which is part
+of the certificate you received from your home server. To check a certificates' validity, you can
+ask the home server for its root certificate, and verify the signature on the certificate you received.</p>
+<p>This means:</p>
+<ul>
+<li>All the data you send is cryptographically tied to your identity</li>
+<li>Anyone can verify that the data was actually sent by you</li>
+<li>Anyone can verify that the data was not tampered with by anyone else</li>
+<li>Everybody can verify that you are who you say you are</li>
+</ul>
+<p>This is even true when you are sending data to a different server than your home server. </p>
+<h2 id="migrating-an-account-on-polyproto">Migrating an account on polyproto<a class="headerlink" href="#migrating-an-account-on-polyproto" title="Permanent link">&para;</a></h2>
+<h3 id="low-data-centralization">Low data centralization<a class="headerlink" href="#low-data-centralization" title="Permanent link">&para;</a></h3>
+<p>Fundamentally, the process of migrating an account in polyproto relies mostly on changing data ownership,
+rather than moving data around. This works best in scenarios where data is highly distributed, and
+not stored in a central location.</p>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p>This might be the case in a social chat messaging system
+similar to Discord, where messages are stored on the servers of the people hosting the chat rooms.</p>
+</div>
+<p>When you want to move your account from one server to another, you:</p>
+<ol>
+<li>First, create a new account on the new server</li>
+<li>Then, you configure the new account to back-reference the old account</li>
+<li>Next, if you are able to, you tell your old home server about the move</li>
+<li>Last but not least, you verify to the servers storing your data that you are the same person as
+  the one who created the old account. The servers then update the data ownership to your new account.
+  This is done by using your old private key(s), in a way that does not reveal your private key(s) to
+  anyone else. </li>
+</ol>
+<p>If applicable, your friends and followers will also be notified about the move, keeping
+existing relationships intact.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This entire process does not rely on the old server being online.
+This means that the process can be completed even if the old server is down, or if the old server
+is not cooperating with the user. </p>
+<p>However, including the homeserver in the process adds to the
+general user experience. If you, for example, have included your federation ID as part of another,
+non-polyproto social media profile, the old server can automatically refer people to the new account.</p>
+</div>
+<h3 id="moving-data">Moving data<a class="headerlink" href="#moving-data" title="Permanent link">&para;</a></h3>
+<p>Should data actually need to be moved, for example when the old server is going to be shut down, or
+if the centralization of data is higher, the migration process is extended by a few steps:</p>
+<ol>
+<li>Using the old account, your client requests a data export from your old home server.</li>
+<li>The old home server sends you a data export. Your client will check the signatures on the exported
+   data, to make sure that the data was not tampered with.</li>
+<li>You then import the data into your new account on the new home server.</li>
+</ol>
+<p>Existing links to content created by the old account will stay intact. </p>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p>Imagine a quote-reply, similar to Twitter's quote-tweets, where your original post is quoted by
+someone else. The quote should point to your new account, rather than the old one. Your client
+knows all the servers your old account has been referenced on, and has already asked those servers
+to update the references to your new account in the previous step of the migration.</p>
+</div>
+<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>polyproto's approach to account migration is very user-friendly, and does not require the user to do
+anything that is not already part of the normal usage of the system. The process is also very secure,
+as it relies on the cryptographic properties of X.509 certificates, and also works across a highly
+distributed data model, which, in my opinion, is how the internet <em>should</em> be.</p>
+<p>The biggest drawback to this approach is that there are a whole lot of web requests involved. 
+Depending on the amount of data, this can take some minutes or possibly even hours.</p>
+<p>It is also worth noting that all of this does not require any new or young technology. polyproto
+relies on <a href="https://en.wikipedia.org/wiki/X.509">X.509 certificates</a>, which have been around for a 
+long time, and are widely used in many different applications. This means that the technology is
+well understood, and that there are already many great tools in all sorts of programming languages
+available to work with it. From my point of view, there is no need to reinvent the wheel.</p>
+<p>I hope that this article has given you a good understanding of how account migration works in polyproto.
+If you have any questions or feedback, feel free to reach out to me via E-Mail, where I can
+be reached under <code>flori@polyphony.chat</code>. OpenPGP is supported, and my public key can be found on
+<a href="https://keys.openpgp.org/vks/v1/by-fingerprint/1AFF5E2D2145C795AB117C2ADCAE4B6877C6FC4E">keys.openpgp.org (click to download pubkey)</a></p>
 
 
 
@@ -1450,7 +1579,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-01-15T18:37:42+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-01-15</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-02-07T22:43:36+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-02-07</span>
   </span>
 
     
@@ -1460,7 +1589,7 @@
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3h-2Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2023-12-24T13:14:38+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2023-12-24</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-02-07T21:00:05+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-02-07</span>
   </span>
 
     
@@ -1470,12 +1599,14 @@
 
 
 
+  
 
 
-                
-              </article>
-            </div>
-          
+
+      
+    </article>
+  </div>
+
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
@@ -1514,16 +1645,16 @@
       <div class="md-progress" data-md-component="progress" role="progressbar"></div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.expand", "toc.follow", "navigation.top", "search.suggest", "content.tooltips", "navigation.indexes"], "search": "../../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.expand", "toc.follow", "navigation.top", "search.suggest", "content.tooltips", "navigation.indexes"], "search": "../../../../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      <script src="../../../../../assets/javascripts/bundle.d7c377c4.min.js"></script>
       
-        <script src="../../../js/timeago.min.js"></script>
+        <script src="../../../../../js/timeago.min.js"></script>
       
-        <script src="../../../js/timeago_mkdocs_material.js"></script>
+        <script src="../../../../../js/timeago_mkdocs_material.js"></script>
       
-        <script src="../../../assets/external/unpkg.com/mermaid@10.6.1/dist/mermaid.min.js"></script>
+        <script src="../../../../../assets/external/unpkg.com/mermaid@10.6.1/dist/mermaid.min.js"></script>
       
     
   </body>
