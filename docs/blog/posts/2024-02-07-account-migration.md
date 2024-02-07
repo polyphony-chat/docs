@@ -7,19 +7,22 @@ authors:
   - bitfl0wer
 ---
 
+Account migration is an important and difficult thing to get right in federated systems. In this blog
+post, I will outline how I imagine account migration to work in polyproto, and what benefits this
+approach brings.
+
+<!-- more -->
+
 # Account migration in polyproto
 
-Traditionally, it seems that striking a good balance between user experience, convenience and privacy
+It seems that striking a good balance between user experience, convenience and privacy
 has been a difficult task for many federated systems, when it comes to account migration.
 polyprotos' approach to how data is distributed and stored, and how identities are managed, makes it
 possible to have a very smooth and secure account migration process.
 
-<!-- more -->
-
 ## The problem
 
-Using Mastodon as an example:
-
+Using Mastodon as an example;
 When a user wants to move from one instance to another, they have to
 create a new account on the new instance, and follow all the people they were following on the
 old account. All the toots and other data from the old account are left behind, and you do not have a
@@ -53,18 +56,18 @@ This is even true when you are sending data to a different server than your home
 
 Fundamentally, the process of migrating an account in polyproto relies mostly on changing data ownership,
 rather than moving data around. This works best in scenarios where data is highly distributed, and
-not stored in a central location. 
+not stored in a central location.
 
-For example, this might be the case in a social chat messaging system
-similar to Discord, where messages are stored on the servers of the people who host the chat rooms.
-Another example might be a social media platform, where post replies are stored on the servers of the
-original poster.
+!!! example
+
+    This might be the case in a social chat messaging system
+    similar to Discord, where messages are stored on the servers of the people hosting the chat rooms.
 
 When you want to move your account from one server to another, you:
 
 1. First, create a new account on the new server
 2. Then, you configure the new account to back-reference the old account
-3. Next, you tell your old home server about the move
+3. Next, if you are able to, you tell your old home server about the move
 4. Last but not least, you verify to the servers storing your data that you are the same person as
   the one who created the old account. The servers then update the data ownership to your new account.
   This is done by using your old private key(s), in a way that does not reveal your private key(s) to
@@ -73,9 +76,15 @@ When you want to move your account from one server to another, you:
 If applicable, your friends and followers will also be notified about the move, keeping
 existing relationships intact.
 
-This entire process does not rely on the old server being online.
-This means that the process can be completed even if the old server is down, or if the old server
-is not cooperating with the user.
+!!! note
+
+    This entire process does not rely on the old server being online.
+    This means that the process can be completed even if the old server is down, or if the old server
+    is not cooperating with the user. 
+    
+    However, including the homeserver in the process adds to the
+    general user experience. If you, for example, have included your federation ID as part of another,
+    non-polyproto social media profile, the old server can automatically refer people to the new account.
 
 ### Moving data
 
@@ -87,11 +96,14 @@ if the centralization of data is higher, the migration process is extended by a 
    data, to make sure that the data was not tampered with.
 3. You then import the data into your new account on the new home server.
 
-Existing links to content created by the old account will stay intact. Imagine a quote-reply, similar
-to Twitter's quote-tweet, where your original post is quoted by someone else. The quote should point to
-your new account, rather than the old one. Your client knows all the places where your old account is
-referenced, and has already asked those servers to update the references to your new account in the
-previous step.
+Existing links to content created by the old account will stay intact. 
+
+!!! example
+
+    Imagine a quote-reply, similar to Twitter's quote-tweets, where your original post is quoted by
+    someone else. The quote should point to your new account, rather than the old one. Your client
+    knows all the servers your old account has been referenced on, and has already asked those servers
+    to update the references to your new account in the previous step of the migration.
 
 ## Conclusion
 
