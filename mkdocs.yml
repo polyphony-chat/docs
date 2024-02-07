@@ -45,9 +45,14 @@ theme:
         icon: material/brightness-4
         name: Switch to system preference
 plugins:
-  - blog
+
+  - blog:
+      blog_toc: true
+      post_readtime: true
+      post_readtime_words_per_minute: 250
+      archive_date_format: MMMM yyyy
   - rss:
-      match_path: blog/posts/.* 
+      match_path: blog/posts/.*
 
 
       date_from_meta:
