@@ -5,6 +5,7 @@ categories:
   - polyproto
 authors:
   - bitfl0wer
+title: Account migration in polyproto
 ---
 
 Account migration is an important and difficult thing to get right in federated systems. In this blog
