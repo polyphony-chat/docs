@@ -12,7 +12,7 @@
         <link rel="prev" href="../../">
       
       
-        <link rel="next" href="../Routes%3A%20No%20registration%20needed/">
+        <link rel="next" href="../polyphony/">
       
       
         <link rel="alternate" type="application/rss+xml" title="RSS feed" href="../../../feed_rss_created.xml">
@@ -23,7 +23,7 @@
     
     
       
-        <title>Client-Home Server API Routes - Polyphony</title>
+        <title>chorus - Polyphony</title>
       
     
     
@@ -79,7 +79,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#authorization" class="md-skip">
+        <a href="#chorus" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Client-Home Server API Routes
+              chorus
             
           </span>
         </div>
@@ -242,11 +242,13 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../../blog/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
           
   
     
@@ -302,13 +304,11 @@
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../../APIs/" class="md-tabs__link">
           
   
     
@@ -395,6 +395,8 @@
       
   
   
+    
+  
   
   
     
@@ -415,19 +417,17 @@
       
       
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../blog/" class="md-nav__link ">
+            <a href="../../" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -444,7 +444,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Blog
@@ -505,7 +505,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../blog/archive/2023/" class="md-nav__link">
+      <a href="../../archive/2023/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -531,8 +531,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -544,14 +546,12 @@
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
         
           
           <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
@@ -565,7 +565,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_3">
             <span class="md-nav__icon md-icon"></span>
             Categories
@@ -576,12 +576,34 @@
                 
   
   
-  
     
   
   
-    <li class="md-nav__item">
-      <a href="../../../blog/category/chorus/" class="md-nav__link">
+    
+      
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    chorus
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -590,6 +612,53 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#porting-chorus-to-webassembly-client-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      Porting chorus to WebAssembly + Client Update
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chorus-alpha-010" class="md-nav__link">
+    <span class="md-ellipsis">
+      chorus Alpha 0.1.0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-updating-structs-moving-blog-posts-to-github-and-more" class="md-nav__link">
+    <span class="md-ellipsis">
+      Self-updating structs, moving blog posts to GitHub, and more!
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -604,7 +673,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../blog/category/polyphony/" class="md-nav__link">
+      <a href="../polyphony/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -808,8 +877,6 @@
       
   
   
-    
-  
   
   
     
@@ -828,17 +895,19 @@
       
       
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../" class="md-nav__link ">
+            <a href="../../../APIs/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -855,7 +924,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             APIs
@@ -868,10 +937,8 @@
                 
   
   
-    
   
   
-  
     
     
       
@@ -891,12 +958,14 @@
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
         
           
           <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
@@ -910,7 +979,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_2">
             <span class="md-nav__icon md-icon"></span>
             Core
@@ -921,8 +990,6 @@
                 
   
   
-    
-  
   
   
     
@@ -936,17 +1003,19 @@
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2_1" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2_1" >
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="./" class="md-nav__link md-nav__link--active">
+            <a href="../../../APIs/Core/Routes%3A%20Registration%20needed/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -958,7 +1027,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_2_1_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_2_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_2_1">
             <span class="md-nav__icon md-icon"></span>
             Routes: Registration needed
@@ -1004,7 +1073,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../Routes%3A%20No%20registration%20needed/" class="md-nav__link ">
+            <a href="../../../APIs/Core/Routes%3A%20No%20registration%20needed/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1066,7 +1135,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../WebSockets/" class="md-nav__link ">
+            <a href="../../../APIs/Core/WebSockets/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1099,7 +1168,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../WebSockets/gateway/" class="md-nav__link">
+      <a href="../../../APIs/Core/WebSockets/gateway/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1120,7 +1189,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../WebSockets/gateway_events/" class="md-nav__link">
+      <a href="../../../APIs/Core/WebSockets/gateway_events/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1149,7 +1218,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../types/" class="md-nav__link">
+      <a href="../../../APIs/Core/types/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1170,7 +1239,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../errors/" class="md-nav__link">
+      <a href="../../../APIs/Core/errors/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1191,7 +1260,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../rate-limits/" class="md-nav__link">
+      <a href="../../../APIs/Core/rate-limits/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1237,6 +1306,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -1245,204 +1316,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#authorization" class="md-nav__link">
+  <a href="#porting-chorus-to-webassembly-client-update" class="md-nav__link">
     <span class="md-ellipsis">
-      Authorization
+      Porting chorus to WebAssembly + Client Update
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#errors" class="md-nav__link">
+  <a href="#chorus-alpha-010" class="md-nav__link">
     <span class="md-ellipsis">
-      Errors
+      chorus Alpha 0.1.0
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#authentication" class="md-nav__link">
+  <a href="#self-updating-structs-moving-blog-posts-to-github-and-more" class="md-nav__link">
     <span class="md-ellipsis">
-      Authentication
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Authentication">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#post-authenticate-new-session" class="md-nav__link">
-    <span class="md-ellipsis">
-      POST Authenticate new Session
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="POST Authenticate new Session">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#request" class="md-nav__link">
-    <span class="md-ellipsis">
-      Request
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#response" class="md-nav__link">
-    <span class="md-ellipsis">
-      Response
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#federated-identity" class="md-nav__link">
-    <span class="md-ellipsis">
-      Federated Identity
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Federated Identity">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#post-rotate-session-id-cert" class="md-nav__link">
-    <span class="md-ellipsis">
-      POST Rotate session ID-Cert 
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="POST Rotate session ID-Cert">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#request_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Request
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#response_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Response
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#encryption" class="md-nav__link">
-    <span class="md-ellipsis">
-      Encryption
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Encryption">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#post-add-keypackage" class="md-nav__link">
-    <span class="md-ellipsis">
-      POST Add KeyPackage  
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="POST Add KeyPackage">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#request_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      Request
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#response_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      Response
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#put-replace-last-resort-keypackage" class="md-nav__link">
-    <span class="md-ellipsis">
-      PUT Replace Last Resort KeyPackage  
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="PUT Replace Last Resort KeyPackage">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#request_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      Request
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#response_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      Response
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#glossary" class="md-nav__link">
-    <span class="md-ellipsis">
-      Glossary
+      Self-updating structs, moving blog posts to GitHub, and more!
     </span>
   </a>
   
@@ -1457,296 +1351,162 @@
             
           
           
-            <div class="md-content" data-md-component="content">
-              <article class="md-content__inner md-typeset">
-                
-                  
-
-  
-  
-
-
-  <h1>Client-Home Server API Routes</h1>
-
-<p>All API endpoints needed for Client-Home Server communication.
-This Page only includes routes which a client can request from its home server. For routes which
-can also be accessed from a foreign server, or with no authentication at all, see the
-<a href="../Client-Foreign%20Server%20API/index.md">Client-Foreign Server API documentation</a></p>
-<div class="admonition bug">
-<p class="admonition-title">Unfinished section</p>
-<p>TODO: This section is not yet finished. It is missing descriptions for most routes, some error-code responses, etc.</p>
-</div>
-<h3 id="authorization">Authorization<a class="headerlink" href="#authorization" title="Permanent link">&para;</a></h3>
-<p><strong>Bearer token</strong>, unless specified otherwise.</p>
-<h3 id="errors">Errors<a class="headerlink" href="#errors" title="Permanent link">&para;</a></h3>
-<p>The errors listed below are not exhaustive, and only include the most common errors associated with an endpoint. For rate limit errors, see the Rate Limits documentation.</p>
-<hr />
-<h2 id="authentication"><span class="group-h">Authentication</span><a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
-<p>Authentication endpoints, such as creating an identity and authenticating a client with an identity.</p>
-<hr />
-<h3 id="post-authenticate-new-session"><span class="request-h"><span class="request request-post">POST</span> Authenticate new Session</span><a class="headerlink" href="#post-authenticate-new-session" title="Permanent link">&para;</a></h3>
-<p><code>/p2core/session/trust</code></p>
-<p>Creates a new <code>id_cert</code> and a session token from a <code>csr</code>.</p>
-<h4 id="request">Request<a class="headerlink" href="#request" title="Permanent link">&para;</a></h4>
-<h5 id="body">Body<a class="headerlink" href="#body" title="Permanent link">&para;</a></h5>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>actor_name</code></td>
-<td>String</td>
-<td>The actor name of the identity to authenticate as.</td>
-</tr>
-<tr>
-<td><code>csr</code></td>
-<td>String, Base64</td>
-<td>A <a href="/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">certificate signing request (CSR)</a></td>
-</tr>
-<tr>
-<td><code>password</code> <span class="twemoji" title="This field is optional."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 19h3v3h-3v-3m2-17c5.35.22 7.68 5.62 4.5 9.67-.83 1-2.17 1.66-2.83 2.5C13 15 13 16 13 17h-3c0-1.67 0-3.08.67-4.08.66-1 2-1.59 2.83-2.25C15.92 8.43 15.32 5.26 12 5a3 3 0 0 0-3 3H6a6 6 0 0 1 6-6Z"/></svg></span></td>
-<td>String</td>
-<td>The password for this identity.</td>
-</tr>
-<tr>
-<td><code>auth_payload</code> <span class="twemoji" title="This field is optional."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 19h3v3h-3v-3m2-17c5.35.22 7.68 5.62 4.5 9.67-.83 1-2.17 1.66-2.83 2.5C13 15 13 16 13 17h-3c0-1.67 0-3.08.67-4.08.66-1 2-1.59 2.83-2.25C15.92 8.43 15.32 5.26 12 5a3 3 0 0 0-3 3H6a6 6 0 0 1 6-6Z"/></svg></span> <span class="twemoji" title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 3a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2H3v2h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h2v-2H8v-5a2 2 0 0 0-2-2 2 2 0 0 0 2-2V5h2V3m6 0a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1v2h-1a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-2v-2h2v-5a2 2 0 0 1 2-2 2 2 0 0 1-2-2V5h-2V3h2Z"/></svg></span></td>
-<td>JSON-Object</td>
-<td>n. A.</td>
-</tr>
-</tbody>
-</table>
-<h4 id="response">Response<a class="headerlink" href="#response" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">201 Created</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<h5 id="body_1">Body<a class="headerlink" href="#body_1" title="Permanent link">&para;</a></h5>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>id_cert</code></td>
-<td>String, Base64</td>
-<td>The <a href="/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">ID-Cert</a> for this unique Identity-Session combination</td>
-</tr>
-<tr>
-<td><code>token</code></td>
-<td>String</td>
-<td>An authorization secret, called a "token", valid for this <code>id_cert</code>.</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<hr />
-<h2 id="federated-identity"><span class="group-h">Federated Identity</span><a class="headerlink" href="#federated-identity" title="Permanent link">&para;</a></h2>
-<p>Client-Home Server API endpoints concerned with Federated Identity and managing ID-Certs.</p>
-<hr />
-<h3 id="post-rotate-session-id-cert"><span class="request-h"><span class="request request-post">POST</span> Rotate session ID-Cert <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a></span><a class="headerlink" href="#post-rotate-session-id-cert" title="Permanent link">&para;</a></h3>
-<p><code>/p2core/session/idcert</code></p>
-<p>Rotate your keys for a given ID-Cert. The <code>session_id</code> in the supplied <code>csr</code> must correspond to the
-session token used in the <code>authorization</code>-Header.</p>
-<h4 id="request_1">Request<a class="headerlink" href="#request_1" title="Permanent link">&para;</a></h4>
-<h5 id="body_2">Body<a class="headerlink" href="#body_2" title="Permanent link">&para;</a></h5>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>csr</code></td>
-<td>String, Base64</td>
-<td>A <a href="/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">certificate signing request (CSR)</a> containing a new public key for this session ID.</td>
-</tr>
-</tbody>
-</table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">&quot;csr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mQINBGSDs58BEADCXP1ArorBtOvGnQdAD26gsOMasyLMqnJyUp8XXCdmTx5...&quot;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">}</span>
-</code></pre></div>
-<h4 id="response_1">Response<a class="headerlink" href="#response_1" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">201 Created</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<p>Contains your new ID-Cert, along with a new session token.</p>
-<h5 id="body_3">Body<a class="headerlink" href="#body_3" title="Permanent link">&para;</a></h5>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>id_cert</code></td>
-<td>String, Base64</td>
-<td>The generated <a href="/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">ID-Cert</a>.</td>
-</tr>
-<tr>
-<td><code>token</code></td>
-<td>String</td>
-<td>An authorization secret, called a "token", valid for this <code>id_cert</code>.</td>
-</tr>
-</tbody>
-</table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span><span class="w"> </span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nt">&quot;id_cert&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWS0tLS0tCk1JSUJqRENDQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYm...&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">&quot;token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Afnaopgi7BXVafjkl34ulvkc...&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">}</span>
-</code></pre></div>
-</div>
-</div>
-</div>
-<hr />
-<h2 id="encryption"><span class="group-h">Encryption</span><a class="headerlink" href="#encryption" title="Permanent link">&para;</a></h2>
-<p>Client-Home Server API endpoints concerned with encryption, such as KeyPackage management.</p>
-<hr />
-<h3 id="post-add-keypackage"><span class="request-h"><span class="request request-post">POST</span> Add KeyPackage <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a> <span class="twemoji" title="This route is optional. Consult the documentation of a specific polyproto extension to check whether it exists."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16c0 1.11.89 2 2 2h12c1.11 0 2-.89 2-2V8l-6-6m4 18H6V4h7v5h5v11m-3-7c0 1.89-2.25 2.07-2.25 3.76h-1.5c0-2.44 2.25-2.26 2.25-3.76 0-.82-.67-1.5-1.5-1.5s-1.5.68-1.5 1.5H9c0-1.65 1.34-3 3-3s3 1.35 3 3m-2.25 4.5V19h-1.5v-1.5h1.5Z"/></svg></span></span><a class="headerlink" href="#post-add-keypackage" title="Permanent link">&para;</a></h3>
-<p><code>/p2core/keypackage/@me</code></p>
-<p>Add a KeyPackage to your KeyPackage store on the server. Only adds KeyPackages to the ID-Cert corresponding
-to the session token used in the <code>authorization</code>-Header.</p>
-<h4 id="request_2">Request<a class="headerlink" href="#request_2" title="Permanent link">&para;</a></h4>
-<h5 id="body_4">Body<a class="headerlink" href="#body_4" title="Permanent link">&para;</a></h5>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>JSON-Array of KeyPackages</td>
-<td>One or more KeyPackages to add to the available KeyPackages for this actor.</td>
-</tr>
-</tbody>
-</table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">}</span><span class="w"> </span><span class="p">]</span>
-</code></pre></div>
-<h4 id="response_2">Response<a class="headerlink" href="#response_2" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="3:1"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">201 Created</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<h5 id="body_5">Body<a class="headerlink" href="#body_5" title="Permanent link">&para;</a></h5>
-<p>This response has no body.</p>
-</div>
-</div>
-</div>
-<hr />
-<h3 id="put-replace-last-resort-keypackage"><span class="request-h"><span class="request request-put">PUT</span> Replace Last Resort KeyPackage <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a> <span class="twemoji" title="This route is optional. Consult the documentation of a specific polyproto extension to check whether it exists."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16c0 1.11.89 2 2 2h12c1.11 0 2-.89 2-2V8l-6-6m4 18H6V4h7v5h5v11m-3-7c0 1.89-2.25 2.07-2.25 3.76h-1.5c0-2.44 2.25-2.26 2.25-3.76 0-.82-.67-1.5-1.5-1.5s-1.5.68-1.5 1.5H9c0-1.65 1.34-3 3-3s3 1.35 3 3m-2.25 4.5V19h-1.5v-1.5h1.5Z"/></svg></span></span><a class="headerlink" href="#put-replace-last-resort-keypackage" title="Permanent link">&para;</a></h3>
-<p><code>/p2core/keypackage_lr</code></p>
-<p>Replace a Last Resort KeyPackage with a new one. Only manipulates Last Resort KeyPackages for the ID-Cert
-corresponding to the session token used in the <code>authorization</code>-Header.</p>
-<h4 id="request_3">Request<a class="headerlink" href="#request_3" title="Permanent link">&para;</a></h4>
-<h5 id="body_6">Body<a class="headerlink" href="#body_6" title="Permanent link">&para;</a></h5>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>KeyPackage</td>
-<td>The KeyPackage to replace the current Last Resort KeyPackage with.</td>
-</tr>
-</tbody>
-</table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span><span class="err">...</span><span class="p">}</span>
-</code></pre></div>
-<h4 id="response_3">Response<a class="headerlink" href="#response_3" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="4:1"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">204 No Content</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<h5 id="body_7">Body<a class="headerlink" href="#body_7" title="Permanent link">&para;</a></h5>
-<p>This response has no body.</p>
-</div>
-</div>
-</div>
-<hr />
-<h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Actor</strong> - An entity represented by a federation ID, registered on a home server. Actors can be users, bots, or any other entity with an identity.</li>
-<li><strong>Client</strong> - Any application used by an actor to connect to a server.</li>
-<li><strong>Federation ID</strong> - A unique identifier; In public contexts, usually <code>username@optionalsubdomain.domain.tld</code></li>
-<li><strong>Foreign client</strong> - Any client authenticated on a server that is not its home server.</li>
-<li><strong>Foreign server</strong> - A server that an actor is not registered on; essentially a third party.</li>
-<li><strong>Home client</strong> - Any client registered and authenticated on its home server.</li>
-<li><strong>Home server</strong> - The server that an actor is registered on. Any polyproto-core compliant server hosted on the same domain is also considered a home server.</li>
-<li><strong>Identity</strong> - A unique Federation ID.</li>
-<li><strong>Identity Key</strong> - A key pair representing an actor's identity in a session, used for signing and encrypting messages.</li>
-<li><strong>Instance</strong> - A server hosting polyproto compliant software for clients.</li>
-<li><strong>polyproto-chat</strong> - The chat-API used by Polyphony. An extension of the polyproto protocol, defining the routes and capabilities of the chat-API used by Polyphony.</li>
-<li><strong>polyproto</strong> - The core federation protocol and APIs of polyproto, enabling identification and authorization on 'foreign' servers. It is independent of the chat-API used.</li>
-<li><strong>Root Certificate</strong> - A certificate used to sign other certificates, establishing a chain of trust. In polyproto, only home servers have root certificates.</li>
-<li><strong>Session</strong> - A specific period of interaction between a client and a server, typically identified and authenticated by the use of an identity key. The session begins when the client connects to the server and ends when the client disconnects. During a session, the client can interact with the server (e.g., send messages, make requests) under the identity associated with the session.</li>
-</ul>
-
-
-
-
-
-
-
-  
-    
-  
-  
-    
-  
-
-
-  <aside class="md-source-file">
-    
+  <div class="md-content" data-md-component="content">
+    <div class="md-content__inner">
+      <header class="md-typeset">
+        <h1 id="chorus">chorus<a class="headerlink" href="#chorus" title="Permanent link">&para;</a></h1>
+      </header>
       
-  <span class="md-source-file__fact">
-    <span class="md-icon" title="Last update">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
-    </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-02-01T16:02:07+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-02-01</span>
-  </span>
-
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
     
+      <nav class="md-post__authors md-typeset">
+        
+          <span class="md-author">
+            <img src="../../../assets/external/avatars.githubusercontent.com/u/39242991.e0565dbb.png" alt="bitfl0wer">
+          </span>
+        
+      </nav>
     
-      
-  <span class="md-source-file__fact">
-    <span class="md-icon" title="Created">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3h-2Z"/></svg>
-    </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2023-12-27T13:38:57+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2023-12-27</span>
-  </span>
-
-    
-    
-    
-  </aside>
-
-
-
-
-
-                
-              </article>
-            </div>
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2023-11-23 00:00:00">November 23, 2023</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="./" class="md-meta__link">chorus</a>, 
+              <a href="../polyphony/" class="md-meta__link">polyphony</a></li>
+        
+        
           
+          <li class="md-meta__item">
+            
+              2 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="porting-chorus-to-webassembly-client-update"><a class="toclink" href="../../2023/11/23/porting-chorus-to-webassembly--client-update/">Porting chorus to WebAssembly + Client Update</a></h2>
+<p>What the current state of GUI libraries in Rust means for Polyphony and chorus, and why we are porting chorus to WebAssembly.</p>
+
+    <nav class="md-post__action">
+      <a href="../../2023/11/23/porting-chorus-to-webassembly--client-update/">
+        Continue reading
+      </a>
+    </nav>
+  </div>
+</article>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+      <nav class="md-post__authors md-typeset">
+        
+          <span class="md-author">
+            <img src="../../../assets/external/avatars.githubusercontent.com/u/39242991.e0565dbb.png" alt="bitfl0wer">
+          </span>
+        
+      </nav>
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2023-08-29 00:00:00">August 29, 2023</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="./" class="md-meta__link">chorus</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              2 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="chorus-alpha-010"><a class="toclink" href="../../2023/08/29/chorus-alpha-010/">chorus Alpha 0.1.0</a></h2>
+<p>We are alpha now! As of 2 days ago, the first Alpha of Chorus, Version 0.1.0, has been released for everyone to look at and use on crates.io!</p>
+
+    <nav class="md-post__action">
+      <a href="../../2023/08/29/chorus-alpha-010/">
+        Continue reading
+      </a>
+    </nav>
+  </div>
+</article>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+      <nav class="md-post__authors md-typeset">
+        
+          <span class="md-author">
+            <img src="../../../assets/external/avatars.githubusercontent.com/u/39242991.e0565dbb.png" alt="bitfl0wer">
+          </span>
+        
+      </nav>
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2023-08-17 00:00:00">August 17, 2023</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="./" class="md-meta__link">chorus</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              3 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="self-updating-structs-moving-blog-posts-to-github-and-more"><a class="toclink" href="../../2023/08/17/self-updating-structs-moving-blog-posts-to-github-and-more/">Self-updating structs, moving blog posts to GitHub, and more!</a></h2>
+<p>Introducing self-updating structs, explaining how they work, and what they are good for. Also, moving blog posts to GitHub, and other improvements.</p>
+
+    <nav class="md-post__action">
+      <a href="../../2023/08/17/self-updating-structs-moving-blog-posts-to-github-and-more/">
+        Continue reading
+      </a>
+    </nav>
+  </div>
+</article>
+      
+      
+        
+          
+
+
+
+<nav class="md-pagination">
+  
+</nav>
+        
+      
+    </div>
+  </div>
+
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
