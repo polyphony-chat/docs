@@ -45,6 +45,17 @@ theme:
         icon: material/brightness-4
         name: Switch to system preference
 plugins:
+  - blog
+  - rss:
+      match_path: blog/posts/.* 
+
+
+      date_from_meta:
+        as_creation: date
+      categories:
+        - categories
+        - tags 
+
   - privacy
   - search
   - mkdocs-nav-weight
