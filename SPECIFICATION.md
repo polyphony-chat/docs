@@ -37,8 +37,10 @@ The version number specified here also applies to the API documentation.
       - [7.3.1 Signing keys and ID-Certs](#731-signing-keys-and-id-certs)
       - [7.3.2 Home server operation and design](#732-home-server-operation-and-design)
   - [8. Account migration](#8-account-migration)
-    - [8.1 Migrating an actor](#81-migrating-an-actor)
-    - [8.2 Re-signing messages](#82-re-signing-messages)
+    - [8.1 Reassigning ownership](#81-reassigning-ownership)
+      - [8.1.1 Migrating an actor](#811-migrating-an-actor)
+      - [8.1.2 Re-signing data](#812-re-signing-data)
+    - [8.2 Moving data](#82-moving-data)
 
 
 The polyproto protocol is a home-server-based identity federation protocol specification intended for use in applications where actor identity is needed. polyproto focuses on federated identity, and apart from the usage of Messaging Layer Security (MLS) for encryption, does not specify any application-specific features. Instead, it is intended to be used as a base for application implementations and other protocols, such as `polyproto-chat` - a chat protocol built on top of polyproto. Through a shared "base layer", polyproto implementations are intercompatible in a way where one identity can be used across various polyproto implementations.
@@ -85,6 +87,7 @@ WebSocket connections to polyproto servers consist of the following cycle:
 
 ```mermaid
 sequenceDiagram
+autonumber
 
 actor c as Client
 participant g as Gateway
@@ -182,6 +185,7 @@ To register, the client sends the necessary information to their home server. Th
 
 ```mermaid
 sequenceDiagram
+autonumber
 
 actor c as Client
 participant s as Server
@@ -206,6 +210,7 @@ To access their account from a new device, an actor authenticates the session wi
 
 ```mermaid
 sequenceDiagram
+autonumber
 
 actor c as Client
 participant s as Server
@@ -246,6 +251,7 @@ back to Alice's client. Alice's client can then authenticate with server B by us
 
 ```mermaid
 sequenceDiagram
+autonumber
 
 actor a as Alice
 participant sb as Server B
@@ -436,12 +442,6 @@ The resulting ID-Cert then holds the following information:
 | The session ID of the client.                                                                | No two valid certificates for one session ID can exist. Session IDs have to be unique per user.           | Subject Unique Identifier                                |
 | Extensions                                                                                   |                                                                                                           | Extensions                                               |
 
-!!! bug "TODO"
-
-    TODO:
-
-    - Add section about cRLs (Certificate Revocation Lists)
-
 #### 7.1.1 Structure of an ID-Cert
 
 The ID-Cert is a valid X.509 certificate, and as such, it has a specific structure. The structure of
@@ -511,6 +511,7 @@ Home servers must keep track of the ID-Certs of all users (and their clients) re
 
 ```mermaid
 sequenceDiagram
+autonumber
 
 actor c as Client
 participant s as Server
@@ -538,19 +539,17 @@ It is common for systems relying on X.509 certificates for user authentication t
 Revocation Lists (CRLs) to keep track of which certificates are no longer valid. This is done to
 prevent a user from using a certificate that has been revoked.
 
-In the context of polyproto, CRLs are not used.
 CRLs are difficult to implement well, often requiring many resources to keep up to date, and
-are also not always reliable. OCSP (Online Certificate Status Protocol) is a more modern alternative,
-which is more reliable and easier to implement. Still, it potentially requires many resources to
-keep up with demand, while also introducing a more immediate single point of failure, along with potential
-privacy concern.
+are also not always reliable. OCSP (Online Certificate Status Protocol) is a more modern, reliable
+and easier to implement alternative. Still, it potentially requires many resources to
+keep up with demand, while introducing a more immediate single point of failure.
 
 polyproto inherently mitigates some of the possible misuse of a revoked certificate, as the validity
 of a certificate is usually checked by many parties. Especially, if the revocation process is
 initiated by the actor themselves, the actor already lets all servers they are connected to know that
 the certificate in question is no longer valid.
 
-Extensions to the protocol are free to implement CRLs or OCSP, should they want to do so.
+polyproto does not require the use of CRLs or OCSP.
 
 ### 7.2 Actor identity keys and message signing
 
@@ -564,6 +563,7 @@ To ensure message integrity via signing, clients and servers must verify message
 
 ```mermaid
 sequenceDiagram
+autonumber
 
 actor b as Bob
 participant sa as Server A
@@ -616,6 +616,12 @@ If the verification fails, Bob's client should try to re-request the key from Se
 Account migration allows users to move their account and associated data to another identity.
 This allows users to switch home servers while not losing ownership of messages sent by them.
 
+Migrating an actor always involves reassigning the ownership of all actor-associated data in the
+distributed network to the new actor. Should the old actor want to additionally move all data from
+the old home server to another home server, more steps are needed. 
+
+### 8.1 Reassigning ownership
+
 Migrating an account is done with the following steps:
 
 1. The actor creates a new account on a new home server.
@@ -632,10 +638,11 @@ Migrating an account is done with the following steps:
    messages to the new account. To have all messages from a server re-signed, an actor must
    prove that they are the owner of the private keys used to sign the messages.
 
-### 8.1 Migrating an actor
+#### 8.1.1 Migrating an actor
 
 ```mermaid
 sequenceDiagram
+autonumber
 
 actor aa as Alice A
 actor ab as Alice B
@@ -658,6 +665,7 @@ Alternatively, if Server A is offline or deemed uncooperative, the following seq
 
 ```mermaid
 sequenceDiagram
+autonumber
 
 actor aa as Alice A
 actor ab as Alice B
@@ -683,12 +691,31 @@ Fig. 8: Sequence diagram depicting a successful migration of Alice A's account t
     regarding the old account to the new server, which makes the process more seamless for other
     users. The "non-cooperative homeserver migration method" is only a last resort.
 
-### 8.2 Re-signing messages
+#### 8.1.2 Re-signing data
 
-Transferring message ownership from an old to a new account, known as re-signing messages, necessitates coordination between the two accounts, initiated by the old account. To start, the old account sends an API request containing the new account's federation ID to the server where messages should be re-signed. The server responds with all ID-Certs used for signing the old account's messages, along with one challenge string. The old account will then need to prove that it is in possession of the private keys that were used to sign the messages. This is done by signing a challenge string with the private keys. If the server verifies the challenge, it authorizes the new account to re-sign the old account's messages signed with the verified key. Instead of overwriting the message, a new message variant with the new signature is created.
+Transferring message ownership from an old to a new account, known as re-signing messages, necessitates
+coordination between the two accounts, initiated by the old account. To start, the old account sends
+an API request containing the new account's federation ID to the server where messages should be
+re-signed. The server responds with all ID-Certs used for signing the old account's messages, along with
+a challenge string. The old account will then need to prove that it is in possession of the private
+keys that were used to sign the messages. This is done by signing a challenge string with the private
+keys. If the server verifies the challenge, it authorizes the new account to re-sign the old
+account's messages signed with the verified key. Instead of overwriting the message, a new message variant
+with the new signature is created, preserving the old message.
+
+Implementations and protocol extensions should carefully consider the extent of messages that can be
+re-signed.
+
+!!! example
+
+    In the case of a social media platform with quote-posting functionality, it is reasonable to
+    assume that re-signing a quoted post is allowed. However, this would likely change the
+    signature of the quoted post, which would be undesirable. Edge cases like these are up to
+    implementations to handle, and should be well documented.
 
 ```mermaid
 sequenceDiagram
+autonumber
 
 actor aa as Alice A
 actor ab as Alice B
@@ -706,3 +733,38 @@ ab->>sc: Send new messages
 sc->>sc: Verify that only FID and signature related fields have changed
 ```
 Fig. 9: Sequence diagram depicting the re-signing procedure.
+
+### 8.2 Moving data
+
+In cases of an imminent server shutdown or distrust in the old server, moving data from the old server
+is necessary to prevent data loss. This process extends upon the reassigning ownership process, and
+involves the following steps:
+
+1. Using the old account, the client requests a data export from your old home server.
+2. The old home server sends a data export to the client. The client will check the signatures on
+   the exported data, to ensure it was not tampered with.
+3. The new account re-signs the data with its own keys and imports it into the new home server.
+4. The new home server verifies the data and signals that the import was successful.
+5. The old client requests the deactivation or deletion of the old account on the old home server.
+
+```mermaid
+sequenceDiagram
+autonumber
+
+participant sa as Server A
+participant sb as Server B
+box Same Device
+actor aa as Alice A
+actor ab as Alice B
+end 
+
+aa->>sa: Request data export
+sa->>aa: Data export
+aa->ab: Data shared on device
+ab->>ab: Verify data integrity
+ab->>ab: Re-sign data
+ab->>sb: Request data import
+sb->>sb: Verify data integrity
+sb->>ab: Data import successful
+aa-xsa: Deactivate account
+```
