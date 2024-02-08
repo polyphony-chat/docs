@@ -96,15 +96,7 @@ if the centralization of data is higher, the migration process is extended by a 
 2. The old home server sends you a data export. Your client will check the signatures on the exported
    data, to make sure that the data was not tampered with.
 3. You then import the data into your new account on the new home server.
-
-Existing links to content created by the old account will stay intact. 
-
-!!! example
-
-    Imagine a quote-reply, similar to Twitter's quote-tweets, where your original post is quoted by
-    someone else. The quote should point to your new account, rather than the old one. Your client
-    knows all the servers your old account has been referenced on, and has already asked those servers
-    to update the references to your new account in the previous step of the migration.
+4. 
 
 ## Conclusion
 
