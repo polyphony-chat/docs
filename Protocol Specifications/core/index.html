@@ -1180,18 +1180,42 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#81-migrating-an-actor" class="md-nav__link">
+  <a href="#81-reassigning-ownership" class="md-nav__link">
     <span class="md-ellipsis">
-      8.1 Migrating an actor
+      8.1 Reassigning ownership
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.1 Reassigning ownership">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#811-migrating-an-actor" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.1.1 Migrating an actor
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#82-re-signing-messages" class="md-nav__link">
+  <a href="#812-re-signing-data" class="md-nav__link">
     <span class="md-ellipsis">
-      8.2 Re-signing messages
+      8.1.2 Re-signing data
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-moving-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.2 Moving data
     </span>
   </a>
   
@@ -2013,18 +2037,42 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#81-migrating-an-actor" class="md-nav__link">
+  <a href="#81-reassigning-ownership" class="md-nav__link">
     <span class="md-ellipsis">
-      8.1 Migrating an actor
+      8.1 Reassigning ownership
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.1 Reassigning ownership">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#811-migrating-an-actor" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.1.1 Migrating an actor
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#82-re-signing-messages" class="md-nav__link">
+  <a href="#812-re-signing-data" class="md-nav__link">
     <span class="md-ellipsis">
-      8.2 Re-signing messages
+      8.1.2 Re-signing data
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-moving-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.2 Moving data
     </span>
   </a>
   
@@ -2112,8 +2160,10 @@ The version number specified here also applies to the API documentation.</p>
 </ul>
 </li>
 <li><a href="#8-account-migration">8. Account migration</a><ul>
-<li><a href="#81-migrating-an-actor">8.1 Migrating an actor</a></li>
-<li><a href="#82-re-signing-messages">8.2 Re-signing messages</a></li>
+<li><a href="#81-reassigning-ownership">8.1 Reassigning ownership</a></li>
+<li><a href="#811-migrating-an-actor">8.1.1 Migrating an actor</a></li>
+<li><a href="#812-re-signing-data">8.1.2 Re-signing data</a></li>
+<li><a href="#82-moving-data">8.2 Moving data</a></li>
 </ul>
 </li>
 </ul>
@@ -2151,6 +2201,7 @@ In addition to these REST APIs, polyproto employs WebSockets for real-time commu
 <p>WebSockets enable real-time communication between actor clients and servers.</p>
 <p>WebSocket connections to polyproto servers consist of the following cycle:</p>
 <pre class="mermaid"><code>sequenceDiagram
+autonumber
 
 actor c as Client
 participant g as Gateway
@@ -2230,6 +2281,7 @@ For instance, in polyproto-chat, an actor can send direct messages to users from
 <p>Registering a new actor in the context of polyproto is done through an API route defined in the polyproto <a href="/APIs/Core/Routes%3A No registration needed/#post-create-identity">"No registration needed" API</a> documentation.</p>
 <p>To register, the client sends the necessary information to their home server. The server verifies the data, checks username availability, and responds with HTTP 201 and the new identity's federation ID, if successful. However, a session token is not provided until the actor authenticates a client, as detailed in section <a href="#412-authenticating-a-new-client-on-a-polyproto-home-server">4.1.2</a>.</p>
 <p><pre class="mermaid"><code>sequenceDiagram
+autonumber
 
 actor c as Client
 participant s as Server
@@ -2249,6 +2301,7 @@ Fig. 2: Sequence diagram of a successful identity creation process.</p>
 <h4 id="412-authenticating-a-new-client-on-a-polyproto-home-server">4.1.2 Authenticating a new client on a polyproto home server<a class="headerlink" href="#412-authenticating-a-new-client-on-a-polyproto-home-server" title="Permanent link">&para;</a></h4>
 <p>To access their account from a new device, an actor authenticates the session with their home server by sending authentication information and a <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">certificate signing request (CSR)</a> for the new client. If verified successfully, the server signs the CSR and responds with the newly generated ID-Cert and a session token corresponding to this ID-Cert.</p>
 <p><pre class="mermaid"><code>sequenceDiagram
+autonumber
 
 actor c as Client
 participant s as Server
@@ -2279,6 +2332,7 @@ this by requesting Alice's ID-Cert, specifically the ID-Cert matching the sessio
 identified with to Server B. If all goes well, server B will send a newly generated session token
 back to Alice's client. Alice's client can then authenticate with server B by using this token.</p>
 <p><pre class="mermaid"><code>sequenceDiagram
+autonumber
 
 actor a as Alice
 participant sb as Server B
@@ -2484,13 +2538,6 @@ and <strong>all</strong> other claims presented in the certificate.</p>
 </tr>
 </tbody>
 </table>
-<div class="admonition bug">
-<p class="admonition-title">TODO</p>
-<p>TODO:</p>
-<ul>
-<li>Add section about cRLs (Certificate Revocation Lists)</li>
-</ul>
-</div>
 <h4 id="711-structure-of-an-id-cert">7.1.1 Structure of an ID-Cert<a class="headerlink" href="#711-structure-of-an-id-cert" title="Permanent link">&para;</a></h4>
 <p>The ID-Cert is a valid X.509 certificate, and as such, it has a specific structure. The structure of
 an X.509 certificate is defined in <a href="https://tools.ietf.org/html/rfc5280">RFC5280</a>.
@@ -2541,6 +2588,7 @@ concrete implementations.</p>
 <p>Before sending any messages to a server, a client that performed a key rotation should inform the server of that change. This is to ensure that the server has cached the correct ID-Cert for this session.</p>
 <p>Home servers must keep track of the ID-Certs of all users (and their clients) registered on them, and must provide a clients' ID-Cert for a given timestamp on request. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of an actor likely changes over time and users must sign all messages they send to servers. Likewise, a client should also keep all of its own ID-Certs stored perpetually, to potentially verify its identity in case of a migration.</p>
 <p><pre class="mermaid"><code>sequenceDiagram
+autonumber
 
 actor c as Client
 participant s as Server
@@ -2563,23 +2611,22 @@ Fig. 5: Sequence diagram depicting the process of a client using a CSR to reques
 <p>It is common for systems relying on X.509 certificates for user authentication to use Certificate
 Revocation Lists (CRLs) to keep track of which certificates are no longer valid. This is done to
 prevent a user from using a certificate that has been revoked.</p>
-<p>In the context of polyproto, CRLs are not used.
-CRLs are difficult to implement well, often requiring many resources to keep up to date, and
-are also not always reliable. OCSP (Online Certificate Status Protocol) is a more modern alternative,
-which is more reliable and easier to implement. Still, it potentially requires many resources to
-keep up with demand, while also introducing a more immediate single point of failure, along with potential
-privacy concern.</p>
+<p>CRLs are difficult to implement well, often requiring many resources to keep up to date, and
+are also not always reliable. OCSP (Online Certificate Status Protocol) is a more modern, reliable
+and easier to implement alternative. Still, it potentially requires many resources to
+keep up with demand, while introducing a more immediate single point of failure.</p>
 <p>polyproto inherently mitigates some of the possible misuse of a revoked certificate, as the validity
 of a certificate is usually checked by many parties. Especially, if the revocation process is
 initiated by the actor themselves, the actor already lets all servers they are connected to know that
 the certificate in question is no longer valid.</p>
-<p>Extensions to the protocol are free to implement CRLs or OCSP, should they want to do so.</p>
+<p>polyproto does not require the use of CRLs or OCSP.</p>
 <h3 id="72-actor-identity-keys-and-message-signing">7.2 Actor identity keys and message signing<a class="headerlink" href="#72-actor-identity-keys-and-message-signing" title="Permanent link">&para;</a></h3>
 <p>As briefly mentioned section <a href="#4-federated-identity">#4</a>, users must hold on to an identity key pair at all times. This key pair is used to represent an actor's identity and to verify message integrity, by having an actor sign all messages they send with their private identity key. The key pair is generated by the actor. An actor-generated identity key certificate signing request (CSR) is sent to the actor's home server when first connecting to the server with a new session, or when rotating keys. The key is stored in the client's local storage. Upon receiving a new identity key CSR, a home server will sign this CSR and send the resulting ID-Cert to the client. This certificate is proof that the home server attests to the clients key. Read <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">section 7.1</a> for more information on the certificate.</p>
 <h4 id="722-message-verification">7.2.2 Message verification<a class="headerlink" href="#722-message-verification" title="Permanent link">&para;</a></h4>
 <p>To ensure message integrity via signing, clients and servers must verify message signatures. This involves cross-checking the message signature against the sender's ID-Cert and the senders' home server's root certificate, while also confirming the validity of the ID-Cert attached to the message and ensuring its public key matches the sender's.</p>
 <p><strong>Example:</strong> Given a signed message from Alice, such as Bob would receive from Server B in <a href="#fig-3">Fig. 3</a>, Bob's client would verify the signature of the message like this:</p>
 <p><pre class="mermaid"><code>sequenceDiagram
+autonumber
 
 actor b as Bob
 participant sa as Server A
@@ -2625,6 +2672,10 @@ to avoid having to request them again.</p>
 <h2 id="8-account-migration">8. Account migration<a class="headerlink" href="#8-account-migration" title="Permanent link">&para;</a></h2>
 <p>Account migration allows users to move their account and associated data to another identity.
 This allows users to switch home servers while not losing ownership of messages sent by them.</p>
+<p>Migrating an actor always involves reassigning the ownership of all actor-associated data in the
+distributed network to the new actor. Should the old actor want to additionally move all data from
+the old home server to another home server, more steps are needed. </p>
+<h3 id="81-reassigning-ownership">8.1 Reassigning ownership<a class="headerlink" href="#81-reassigning-ownership" title="Permanent link">&para;</a></h3>
 <p>Migrating an account is done with the following steps:</p>
 <ol>
 <li>The actor creates a new account on a new home server.</li>
@@ -2641,8 +2692,9 @@ This allows users to switch home servers while not losing ownership of messages 
    messages to the new account. To have all messages from a server re-signed, an actor must
    prove that they are the owner of the private keys used to sign the messages.</li>
 </ol>
-<h3 id="81-migrating-an-actor">8.1 Migrating an actor<a class="headerlink" href="#81-migrating-an-actor" title="Permanent link">&para;</a></h3>
+<h4 id="811-migrating-an-actor">8.1.1 Migrating an actor<a class="headerlink" href="#811-migrating-an-actor" title="Permanent link">&para;</a></h4>
 <p><pre class="mermaid"><code>sequenceDiagram
+autonumber
 
 actor aa as Alice A
 actor ab as Alice B
@@ -2661,6 +2713,7 @@ sa-&gt;&gt;sa: Setup redirect from Alice A to Alice B</code></pre>
 Fig. 7: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is reachable and cooperative.</p>
 <p>Alternatively, if Server A is offline or deemed uncooperative, the following sequence diagram depicts how the migration can be done without Server A's cooperation:</p>
 <p><pre class="mermaid"><code>sequenceDiagram
+autonumber
 
 actor aa as Alice A
 actor ab as Alice B
@@ -2684,9 +2737,27 @@ home server with all information associated with the old account. It can also fo
 regarding the old account to the new server, which makes the process more seamless for other
 users. The "non-cooperative homeserver migration method" is only a last resort.</p>
 </div>
-<h3 id="82-re-signing-messages">8.2 Re-signing messages<a class="headerlink" href="#82-re-signing-messages" title="Permanent link">&para;</a></h3>
-<p>Transferring message ownership from an old to a new account, known as re-signing messages, necessitates coordination between the two accounts, initiated by the old account. To start, the old account sends an API request containing the new account's federation ID to the server where messages should be re-signed. The server responds with all ID-Certs used for signing the old account's messages, along with one challenge string. The old account will then need to prove that it is in possession of the private keys that were used to sign the messages. This is done by signing a challenge string with the private keys. If the server verifies the challenge, it authorizes the new account to re-sign the old account's messages signed with the verified key. Instead of overwriting the message, a new message variant with the new signature is created.</p>
+<h4 id="812-re-signing-data">8.1.2 Re-signing data<a class="headerlink" href="#812-re-signing-data" title="Permanent link">&para;</a></h4>
+<p>Transferring message ownership from an old to a new account, known as re-signing messages, necessitates
+coordination between the two accounts, initiated by the old account. To start, the old account sends
+an API request containing the new account's federation ID to the server where messages should be
+re-signed. The server responds with all ID-Certs used for signing the old account's messages, along with
+a challenge string. The old account will then need to prove that it is in possession of the private
+keys that were used to sign the messages. This is done by signing a challenge string with the private
+keys. If the server verifies the challenge, it authorizes the new account to re-sign the old
+account's messages signed with the verified key. Instead of overwriting the message, a new message variant
+with the new signature is created, preserving the old message.</p>
+<p>Implementations and protocol extensions should carefully consider the extent of messages that can be
+re-signed.</p>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p>In the case of a social media platform with quote-posting functionality, it is reasonable to
+assume that re-signing a quoted post is allowed. However, this would likely change the
+signature of the quoted post, which would be undesirable. Edge cases like these are up to
+implementations to handle, and should be well documented.</p>
+</div>
 <p><pre class="mermaid"><code>sequenceDiagram
+autonumber
 
 actor aa as Alice A
 actor ab as Alice B
@@ -2703,6 +2774,37 @@ ab-&gt;&gt;ab: Re-sign messages with own keys
 ab-&gt;&gt;sc: Send new messages
 sc-&gt;&gt;sc: Verify that only FID and signature related fields have changed</code></pre>
 Fig. 9: Sequence diagram depicting the re-signing procedure.</p>
+<h3 id="82-moving-data">8.2 Moving data<a class="headerlink" href="#82-moving-data" title="Permanent link">&para;</a></h3>
+<p>In cases of an imminent server shutdown or distrust in the old server, moving data from the old server
+is necessary to prevent data loss. This process extends upon the reassigning ownership process, and
+involves the following steps:</p>
+<ol>
+<li>Using the old account, the client requests a data export from your old home server.</li>
+<li>The old home server sends a data export to the client. The client will check the signatures on
+   the exported data, to ensure it was not tampered with.</li>
+<li>The new account re-signs the data with its own keys and imports it into the new home server.</li>
+<li>The new home server verifies the data and signals that the import was successful.</li>
+<li>The old client requests the deactivation or deletion of the old account on the old home server.</li>
+</ol>
+<pre class="mermaid"><code>sequenceDiagram
+autonumber
+
+participant sa as Server A
+participant sb as Server B
+box Same Device
+actor aa as Alice A
+actor ab as Alice B
+end 
+
+aa-&gt;&gt;sa: Request data export
+sa-&gt;&gt;aa: Data export
+aa-&gt;ab: Data shared on device
+ab-&gt;&gt;ab: Verify data integrity
+ab-&gt;&gt;ab: Re-sign data
+ab-&gt;&gt;sb: Request data import
+sb-&gt;&gt;sb: Verify data integrity
+sb-&gt;&gt;ab: Data import successful
+aa-xsa: Deactivate account</code></pre>
 <h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Actor</strong> - An entity represented by a federation ID, registered on a home server. Actors can be users, bots, or any other entity with an identity.</li>
