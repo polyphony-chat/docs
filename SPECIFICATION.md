@@ -456,10 +456,11 @@ The distinguished name must be unique for each certificate issued by a home serv
 must include the following fields:
 
 ```
-dn: cn=<actor or home server name>, dc=<home server subdomain, if any>, dc=<home server domain>, dc=<home server tld>
+dn: cn=<actor or home server name>, dc=<home server subdomain, if any>, dc=<home server domain>, dc=<hosme server tld, if any>
 ```
 
-If the home server does not have a subdomain, the `dc` field for the subdomain should be omitted.
+If the home server does not have a subdomain or tld, the `dc` fields for these components should
+be omitted. 
 
 Optionally, the `DN` can include an `ou` field, representing the organizational unit of the actor.
 
@@ -563,7 +564,7 @@ As briefly mentioned section [#4](#4-federated-identity), users must hold on to 
 
 !!! bug "TODO"
 
-    TODO: Add the information that PKCS#10 is used for CSRs
+    TODO: Add the information that PKCS#10 is used for CSRs, and that CSRs are DER encoded.
 
 To ensure message integrity via signing, clients and servers must verify message signatures. This involves cross-checking the message signature against the sender's ID-Cert and the senders' home server's root certificate, while also confirming the validity of the ID-Cert attached to the message and ensuring its public key matches the sender's.
 
