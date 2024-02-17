@@ -2546,9 +2546,10 @@ ID-Certs encompass a subset of the structure of an X.509 certificate.</p>
 <p>The Distinguished Names (<code>DNs</code>), according to the <a href="https://en.wikipedia.org/wiki/LDAP_Data_Interchange_Format">LDAP Data Interchange Format (LDIF)</a>. The <code>DN</code> is a sequence of relative distinguished names (<code>RDNs</code>).</p>
 <p>The distinguished name must be unique for each certificate issued by a home server. The <code>DN</code> of an ID-Cert
 must include the following fields:</p>
-<div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>dn: cn=&lt;actor or home server name&gt;, dc=&lt;home server subdomain, if any&gt;, dc=&lt;home server domain&gt;, dc=&lt;home server tld&gt;
+<div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>dn: cn=&lt;actor or home server name&gt;, dc=&lt;home server subdomain, if any&gt;, dc=&lt;home server domain&gt;, dc=&lt;hosme server tld, if any&gt;
 </code></pre></div>
-<p>If the home server does not have a subdomain, the <code>dc</code> field for the subdomain should be omitted.</p>
+<p>If the home server does not have a subdomain or tld, the <code>dc</code> fields for these components should
+be omitted. </p>
 <p>Optionally, the <code>DN</code> can include an <code>ou</code> field, representing the organizational unit of the actor.</p>
 <h5 id="7112-extensions-and-constraints">7.1.1.2 Extensions and constraints<a class="headerlink" href="#7112-extensions-and-constraints" title="Permanent link">&para;</a></h5>
 <p>The following constraints must be met by ID-Certs:</p>
@@ -2629,7 +2630,7 @@ the certificate in question is no longer valid.</p>
 </div>
 <div class="admonition bug">
 <p class="admonition-title">TODO</p>
-<p>TODO: Add the information that PKCS#10 is used for CSRs</p>
+<p>TODO: Add the information that PKCS#10 is used for CSRs, and that CSRs are DER encoded.</p>
 </div>
 <p>To ensure message integrity via signing, clients and servers must verify message signatures. This involves cross-checking the message signature against the sender's ID-Cert and the senders' home server's root certificate, while also confirming the validity of the ID-Cert attached to the message and ensuring its public key matches the sender's.</p>
 <p><strong>Example:</strong> Given a signed message from Alice, such as Bob would receive from Server B in <a href="#fig-3">Fig. 3</a>, Bob's client would verify the signature of the message like this:</p>
