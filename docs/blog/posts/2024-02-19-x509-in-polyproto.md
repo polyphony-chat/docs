@@ -11,8 +11,8 @@ title: X.509 in polyproto
 
 # Certificates, please: X.509 in polyproto
 
-This blog post covers a bit about why and how X.509 is used in polyproto, and how we try to prevent
-levels of centralization seen in the X.509 implementations used today.
+This blog post covers a bit about how and why X.509 is used in polyproto, and how we try to make
+the process of implementing your own server and getting one up-and-running a little easier.
 
 <!-- more -->
 
@@ -34,9 +34,9 @@ core. X.509 was chosen over `OpenPGP` because of its comparative simplicity. The
 `OpenPGP` often requires active user input to assign trust levels to users and their keys, which is
 not inline with our ideas and goals for user experience in a decentralized system.
 Ideally, decentralization and federation is as seamless as possible for the end-user,
-and X.509 with its Certificate Authority model is the better fit for such a goal. In fact,
-X.509 can be *so* seamless to the end-user, that you have probably forgotten that you are already
-using it right now!
+and X.509 with its Certificate Authority (CA for short) model is the better fit for such a goal. 
+In fact, X.509 can be *so* seamless to the end-user, that you have probably forgotten that you are
+already using it right now!
 
 HTTPS (SSL/TLS) certificates are likely the most popular form of digital certificate out there,
 and they’re implemented in a way, where the only time us humans ever have to think about them,
@@ -89,36 +89,24 @@ using this certificate.
 
 ## But it’s not all perfect.
 
-Root Certificates in the context of HTTPS and the modern, SSL/TLS protected web are *evil*.
-
-!!! quote "Authors note"
-
-    Not "true evil"-evil, but rather "putting a lot of trust into a few corporations with no real
-    alternative"-evil.
+Root Certificates in the context of HTTPS and the modern, SSL/TLS protected web are a big source
+of centralization. This centralization might be necessary to a degree, but it also means less
+plurality, and way more hoops to jump through, should you also want to be a CA. 
 
 To give context for those who might need it, essentially, every certificate for every website out
 there has to be able to be traced back to one of the root certificates installed on your
 internet-capable device's operating system or web browser. This creates an incredible amount of
-centralization, because one  Root Certificate Authority is directly responsible for hundreds of
-thousands, if not millions of websites. This dependency on these few, extremely privileged Root CAs
-has of course been monetized, which is why getting an SSL/TLS certificate for your website
+centralization, because one Root Certificate Authority is directly responsible for hundreds of
+thousands, if not millions of websites. This dependency on a few privileged Root CAs
+has been monetized, which is why getting an SSL/TLS certificate for your website
 used to cost you money (and depending on who you are, it might still be that way). Nowadays though,
-many of us are forced to use Let's Encrypt and the "free" SSL/TLS certificates they provide.
-[Let's Encrypt is not the solution though; it just shifts the problem elsewhere.](https://michael.orlitzky.com/articles/lets_not_encrypt.xhtml)
-
-!!! quote "Authors note"
-
-    Yes, Let's Encrypt *technically, on-paper* helps by being a non-profit which offers free SSL/TLS
-    certificates for everyone; until, say, Google chooses to not trust Let's Encrypt anymore,
-    which would lead to millions of websites suddenly becoming untrustworthy in almost every
-    Chromium-based browser.
+[Let's Encrypt](https://letsencrypt.org) exists, offering free SSL/TLS certificates, with the caveat
+that these certificates are only valid for three months at a time.
 
 ## What can we do about this?
 
-When pouring your heart and soul into building decentralized communications software, you *really*
-do not want to see the thing you’ve created potentially succumb to the same fate of
-corporate-greed-driven centralization efforts. polyproto should make centralization to the degree
-of modern-day SSL/TLS at least highly impractical and infeasible.
+To prevent an open polyproto network to *stay* open for everyone, polyproto should make
+centralization to the degree of modern-day SSL/TLS at infeasible.
 
 This can be done by limiting the length of the certification path.
 
@@ -147,10 +135,12 @@ to verify and sign CSRs.
 In polyproto, the maximum length of this certification path is 1, meaning a Root Certificate may
 only issue leaf certificates. Cutting out middlemen makes it hard to scale to monstrous levels
 of centralization, as the service provider behind the Certificate Authority cannot effectively
-delegate the task of managing certificates to other trusted service providers. All of these things
-combined should make hosting your one home server viable, which, in the
-context of Certificate Authorities, means way more, smaller CAs, instead of a few big CAs (with
-middlemen CAs).
+delegate the task of managing certificates to other trusted service providers. It also means that
+the chain of trust is way easier to verify.
+
+All of these things combined should make developing and/or hosting your one home server always be a 
+viable option, which, in the context of Certificate Authorities, means way more, smaller CAs,
+instead of a few big CAs (with middlemen CAs).
 
 !!! quote "Authors note"
 
