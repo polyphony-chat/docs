@@ -425,6 +425,10 @@ When signing a CSR, the home server must verify the correctness of all claims pr
     This includes checking the signature, the certificate's validity period, the certificate's issuer
     and **all** other claims presented in the certificate.
 
+!!! bug "TODO"
+
+    TODO: "Session ID" should be stored in DN as UID, "Subject Unique Identifier" should be full federation ID (or left out?)
+
 The resulting ID-Cert then holds the following information:
 
 | Field Description                                                                            | Special requirements, if any                                                                              | X.509 equivalent                                         |
