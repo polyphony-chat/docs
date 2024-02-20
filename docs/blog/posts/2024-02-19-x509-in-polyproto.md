@@ -1,5 +1,4 @@
 ---
-draft: true 
 date: 2024-02-19
 categories:
   - polyproto
@@ -25,7 +24,7 @@ easier.
     biggest joys I experience when writing software, so this humbling experience was totally worth
     it for me, personally.
 
-polyproto is a federation protocol which is using X.509 Public Key Infrastructure (PKI) to prove and
+polyproto is a federation protocol that uses X.509 Public Key Infrastructure (PKI) to prove and
 federate your identity across a whole network of decentralized services.
 
 ## X.509
@@ -45,8 +44,8 @@ is when our browser tells us that a certificate from a website we’re trying to
 valid anymore.
 
 This popularity is great news for polyproto, because it means that mature tooling for all sorts
-of programming languages already exists *today*, along with hundreds upon hundreds of tutorials
-and other documentation, teaching potential implementers how everything works.
+of programming languages exists *today*, along with tutorials and documentation, teaching potential
+implementers how everything works.
 
 ## How polyproto uses X.509, briefly
 
@@ -56,7 +55,7 @@ identity to any person or server at any time. Certificates are also used to veri
 of data sent across the polyproto network.
 
 If servers and clients have well-implemented cryptography, it should be *extremely* unlikely - if
-not impossible - for non-quantum-based, non-supercomputer-cluster home servers or clients to alter
+not impossible - for non-quantum-based, non-supercomputer-cluster home servers to alter
 the contents of a message before passing them on to the recipient.
 
 !!! quote "Authors note"
