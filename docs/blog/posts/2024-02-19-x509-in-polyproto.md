@@ -12,7 +12,8 @@ title: X.509 in polyproto
 # Certificates, please: X.509 in polyproto
 
 This blog post covers a bit about how and why X.509 is used in polyproto, and how we try to make
-the process of implementing your own server and getting one up-and-running a little easier.
+the process of implementing your own server and incorporating it into an existing network a little
+easier.
 
 <!-- more -->
 
@@ -77,7 +78,6 @@ information is:
 - the public key attached to the CSR
 - a signature which is verifiable using the attached public key, validating all of the
   aforementioned information
-- Optionally, a request for an earlier-than-usual certificate expiry date
 
 This CSR is sent to your home server, which verifies this information and in turn responds with a
 polyproto X.509 Certificate (ID-Cert).
@@ -90,7 +90,7 @@ using this certificate.
 ## But it’s not all perfect.
 
 Root Certificates in the context of HTTPS and the modern, SSL/TLS protected web are a big source
-of centralization. This centralization might be necessary to a degree, but it also means less
+of centralization. This centralization might be necessary to a degree, but it inevitably means less
 plurality, and way more hoops to jump through, should you also want to be a CA. 
 
 To give context for those who might need it, essentially, every certificate for every website out
@@ -105,10 +105,10 @@ that these certificates are only valid for three months at a time.
 
 ## What can we do about this?
 
-To prevent an open polyproto network to *stay* open for everyone, polyproto should make
+To try and keep open polyproto networks to *stay* open for everyone, polyproto should make
 centralization to the degree of modern-day SSL/TLS at infeasible.
 
-This can be done by limiting the length of the certification path.
+An approach we are taking is limiting the length of the certification path.
 
 In X.509, to validate and trust a certificate, you must also trust all the other certificates leading up to the Root Certificate of the Certificate Tree.
 
@@ -134,27 +134,23 @@ to verify and sign CSRs.
 
 In polyproto, the maximum length of this certification path is 1, meaning a Root Certificate may
 only issue leaf certificates. Cutting out middlemen makes it hard to scale to monstrous levels
-of centralization, as the service provider behind the Certificate Authority cannot effectively
-delegate the task of managing certificates to other trusted service providers. It also means that
-the chain of trust is way easier to verify.
+of centralization, as the control one CA can have over the entire network is limited.
 
-All of these things combined should make developing and/or hosting your one home server always be a 
-viable option, which, in the context of Certificate Authorities, means way more, smaller CAs,
-instead of a few big CAs (with middlemen CAs).
+All of these factors combined should always make developing or hosting your own home server a
+viable option.
 
 !!! quote "Authors note"
 
     To clarify, this does not mean that polyproto servers will only be able to handle a small amount
-    of users. A well-implemented and fast home server implementation should, with the given
-    resources, be able to handle a great number of registered users. This shallow-depth trust model
-    should aid in stoppin trust hierarchies with great amounts of centralization from forming.
+    of users, or that polyproto is designed for small-userbase scenarios. A well-implemented
+    and fast home server implementation should, with the given resources, be able to handle a great
+    number of registered users. This shallow-depth trust model should aid in stopping trust
+    hierarchies with great amounts of influence over the network from forming.
 
-    Please also keep in mind that especially this last section makes claims which might be true in
-    theory in a vacuum, but real-life power distribution scenarios might be unpredictable, which
-    means that the efficacy of limiting the certificate path length to prevent centralization can
-    only be proven when polyproto is being deployed in the real world. TL;DR: Take this with a grain
-    of salt.
-
+    However, real-life power distribution scenarios can be be unpredictable, which
+    means that the efficacy of limiting the certificate path length as a measure to prevent
+    centralization can only be proven when polyproto is being deployed in the real world.
+    
 ---
 
 If you have any questions or feedback, feel free to reach out to me via email, where you can
