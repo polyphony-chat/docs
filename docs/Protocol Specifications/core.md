@@ -47,7 +47,6 @@ The version number specified here also applies to the API documentation.
       - [8.1.2 Re-signing data](#812-re-signing-data)
     - [8.2 Moving data](#82-moving-data)
 
-
 The polyproto protocol is a home-server-based identity federation protocol specification intended for use in applications where actor identity is needed. polyproto focuses on federated identity, and apart from the usage of Messaging Layer Security (MLS) for encryption, does not specify any application-specific features. Instead, it is intended to be used as a base for application implementations and other protocols, such as `polyproto-chat` - a chat protocol built on top of polyproto. Through a shared "base layer", polyproto implementations are intercompatible in a way where one identity can be used across various polyproto implementations.
 
 No part of polyproto is considered less important than any other part, and all parts of polyproto are required for a polyproto implementation to be considered compliant with the polyproto specification. The only exception to this is the encryption part of polyproto, which is optional, as the necessity of encryption depends on the specific implementation.
@@ -59,12 +58,12 @@ This document is intended to be used as a starting point for developers wanting 
 In addition to the terminology found in the glossary located at the end of this document, the following terminology is used throughout this document:
 
 - **Message, Messages**: In the context of this protocol specification, a **message** is any piece of data sent by a client that is intended to be identifiable as being sent by a specific actor. To qualify as a "message", this piece of data must also, at any point in time, and also if only briefly, be visible to other users or to the unauthenticated public. Examples of things that would qualify as messages include:
-    - A message sent to another actor in a chat application
-    - A post on a social media platform
-    - A "like" interaction on a social media platform
-    - Reaction emojis in Discord-like chat applications
-    - Group join or leave messages
-    - Reporting a post or actor, if the report is not anonymous
+  - A message sent to another actor in a chat application
+  - A post on a social media platform
+  - A "like" interaction on a social media platform
+  - Reaction emojis in Discord-like chat applications
+  - Group join or leave messages
+  - Reporting a post or actor, if the report is not anonymous
 
 Terminology not specified in this section or in the glossary has been defined somewhere else in this document.
 
@@ -134,7 +133,7 @@ Fig. 1: Sequence diagram of a WebSocket connection to a polyproto server.
 For some implementation contexts, a constant WebSocket connection might not be wanted. A client can
 instead opt to query an API endpoint to receive events, which would normally be sent through the WebSocket
 connection. Concrete polyproto-implementations and extensions can decide whether this alternative
-behaviour is supported. 
+behaviour is supported.
 
 !!! example
 
@@ -175,7 +174,6 @@ Identity certificates defined in sections [#7. Keys and signatures](#7-keys-and-
 
     An actor can choose to use the same identity for multiple polyproto implementations. If section [4.1.3](#413-authenticating-on-a-foreign-server) is implemented correctly, this should not be a problem.
 
-
 !!! info
 
     You can read more about the Identity Pubkey and Certificate in [7. Keys and signatures](#7-keys-and-signatures).
@@ -207,6 +205,7 @@ alt verification successful
   end
 end
 ```
+
 Fig. 2: Sequence diagram of a successful identity creation process.
 
 #### 4.1.2 Authenticating a new client on a polyproto home server
@@ -232,6 +231,7 @@ alt Verified successfully
 end
 
 ```
+
 Fig. 3: Sequence diagram of a successful client authentication process.
 
 The client is now authenticated and can use the session token and ID-Cert to perform actions on behalf of the actor identified by the ID-Cert.
@@ -253,7 +253,6 @@ this by requesting Alice's ID-Cert, specifically the ID-Cert matching the sessio
 identified with to Server B. If all goes well, server B will send a newly generated session token
 back to Alice's client. Alice's client can then authenticate with server B by using this token.
 
-
 ```mermaid
 sequenceDiagram
 autonumber
@@ -270,6 +269,7 @@ sa->>sb: Send Public Certificate
 sb->>sb: Verify signature of challenge string
 sb->>a: Session token, optional payload
 ```
+
 Fig. 4: Sequence diagram of a successful identity verification.
 
 In the diagram, Alice's "optional payload" is extra data that might be requested by servers. This is useful when using a single identity across various polyproto implementations, due to differing information needs. The payload is signed with the actor's private identity key.
@@ -374,9 +374,10 @@ A polyproto compliant server must store KeyPackages for all clients registered o
 - `extensions` can be used to add additional information to the protocol, as defined in section `13. Extensibility` in RFC9420.
 
 A KeyPackage is supposed to be used only once. Servers must ensure the following things:
--  That any KeyPackage is not given out to clients more than once.
--  That the `init_key` values of all KeyPackages are unique, as the `init_key` is what makes the KeyPackage one-time use.
--  That the contents of the `LeafNode` and the `init_key` were signed by the actor who submitted the KeyPackage.
+
+- That any KeyPackage is not given out to clients more than once.
+- That the `init_key` values of all KeyPackages are unique, as the `init_key` is what makes the KeyPackage one-time use.
+- That the contents of the `LeafNode` and the `init_key` were signed by the actor who submitted the KeyPackage.
 
 Because KeyPackages are supposed to be used only once, servers should retain multiple valid KeyPackages for each actor, alerting clients when their stock is running low. Consult the ["Registration needed"-API](/APIs/Core/Routes%3A Registration needed) for more information about how servers should request new KeyPackages from clients. Servers should delete KeyPackages when their validity lapses.
 
@@ -406,7 +407,7 @@ polyproto servers and clients employing encryption must support multi-device use
 ## 7. Keys and signatures
 
 ### 7.1 Home server signed certificates for public client identity keys (ID-Cert)
- 
+
 The ID-Cert, a [X.509](https://en.wikipedia.org/wiki/X.509) certificate, validates a public actor identity key. It is an actor-generated CSR ([Certificate Signing Request](https://en.wikipedia.org/wiki/Certificate_signing_request)), signed by a home server, encompassing actor identity information and the client's public identity key. Clients can get an ID-Cert in return for a valid and well-formed CSR.
 
 All ID-Certs are valid X.509 certificates. However, not all X.509 certificates are valid ID-Certs.
@@ -494,8 +495,8 @@ Optionally, the `DN` can include an `ou` field, representing the organizational 
 The following constraints must be met by ID-Certs:
 
 - If the ID-Cert is a root certificate
-  -  It must have the `CA` flag set to `true`. The path length constraint must be set to `0`.
-  -  It must have the `keyCertSign` and `cRLSign` key usage flags set to `true`.
+  - It must have the `CA` flag set to `true`. The path length constraint must be set to `0`.
+  - It must have the `keyCertSign` and `cRLSign` key usage flags set to `true`.
 - If the ID-Cert is an actor certificate
   - It must have the `CA` flag set to `false`.
   - It must have the `keyCertSign` and `cRLSign` key usage flags set to `false`.
@@ -521,7 +522,7 @@ For example, in the context of a chat application built with polyproto-chat, an 
 - they are friends
 - they have a pending friend request between each other.
 
-Rotating keys is done by using an API route which requires authorization. 
+Rotating keys is done by using an API route which requires authorization.
 
 !!! note
 
@@ -551,6 +552,7 @@ alt verify success
 end
 Note right of s: Send CLIENT_KEY_CHANGE to associated clients
 ```
+
 Fig. 5: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert from their home server.
 
 A server identity key's lifetime might come to an early or unexpected end, perhaps due to some sort of leak of the corresponding private key. When this happens, the server should generate a new identity key pair and broadcast the [`SERVER_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#server_key_change) and [`LOW_KEY_PACKAGES`](/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages) gateway events to all clients. Clients should regenerate their identity keys, request a new ID-Cert (through a CSR), and respond appropriately to the [`LOW_KEY_PACKAGES`](/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages) event. Should a client be offline at the time of the key change, it must be informed of the change upon reconnection.
@@ -611,6 +613,7 @@ sa->>b: Server A ID-Cert
 b->>b: Verify signature of Alice's message
 
 ```
+
 Fig. 6: Sequence diagram of a successful message signature verification.
 
 Bob's client and Server B should now cache Server A's public identity key and Alice's ID-Cert,
@@ -652,7 +655,7 @@ This allows users to switch home servers while not losing ownership of messages 
 
 Migrating an actor always involves reassigning the ownership of all actor-associated data in the
 distributed network to the new actor. Should the old actor want to additionally move all data from
-the old home server to another home server, more steps are needed. 
+the old home server to another home server, more steps are needed.
 
 ### 8.1 Reassigning ownership
 
@@ -664,7 +667,7 @@ Migrating an account is done with the following steps:
 3. The old actor account confirms the migration request by sending a signed API request to the new home
    server. The confirmation contains the federation ID of the new account.
 4. The new server sends this information to the old server, which then sends the new server all
-   information associated with the old account. 
+   information associated with the old account.
    The old server now forward requests regarding the old account to the new server.
    Alternatively, if the old server is shut down, the new server can request the information
    from the old actor directly.
@@ -693,6 +696,7 @@ sb->>ab: New account data
 sa->>sa: Deactivate Alice A's account
 sa->>sa: Setup redirect from Alice A to Alice B
 ```
+
 Fig. 7: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is reachable and cooperative.
 
 Alternatively, if Server A is offline or deemed uncooperative, the following sequence diagram depicts how the migration can be done without Server A's cooperation:
@@ -715,6 +719,7 @@ sb->>sb: Verify, replace Alice B profile with Alice A
 sb->>ab: New account data
 
 ```
+
 Fig. 8: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is unreachable or uncooperative.
 
 !!! question "If the old home server is not needed for the migration, why try to contact it in the first place?"
@@ -766,6 +771,7 @@ ab->>ab: Re-sign messages with own keys
 ab->>sc: Send new messages
 sc->>sc: Verify that only FID and signature related fields have changed
 ```
+
 Fig. 9: Sequence diagram depicting the re-signing procedure.
 
 ### 8.2 Moving data
