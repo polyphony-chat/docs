@@ -468,7 +468,7 @@ Home servers must keep track of the ID-Certs of all users (and their clients) re
     Note right of s: Send CLIENT_KEY_CHANGE to associated clients
     ```
 
-Fig. 5: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert from their home server.
+Fig. 2: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert from their home server.
 
 A server identity key's lifetime might come to an early or unexpected end, perhaps due to some sort of leak of the corresponding private key. When this happens, the server should generate a new identity key pair and broadcast the [`SERVER_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#server_key_change) and [`LOW_KEY_PACKAGES`](/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages) gateway events to all clients. Clients should regenerate their identity keys, request a new ID-Cert (through a CSR), and respond appropriately to the [`LOW_KEY_PACKAGES`](/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages) event. Should a client be offline at the time of the key change, it must be informed of the change upon reconnection.
 
@@ -529,7 +529,7 @@ b->>b: Verify signature of Alice's message
 
 ```
 
-Fig. 6: Sequence diagram of a successful message signature verification.
+Fig. 3: Sequence diagram of a successful message signature verification.
 
 Bob's client and Server B should now cache Server A's public identity key and Alice's ID-Cert,
 to avoid having to request them again.
@@ -612,7 +612,7 @@ sa->>sa: Deactivate Alice A's account
 sa->>sa: Setup redirect from Alice A to Alice B
 ```
 
-Fig. 7: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is reachable and cooperative.
+Fig. 4: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is reachable and cooperative.
 
 Alternatively, if Server A is offline or deemed uncooperative, the following sequence diagram depicts how the migration can be done without Server A's cooperation:
 
@@ -635,7 +635,7 @@ sb->>ab: New account data
 
 ```
 
-Fig. 8: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is unreachable or uncooperative.
+Fig. 5: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is unreachable or uncooperative.
 
 !!! question "If the old home server is not needed for the migration, why try to contact it in the first place?"
 
@@ -687,7 +687,7 @@ ab->>sc: Send new messages
 sc->>sc: Verify that only FID and signature related fields have changed
 ```
 
-Fig. 9: Sequence diagram depicting the re-signing procedure.
+Fig. 6: Sequence diagram depicting the re-signing procedure.
 
 ### 8.2 Moving data
 
@@ -723,6 +723,8 @@ sb->>sb: Verify data integrity
 sb->>ab: Data import successful
 aa-xsa: Deactivate account
 ```
+
+Fig. 7: Sequence diagram depicting the data moving process.
 
 ---
 
