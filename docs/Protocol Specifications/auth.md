@@ -131,7 +131,12 @@ information.
 
 !!! example
 
-    Alice currently has a polyproto identity, which she created when signing up for "https://example.com/chat". When signing up for this service, she didn't need to provide any additional information on registration. However, when she wants to actor her existing identity to sign up for "https://example.com/social", she is asked to provide her email address, which she can provide as the "optional payload". The server can then store the email address in its' database, associate it with Alice's identity, and let Alice log in with her existing identity. 
+    Alice currently has a polyproto identity, which she created when signing up for 
+    "https://example.com/chat". When signing up for this service, she didn't need to provide any
+    additional information on registration. However, when she wants to actor her existing identity
+    to sign up for "https://example.com/social", she is asked to provide her email address, which
+    she can provide as the "optional payload". The server can then store the email address in its'
+    database, associate it with Alice's identity, and let Alice log in with her existing identity. 
 
 If Alice's session token expires, they can repeat this process of requesting a challenge string and,
 together with her ID-Cert, exchange it for a session token. However, if Alice wants to access this
