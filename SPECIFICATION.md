@@ -429,6 +429,22 @@ When signing a CSR, the home server must verify the correctness of all claims pr
 
     TODO: "Session ID" should be stored in DN as UID, "Subject Unique Identifier" should be full federation ID (or left out?)
 
+    As per the polyproto crate documentation:
+
+    ```rs
+    /// [Name] must meet the following criteria to be valid in the context of polyproto:
+    /// - Distinguished name MUST have "common name" attribute, which is equal to the actor or
+    ///   home server name of the subject in question. Only one "common name" is allowed.
+    /// - MUST have AT LEAST one domain component, specifying the home server subdomain for this
+    ///   entity.
+    /// - If actor name, MUST include UID (OID 0.9.2342.19200300.100.1.1) and uniqueIdentifier
+    ///   (OID 0.9.2342.19200300.100.1.44).
+    ///     - UID is the federation ID of the actor.
+    ///     - uniqueIdentifier is the [SessionId] of the actor.
+    /// - MAY have "organizational unit" attributes
+    /// - MAY have other attributes, which might be ignored by other home servers and other clients.
+    ```
+
 The resulting ID-Cert then holds the following information:
 
 | Field Description                                                                            | Special requirements, if any                                                                              | X.509 equivalent                                         |
