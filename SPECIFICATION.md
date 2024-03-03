@@ -1,3 +1,8 @@
+---
+title: polyproto
+weight: 0
+---
+
 # polyproto Specification
 
 **v0.0.0** - Treat this as an unfinished draft.
@@ -797,3 +802,7 @@ sb->>sb: Verify data integrity
 sb->>ab: Data import successful
 aa-xsa: Deactivate account
 ```
+
+---
+
+--8<-- "snippets/glossary.md"

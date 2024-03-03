@@ -1,11 +1,8 @@
----
-title: polyproto
-weight: 0
----
+<!--
+ Copyright (c) 2024 star
+ 
+ This Source Code Form is subject to the terms of the Mozilla Public
+ License, v. 2.0. If a copy of the MPL was not distributed with this
+ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-->
 
-
---8<-- "SPECIFICATION.md"
-
---8<-- "snippets/glossary.md"
-
-**The below creation- and update-times are not accurate. This is only an issue on this page. Please have a look at the [commit history](https://github.com/polyphony-chat/polyproto/commits/main/SPECIFICATION.md) to view when this document was last updated.**
