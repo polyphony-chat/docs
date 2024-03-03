@@ -187,7 +187,7 @@ then a WebSocket connection should be considered.
 ## 4. Federated identity
 
 The federation of actor identities allows users to engage with foreign servers as if they were their
-home servers. For instance, in polyproto-chat, an actor can send direct messages to users from a
+home servers. For example, in polyproto-chat, an actor can send direct messages to users from a
 different server or join the Guilds of other servers.
 
 Identity certificates defined in sections [#7. Keys and signatures](#7-keys-and-signatures) and
