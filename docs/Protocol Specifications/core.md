@@ -510,7 +510,7 @@ As briefly mentioned section [#4](#4-federated-identity), users must hold on to 
 
 To ensure message integrity via signing, clients and servers must verify message signatures. This involves cross-checking the message signature against the sender's ID-Cert and the senders' home server's root certificate, while also confirming the validity of the ID-Cert attached to the message and ensuring its public key matches the sender's.
 
-**Example:** Given a signed message from Alice, such as Bob would receive from Server B in [Fig. 3](#fig-3), Bob's client would verify the signature of the message like this:
+**Example:** Given a signed message from Alice, such as Bob would receive from Server B, Bob's client would verify the signature of the message like this:
 
 ```mermaid
 sequenceDiagram

@@ -98,8 +98,8 @@ Alice                                          Server                           
 |                                              |--------------------------------->|
 |                                              |                                  |
 ```
-Fig. 4: Sequence diagram of a successful encrypted direct message creation. 
 
+Fig. 4: Sequence diagram of a successful encrypted direct message creation.
 
 ### 6.3 Encrypted group messages
 
@@ -158,6 +158,7 @@ Alice (gatekeeper)                                 Server                       
 |                                                  |------------------------------------------------>|
 |                                                  |                                       |         |
 ```
+
 Fig. 5: Sequence diagram of a successful encrypted group creation with 3 members.
 
 ### 6.4 Joining new devices from existing users
