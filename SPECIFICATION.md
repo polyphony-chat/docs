@@ -479,8 +479,8 @@ must include the following fields:
 dn: cn=<actor or home server name>, dc=<home server subdomain, if any>, dc=<home server domain>, dc=<hosme server tld, if any>
 ```
 
-If the home server does not have a subdomain or tld, the `dc` fields for these components should
-be omitted. 
+If the home server does not have a subdomain or top level domain, the `dc` fields for these
+components should be omitted.
 
 Optionally, the `DN` can include an `ou` field, representing the organizational unit of the actor.
 
