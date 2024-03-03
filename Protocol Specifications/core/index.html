@@ -2150,13 +2150,28 @@ The version number specified here also applies to the API documentation.</p>
 <p class="admonition-title">TODO</p>
 <p>TODO: Check figure numbers and section numbers for correctness.</p>
 </div>
-<p>The polyproto protocol is a home-server-based identity federation protocol specification intended for use in applications where actor identity is needed. polyproto focuses on federated identity, and apart from the usage of Messaging Layer Security (MLS) for encryption, does not specify any application-specific features. Instead, it is intended to be used as a base for application implementations and other protocols, such as <code>polyproto-chat</code> - a chat protocol built on top of polyproto. Through a shared "base layer", polyproto implementations are intercompatible in a way where one identity can be used across various polyproto implementations.</p>
-<p>No part of polyproto is considered less important than any other part, and all parts of polyproto are required for a polyproto implementation to be considered compliant with the polyproto specification. The only exception to this is the encryption part of polyproto, which is optional, as the necessity of encryption depends on the specific implementation.</p>
-<p>This document is intended to be used as a starting point for developers wanting to develop software, which can operate with other polyproto implementations.</p>
+<p>The polyproto protocol is a home-server-based identity federation protocol specification intended
+for use in applications where actor identity is needed. polyproto focuses on federated identity,
+and apart from the usage of Messaging Layer Security (MLS) for encryption, does not specify any
+application-specific features. Instead, it is intended to be used as a base for application
+implementations and other protocols, such as <code>polyproto-chat</code> - a chat protocol built on top of
+polyproto. Through a shared "base layer", polyproto implementations are intercompatible in a way
+where one identity can be used across various polyproto implementations.</p>
+<p>No part of polyproto is considered less important than any other part, and all parts of polyproto
+are required for a polyproto implementation to be considered compliant with the polyproto
+specification. The only exception to this is the encryption part of polyproto, which is optional,
+as the necessity of encryption depends on the specific implementation.</p>
+<p>This document is intended to be used as a starting point for developers wanting to develop software,
+which can operate with other polyproto implementations.</p>
 <h2 id="1-terminology-used-in-this-document">1. Terminology used in this document<a class="headerlink" href="#1-terminology-used-in-this-document" title="Permanent link">&para;</a></h2>
-<p>In addition to the terminology found in the glossary located at the end of this document, the following terminology is used throughout this document:</p>
+<p>In addition to the terminology found in the glossary located at the end of this document, the
+following terminology is used throughout this document:</p>
 <ul>
-<li><strong>Message, Messages</strong>: In the context of this protocol specification, a <strong>message</strong> is any piece of data sent by a client that is intended to be identifiable as being sent by a specific actor. To qualify as a "message", this piece of data must also, at any point in time, and also if only briefly, be visible to other users or to the unauthenticated public. Examples of things that would qualify as messages include:</li>
+<li><strong>Message, Messages</strong>: In the context of this protocol specification, a <strong>message</strong> is any piece
+  of data sent by a client that is intended to be identifiable as being sent by a specific actor.
+  To qualify as a "message", this piece of data must also, at any point in time, and also if only
+  briefly, be visible to other users or to the unauthenticated public. Examples of things that would
+  qualify as messages include:</li>
 <li>A message sent to another actor in a chat application</li>
 <li>A post on a social media platform</li>
 <li>A "like" interaction on a social media platform</li>
@@ -2164,20 +2179,24 @@ The version number specified here also applies to the API documentation.</p>
 <li>Group join or leave messages</li>
 <li>Reporting a post or actor, if the report is not anonymous</li>
 </ul>
-<p>Terminology not specified in this section or in the glossary has been defined somewhere else in this document.</p>
+<p>Terminology not specified in this section or in the glossary has been defined somewhere else in this
+document.</p>
 <h2 id="2-trust-model">2. Trust model<a class="headerlink" href="#2-trust-model" title="Permanent link">&para;</a></h2>
 <p>polyproto operates under the following trust assumptions:</p>
 <ol>
-<li>Users entrust their home server and its admins with data security and discretion on actions appearing as actor-performed.</li>
+<li>Users entrust their home server and its admins with data security and discretion on actions</li>
+<li>appearing as actor-performed.</li>
 <li>Users only distrust their home servers in case of irregularities or conflicting information.</li>
 <li>In a federated context, users trust foreign servers with all unencrypted data.</li>
 <li>Users trust MLS channel members with their data and attached metadata.</li>
 <li>Foreign servers cannot impersonate users without explicit consent.</li>
-<li>Users rely on their home servers for identity key certification, without the home servers possessing the identity.</li>
+<li>Users rely on their home servers for identity key certification, without the home servers</li>
+<li>possessing the identity.</li>
 </ol>
 <h2 id="3-apis-and-communication-protocols">3. APIs and communication protocols<a class="headerlink" href="#3-apis-and-communication-protocols" title="Permanent link">&para;</a></h2>
 <p>The polyproto specification defines a set of <a href="/APIs">APIs</a>.
-In addition to these REST APIs, polyproto employs WebSockets for real-time communication between clients and servers.</p>
+In addition to these REST APIs, polyproto employs WebSockets for real-time communication between
+clients and servers.</p>
 <h3 id="33-websockets">3.3 WebSockets<a class="headerlink" href="#33-websockets" title="Permanent link">&para;</a></h3>
 <p>WebSockets enable real-time communication between actor clients and servers.</p>
 <p>WebSocket connections to polyproto servers consist of the following cycle:</p>
@@ -2224,7 +2243,8 @@ behaviour is supported.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
 <p>An example of an implementation context where having a constant WebSocket might not be wanted would
-be Urban IoT devices, or devices with a limited or only periodically available internet connection. </p>
+be Urban IoT devices, or devices with a limited or only periodically available internet
+connection. </p>
 </div>
 <p>Querying <a href="/APIs/Core/Routes%3A No registration needed/#get-events">this endpoint</a> yields a JSON-Array
 containing either all events the session has missed since disconnecting from the WebSocket, or all events
@@ -2246,12 +2266,16 @@ a long-polling endpoint.</p>
 ranging from a few minutes to a few days. If a client requires information more often than that,
 then a WebSocket connection should be considered.</p>
 <h2 id="4-federated-identity">4. Federated identity<a class="headerlink" href="#4-federated-identity" title="Permanent link">&para;</a></h2>
-<p>The federation of actor identities allows users to engage with foreign servers as if they were their home servers.
-For instance, in polyproto-chat, an actor can send direct messages to users from a different server or join the Guilds of other servers.</p>
-<p>Identity certificates defined in sections <a href="#7-keys-and-signatures">#7. Keys and signatures</a> and <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">#7.1 Home server signed certificates for public client identity keys (ID-Cert)</a> are employed to sign messages that the actor sends to other servers.</p>
+<p>The federation of actor identities allows users to engage with foreign servers as if they were their
+home servers. For instance, in polyproto-chat, an actor can send direct messages to users from a
+different server or join the Guilds of other servers.</p>
+<p>Identity certificates defined in sections <a href="#7-keys-and-signatures">#7. Keys and signatures</a> and
+<a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">#7.1 Home server signed certificates for public client identity keys (ID-Cert)</a>
+are employed to sign messages that the actor sends to other servers.</p>
 <div class="admonition note">
 <p class="admonition-title">Using one identity for several polyproto implementations</p>
-<p>An actor can choose to use the same identity for multiple polyproto implementations. If section <a href="#413-authenticating-on-a-foreign-server">4.1.3</a> is implemented correctly, this should not be a problem.</p>
+<p>An actor can choose to use the same identity for multiple polyproto implementations. If section
+<a href="#413-authenticating-on-a-foreign-server">4.1.3</a> is implemented correctly, this should not be a problem.</p>
 </div>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
@@ -2283,11 +2307,17 @@ data (such as messages, in the context of a chat application) sent on the other 
 <div class="admonition abstract">
 <p class="admonition-title">Abstract</p>
 <p>The above scenario is not unique to polyproto, and rather a problem other federated services/
-protocols, like ActivityPub, have as well. There is no real solution to this problem, but it can be
-mitigated a bit by making it more difficult for malicious home servers to do something like this
-without the actor noticing.</p>
+protocols, like ActivityPub, have as well. There is no real solution to this problem, but it can
+be mitigated a bit by making it more difficult for malicious home servers to do something like
+this without the actor noticing.</p>
 </div>
-<p>Polyproto servers need to inform users of new session tokens. This visibility hampers malicious home servers, but does not solve the issue of them being able to create federation tokens for servers the actor does not connect to. This is because, naturally, users cannot receive notifications without a connection. Clients re-establishing server connections must be updated on any new session tokens generated during their absence. The <code>NEW_SESSION</code> gateway event must be dispatched to all sessions, excluding the new session. The <code>NEW_SESSION</code> event's stored data can be accessed in the <a href="/docs/APIs/Core/WebSockets/gateway_events.md#new_session">Gateway Events documentation</a>.</p>
+<p>Polyproto servers need to inform users of new session tokens. This visibility hampers malicious home
+servers, but does not solve the issue of them being able to create federation tokens for servers the
+actor does not connect to. This is because, naturally, users cannot receive notifications without a
+connection. Clients re-establishing server connections must be updated on any new session tokens
+generated during their absence. The <code>NEW_SESSION</code> gateway event must be dispatched to all sessions,
+excluding the new session. The <code>NEW_SESSION</code> event's stored data can be accessed in the
+<a href="/docs/APIs/Core/WebSockets/gateway_events.md#new_session">Gateway Events documentation</a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>With proper safety precautions and strong encryption, it is extremely unlikely for a malicious
@@ -2297,7 +2327,9 @@ session cannot decrypt any messages sent before its' join epoch. If secrecy or c
 are of concern, users should host their own home server and use end-to-end encryption.</p>
 </div>
 <h2 id="5-users">5. Users<a class="headerlink" href="#5-users" title="Permanent link">&para;</a></h2>
-<p>Every client requires an associated actor identity. Users are distinguished by a unique federation ID (FID), consist of their username, which is unique per instance, and the instance's root domain. This combination ensures global uniqueness.</p>
+<p>Every client requires an associated actor identity. Users are distinguished by a unique federation
+ID (FID), consist of their username, which is unique per instance, and the instance's root domain.
+This combination ensures global uniqueness.</p>
 <p>FIDs used in public contexts are formatted as <code>actor@optionalsubdomain.domain.tld</code>, and are case-insensitive.</p>
 <p>The following regular expression can be used to validate actor IDs: <code>\b([A-Z0-9._%+-]+)@([A-Z0-9.-]+\.[A-Z]{2,})\b</code>.</p>
 <div class="admonition note">
@@ -2311,8 +2343,14 @@ and <a href="#722-message-verification">Section #7.2.2</a> for more information.
 <h2 id="6-encryption">6. Encryption<a class="headerlink" href="#6-encryption" title="Permanent link">&para;</a></h2>
 <div class="admonition abstract">
 <p class="admonition-title">About MLS</p>
-<p>Polyproto offers end-to-end encryption for messages via <a href="https://messaginglayersecurity.rocks/">Message Layer Security (MLS)</a>. polyproto compliant servers take on the role of both an Authentication Service and a Delivery Service in the context of MLS.</p>
-<p>MLS is a cryptographic protocol that provides confidentiality, integrity, and authenticity guarantees for group messaging applications. It builds on top of the <a href="https://signal.org/docs/specifications/doubleratchet/">Double Ratchet Algorithm</a> and <a href="https://signal.org/docs/specifications/x3dh/">X3DH</a> to provide these security guarantees.</p>
+<p>Polyproto offers end-to-end encryption for messages via
+<a href="https://messaginglayersecurity.rocks/">Message Layer Security (MLS)</a>. polyproto compliant
+servers take on the role of both an Authentication Service and a Delivery Service in the context
+of MLS.</p>
+<p>MLS is a cryptographic protocol that provides confidentiality, integrity, and authenticity
+guarantees for group messaging applications. It builds on top of the
+<a href="https://signal.org/docs/specifications/doubleratchet/">Double Ratchet Algorithm</a> and
+<a href="https://signal.org/docs/specifications/x3dh/">X3DH</a> to provide these security guarantees.</p>
 </div>
 <p>Implementations of polyproto can opt to support encryption to secure communication channels.
 The selected security protocol for all polyproto implementations is the Messaging Layer Security
@@ -2320,7 +2358,8 @@ protocol, given its feasibility within the implementation context. MLS inherentl
 negotiation of protocol versions, cipher suites, extensions, credential types, and extra proposal
 types. For two implementations of polyproto to be compatible with each other in the context of
 encryption, they must have overlapping capabilities in these areas.</p>
-<p>The following sections explain the additional behavior that polyproto implementations utilizing MLS must implement.</p>
+<p>The following sections explain the additional behavior that polyproto implementations utilizing MLS
+must implement.</p>
 <h3 id="61-keypackages">6.1. KeyPackages<a class="headerlink" href="#61-keypackages" title="Permanent link">&para;</a></h3>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -2341,35 +2380,60 @@ KeyPackage is a JSON object that contains the following information:</p>
 </code></pre></div>
 <ul>
 <li><code>protocol_version</code> denotes the MLS protocol version.</li>
-<li><code>cipher_suite</code> indicates the used cipher suite for this KeyPackage. Note that a server can store many KeyPackages for a single actor, to support various cipher suites.</li>
+<li><code>cipher_suite</code> indicates the used cipher suite for this KeyPackage. Note that a server can store
+  many KeyPackages for a single actor, to support various cipher suites.</li>
 <li><code>init_key</code> is a public key for encrypting initial group secrets.</li>
-<li><code>leaf_node</code> is a signed <code>LeafNodeTBS</code> struct as defined in section <code>7.2. Leaf Node Contents</code> in RFC9420. A <code>LeafNode</code> has information representing a users' identity, in the form of the users' <strong>ID-Cert</strong> for a given session or client. The <code>LeafNodeTBS</code> is signed by using the actor's private identity key.</li>
-<li><code>extensions</code> can be used to add additional information to the protocol, as defined in section <code>13. Extensibility</code> in RFC9420.</li>
+<li><code>leaf_node</code> is a signed <code>LeafNodeTBS</code> struct as defined in section <code>7.2. Leaf Node Contents</code> in
+  RFC9420. A <code>LeafNode</code> has information representing a users' identity, in the form of the users'
+  <strong>ID-Cert</strong> for a given session or client. The <code>LeafNodeTBS</code> is signed by using the actor's
+  private identity key.</li>
+<li><code>extensions</code> can be used to add additional information to the protocol, as defined in section
+  <code>13. Extensibility</code> in RFC9420.</li>
 </ul>
 <p>A KeyPackage is supposed to be used only once. Servers must ensure the following things:</p>
 <ul>
 <li>That any KeyPackage is not given out to clients more than once.</li>
-<li>That the <code>init_key</code> values of all KeyPackages are unique, as the <code>init_key</code> is what makes the KeyPackage one-time use.</li>
+<li>That the <code>init_key</code> values of all KeyPackages are unique, as the <code>init_key</code> is what makes the
+  KeyPackage one-time use.</li>
 <li>That the contents of the <code>LeafNode</code> and the <code>init_key</code> were signed by the actor who submitted the KeyPackage.</li>
 </ul>
-<p>Because KeyPackages are supposed to be used only once, servers should retain multiple valid KeyPackages for each actor, alerting clients when their stock is running low. Consult the <a href="/APIs/Core/Routes%3A Registration needed">"Registration needed"-API</a> for more information about how servers should request new KeyPackages from clients. Servers should delete KeyPackages when their validity lapses.</p>
+<p>Because KeyPackages are supposed to be used only once, servers should retain multiple valid
+KeyPackages for each actor, alerting clients when their stock is running low. Consult the
+<a href="/APIs/Core/Routes%3A Registration needed">"Registration needed"-API</a> for more information about
+how servers should request new KeyPackages from clients. Servers should delete KeyPackages when
+their validity lapses.</p>
 <p>Servers only store KeyPackages for home server users, not for foreign users.</p>
 <div class="admonition note">
 <p class="admonition-title">About keys</p>
-<p>It is recommended that keys are generated using the <code>EdDSA</code> signature scheme, however, other signature schemes may be used as well.
-Consider, that intercompatibility can only be guaranteed if all communicating parties have an overlapping set of supported signature schemes.</p>
+<p>It is recommended that keys are generated using the <code>EdDSA</code> signature scheme, however, other
+signature schemes may be used as well.
+Consider, that intercompatibility can only be guaranteed if all communicating parties have an
+overlapping set of supported signature schemes.</p>
 </div>
 <h4 id="611-last-resort-keypackages">6.1.1 Last resort KeyPackages<a class="headerlink" href="#611-last-resort-keypackages" title="Permanent link">&para;</a></h4>
-<p>A "last resort" KeyPackage, which, contrasting regular KeyPackages, is reusable, is issued when a server runs out of regular KeyPackages for an actor. This is to prevent <code>DoS</code> attacks, where malicious clients deplete all KeyPackages for a given actor, blocking that actor's inclusion into encrypted groups or guild channels.</p>
-<p>Servers are to replace a "last resort" KeyPackage after it has been used at least once by requesting one from the client.</p>
+<p>A "last resort" KeyPackage, which, contrasting regular KeyPackages, is reusable, is issued when a
+server runs out of regular KeyPackages for an actor. This is to prevent <code>DoS</code> attacks, where
+malicious clients deplete all KeyPackages for a given actor, blocking that actor's inclusion into
+encrypted groups or guild channels.</p>
+<p>Servers are to replace a "last resort" KeyPackage after it has been used at least once by requesting
+one from the client.</p>
 <h3 id="62-initial-authentication">6.2 Initial authentication<a class="headerlink" href="#62-initial-authentication" title="Permanent link">&para;</a></h3>
-<p>During the initial authentication process, a client must provide at least one <a href="#61-keypackages">KeyPackage</a> and one <a href="#611-last-resort-keypackages">"last resort" KeyPackage</a> to the server, in addition to the required registration information.</p>
-<p>The public identity key inside the <code>LeafNode</code> of this KeyPackage corresponds to the public identity key found inside a clients' ID-Cert.</p>
+<p>During the initial authentication process, a client must provide at least one
+<a href="#61-keypackages">KeyPackage</a> and one <a href="#611-last-resort-keypackages">"last resort" KeyPackage</a> to
+the server, in addition to the required registration information.</p>
+<p>The public identity key inside the <code>LeafNode</code> of this KeyPackage corresponds to the public identity
+key found inside a clients' ID-Cert.</p>
 <h3 id="63-multi-device-support">6.3 Multi-device support<a class="headerlink" href="#63-multi-device-support" title="Permanent link">&para;</a></h3>
-<p>polyproto servers and clients employing encryption must support multi-device use. The MLS protocol assigns each device a unique <code>LeafNode</code> and prohibits key sharing across devices. Each device offers distinct KeyPackages and an own ID-Cert.</p>
+<p>polyproto servers and clients employing encryption must support multi-device use. The MLS protocol
+assigns each device a unique <code>LeafNode</code> and prohibits key sharing across devices. Each device offers
+distinct KeyPackages and an own ID-Cert.</p>
 <h2 id="7-keys-and-signatures">7. Keys and signatures<a class="headerlink" href="#7-keys-and-signatures" title="Permanent link">&para;</a></h2>
 <h3 id="71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">7.1 Home server signed certificates for public client identity keys (ID-Cert)<a class="headerlink" href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert" title="Permanent link">&para;</a></h3>
-<p>The ID-Cert, a <a href="https://en.wikipedia.org/wiki/X.509">X.509</a> certificate, validates a public actor identity key. It is an actor-generated CSR (<a href="https://en.wikipedia.org/wiki/Certificate_signing_request">Certificate Signing Request</a>), signed by a home server, encompassing actor identity information and the client's public identity key. Clients can get an ID-Cert in return for a valid and well-formed CSR.</p>
+<p>The ID-Cert, a <a href="https://en.wikipedia.org/wiki/X.509">X.509</a> certificate, validates a public actor
+identity key. It is an actor-generated CSR
+(<a href="https://en.wikipedia.org/wiki/Certificate_signing_request">Certificate Signing Request</a>), signed
+by a home server, encompassing actor identity information and the client's public identity key.
+Clients can get an ID-Cert in return for a valid and well-formed CSR.</p>
 <p>All ID-Certs are valid X.509 certificates. However, not all X.509 certificates are valid ID-Certs.</p>
 <p>ID-Certs form the basis of message signing and verification in polyproto.
 They are used to verify the identity of a client, and to verify the integrity of messages sent by a
@@ -2378,8 +2442,10 @@ client.</p>
 <ul>
 <li>The public identity key of the client.</li>
 <li>The federation ID of the actor associated with the client.</li>
-<li>The session ID of the client. The session ID is a unique identifier for a session, which does not change when a client rotates their identity keys.</li>
-<li>Optionally, an expiry date for the certificate. This expiry date must be less than or equal to the expiry date of the home servers' public identity key certificate.</li>
+<li>The session ID of the client. The session ID is a unique identifier for a session, which does not
+  change when a client rotates their identity keys.</li>
+<li>Optionally, an expiry date for the certificate. This expiry date must be less than or equal to the
+  expiry date of the home servers' public identity key certificate.</li>
 </ul>
 <p>When signing a CSR, the home server must verify the correctness of all claims presented in the CSR.</p>
 <div class="admonition warning">
@@ -2390,7 +2456,8 @@ and <strong>all</strong> other claims presented in the certificate.</p>
 </div>
 <div class="admonition bug">
 <p class="admonition-title">TODO</p>
-<p>TODO: "Session ID" should be stored in DN as UID, "Subject Unique Identifier" should be full federation ID (or left out?)</p>
+<p>TODO: "Session ID" should be stored in DN as UID, "Subject Unique Identifier" should be full
+federation ID (or left out?)</p>
 <p>As per the polyproto crate documentation:</p>
 <div class="language-rs highlight"><span class="filename">Rust</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="sd">/// [Name] must meet the following criteria to be valid in the context of polyproto:</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="sd">/// - Distinguished name MUST have &quot;common name&quot; attribute, which is equal to the actor or</span>
@@ -2482,7 +2549,9 @@ and <strong>all</strong> other claims presented in the certificate.</p>
 an X.509 certificate is defined in <a href="https://tools.ietf.org/html/rfc5280">RFC5280</a>.
 ID-Certs encompass a subset of the structure of an X.509 certificate.</p>
 <h5 id="7111-distinguished-names-dns">7.1.1.1 Distinguished Names (<code>DNs</code>)<a class="headerlink" href="#7111-distinguished-names-dns" title="Permanent link">&para;</a></h5>
-<p>The Distinguished Names (<code>DNs</code>), according to the <a href="https://en.wikipedia.org/wiki/LDAP_Data_Interchange_Format">LDAP Data Interchange Format (LDIF)</a>. The <code>DN</code> is a sequence of relative distinguished names (<code>RDNs</code>).</p>
+<p>The Distinguished Names (<code>DNs</code>), according to the
+<a href="https://en.wikipedia.org/wiki/LDAP_Data_Interchange_Format">LDAP Data Interchange Format (LDIF)</a>.
+The <code>DN</code> is a sequence of relative distinguished names (<code>RDNs</code>).</p>
 <p>The distinguished name must be unique for each certificate issued by a home server. The <code>DN</code> of an ID-Cert
 must include the following fields:</p>
 <div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code>```md
@@ -2504,15 +2573,31 @@ components should be omitted.</p>
 <li>It must have the <code>digitalSignature</code> key usage flag set to <code>true</code>.</li>
 </ul>
 <h4 id="712-necessity-of-id-certs">7.1.2 Necessity of ID-Certs<a class="headerlink" href="#712-necessity-of-id-certs" title="Permanent link">&para;</a></h4>
-<p>The addition of a certificate might seem ubiquitous, but it is necessary to prevent a malicious foreign server from abusing public identity key caching to impersonate an actor. Consider the following example which employs foreign server public identity key caching, but no home server issued identity key certificates:</p>
+<p>The addition of a certificate might seem ubiquitous, but it is necessary to prevent a malicious
+foreign server from abusing public identity key caching to impersonate an actor. Consider the
+following example which employs foreign server public identity key caching, but no home server
+issued identity key certificates:</p>
 <div class="admonition example">
 <p class="admonition-title">Potential abuse scenario</p>
-<p>A malicious foreign server B can fake a message from Alice (Home server: Server A) to Bob (Home Server: Server B), by generating a new identity key pair and using it to sign the malicious message. The foreign server then sends that message to Bob, who will then request Alice's public identity key from Server B, who will then send Bob the malicious public identity key. Bob will succeed in verifying the signature of the message, and not notice that the message is malicious.</p>
+<p>A malicious foreign server B can fake a message from Alice (Home server: Server A) to Bob
+(Home Server: Server B), by generating a new identity key pair and using it to sign the
+malicious message. The foreign server then sends that message to Bob, who will then request
+Alice's public identity key from Server B, who will then send Bob the malicious public identity
+key. Bob will succeed in verifying the signature of the message, and not notice that the message
+is malicious.</p>
 </div>
-<p>The above scenario is not possible with home server issued identity key certificates, as the malicious server cannot generate an identity key pair for Alice, which is signed by Server A.</p>
+<p>The above scenario is not possible with home server issued identity key certificates, as the
+malicious server cannot generate an identity key pair for Alice, which is signed by Server A.</p>
 <h4 id="713-key-rotation">7.1.3 Key rotation<a class="headerlink" href="#713-key-rotation" title="Permanent link">&para;</a></h4>
-<p>A session can choose to rotate their ID-Cert at any time. This is done by generating a new identity key pair, using the new private key to generate a new CSR, and sending the new Certificate Signing Request to the home server, along with at least one new KeyPackage and a corresponding 'last resort' KeyPackage. The home server will then generate the new ID-Cert, send it to the client, and let all associated clients know that this clients' public identity key has changed. The server does this by sending a <a href="/docs/APIs/Core/WebSockets/gateway_events.md#client_key_change"><code>CLIENT_KEY_CHANGE</code></a> gateway event to those clients.</p>
-<p>For example, in the context of a chat application built with polyproto-chat, an associating relationship between two clients exists, if:</p>
+<p>A session can choose to rotate their ID-Cert at any time. This is done by generating a new identity
+key pair, using the new private key to generate a new CSR, and sending the new Certificate Signing
+Request to the home server, along with at least one new KeyPackage and a corresponding 'last resort'
+KeyPackage. The home server will then generate the new ID-Cert, send it to the client, and let all
+associated clients know that this clients' public identity key has changed. The server does this by
+sending a <a href="/docs/APIs/Core/WebSockets/gateway_events.md#client_key_change"><code>CLIENT_KEY_CHANGE</code></a>
+gateway event to those clients.</p>
+<p>For example, in the context of a chat application built with polyproto-chat, an associating
+relationship between two clients exists, if:</p>
 <ul>
 <li>the two clients share a guild, a group or a direct message channel</li>
 <li>they are friends</li>
@@ -2527,8 +2612,14 @@ devices they no longer use. Depending on your use case, this might be a security
 potentially simplifies account takeovers. Whether and how this risk is mitigated is up to 
 concrete implementations.</p>
 </div>
-<p>Before sending any messages to a server, a client that performed a key rotation should inform the server of that change. This is to ensure that the server has cached the correct ID-Cert for this session.</p>
-<p>Home servers must keep track of the ID-Certs of all users (and their clients) registered on them, and must provide a clients' ID-Cert for a given timestamp on request. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of an actor likely changes over time and users must sign all messages they send to servers. Likewise, a client should also keep all of its own ID-Certs stored perpetually, to potentially verify its identity in case of a migration.</p>
+<p>Before sending any messages to a server, a client that performed a key rotation should inform the
+server of that change. This is to ensure that the server has cached the correct ID-Cert for this session.</p>
+<p>Home servers must keep track of the ID-Certs of all users (and their clients) registered on them,
+and must provide a clients' ID-Cert for a given timestamp on request. This is to ensure messages
+sent by users, even ones sent a long time ago, can be verified by other servers and their users.
+This is because the public key of an actor likely changes over time and users must sign all messages
+they send to servers. Likewise, a client should also keep all of its own ID-Certs stored
+perpetually, to potentially verify its identity in case of a migration.</p>
 <div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code>```mermaid
 sequenceDiagram
 autonumber
@@ -2546,11 +2637,21 @@ end
 Note right of s: Send CLIENT_KEY_CHANGE to associated clients
 ```
 </code></pre></div>
-<p>Fig. 2: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert from their home server.</p>
-<p>A server identity key's lifetime might come to an early or unexpected end, perhaps due to some sort of leak of the corresponding private key. When this happens, the server should generate a new identity key pair and broadcast the <a href="/docs/APIs/Core/WebSockets/gateway_events.md#server_key_change"><code>SERVER_KEY_CHANGE</code></a> and <a href="/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages"><code>LOW_KEY_PACKAGES</code></a> gateway events to all clients. Clients should regenerate their identity keys, request a new ID-Cert (through a CSR), and respond appropriately to the <a href="/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages"><code>LOW_KEY_PACKAGES</code></a> event. Should a client be offline at the time of the key change, it must be informed of the change upon reconnection.</p>
+<p>Fig. 2: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert
+from their home server.</p>
+<p>A server identity key's lifetime might come to an early or unexpected end, perhaps due to some sort
+of leak of the corresponding private key. When this happens, the server should generate a new
+identity key pair and broadcast the
+<a href="/docs/APIs/Core/WebSockets/gateway_events.md#server_key_change"><code>SERVER_KEY_CHANGE</code></a> and
+<a href="/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages"><code>LOW_KEY_PACKAGES</code></a> gateway events
+to all clients. Clients should regenerate their identity keys, request a new ID-Cert (through a CSR),
+and respond appropriately to the <a href="/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages"><code>LOW_KEY_PACKAGES</code></a>
+event. Should a client be offline at the time of the key change, it must be informed of the change
+upon reconnection.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>A <code>LOW_KEY_PACKAGES</code> event is only sent by servers which use MLS encryption. Server/Clients not implementing MLS encryption can safely ignore this event.</p>
+<p>A <code>LOW_KEY_PACKAGES</code> event is only sent by servers which use MLS encryption. Server/Clients not
+implementing MLS encryption can safely ignore this event.</p>
 </div>
 <h5 id="7131-a-note-about-crls-certificate-revocation-lists">7.1.3.1 A note about CRLs (Certificate revocation lists)<a class="headerlink" href="#7131-a-note-about-crls-certificate-revocation-lists" title="Permanent link">&para;</a></h5>
 <p>It is common for systems relying on X.509 certificates for user authentication to use Certificate
@@ -2566,7 +2667,15 @@ initiated by the actor themselves, the actor already lets all servers they are c
 the certificate in question is no longer valid.</p>
 <p>polyproto does not require the use of CRLs or OCSP.</p>
 <h3 id="72-actor-identity-keys-and-message-signing">7.2 Actor identity keys and message signing<a class="headerlink" href="#72-actor-identity-keys-and-message-signing" title="Permanent link">&para;</a></h3>
-<p>As briefly mentioned section <a href="#4-federated-identity">#4</a>, users must hold on to an identity key pair at all times. This key pair is used to represent an actor's identity and to verify message integrity, by having an actor sign all messages they send with their private identity key. The key pair is generated by the actor. An actor-generated identity key certificate signing request (CSR) is sent to the actor's home server when first connecting to the server with a new session, or when rotating keys. The key is stored in the client's local storage. Upon receiving a new identity key CSR, a home server will sign this CSR and send the resulting ID-Cert to the client. This certificate is proof that the home server attests to the clients key. Read <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">section 7.1</a> for more information on the certificate.</p>
+<p>As briefly mentioned section <a href="#4-federated-identity">#4</a>, users must hold on to an identity key pair
+at all times. This key pair is used to represent an actor's identity and to verify message integrity,
+by having an actor sign all messages they send with their private identity key. The key pair is
+generated by the actor. An actor-generated identity key certificate signing request (CSR) is sent
+to the actor's home server when first connecting to the server with a new session, or when rotating
+keys. The key is stored in the client's local storage. Upon receiving a new identity key CSR, a
+home server will sign this CSR and send the resulting ID-Cert to the client. This certificate is
+proof that the home server attests to the clients key. Read <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">section 7.1</a>
+for more information on the certificate.</p>
 <h4 id="722-message-verification">7.2.2 Message verification<a class="headerlink" href="#722-message-verification" title="Permanent link">&para;</a></h4>
 <div class="admonition bug">
 <p class="admonition-title">TODO</p>
@@ -2576,8 +2685,12 @@ the certificate in question is no longer valid.</p>
 <p class="admonition-title">TODO</p>
 <p>TODO: Add the information that PKCS#10 is used for CSRs, and that CSRs are DER encoded.</p>
 </div>
-<p>To ensure message integrity via signing, clients and servers must verify message signatures. This involves cross-checking the message signature against the sender's ID-Cert and the senders' home server's root certificate, while also confirming the validity of the ID-Cert attached to the message and ensuring its public key matches the sender's.</p>
-<p><strong>Example:</strong> Given a signed message from Alice, such as Bob would receive from Server B, Bob's client would verify the signature of the message like this:</p>
+<p>To ensure message integrity via signing, clients and servers must verify message signatures.
+This involves cross-checking the message signature against the sender's ID-Cert and the senders'
+home server's root certificate, while also confirming the validity of the ID-Cert attached to the
+message and ensuring its public key matches the sender's.</p>
+<p><strong>Example:</strong> Given a signed message from Alice, such as Bob would receive from Server B, Bob's
+client would verify the signature of the message like this:</p>
 <pre class="mermaid"><code>sequenceDiagram
 autonumber
 
@@ -2595,27 +2708,50 @@ b-&gt;&gt;b: Verify signature of Alice's message
 <p>Fig. 3: Sequence diagram of a successful message signature verification.</p>
 <p>Bob's client and Server B should now cache Server A's public identity key and Alice's ID-Cert,
 to avoid having to request them again.</p>
-<p>If the verification fails, Bob's client should try to re-request the key from Server B first. Should the verification fail again, Bob's client can try to request Alice's public identity key and ID-Cert from Server A (Alice's home server). The signature verification process should then be re-tried. Should the verification still not succeed, the message should be treated with extreme caution.</p>
+<p>If the verification fails, Bob's client should try to re-request the key from Server B first.
+Should the verification fail again, Bob's client can try to request Alice's public identity key
+and ID-Cert from Server A (Alice's home server). The signature verification process should then be
+re-tried. Should the verification still not succeed, the message should be treated with extreme
+caution.</p>
 <div class="admonition question">
 <p class="admonition-title">Why does Bob's client not request Alice's public identity key from Server A?</p>
-<p>Bob's client could request Alice's public identity key from Server A, instead of Server B. However, this is discouraged, as it</p>
+<p>Bob's client could request Alice's public identity key from Server A, instead of Server B.
+However, this is discouraged, as it</p>
 <ul>
-<li>Generates unnecessary load on Server A; Doing it this way distributes the load of public identity key requests more fairly, as the server that the message was sent on is the one that has to process the bulk of public identity key requests.</li>
-<li>Would expose unnecessary metadata to Server A; Server A does not need to know who exactly Alice is talking to, and when. Only Server B, Alice and Bob need to know this information. Always requesting the public identity key from Server A might expose this information to Server A.</li>
+<li>Generates unnecessary load on Server A; Doing it this way distributes the load of public
+  identity key requests more fairly, as the server that the message was sent on is the one that
+  has to process the bulk of public identity key requests.</li>
+<li>Would expose unnecessary metadata to Server A; Server A does not need to know who exactly
+  Alice is talking to, and when. Only Server B, Alice and Bob need to know this information.
+  Always requesting the public identity key from Server A might expose this information to
+  Server A.</li>
 </ul>
-<p>Clients should only use Server A as a fallback for public identity key verification, if Server B does not respond to the request for Alice's public identity key, or if the verification fails with the public identity key from Server B.</p>
+<p>Clients should only use Server A as a fallback for public identity key verification, if Server B
+does not respond to the request for Alice's public identity key, or if the verification fails
+with the public identity key from Server B.</p>
 </div>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
-<p>A failed signature verification does not always mean that the message is invalid. It may be that the actor's identity key has changed, and that Server B has not yet received the new public identity key for some reason.</p>
+<p>A failed signature verification does not always mean that the message is invalid. It may be that
+the actor's identity key has changed, and that Server B has not yet received the new public
+identity key for some reason.</p>
 </div>
 <h3 id="73-best-practices">7.3 Best practices<a class="headerlink" href="#73-best-practices" title="Permanent link">&para;</a></h3>
 <h4 id="731-signing-keys-and-id-certs">7.3.1 Signing keys and ID-Certs<a class="headerlink" href="#731-signing-keys-and-id-certs" title="Permanent link">&para;</a></h4>
 <ul>
-<li>Actor and client signing keys should be rotated regularly (every 20-60 days). This is to ensure that a compromised key can only be used for a limited amount of time. Server identity keys should be rotated way less often (every 1-5 years), and perhaps only when a leak is suspected.</li>
-<li>When a server is asked to generate a new ID-Cert for an actor, it must make sure that the CSR is valid and, if set, has an expiry date less than or equal to the expiry date of the server's own ID-Cert.</li>
-<li>Due to the fact that a <code>SERVER_KEY_CHANGE</code> gateway event is bound to generate a large amount of traffic, servers should only manually generate a new identity key pair when absolutely necessary and instead choose a fitting expiry date interval for their identity key certificates. It might also be a good idea to stagger the sending of <code>SERVER_KEY_CHANGE</code> gateway events, to prevent a server from initiating a DDoS attack on itself.</li>
-<li>When a client or server receives the information that an actor's client identity key has been changed, the client/server in question should update their cached ID-Cert for the actor in question, taking into account the session ID of the new identity key pair.</li>
+<li>Actor and client signing keys should be rotated regularly (every 20-60 days). This is to ensure
+  that a compromised key can only be used for a limited amount of time. Server identity keys should be
+  rotated way less often (every 1-5 years), and perhaps only when a leak is suspected.</li>
+<li>When a server is asked to generate a new ID-Cert for an actor, it must make sure that the CSR is
+  valid and, if set, has an expiry date less than or equal to the expiry date of the server's own ID-Cert.</li>
+<li>Due to the fact that a <code>SERVER_KEY_CHANGE</code> gateway event is bound to generate a large amount of
+  traffic, servers should only manually generate a new identity key pair when absolutely necessary
+  and instead choose a fitting expiry date interval for their identity key certificates. It might
+  also be a good idea to stagger the sending of <code>SERVER_KEY_CHANGE</code> gateway events, to prevent a
+  server from initiating a DDoS attack on itself.</li>
+<li>When a client or server receives the information that an actor's client identity key has been
+  changed, the client/server in question should update their cached ID-Cert for the actor in
+  question, taking into account the session ID of the new identity key pair.</li>
 </ul>
 <h4 id="732-home-server-operation-and-design">7.3.2 Home server operation and design<a class="headerlink" href="#732-home-server-operation-and-design" title="Permanent link">&para;</a></h4>
 <ul>
@@ -2663,8 +2799,10 @@ sb-&gt;&gt;sb: Verify, replace Alice B with Alice A
 sb-&gt;&gt;ab: New account data
 sa-&gt;&gt;sa: Deactivate Alice A's account
 sa-&gt;&gt;sa: Setup redirect from Alice A to Alice B</code></pre>
-<p>Fig. 4: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is reachable and cooperative.</p>
-<p>Alternatively, if Server A is offline or deemed uncooperative, the following sequence diagram depicts how the migration can be done without Server A's cooperation:</p>
+<p>Fig. 4: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account,
+where Server A is reachable and cooperative.</p>
+<p>Alternatively, if Server A is offline or deemed uncooperative, the following sequence diagram depicts
+how the migration can be done without Server A's cooperation:</p>
 <pre class="mermaid"><code>sequenceDiagram
 autonumber
 
@@ -2681,7 +2819,8 @@ aa-&gt;&gt;sb: Full profile of Self
 sb-&gt;&gt;sb: Verify, replace Alice B profile with Alice A
 sb-&gt;&gt;ab: New account data
 </code></pre>
-<p>Fig. 5: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account, where Server A is unreachable or uncooperative.</p>
+<p>Fig. 5: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account,
+where Server A is unreachable or uncooperative.</p>
 <div class="admonition question">
 <p class="admonition-title">If the old home server is not needed for the migration, why try to contact it in the first place?</p>
 <p>It is generally preferrable to have the old home server cooperate with the migration, as it
@@ -2799,7 +2938,7 @@ aa-xsa: Deactivate account</code></pre>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-03-03T18:49:46+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-03-03</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-03-03T19:05:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-03-03</span>
   </span>
 
     
