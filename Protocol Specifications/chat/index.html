@@ -1660,7 +1660,7 @@
 Fig. 3: Sequence diagram of a successful encrypted channel join in which Alice acts as a gatekeeper. The sequence diagram assumes that Alice can verify Charlies' public key to indeed belong to Charlie, and that Alice accepts the join request.</p>
 <h3 id="62-encrypted-direct-messages">6.2 Encrypted direct messages<a class="headerlink" href="#62-encrypted-direct-messages" title="Permanent link">&para;</a></h3>
 <p>Adding another person to a direct message is not possible, and would not make much sense, as the new person cannot see any messages that were sent before they joined the group. If Alice wants to add Charlie to a direct message with Bob, she will have to create a new direct message with Bob and Charlie.</p>
-<p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Alice                                          Server                             Bob
+<div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Alice                                          Server                             Bob
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>|                                              |                                  |
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Request Bob&#39;s KeyPackages                    |                                  |
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---------------------------------------------&gt;|                                  |
@@ -1686,10 +1686,10 @@ Fig. 3: Sequence diagram of a successful encrypted channel join in which Alice a
 <a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>|                                              |---------------------------------&gt;|
 <a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>|                                              |                                  |
 </code></pre></div>
-Fig. 4: Sequence diagram of a successful encrypted direct message creation. </p>
+<p>Fig. 4: Sequence diagram of a successful encrypted direct message creation.</p>
 <h3 id="63-encrypted-group-messages">6.3 Encrypted group messages<a class="headerlink" href="#63-encrypted-group-messages" title="Permanent link">&para;</a></h3>
 <p>Encrypted group messages work by using the traditional MLS protocol, with the additional concept of group owners. Only group owners can add new members to the group and forcibly remove others from the group. The Group owner is determined by the Client-Server API.</p>
-<p><div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Alice (gatekeeper)                                 Server                                  Bob       Charlie
+<div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Alice (gatekeeper)                                 Server                                  Bob       Charlie
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>|                                                  |                                       |         |
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>| Request Bob&#39;s KeyPackages                        |                                       |         |
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>|-------------------------------------------------&gt;|                                       |         |
@@ -1741,7 +1741,7 @@ Fig. 4: Sequence diagram of a successful encrypted direct message creation. </p>
 <a id="__codelineno-2-50" name="__codelineno-2-50" href="#__codelineno-2-50"></a>|                                                  |------------------------------------------------&gt;|
 <a id="__codelineno-2-51" name="__codelineno-2-51" href="#__codelineno-2-51"></a>|                                                  |                                       |         |
 </code></pre></div>
-Fig. 5: Sequence diagram of a successful encrypted group creation with 3 members.</p>
+<p>Fig. 5: Sequence diagram of a successful encrypted group creation with 3 members.</p>
 <h3 id="64-joining-new-devices-from-existing-users">6.4 Joining new devices from existing users<a class="headerlink" href="#64-joining-new-devices-from-existing-users" title="Permanent link">&para;</a></h3>
 <p>Regardless of channel or group permissions, a user join request from a new device should be accepted by default.</p>
 <h3 id="65-best-practices">6.5 Best practices<a class="headerlink" href="#65-best-practices" title="Permanent link">&para;</a></h3>
@@ -1789,7 +1789,7 @@ Fig. 5: Sequence diagram of a successful encrypted group creation with 3 members
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-03-03T18:07:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-03-03</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-03-03T18:49:46+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-03-03</span>
   </span>
 
     
