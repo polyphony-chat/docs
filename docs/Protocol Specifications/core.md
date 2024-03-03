@@ -17,10 +17,7 @@ The version number specified here also applies to the API documentation.
       - [3.3.1 Events over REST](#331-events-over-rest)
   - [4. Federated identity](#4-federated-identity)
     - [4.1 Authentication](#41-authentication)
-      - [4.1.1 Registering a new actor on a polyproto home server](#411-registering-a-new-actor-on-a-polyproto-home-server)
-      - [4.1.2 Authenticating a new client on a polyproto home server](#412-authenticating-a-new-client-on-a-polyproto-home-server)
-      - [4.1.3 Authenticating on a foreign server](#413-authenticating-on-a-foreign-server)
-    - [4.2 Challenge Strings](#42-challenge-strings)
+    - [4.2 Challenge strings](#42-challenge-strings)
     - [4.3 Abuse prevention](#43-abuse-prevention)
   - [5. Users](#5-users)
   - [6. Encryption](#6-encryption)
@@ -46,6 +43,10 @@ The version number specified here also applies to the API documentation.
       - [8.1.1 Migrating an actor](#811-migrating-an-actor)
       - [8.1.2 Re-signing data](#812-re-signing-data)
     - [8.2 Moving data](#82-moving-data)
+
+!!! bug "TODO"
+
+    TODO: Check figure numbers and section numbers for correctness.
 
 The polyproto protocol is a home-server-based identity federation protocol specification intended for use in applications where actor identity is needed. polyproto focuses on federated identity, and apart from the usage of Messaging Layer Security (MLS) for encryption, does not specify any application-specific features. Instead, it is intended to be used as a base for application implementations and other protocols, such as `polyproto-chat` - a chat protocol built on top of polyproto. Through a shared "base layer", polyproto implementations are intercompatible in a way where one identity can be used across various polyproto implementations.
 
@@ -180,114 +181,20 @@ Identity certificates defined in sections [#7. Keys and signatures](#7-keys-and-
 
 ### 4.1 Authentication
 
-#### 4.1.1 Registering a new actor on a polyproto home server
+Authentication tasks such as registering a new actor, authenticating a new client, and authenticating
+on a foreign server are not strictly defined in polyproto. Instead, polyproto defines a set of
+requirements that must be met by any polyproto implementation. This allows for a wide range of
+authentication methods to be used, provided they meet the requirements.
 
-Registering a new actor in the context of polyproto is done through an API route defined in the polyproto ["No registration needed" API](/APIs/Core/Routes%3A No registration needed/#post-create-identity) documentation.
+### 4.2 Challenge strings
 
-To register, the client sends the necessary information to their home server. The server verifies the data, checks username availability, and responds with HTTP 201 and the new identity's federation ID, if successful. However, a session token is not provided until the actor authenticates a client, as detailed in section [4.1.2](#412-authenticating-a-new-client-on-a-polyproto-home-server).
+Servers generate alphanumeric challenge strings to verify an actor's private identity key
+possession. These strings, ranging from 32 to 256 characters, have a UNIX timestamp lifetime. If the
+current timestamp surpasses this lifetime, the challenge fails. The actor signs the string, sending
+the signature and their ID-Cert to the server, enabling identity confirmation.
 
-```mermaid
-sequenceDiagram
-autonumber
-
-actor c as Client
-participant s as Server
-
-c->>s: Registration information
-s->>s: Verify correctness of provided information,<br />check if username is available, etc
-
-alt verification successful
-  s->>s: Verify provided CSR
-
-  alt CSR okay
-    s->>s: Sign CSR
-    s->>c: HTTP status code 201, with actor federation ID
-  end
-end
-```
-
-Fig. 2: Sequence diagram of a successful identity creation process.
-
-#### 4.1.2 Authenticating a new client on a polyproto home server
-
-To access their account from a new device, an actor authenticates the session with their home server by sending authentication information and a [certificate signing request (CSR)](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) for the new client. If verified successfully, the server signs the CSR and responds with the newly generated ID-Cert and a session token corresponding to this ID-Cert.
-
-```mermaid
-sequenceDiagram
-autonumber
-
-actor c as Client
-participant s as Server
-
-c->>s: Auth information, CSR
-s->>s: Verify correctness of provided auth information
-
-alt Verified successfully
-  s->>s: Verify provided CSR
-  alt CSR okay
-  s->>s: Sign CSR
-  s->>c: HTTP status code 201, ID-Cert + session token
-  end
-end
-
-```
-
-Fig. 3: Sequence diagram of a successful client authentication process.
-
-The client is now authenticated and can use the session token and ID-Cert to perform actions on behalf of the actor identified by the ID-Cert.
-
-#### 4.1.3 Authenticating on a foreign server
-
-Authenticating on a foreign server requires the actor to sign a challenge string with their private identity key and send it, along with their ID-Cert, to the server. The server then validates the ID-Cert's origin, the challenge string's signature, and the ID-Cert's validity.
-
-If the verification is successful, the foreign server can issue a session token to the actor.
-
-**Example:**
-Say that Alice is on server A, and wants to authenticate on Server B, using her existing identity.
-
-Alice's client sends a request to Server B for a challenge string, telling Server B the session ID
-they are communicating from in the process. Upon receiving a response, Alice signs this challenge
-string with the correct private key. They then send the signature to Server B. Server B can now
-verify that it was actually Alice who signed the string, and not a malicious outsider. Server B does
-this by requesting Alice's ID-Cert, specifically the ID-Cert matching the session ID Alice
-identified with to Server B. If all goes well, server B will send a newly generated session token
-back to Alice's client. Alice's client can then authenticate with server B by using this token.
-
-```mermaid
-sequenceDiagram
-autonumber
-
-actor a as Alice
-participant sb as Server B
-participant sa as Server A
-
-a->>sb: Challenge string request including current Session ID
-sb->>a: Challenge string
-a->>sb: Signed challenge, ID-Cert, optional payload
-sb->>sa: Get Server A Public Certificate
-sa->>sb: Send Public Certificate
-sb->>sb: Verify signature of challenge string
-sb->>a: Session token, optional payload
-```
-
-Fig. 4: Sequence diagram of a successful identity verification.
-
-In the diagram, Alice's "optional payload" is extra data that might be requested by servers. This is useful when using a single identity across various polyproto implementations, due to differing information needs. The payload is signed with the actor's private identity key.
-
-Likewise, the "optional payload" sent by the server in the above diagram can be used by implementations to send additional information to the client. An example might be initial account information.
-
-!!! example
-
-    Alice currently has a polyproto identity, which she created when signing up for "https://example.com/chat". When signing up for this service, she didn't need to provide any additional information on registration. However, when she wants to actor her existing identity to sign up for "https://example.com/social", she is asked to provide her email address, which she can provide as the "optional payload". The server can then store the email address in its' database, associate it with Alice's identity, and let Alice log in with her existing identity. 
-
-If Alice's session token expires, they can repeat this process of requesting a challenge string and, together with her ID-Cert, exchange it for a session token.
-However, if Alice wants to access this third party account from a completely new device, they will have to perform the steps described in section [4.1.2](#412-authenticating-a-new-client-on-a-polyproto-home-server) to obtain a valid ID-Cert for that session.
-
-### 4.2 Challenge Strings
-
-Servers generate alphanumeric challenge strings to verify an actor's private identity key possession. These strings, ranging from 32 to 256 characters, have a UNIX timestamp lifetime. If the current timestamp surpasses this lifetime, the challenge fails. The actor signs the string, sending the signature and their ID-Cert to the server, enabling identity confirmation.
-
-Challenge strings counteract replay attacks. Their uniqueness ensures that even identical requests have different signatures, preventing malicious servers from successfully replaying requests.
+Challenge strings counteract replay attacks. Their uniqueness ensures that even identical requests
+have different signatures, preventing malicious servers from successfully replaying requests.
 
 ### 4.3 Abuse prevention
 
@@ -344,7 +251,12 @@ and [Section #7.2.2](#722-message-verification) for more information.
 
     MLS is a cryptographic protocol that provides confidentiality, integrity, and authenticity guarantees for group messaging applications. It builds on top of the [Double Ratchet Algorithm](https://signal.org/docs/specifications/doubleratchet/) and [X3DH](https://signal.org/docs/specifications/x3dh/) to provide these security guarantees.
 
-Implementations of polyproto can opt to support encryption to secure communication channels. The selected security protocol for all polyproto implementations is the Messaging Layer Security protocol, given its feasibility within the implementation context. MLS inherently supports negotiation of protocol versions, cipher suites, extensions, credential types, and extra proposal types. For two implementations of polyproto to be compatible with each other in the context of encryption, they must have overlapping capabilities in these areas.
+Implementations of polyproto can opt to support encryption to secure communication channels.
+The selected security protocol for all polyproto implementations is the Messaging Layer Security
+protocol, given its feasibility within the implementation context. MLS inherently supports
+negotiation of protocol versions, cipher suites, extensions, credential types, and extra proposal
+types. For two implementations of polyproto to be compatible with each other in the context of
+encryption, they must have overlapping capabilities in these areas.
 
 The following sections explain the additional behavior that polyproto implementations utilizing MLS must implement.
 
@@ -352,10 +264,13 @@ The following sections explain the additional behavior that polyproto implementa
 
 !!! warning
 
-    The sections 6.1 and 6.1.1 are not exhaustive and do not cover all aspects of MLS and KeyPackages. They exist solely to give a general overview of how KeyPackages are used in polyproto.
-    Please read and understand the MLS specification (RFC9420) to implement polyproto correctly.
+    The sections 6.1 and 6.1.1 are not exhaustive and do not cover all aspects of MLS and
+    KeyPackages. They exist solely to give a general overview of how KeyPackages are used in
+    polyproto. Please read and understand the MLS specification (RFC9420) to implement polyproto
+    correctly.
 
-A polyproto compliant server must store KeyPackages for all clients registered on it. The KeyPackage is a JSON object that contains the following information:
+A polyproto compliant server must store KeyPackages for all clients registered on it. The
+KeyPackage is a JSON object that contains the following information:
 
 ```json
 {
@@ -481,9 +396,9 @@ The Distinguished Names (`DNs`), according to the [LDAP Data Interchange Format 
 The distinguished name must be unique for each certificate issued by a home server. The `DN` of an ID-Cert
 must include the following fields:
 
-```
-dn: cn=<actor or home server name>, dc=<home server subdomain, if any>, dc=<home server domain>, dc=<hosme server tld, if any>
-```
+    ```md
+    dn: cn=<actor or home server name>, dc=<home server subdomain, if any>, dc=<home server domain>, dc=<hosme server tld, if any>
+    ```
 
 If the home server does not have a subdomain or top level domain, the `dc` fields for these
 components should be omitted.
@@ -514,7 +429,7 @@ The above scenario is not possible with home server issued identity key certific
 
 #### 7.1.3 Key rotation
 
-A session may choose to rotate their ID-Cert at any time. This is done by generating a new identity key pair, using the new private key to generate a new CSR, and sending the new Certificate Signing Request to the home server, along with at least one new KeyPackage and a corresponding 'last resort' KeyPackage. The home server will then generate the new ID-Cert, send it to the client, and let all associated clients know that this clients' public identity key has changed. The server does this by sending a [`CLIENT_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#client_key_change) gateway event to those clients.
+A session can choose to rotate their ID-Cert at any time. This is done by generating a new identity key pair, using the new private key to generate a new CSR, and sending the new Certificate Signing Request to the home server, along with at least one new KeyPackage and a corresponding 'last resort' KeyPackage. The home server will then generate the new ID-Cert, send it to the client, and let all associated clients know that this clients' public identity key has changed. The server does this by sending a [`CLIENT_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#client_key_change) gateway event to those clients.
 
 For example, in the context of a chat application built with polyproto-chat, an associating relationship between two clients exists, if:
 
@@ -536,22 +451,22 @@ Before sending any messages to a server, a client that performed a key rotation 
 
 Home servers must keep track of the ID-Certs of all users (and their clients) registered on them, and must provide a clients' ID-Cert for a given timestamp on request. This is to ensure messages sent by users, even ones sent a long time ago, can be verified by other servers and their users. This is because the public key of an actor likely changes over time and users must sign all messages they send to servers. Likewise, a client should also keep all of its own ID-Certs stored perpetually, to potentially verify its identity in case of a migration.
 
-```mermaid
-sequenceDiagram
-autonumber
+    ```mermaid
+    sequenceDiagram
+    autonumber
 
-actor c as Client
-participant s as Server
+    actor c as Client
+    participant s as Server
 
-c->>c: Create CSR for own identity key
-c->>s: Request key rotation/CSR signing, CSR attached
-s->>s: Verify validity of claims presented in the CSR
-alt verify success
-  s->>s: Create ID-Cert for Client
-  s->>c: Respond with ID-Cert
-end
-Note right of s: Send CLIENT_KEY_CHANGE to associated clients
-```
+    c->>c: Create CSR for own identity key
+    c->>s: Request key rotation/CSR signing, CSR attached
+    s->>s: Verify validity of claims presented in the CSR
+    alt verify success
+      s->>s: Create ID-Cert for Client
+      s->>c: Respond with ID-Cert
+    end
+    Note right of s: Send CLIENT_KEY_CHANGE to associated clients
+    ```
 
 Fig. 5: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert from their home server.
 
