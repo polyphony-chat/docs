@@ -3,7 +3,7 @@ title: polyproto-chat
 weight: 1
 ---
 
-# polyproto-chat Specification
+# P2 Protocol Extension: polyproto-chat
 
 !!! bug "TODO"
 
