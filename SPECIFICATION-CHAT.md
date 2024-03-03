@@ -1,3 +1,8 @@
+---
+title: polyproto-chat
+weight: 1
+---
+
 # polyproto-chat Specification
 
 !!! bug "TODO"
@@ -163,3 +168,7 @@ Regardless of channel or group permissions, a user join request from a new devic
 
 - In case of encrypted guild channel join requests, it may be a good idea to treat multiple join requests from the same user with different clients as a single join request, when it comes to UI/UX.
 - Joining an encrypted channel, even from an already established member with a new device, should be an event distinctly visible to all members of the channel. This is to prevent a malicious user from joining a channel without the other members noticing.
+
+---
+
+--8<-- "snippets/glossary.md"
