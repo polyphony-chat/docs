@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "davidanson.vscode-markdownlint",
+        "chrischinchilla.vale-vscode",
+        "valentjn.vscode-ltex",
+        "gruntfuggly.todo-tree"
+    ]
+}
