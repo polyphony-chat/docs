@@ -15,3 +15,5 @@ APIs
 unencrypted
 intercompatible
 CRLs
+RDNs
+CAs
