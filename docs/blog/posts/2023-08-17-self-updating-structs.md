@@ -3,6 +3,7 @@ draft: false
 date: 2023-08-17
 categories:
   - chorus
+  - updates
 authors:
   - bitfl0wer
 ---
