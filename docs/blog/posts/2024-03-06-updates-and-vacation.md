@@ -73,7 +73,7 @@ the authentication endpoints from the core protocol means that polyproto extensi
 methods for themselves, instead of being forced to implement a bunch of REST-based authentication endpoints they might not even want
 or use anyways.
 
-I would like to thank `@Laxystem` for this idea! :> Collaboration and feedback are truly great things, and I am happy to have such
+I would like to thank `@laxla@tech.lgbt` for this idea! :> Collaboration and feedback are truly great things, and I am happy to have such
 a nice group of people on Discord and Matrix who are genuinely interested in the silly thing I/we want to do with Polyphony and
 polyproto :)
 
