@@ -462,11 +462,11 @@ The following constraints must be met by ID-Certs:
 
 - If the ID-Cert is a root certificate
   - It must have the `CA` flag set to `true`. The path length constraint must be set to `0`.
-  - It must have the `keyCertSign` and `cRLSign` key usage flags set to `true`.
+  - It must have the `keyCertSign` key usage flag set to `true`.
 - If the ID-Cert is an actor certificate
   - It must have the `CA` flag set to `false` or omitted.
-  - It must have the `keyCertSign` and `cRLSign` key usage flags set to `false` or omitted.
-  - It must have the `digitalSignature` key usage flag set to `true`.
+  - It must have the `keyCertSign` key usage flag set to `false` or omitted.
+  - It must have the `digitalSignature` key usage flag OR `contentCommitment` flags set to `true`.
 
 ##### 7.1.1.3 Session IDs
 
