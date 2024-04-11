@@ -468,6 +468,11 @@ The following constraints must be met by ID-Certs:
   - It must have the `keyCertSign` key usage flag set to `false` or omitted.
   - It must have the `digitalSignature` key usage flag OR `contentCommitment` flags set to `true`.
 
+[Key Usage Flags](https://cryptography.io/en/latest/x509/reference/#cryptography.x509.KeyUsage) and
+[Basic Constraints](https://cryptography.io/en/latest/x509/reference/#cryptography.x509.BasicConstraints)
+are critical extensions. Therefore, if any of these X.509 extensions are present, they must be marked
+as "critical". ID-Certs not adhering to this standard should be treated as malformed.
+
 ##### 7.1.1.3 Session IDs
 
 The session ID is an [`ASN.1`](https://en.wikipedia.org/wiki/ASN.1) [`Ia5String`](https://en.wikipedia.org/wiki/IA5STRING)
