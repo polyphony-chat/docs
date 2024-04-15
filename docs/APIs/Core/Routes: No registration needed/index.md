@@ -117,12 +117,12 @@ Request a challenge string. See [the type definition](../types.md#challenge-stri
     | Name            | Type   | Description                                                                                                       |
     | --------------- | ------ | ----------------------------------------------------------------------------------------------------------------- |
     | `challenge`     | String | The [challenge string](../types.md#challenge-string), which the client should sign with its private identity key. |
-    | `lifetime_unix` | String | The UNIX timestamp after which the challenge expires.                                                             |
+    | `expires` | String | The UNIX timestamp after which the challenge expires.                                                             |
 
     ```json
     {
         "challenge": "UH675678rbnFGNHJV2ijcnr3ghjHV74jah...",
-        "lifetime_unix": "1620000000"
+        "expires": "1620000000"
     }
     ```
 
