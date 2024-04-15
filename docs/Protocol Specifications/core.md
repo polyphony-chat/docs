@@ -35,15 +35,18 @@ The version number specified here also applies to the API documentation.
       - [7.1.3 Key rotation](#713-key-rotation)
         - [7.1.3.1 A note about CRLs (Certificate revocation lists)](#7131-a-note-about-crls-certificate-revocation-lists)
     - [7.2 Actor identity keys and message signing](#72-actor-identity-keys-and-message-signing)
-      - [7.2.2 Message verification](#722-message-verification)
-    - [7.3 Best practices](#73-best-practices)
-      - [7.3.1 Signing keys and ID-Certs](#731-signing-keys-and-id-certs)
-      - [7.3.2 Home server operation and design](#732-home-server-operation-and-design)
+      - [7.2.1 Message verification](#721-message-verification)
+    - [7.3 Private key loss prevention and private key recovery](#73-private-key-loss-prevention-and-private-key-recovery)
+    - [7.4 Best practices](#74-best-practices)
+      - [7.4.1 Signing keys and ID-Certs](#741-signing-keys-and-id-certs)
+      - [7.4.2 Home server operation and design](#742-home-server-operation-and-design)
+      - [7.4.3 Private key loss prevention and private key recovery](#743-private-key-loss-prevention-and-private-key-recovery)
   - [8. Account migration](#8-account-migration)
-    - [8.1 Reassigning ownership](#81-reassigning-ownership)
-      - [8.1.1 Migrating an actor](#811-migrating-an-actor)
-      - [8.1.2 Re-signing data](#812-re-signing-data)
-    - [8.2 Moving data](#82-moving-data)
+    - [8.1 Challenges and trust](#81-challenges-and-trust)
+    - [8.2 Reassigning ownership](#82-reassigning-ownership)
+      - [8.2.1 Migrating an actor](#821-migrating-an-actor)
+      - [8.2.2 Re-signing data](#822-re-signing-data)
+    - [8.3 Moving data](#83-moving-data)
 
 The polyproto protocol is a home-server-based identity federation protocol specification intended
 for use in applications where actor identity is needed. polyproto focuses on federated identity,
@@ -506,9 +509,9 @@ malicious server cannot generate an identity key pair for Alice, which is signed
 A session can choose to rotate their ID-Cert at any time. This is done by generating a new identity
 key pair, using the new private key to generate a new CSR, and sending the new Certificate Signing
 Request to the home server, along with at least one new KeyPackage and a corresponding 'last resort'
-KeyPackage. The home server will then generate the new ID-Cert, send it to the client, and let all
-associated clients know that this clients' public identity key has changed. The server does this by
-sending a [`CLIENT_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#client_key_change)
+KeyPackage, if encryption is offered. The home server will then generate the new ID-Cert, send it to
+the client, and let all associated clients know that this clients' public identity key has changed.
+The server does this by sending a [`CLIENT_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#client_key_change)
 gateway event to those clients.
 
 For example, in the context of a chat application built with polyproto-chat, an associating
@@ -537,6 +540,10 @@ sent by users, even ones sent a long time ago, can be verified by other servers 
 This is because the public key of an actor likely changes over time and users must sign all messages
 they send to servers. Likewise, a client should also keep all of its own ID-Certs stored
 perpetually, to potentially verify its identity in case of a migration.
+
+Users must hold on to all of their past key pairs, as they might need them to
+[migrate their account in the future](#8-account-migration). How this is done is specified in
+[section 7.3: Private key loss prevention and private key recovery](#73-private-key-loss-prevention-and-private-key-recovery).
 
     ```mermaid
     sequenceDiagram
@@ -601,9 +608,9 @@ to the actor's home server when first connecting to the server with a new sessio
 keys. The key is stored in the client's local storage. Upon receiving a new identity key CSR, a
 home server will sign this CSR and send the resulting ID-Cert to the client. This certificate is
 proof that the home server attests to the clients key. Read [section 7.1](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
-for more information on the certificate.
+for more information about the certificate.
 
-#### 7.2.2 Message verification
+#### 7.2.1 Message verification
 
 To ensure message integrity via signing, clients and servers must verify message signatures.
 This involves cross-checking the message signature against the sender's ID-Cert and the senders'
@@ -667,9 +674,23 @@ caution.
     the actor's identity key has changed, and that Server B has not yet received the new public
     identity key for some reason.
 
-### 7.3 Best practices
+### 7.3 Private key loss prevention and private key recovery
 
-#### 7.3.1 Signing keys and ID-Certs
+As described in previous sections, actors must hold on to their past identity key pairs, should they
+want or need to migrate their account.
+
+Home servers must offer a way for actors to upload and recover their private identity keys. Private
+identity keys should be encrypted with a strong password and symmetric encryption schemes such as AES
+and CRYSTALS-KYBER before being uploaded to the server. Authenticated actors can download their
+encrypted private identity keys from the server at any time. All encryption and decryption operations
+must be done client-side.
+
+If any uncertainty about the availability of the home server exists, clients should regularly
+download their encrypted private identity keys from the server and store them in a secure location.
+
+### 7.4 Best practices
+
+#### 7.4.1 Signing keys and ID-Certs
 
 - Actor and client signing keys should be rotated regularly (every 20-60 days). This is to ensure
   that a compromised key can only be used for a limited amount of time. Server identity keys should be
@@ -685,10 +706,15 @@ caution.
   changed, the client/server in question should update their cached ID-Cert for the actor in
   question, taking into account the session ID of the new identity key pair.
 
-#### 7.3.2 Home server operation and design
+#### 7.4.2 Home server operation and design
 
 - Use a caching layer for your home server to handle the potentially large amount of requests for
   ID-Certs without putting unnecessary strain on the database.
+
+#### 7.4.3 Private key loss prevention and private key recovery
+
+- It is a good idea for home servers to limit the upload size and available upload slots for encrypted
+  private identity keys.
 
 ## 8. Account migration
 
@@ -699,7 +725,38 @@ Migrating an actor always involves reassigning the ownership of all actor-associ
 distributed network to the new actor. Should the old actor want to additionally move all data from
 the old home server to another home server, more steps are needed.
 
-### 8.1 Reassigning ownership
+### 8.1 Challenges and trust
+
+Changing the publicly visible ownership of actor data requires the chain of trust to be maintained.
+Whenever an "old" account wants to change the publicly visible ownership of its data to a "new"
+account, the old account will need to prove that it is in possession of the private
+keys that were used to sign the messages. This is done by signing a challenge string with the private
+keys. If the server verifies the challenge, it authorizes the new account to re-sign the old
+account's messages signed with the verified key. Instead of overwriting the message, a new message variant
+with the new signature is created, preserving the old message.
+
+All challenge strings and their responses created in the context of account migration must be made
+public to ensure that a chain of trust can be maintained. A third party should be able to verify that
+the challenge string which authorized the ownership change of an accounts' data was signed by the
+correct private key.
+
+Implementations and protocol extensions should carefully consider the extent of messages that can be
+re-signed.
+
+!!! example
+
+    In the case of a social media platform with quote-posting functionality, it is reasonable to
+    assume that re-signing a quoted post is allowed. However, this would likely change the
+    signature of the quoted post, which would be undesirable. Edge cases like these are up to
+    implementations to handle, and should be well documented.
+
+### 8.2 Reassigning ownership
+
+Transferring message ownership from an old to a new account, known as re-signing messages, necessitates
+coordination between the two accounts, initiated by the old account. To start, the old account sends
+an API request containing the new account's federation ID to the server where messages should be
+re-signed. The server responds with all ID-Certs used for signing the old account's messages, along with
+a challenge string.
 
 Migrating an account is done with the following steps:
 
@@ -717,7 +774,7 @@ Migrating an account is done with the following steps:
    messages to the new account. To have all messages from a server re-signed, an actor must
    prove that they are the owner of the private keys used to sign the messages.
 
-#### 8.1.1 Migrating an actor
+#### 8.2.1 Migrating an actor
 
 ```mermaid
 sequenceDiagram
@@ -775,27 +832,7 @@ where Server A is unreachable or uncooperative.
     regarding the old account to the new server, which makes the process more seamless for other
     users. The "non-cooperative homeserver migration method" is only a last resort.
 
-#### 8.1.2 Re-signing data
-
-Transferring message ownership from an old to a new account, known as re-signing messages, necessitates
-coordination between the two accounts, initiated by the old account. To start, the old account sends
-an API request containing the new account's federation ID to the server where messages should be
-re-signed. The server responds with all ID-Certs used for signing the old account's messages, along with
-a challenge string. The old account will then need to prove that it is in possession of the private
-keys that were used to sign the messages. This is done by signing a challenge string with the private
-keys. If the server verifies the challenge, it authorizes the new account to re-sign the old
-account's messages signed with the verified key. Instead of overwriting the message, a new message variant
-with the new signature is created, preserving the old message.
-
-Implementations and protocol extensions should carefully consider the extent of messages that can be
-re-signed.
-
-!!! example
-
-    In the case of a social media platform with quote-posting functionality, it is reasonable to
-    assume that re-signing a quoted post is allowed. However, this would likely change the
-    signature of the quoted post, which would be undesirable. Edge cases like these are up to
-    implementations to handle, and should be well documented.
+#### 8.2.2 Re-signing data
 
 ```mermaid
 sequenceDiagram
@@ -819,7 +856,7 @@ sc->>sc: Verify that only FID and signature related fields have changed
 
 Fig. 6: Sequence diagram depicting the re-signing procedure.
 
-### 8.2 Moving data
+### 8.3 Moving data
 
 In cases of an imminent server shutdown or distrust in the old server, moving data from the old server
 is necessary to prevent data loss. This process extends upon the reassigning ownership process, and
