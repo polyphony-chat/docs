@@ -18,8 +18,8 @@ The version number specified here also applies to the API documentation.
   - [4. Federated identity](#4-federated-identity)
     - [4.1 Authentication](#41-authentication)
     - [4.2 Challenge strings](#42-challenge-strings)
-    - [4.3 Abuse prevention](#43-abuse-prevention)
-  - [5. Users](#5-users)
+    - [4.3 Misuse prevention](#43-misuse-prevention)
+  - [5. Actors](#5-actors)
   - [6. Encryption](#6-encryption)
     - [6.1. KeyPackages](#61-keypackages)
       - [6.1.1 Last resort KeyPackages](#611-last-resort-keypackages)
@@ -220,13 +220,13 @@ the signature and their ID-Cert to the server, enabling identity confirmation.
 Challenge strings counteract replay attacks. Their uniqueness ensures that even identical requests
 have different signatures, preventing malicious servers from successfully replaying requests.
 
-### 4.3 Abuse prevention
+### 4.3 Misuse prevention
 
 To protect users from malicious home servers secretly acting on the behalf of non-consenting users,
 a mechanism is needed to prevent home servers from generating federation tokens for users without
 their consent.
 
-!!! example "Potential abuse scenario"
+!!! example "Potential misuse scenario"
 
     A malicious home server can potentially request a federation token on behalf of one of its
     users, and use it to generate a session token on the actor's behalf. This is a problem, as the
@@ -256,15 +256,17 @@ excluding the new session. The `NEW_SESSION` event's stored data can be accessed
     session cannot decrypt any messages sent before its' join epoch. If secrecy or confidentiality
     are of concern, users should host their own home server and use end-to-end encryption.
 
-## 5. Users
+## 5. Actors
 
-Every client requires an associated actor identity. Users are distinguished by a unique federation
-ID (FID), consist of their username, which is unique per instance, and the instance's root domain.
+Every client requires an associated actor identity. Actors are distinguished by a unique federation
+ID (FID), consist of their identifier, which is unique per instance, and the instance's root domain.
 This combination ensures global uniqueness.
 
 FIDs used in public contexts are formatted as `actor@optionalsubdomain.domain.tld`, and are case-insensitive.
 
-The following regular expression can be used to validate actor IDs: `\b([A-Z0-9._%+-]+)@([A-Z0-9.-]+\.[A-Z]{2,})\b`.
+The following regular expression can be used to validate actor IDs: `\b([a-z0-9._%+-]+)@([a-z0-9.-]+)\b(?<!\.)`.
+The regular expression is in `PCRE2`/Python format and is case-sensitive. A Rust version of the regular
+expression is `\b([a-z0-9._%+-]+)@([a-z0-9-]+(\.[a-z0-9-]+)*)`.
 
 !!! note
 
@@ -492,7 +494,7 @@ The addition of a certificate is necessary to prevent a malicious foreign server
 identity key caching to impersonate an actor. Consider the following example which employs foreign
 server public identity key caching, but no home server issued identity key certificates:
 
-!!! example "Potential abuse scenario"
+!!! example "Potential misuse scenario"
 
     A malicious foreign server B can fake a message from Alice (Home server: Server A) to Bob
     (Home Server: Server B), by generating a new identity key pair and using it to sign the
