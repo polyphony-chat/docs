@@ -12,3 +12,6 @@ $ANYTHING
 cURL
 FIDs
 polyproto-protocol
+intercompatible
+IDDs
+CRLs
