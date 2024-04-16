@@ -19,7 +19,7 @@ The version number specified here also applies to the API documentation.
     - [4.1 Authentication](#41-authentication)
     - [4.2 Challenge strings](#42-challenge-strings)
     - [4.3 Misuse prevention](#43-misuse-prevention)
-  - [5. Actors](#5-actors)
+  - [5. Federation IDs (FIDs)](#5-federation-ids-fids)
   - [6. Encryption](#6-encryption)
     - [6.1. KeyPackages](#61-keypackages)
       - [6.1.1 Last resort KeyPackages](#611-last-resort-keypackages)
@@ -256,7 +256,7 @@ excluding the new session. The `NEW_SESSION` event's stored data can be accessed
     session cannot decrypt any messages sent before its' join epoch. If secrecy or confidentiality
     are of concern, users should host their own home server and use end-to-end encryption.
 
-## 5. Actors
+## 5. Federation IDs (FIDs)
 
 Every client requires an associated actor identity. Actors are distinguished by a unique federation
 ID (FID), consist of their identifier, which is unique per instance, and the instance's root domain.
@@ -264,9 +264,12 @@ This combination ensures global uniqueness.
 
 FIDs used in public contexts are formatted as `actor@optionalsubdomain.domain.tld`, and are case-insensitive.
 
-The following regular expression can be used to validate actor IDs: `\b([a-z0-9._%+-]+)@([a-z0-9.-]+)\b(?<!\.)`.
-The regular expression is in `PCRE2`/Python format and is case-sensitive. A Rust version of the regular
-expression is `\b([a-z0-9._%+-]+)@([a-z0-9-]+(\.[a-z0-9-]+)*)`.
+The following regular expression can be used to validate actor IDs: `\b([a-z0-9._%+-]+)@([a-z0-9-]+(\.[a-z0-9-]+)*)`.
+
+!!! note
+
+    The above regular expression is flavored for the Rust Programming Language, but can be easily
+    adapted to other languages.
 
 !!! note
 
@@ -275,7 +278,7 @@ expression is `\b([a-z0-9._%+-]+)@([a-z0-9-]+(\.[a-z0-9-]+)*)`.
 
 For all intents and purposes, a federation ID is a display of identity. However, verifying identity
 claims is crucial. See [Section #7.1](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
-and [Section #7.2.2](#722-message-verification) for more information.
+and [Section #7.2.2](#721-message-verification) for more information.
 
 ## 6. Encryption
 
