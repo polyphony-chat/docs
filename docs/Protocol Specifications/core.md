@@ -25,10 +25,10 @@ The version number specified here also applies to the API documentation.
       - [6.1.1 Last resort KeyPackages](#611-last-resort-keypackages)
     - [6.2 Initial authentication](#62-initial-authentication)
     - [6.3 Multi-device support](#63-multi-device-support)
-  - [7. Keys and signatures](#7-keys-and-signatures)
+  - [7. Cryptography and ID-Certs](#7-cryptography-and-id-certs)
     - [7.1 Home server signed certificates for public client identity keys (ID-Cert)](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
       - [7.1.1 Structure of an ID-Cert](#711-structure-of-an-id-cert)
-        - [7.1.1.1 Identity Descriptors](#7111-identity-descriptors)
+        - [7.1.1.1 Identity Descriptors (IDDs)](#7111-identity-descriptors-idds)
         - [7.1.1.2 Extensions and constraints](#7112-extensions-and-constraints)
         - [7.1.1.3 Session IDs](#7113-session-ids)
       - [7.1.2 Necessity of ID-Certs](#712-necessity-of-id-certs)
@@ -51,7 +51,7 @@ The version number specified here also applies to the API documentation.
 The polyproto protocol is a home-server-based identity federation protocol specification intended
 for use in applications where actor identity is needed. polyproto focuses on federated identity,
 and apart from the usage of Messaging Layer Security (MLS) for encryption, does not specify any
-application-specific features. Instead, it is intended to be used as a base for application
+further application-specific features. Instead, it is intended to be used as a base for application
 implementations and other protocols, such as `polyproto-chat` - a chat protocol built on top of
 polyproto. Through a shared "base layer", polyproto implementations are intercompatible in a way
 where one identity can be used across various polyproto implementations.
@@ -89,19 +89,31 @@ document.
 polyproto operates under the following trust assumptions:
 
 1. Users entrust their home server and its admins with data security and discretion on actions
-2. appearing as actor-performed.
-3. Users only distrust their home servers in case of irregularities or conflicting information.
-4. In a federated context, users trust foreign servers with all unencrypted data.
-5. Users trust MLS channel members with their data and attached metadata.
-6. Foreign servers cannot impersonate users without explicit consent.
-7. Users rely on their home servers for identity key certification, without the home servers
-8. possessing the identity.
+   appearing as actor-performed.
+2. Users only distrust their home servers in case of irregularities or conflicting information.
+3. In a federated context, users trust foreign servers with all unencrypted data they send
+   to them.
+4. Users trust MLS channel or group members with their data and attached metadata.
+5. Foreign servers cannot impersonate users without explicit consent.
+6. Users rely on their home servers for identity key certification, without the home servers
+7. possessing the identity.
 
 ## 3. APIs and communication protocols
 
 The polyproto specification defines a set of [APIs](/APIs).
 In addition to these REST APIs, polyproto employs WebSockets for real-time communication between
 clients and servers.
+
+The APIs are divided into two categories:
+
+- **Routes: No registration needed**: These routes are available to all clients, regardless of
+  whether this server is the client's home server.
+- **Routes: Registration needed**: These routes are only available to clients where the server is
+  the client's home server.
+
+All polyproto implementations must implement the APIs defined in this specification. Implementations
+can choose to extend the APIs with additional routes, but must not remove or change the behavior of
+the routes defined in this specification.
 
 ### 3.3 WebSockets
 
@@ -190,8 +202,8 @@ The federation of actor identities allows users to engage with foreign servers a
 home servers. For example, in polyproto-chat, an actor can send direct messages to users from a
 different server or join the Guilds of other servers.
 
-Identity certificates defined in sections [#7. Keys and signatures](#7-keys-and-signatures) and
-[#7.1 Home server signed certificates for public client identity keys (ID-Cert)](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
+Identity certificates defined in sections [#7. Cryptography and ID-Certs](#7-cryptography-and-id-certs)
+and [#7.1 Home server signed certificates for public client identity keys (ID-Cert)](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
 are employed to sign messages that the actor sends to other servers.
 
 !!! note "Using one identity for several polyproto implementations"
@@ -201,7 +213,7 @@ are employed to sign messages that the actor sends to other servers.
 
 !!! info
 
-    You can read more about the Identity Pubkey and Certificate in [7. Keys and signatures](#7-keys-and-signatures).
+    You can read more about the Identity Keys and Certificates in [7. Keys and signatures](#7-keys-and-signatures).
 
 ### 4.1 Authentication
 
@@ -222,9 +234,8 @@ have different signatures, preventing malicious servers from successfully replay
 
 ### 4.3 Misuse prevention
 
-To protect users from malicious home servers secretly acting on the behalf of non-consenting users,
-a mechanism is needed to prevent home servers from generating federation tokens for users without
-their consent.
+To protect users from misuse by malicious home servers, a mechanism is needed to prevent home
+servers from generating federation tokens for users without their consent and knowledge.
 
 !!! example "Potential misuse scenario"
 
@@ -384,7 +395,7 @@ polyproto servers and clients employing encryption must support multi-device use
 assigns each device a unique `LeafNode` and prohibits key sharing across devices. Each device offers
 distinct KeyPackages and an own ID-Cert.
 
-## 7. Keys and signatures
+## 7. Cryptography and ID-Certs
 
 ### 7.1 Home server signed certificates for public client identity keys (ID-Cert)
 
@@ -406,7 +417,7 @@ An ID-CSR includes the following information, according to the X.509 standard:
 
 - The public identity key of the client.
 - An identity descriptor (IDD), describing the entity the certificate is issued to. The IDD must be
-  formatted according to [Section 7.1.1.1](#7111-identity-descriptors).
+  formatted according to [Section 7.1.1.1](#7111-identity-descriptors-idds).
 - The signature algorithm used to sign the certificate.
 - The signature of the certificate, generated by using the entities' private identity key.
 
@@ -422,7 +433,7 @@ The resulting ID-Cert then holds the following information:
 
 | Field Description                                                                            | Special requirements, if any                                                                    | X.509 equivalent                                         |
 | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| Correctly formatted Name attribute, according to [#7.1.1.1](#7111-identity-descriptors)      | [Identity descriptor](#7111-identity-descriptors)                                               | Issuer Name                                              |
+| Correctly formatted Name attribute, according to [#7.1.1.1](#7111-identity-descriptors-idds) | [Identity descriptor](#7111-identity-descriptors-idds)                                          | Issuer Name                                              |
 | A unique identifier for the certificate, used by the CA to identify this certificate.        | Must be unique across all certificates issued by a home server.                                 | Serial Number                                            |
 | The algorithm used to sign the certificate.                                                  |                                                                                                 | Certificate Signature Algorithm & Signature Algorithm ID |
 | The signature of the certificate, generated by using the home servers' private identity key. |                                                                                                 | Certificate Signature                                    |
@@ -440,7 +451,7 @@ The ID-Cert is a valid X.509 certificate, and as such, it has a specific structu
 an X.509 certificate is defined in [RFC5280](https://tools.ietf.org/html/rfc5280).
 ID-Certs encompass a subset of the structure of an X.509 certificate.
 
-##### 7.1.1.1 Identity Descriptors
+##### 7.1.1.1 Identity Descriptors (IDDs)
 
 polyproto Identity Descriptors are a subset of the X.509 certificate's distinguished name. Distinguished
 Names (`DNs`), according to the [LDAP Data Interchange Format (LDIF)](https://en.wikipedia.org/wiki/LDAP_Data_Interchange_Format).
@@ -469,12 +480,12 @@ components should be omitted.
 The following constraints must be met by ID-Certs:
 
 - If the ID-Cert is a root certificate
-  - It must have the `CA` flag set to `true`. The path length constraint must be set to `0`.
-  - It must have the `keyCertSign` key usage flag set to `true`.
+    - It must have the `CA` flag set to `true`. The path length constraint must be set to `0`.
+    - It must have the `keyCertSign` key usage flag set to `true`.
 - If the ID-Cert is an actor certificate
-  - It must have the `CA` flag set to `false` or omitted.
-  - It must have the `keyCertSign` key usage flag set to `false` or omitted.
-  - It must have the `digitalSignature` key usage flag OR `contentCommitment` flags set to `true`.
+    - It must have the `CA` flag set to `false` or omitted.
+    - It must have the `keyCertSign` key usage flag set to `false` or omitted.
+    - It must have the `digitalSignature` key usage flag OR `contentCommitment` flags set to `true`.
 
 [Key Usage Flags](https://cryptography.io/en/latest/x509/reference/#cryptography.x509.KeyUsage) and
 [Basic Constraints](https://cryptography.io/en/latest/x509/reference/#cryptography.x509.BasicConstraints)
@@ -487,6 +498,9 @@ The session ID is an [`ASN.1`](https://en.wikipedia.org/wiki/ASN.1) [`Ia5String`
 chosen by the entity requesting the ID-Cert. It is used to uniquely identify a session. The session
 ID must be unique for each certificate issued to that entity. A session ID can be re-used if the
 previous certificate with that session ID has expired.
+
+Session IDs are 1 - 32 characters long and. They can contain any character permitted by the `ASN.1`
+`IA5String` type.
 
 Session IDs can be used to identify a session across devices, or to detect if a new, perhaps
 malicious session has been created.
