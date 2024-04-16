@@ -995,9 +995,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#43-abuse-prevention" class="md-nav__link">
+  <a href="#43-misuse-prevention" class="md-nav__link">
     <span class="md-ellipsis">
-      4.3 Abuse prevention
+      4.3 Misuse prevention
     </span>
   </a>
   
@@ -1009,9 +1009,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-users" class="md-nav__link">
+  <a href="#5-actors" class="md-nav__link">
     <span class="md-ellipsis">
-      5. Users
+      5. Actors
     </span>
   </a>
   
@@ -1867,9 +1867,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#43-abuse-prevention" class="md-nav__link">
+  <a href="#43-misuse-prevention" class="md-nav__link">
     <span class="md-ellipsis">
-      4.3 Abuse prevention
+      4.3 Misuse prevention
     </span>
   </a>
   
@@ -1881,9 +1881,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-users" class="md-nav__link">
+  <a href="#5-actors" class="md-nav__link">
     <span class="md-ellipsis">
-      5. Users
+      5. Actors
     </span>
   </a>
   
@@ -2187,10 +2187,10 @@ The version number specified here also applies to the API documentation.</p>
 <li><a href="#4-federated-identity">4. Federated identity</a><ul>
 <li><a href="#41-authentication">4.1 Authentication</a></li>
 <li><a href="#42-challenge-strings">4.2 Challenge strings</a></li>
-<li><a href="#43-abuse-prevention">4.3 Abuse prevention</a></li>
+<li><a href="#43-misuse-prevention">4.3 Misuse prevention</a></li>
 </ul>
 </li>
-<li><a href="#5-users">5. Users</a></li>
+<li><a href="#5-actors">5. Actors</a></li>
 <li><a href="#6-encryption">6. Encryption</a><ul>
 <li><a href="#61-keypackages">6.1. KeyPackages</a></li>
 <li><a href="#611-last-resort-keypackages">6.1.1 Last resort KeyPackages</a></li>
@@ -2372,12 +2372,12 @@ current timestamp surpasses this lifetime, the challenge fails. The actor signs 
 the signature and their ID-Cert to the server, enabling identity confirmation.</p>
 <p>Challenge strings counteract replay attacks. Their uniqueness ensures that even identical requests
 have different signatures, preventing malicious servers from successfully replaying requests.</p>
-<h3 id="43-abuse-prevention">4.3 Abuse prevention<a class="headerlink" href="#43-abuse-prevention" title="Permanent link">&para;</a></h3>
+<h3 id="43-misuse-prevention">4.3 Misuse prevention<a class="headerlink" href="#43-misuse-prevention" title="Permanent link">&para;</a></h3>
 <p>To protect users from malicious home servers secretly acting on the behalf of non-consenting users,
 a mechanism is needed to prevent home servers from generating federation tokens for users without
 their consent.</p>
 <div class="admonition example">
-<p class="admonition-title">Potential abuse scenario</p>
+<p class="admonition-title">Potential misuse scenario</p>
 <p>A malicious home server can potentially request a federation token on behalf of one of its
 users, and use it to generate a session token on the actor's behalf. This is a problem, as the
 malicious server can then impersonate the actor on another server, as well as read unencrypted
@@ -2405,12 +2405,14 @@ conversation noticing. MLS's forward secrecy guarantees ensure that, in theory, 
 session cannot decrypt any messages sent before its' join epoch. If secrecy or confidentiality
 are of concern, users should host their own home server and use end-to-end encryption.</p>
 </div>
-<h2 id="5-users">5. Users<a class="headerlink" href="#5-users" title="Permanent link">&para;</a></h2>
-<p>Every client requires an associated actor identity. Users are distinguished by a unique federation
-ID (FID), consist of their username, which is unique per instance, and the instance's root domain.
+<h2 id="5-actors">5. Actors<a class="headerlink" href="#5-actors" title="Permanent link">&para;</a></h2>
+<p>Every client requires an associated actor identity. Actors are distinguished by a unique federation
+ID (FID), consist of their identifier, which is unique per instance, and the instance's root domain.
 This combination ensures global uniqueness.</p>
 <p>FIDs used in public contexts are formatted as <code>actor@optionalsubdomain.domain.tld</code>, and are case-insensitive.</p>
-<p>The following regular expression can be used to validate actor IDs: <code>\b([A-Z0-9._%+-]+)@([A-Z0-9.-]+\.[A-Z]{2,})\b</code>.</p>
+<p>The following regular expression can be used to validate actor IDs: <code>\b([a-z0-9._%+-]+)@([a-z0-9.-]+)\b(?&lt;!\.)</code>.
+The regular expression is in <code>PCRE2</code>/Python format and is case-sensitive. A Rust version of the regular
+expression is <code>\b([a-z0-9._%+-]+)@([a-z0-9-]+(\.[a-z0-9-]+)*)</code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Validating a federation ID with the above regex does not guarantee that the ID is valid. It only
@@ -2652,7 +2654,7 @@ malicious session has been created.</p>
 identity key caching to impersonate an actor. Consider the following example which employs foreign
 server public identity key caching, but no home server issued identity key certificates:</p>
 <div class="admonition example">
-<p class="admonition-title">Potential abuse scenario</p>
+<p class="admonition-title">Potential misuse scenario</p>
 <p>A malicious foreign server B can fake a message from Alice (Home server: Server A) to Bob
 (Home Server: Server B), by generating a new identity key pair and using it to sign the
 malicious message. The foreign server then sends that message to Bob, who will then request
@@ -3049,7 +3051,7 @@ aa-xsa: Deactivate account</code></pre>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-04-15T19:15:16+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-04-15</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-04-16T12:01:34+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-04-16</span>
   </span>
 
     
