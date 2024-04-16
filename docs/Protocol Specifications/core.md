@@ -266,7 +266,7 @@ FIDs used in public contexts are formatted as `actor@optionalsubdomain.domain.tl
 
 The following regular expression can be used to validate actor IDs: `\b([a-z0-9._%+-]+)@([a-z0-9-]+(\.[a-z0-9-]+)*)`.
 
-!!! note
+!!! info
 
     The above regular expression is flavored for the Rust Programming Language, but can be easily
     adapted to other languages.
