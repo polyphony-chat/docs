@@ -1075,13 +1075,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#7-keys-and-signatures" class="md-nav__link">
+  <a href="#7-cryptography-and-id-certs" class="md-nav__link">
     <span class="md-ellipsis">
-      7. Keys and signatures
+      7. Cryptography and ID-Certs
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7. Keys and signatures">
+    <nav class="md-nav" aria-label="7. Cryptography and ID-Certs">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1947,13 +1947,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#7-keys-and-signatures" class="md-nav__link">
+  <a href="#7-cryptography-and-id-certs" class="md-nav__link">
     <span class="md-ellipsis">
-      7. Keys and signatures
+      7. Cryptography and ID-Certs
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7. Keys and signatures">
+    <nav class="md-nav" aria-label="7. Cryptography and ID-Certs">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2198,10 +2198,10 @@ The version number specified here also applies to the API documentation.</p>
 <li><a href="#63-multi-device-support">6.3 Multi-device support</a></li>
 </ul>
 </li>
-<li><a href="#7-keys-and-signatures">7. Keys and signatures</a><ul>
+<li><a href="#7-cryptography-and-id-certs">7. Cryptography and ID-Certs</a><ul>
 <li><a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">7.1 Home server signed certificates for public client identity keys (ID-Cert)</a></li>
 <li><a href="#711-structure-of-an-id-cert">7.1.1 Structure of an ID-Cert</a><ul>
-<li><a href="#7111-identity-descriptors">7.1.1.1 Identity Descriptors</a></li>
+<li><a href="#7111-identity-descriptors-idds">7.1.1.1 Identity Descriptors (IDDs)</a></li>
 <li><a href="#7112-extensions-and-constraints">7.1.1.2 Extensions and constraints</a></li>
 <li><a href="#7113-session-ids">7.1.1.3 Session IDs</a></li>
 </ul>
@@ -2232,7 +2232,7 @@ The version number specified here also applies to the API documentation.</p>
 <p>The polyproto protocol is a home-server-based identity federation protocol specification intended
 for use in applications where actor identity is needed. polyproto focuses on federated identity,
 and apart from the usage of Messaging Layer Security (MLS) for encryption, does not specify any
-application-specific features. Instead, it is intended to be used as a base for application
+further application-specific features. Instead, it is intended to be used as a base for application
 implementations and other protocols, such as <code>polyproto-chat</code> - a chat protocol built on top of
 polyproto. Through a shared "base layer", polyproto implementations are intercompatible in a way
 where one identity can be used across various polyproto implementations.</p>
@@ -2263,11 +2263,12 @@ document.</p>
 <h2 id="2-trust-model">2. Trust model<a class="headerlink" href="#2-trust-model" title="Permanent link">&para;</a></h2>
 <p>polyproto operates under the following trust assumptions:</p>
 <ol>
-<li>Users entrust their home server and its admins with data security and discretion on actions</li>
-<li>appearing as actor-performed.</li>
+<li>Users entrust their home server and its admins with data security and discretion on actions
+   appearing as actor-performed.</li>
 <li>Users only distrust their home servers in case of irregularities or conflicting information.</li>
-<li>In a federated context, users trust foreign servers with all unencrypted data.</li>
-<li>Users trust MLS channel members with their data and attached metadata.</li>
+<li>In a federated context, users trust foreign servers with all unencrypted data they send
+   to them.</li>
+<li>Users trust MLS channel or group members with their data and attached metadata.</li>
 <li>Foreign servers cannot impersonate users without explicit consent.</li>
 <li>Users rely on their home servers for identity key certification, without the home servers</li>
 <li>possessing the identity.</li>
@@ -2276,6 +2277,16 @@ document.</p>
 <p>The polyproto specification defines a set of <a href="/APIs">APIs</a>.
 In addition to these REST APIs, polyproto employs WebSockets for real-time communication between
 clients and servers.</p>
+<p>The APIs are divided into two categories:</p>
+<ul>
+<li><strong>Routes: No registration needed</strong>: These routes are available to all clients, regardless of
+  whether this server is the client's home server.</li>
+<li><strong>Routes: Registration needed</strong>: These routes are only available to clients where the server is
+  the client's home server.</li>
+</ul>
+<p>All polyproto implementations must implement the APIs defined in this specification. Implementations
+can choose to extend the APIs with additional routes, but must not remove or change the behavior of
+the routes defined in this specification.</p>
 <h3 id="33-websockets">3.3 WebSockets<a class="headerlink" href="#33-websockets" title="Permanent link">&para;</a></h3>
 <p>WebSockets enable real-time communication between actor clients and servers.</p>
 <p>WebSocket connections to polyproto servers consist of the following cycle:</p>
@@ -2348,8 +2359,8 @@ then a WebSocket connection should be considered.</p>
 <p>The federation of actor identities allows users to engage with foreign servers as if they were their
 home servers. For example, in polyproto-chat, an actor can send direct messages to users from a
 different server or join the Guilds of other servers.</p>
-<p>Identity certificates defined in sections <a href="#7-keys-and-signatures">#7. Keys and signatures</a> and
-<a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">#7.1 Home server signed certificates for public client identity keys (ID-Cert)</a>
+<p>Identity certificates defined in sections <a href="#7-cryptography-and-id-certs">#7. Cryptography and ID-Certs</a>
+and <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">#7.1 Home server signed certificates for public client identity keys (ID-Cert)</a>
 are employed to sign messages that the actor sends to other servers.</p>
 <div class="admonition note">
 <p class="admonition-title">Using one identity for several polyproto implementations</p>
@@ -2358,7 +2369,7 @@ are employed to sign messages that the actor sends to other servers.</p>
 </div>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
-<p>You can read more about the Identity Pubkey and Certificate in <a href="#7-keys-and-signatures">7. Keys and signatures</a>.</p>
+<p>You can read more about the Identity Keys and Certificates in <a href="#7-keys-and-signatures">7. Keys and signatures</a>.</p>
 </div>
 <h3 id="41-authentication">4.1 Authentication<a class="headerlink" href="#41-authentication" title="Permanent link">&para;</a></h3>
 <p>Authentication tasks such as registering a new actor, authenticating a new client, and authenticating
@@ -2373,9 +2384,8 @@ the signature and their ID-Cert to the server, enabling identity confirmation.</
 <p>Challenge strings counteract replay attacks. Their uniqueness ensures that even identical requests
 have different signatures, preventing malicious servers from successfully replaying requests.</p>
 <h3 id="43-misuse-prevention">4.3 Misuse prevention<a class="headerlink" href="#43-misuse-prevention" title="Permanent link">&para;</a></h3>
-<p>To protect users from malicious home servers secretly acting on the behalf of non-consenting users,
-a mechanism is needed to prevent home servers from generating federation tokens for users without
-their consent.</p>
+<p>To protect users from misuse by malicious home servers, a mechanism is needed to prevent home
+servers from generating federation tokens for users without their consent and knowledge.</p>
 <div class="admonition example">
 <p class="admonition-title">Potential misuse scenario</p>
 <p>A malicious home server can potentially request a federation token on behalf of one of its
@@ -2511,7 +2521,7 @@ key found inside a clients' ID-Cert.</p>
 <p>polyproto servers and clients employing encryption must support multi-device use. The MLS protocol
 assigns each device a unique <code>LeafNode</code> and prohibits key sharing across devices. Each device offers
 distinct KeyPackages and an own ID-Cert.</p>
-<h2 id="7-keys-and-signatures">7. Keys and signatures<a class="headerlink" href="#7-keys-and-signatures" title="Permanent link">&para;</a></h2>
+<h2 id="7-cryptography-and-id-certs">7. Cryptography and ID-Certs<a class="headerlink" href="#7-cryptography-and-id-certs" title="Permanent link">&para;</a></h2>
 <h3 id="71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">7.1 Home server signed certificates for public client identity keys (ID-Cert)<a class="headerlink" href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert" title="Permanent link">&para;</a></h3>
 <p>The ID-Cert, a <a href="https://en.wikipedia.org/wiki/X.509">X.509</a> certificate, validates a public actor
 identity key. It is an actor-generated CSR (<a href="https://en.wikipedia.org/wiki/Certificate_signing_request">Certificate Signing Request</a>)
@@ -2527,7 +2537,7 @@ client.</p>
 <ul>
 <li>The public identity key of the client.</li>
 <li>An identity descriptor (IDD), describing the entity the certificate is issued to. The IDD must be
-  formatted according to <a href="#7111-identity-descriptors">Section 7.1.1.1</a>.</li>
+  formatted according to <a href="#7111-identity-descriptors-idds">Section 7.1.1.1</a>.</li>
 <li>The signature algorithm used to sign the certificate.</li>
 <li>The signature of the certificate, generated by using the entities' private identity key.</li>
 </ul>
@@ -2549,8 +2559,8 @@ certificate's validity period.</p>
 </thead>
 <tbody>
 <tr>
-<td>Correctly formatted Name attribute, according to <a href="#7111-identity-descriptors">#7.1.1.1</a></td>
-<td><a href="#7111-identity-descriptors">Identity descriptor</a></td>
+<td>Correctly formatted Name attribute, according to <a href="#7111-identity-descriptors-idds">#7.1.1.1</a></td>
+<td><a href="#7111-identity-descriptors-idds">Identity descriptor</a></td>
 <td>Issuer Name</td>
 </tr>
 <tr>
@@ -2609,7 +2619,7 @@ certificate's validity period.</p>
 <p>The ID-Cert is a valid X.509 certificate, and as such, it has a specific structure. The structure of
 an X.509 certificate is defined in <a href="https://tools.ietf.org/html/rfc5280">RFC5280</a>.
 ID-Certs encompass a subset of the structure of an X.509 certificate.</p>
-<h5 id="7111-identity-descriptors">7.1.1.1 Identity Descriptors<a class="headerlink" href="#7111-identity-descriptors" title="Permanent link">&para;</a></h5>
+<h5 id="7111-identity-descriptors-idds">7.1.1.1 Identity Descriptors (IDDs)<a class="headerlink" href="#7111-identity-descriptors-idds" title="Permanent link">&para;</a></h5>
 <p>polyproto Identity Descriptors are a subset of the X.509 certificate's distinguished name. Distinguished
 Names (<code>DNs</code>), according to the <a href="https://en.wikipedia.org/wiki/LDAP_Data_Interchange_Format">LDAP Data Interchange Format (LDIF)</a>.
 The <code>DN</code> is a sequence of relative distinguished names (<code>RDNs</code>).</p>
@@ -2633,13 +2643,17 @@ components should be omitted.</p>
 <h5 id="7112-extensions-and-constraints">7.1.1.2 Extensions and constraints<a class="headerlink" href="#7112-extensions-and-constraints" title="Permanent link">&para;</a></h5>
 <p>The following constraints must be met by ID-Certs:</p>
 <ul>
-<li>If the ID-Cert is a root certificate</li>
+<li>If the ID-Cert is a root certificate<ul>
 <li>It must have the <code>CA</code> flag set to <code>true</code>. The path length constraint must be set to <code>0</code>.</li>
 <li>It must have the <code>keyCertSign</code> key usage flag set to <code>true</code>.</li>
-<li>If the ID-Cert is an actor certificate</li>
+</ul>
+</li>
+<li>If the ID-Cert is an actor certificate<ul>
 <li>It must have the <code>CA</code> flag set to <code>false</code> or omitted.</li>
 <li>It must have the <code>keyCertSign</code> key usage flag set to <code>false</code> or omitted.</li>
 <li>It must have the <code>digitalSignature</code> key usage flag OR <code>contentCommitment</code> flags set to <code>true</code>.</li>
+</ul>
+</li>
 </ul>
 <p><a href="https://cryptography.io/en/latest/x509/reference/#cryptography.x509.KeyUsage">Key Usage Flags</a> and
 <a href="https://cryptography.io/en/latest/x509/reference/#cryptography.x509.BasicConstraints">Basic Constraints</a>
@@ -2650,6 +2664,8 @@ as "critical". ID-Certs not adhering to this standard should be treated as malfo
 chosen by the entity requesting the ID-Cert. It is used to uniquely identify a session. The session
 ID must be unique for each certificate issued to that entity. A session ID can be re-used if the
 previous certificate with that session ID has expired.</p>
+<p>Session IDs are 1 - 32 characters long and. They can contain any character permitted by the <code>ASN.1</code>
+<code>IA5String</code> type.</p>
 <p>Session IDs can be used to identify a session across devices, or to detect if a new, perhaps
 malicious session has been created.</p>
 <h4 id="712-necessity-of-id-certs">7.1.2 Necessity of ID-Certs<a class="headerlink" href="#712-necessity-of-id-certs" title="Permanent link">&para;</a></h4>
@@ -3054,7 +3070,7 @@ aa-xsa: Deactivate account</code></pre>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-04-16T12:27:58+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-04-16</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-04-16T12:45:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-04-16</span>
   </span>
 
     
