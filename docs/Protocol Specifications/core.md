@@ -5,7 +5,7 @@ weight: 0
 
 # polyproto Specification
 
-**v1.0.0-alpha-1** - Treat this as an unfinished draft.
+**v1.0.0-alpha-2** - Treat this as an unfinished draft.
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 The version number specified here also applies to the API documentation.
 
@@ -113,9 +113,9 @@ The APIs are divided into two categories:
 - **Routes: Registration needed**: These routes are only available to clients where the server is
   the client's home server.
 
-All polyproto implementations must implement the APIs defined in this specification. Implementations
-can choose to extend the APIs with additional routes, but must not remove or change the behavior of
-the routes defined in this specification.
+All software aiming to federate with other polyproto implementations must implement the APIs defined
+in this specification. Implementations can choose to extend the APIs with additional routes, but must
+not remove or change the behavior of the routes defined in this specification.
 
 ### 3.3 WebSockets
 
@@ -176,8 +176,8 @@ behavior is supported.
     connection. 
 
 Querying [this endpoint](/APIs/Core/Routes%3A No registration needed/#get-events) yields a JSON-Array
-containing either all events the session has missed since disconnecting from the WebSocket, or all events
-the session has missed since last querying the endpoint.
+containing all events the session has missed since last querying the endpoint, or since last being
+connected to the WebSocket.
 
 Depending on how many events the session has
 missed, the earliest events might be excluded from the response to limit the response bodies size. This
@@ -219,19 +219,18 @@ are employed to sign messages that the actor sends to other servers.
 
 ### 4.1 Authentication
 
-Authentication tasks such as registering a new actor, authenticating a new client, and authenticating
-on a foreign server are not strictly defined in polyproto. This allows for a wide range of
-authentication methods to be used. However, public-facing polyproto implementations should **highly**
-consider implementing the [polyproto-auth](./auth.md) standard for authenticating on home servers
-and foreign servers alike.
+The core polyproto specification does not contain a strict definition of authentication procedures
+and endpoints. This allows for a wide range of authentication methods to be used. However,
+public-facing polyproto implementations should **highly** consider implementing the
+[polyproto-auth](./auth.md) standard for authenticating on home servers and foreign servers alike.
 
 !!! warning
 
     Federation is only possible if all involved polyproto implementations have an
-    overlapping set of supported authentication methods. It is thus highly recommended to implement
-    and use the polyproto-auth standard in any given polyproto implementation, unless your use case
-    requires strictly requires a different authentication method. Of course, other authentication
-    methods can be implemented in addition to polyproto-auth.
+    overlapping set of supported authentication methods. Therefore, it is highly recommended to implement
+    and use the polyproto-auth standard, unless your use case requires strictly requires a different
+    authentication method. Of course, other authentication methods can be implemented in addition to
+    polyproto-auth.
 
 When successfully authenticated, a client receives a session token, which can then be used to
 access authenticated routes on the REST API and to establish a WebSocket connection. Each ID-Cert
@@ -275,10 +274,11 @@ APIs for this purpose are defined in the [API documentation](/APIs).
 
 ### 4.2 Challenge strings
 
-Servers generate alphanumeric challenge strings to verify an actor's private identity key
-possession. These strings, ranging from 32 to 256 characters, have a UNIX timestamp lifetime. If the
-current timestamp surpasses this lifetime, the challenge fails. The actor signs the string, sending
-the signature and their ID-Cert to the server, which verifies the signature's authenticity.
+Servers are alphanumeric challenge strings to verify an actor's private identity key
+possession, without revealing the private key itself. These strings, ranging from 32 to 256 characters,
+have a UNIX timestamp lifetime. If the current timestamp surpasses this lifetime, the challenge fails.
+The actor signs the string, sending the signature and their ID-Cert to the server, which then verifies
+the signature's authenticity.
 
 !!! tip
 
@@ -287,7 +287,7 @@ the signature and their ID-Cert to the server, which verifies the signature's au
     character classes (`[a-zA-Z0-9]`). Server implementations should ensure that challenge strings
     are unique per actor. If this is not the case, actors could potentially be the target of replay attacks.
 
-Challenge strings counteract replay attacks. Their uniqueness ensures that even identical requests
+Challenge strings can counteract replay attacks. Their uniqueness ensures that even identical requests
 have different signatures, preventing malicious servers from successfully replaying requests.
 
 ### 4.3 Protection against misuse by malicious home servers
@@ -467,7 +467,7 @@ of authentication.
 A CSR in the context of polyproto will be referred to as an ID-CSR. ID-CSRs are DER- or PEM-encoded
 [PKCS #10](https://datatracker.ietf.org/doc/html/rfc2986) CSRs, with a few additional requirements.
 
-All ID-Certs are valid X.509 certificates. However, not all X.509 certificates are valid ID-Certs.
+All ID-Certs are valid X.509 v3 certificates. However, not all X.509 v3 certificates are valid ID-Certs.
 
 ID-Certs form the basis of message signing and verification in polyproto.
 They are used to verify the identity of a client, and to verify the integrity of messages sent by a
@@ -522,17 +522,19 @@ The `DN` is a sequence of relative distinguished names (`RDNs`).
 The identity descriptor must be unique for each certificate issued by a home server. The `DN` of an ID-Cert
 must meet all of the following requirements:
 
-- Identity descriptor (IDD) must have "common name" attribute, which is equal to the actor or
-  home server name of the subject in question. Only one "common name" is allowed.
+- Identity descriptor (IDD) must have "common name" attribute. If the ID-Cert is for an actor, the
+  common name must be the federation ID of the actor. If the ID-Cert is a self-signed home server
+  certificate, the "common name" attribute must not be present.
 - Must have at least one domain component, specifying the home servers' FQDN
   (fully qualified domain name).
 - If the ID-Cert or ID-CSR is for an actor, the IDD must include the `UID` (OID 0.9.2342.19200300.100.1.1)
   **and** `uniqueIdentifier` (OID 0.9.2342.19200300.100.1.44) fields.
-  - `UID` is the federation ID of the actor, e.g. `actor@fqdn-of-homeserver.example.com`.
-  - `uniqueIdentifier` is a Session ID.
+    - `UID` is the federation ID of the actor, e.g. `actor@fqdn-of-homeserver.example.com`.
+    - `uniqueIdentifier` is a Session ID.
 - Can have other attributes, if the additional attributes do not conflict with the above
   requirements. Additional attributes might be ignored by other home servers and other clients, unless
-  specified otherwise in a polyproto extension.
+  specified otherwise in a polyproto extension. Additional attributes, which are not part of a polyproto
+  extension must be non-critical X.509 extensions.
 
 If the home server does not have a subdomain or top level domain, the `dc` fields for these
 components should be omitted.
@@ -542,7 +544,8 @@ components should be omitted.
 The following constraints must be met by ID-Certs:
 
 - If the ID-Cert is a root certificate
-    - It must have the `CA` flag set to `true`. The path length constraint must be set to `0`.
+    - It must have the `CA` flag set to `true`. The path length constraint must be present and set
+      to `0`.
     - It must have the `keyCertSign` key usage flag set to `true`.
 - If the ID-Cert is an actor certificate
     - It must have the `CA` flag set to `false` or omitted.
@@ -552,7 +555,7 @@ The following constraints must be met by ID-Certs:
 [Key Usage Flags](https://cryptography.io/en/latest/x509/reference/#cryptography.x509.KeyUsage) and
 [Basic Constraints](https://cryptography.io/en/latest/x509/reference/#cryptography.x509.BasicConstraints)
 are critical extensions. Therefore, if any of these X.509 extensions are present, they must be marked
-as "critical". ID-Certs not adhering to this standard should be treated as malformed.
+as "critical". ID-Certs not adhering to this standard must be treated as malformed.
 
 ##### 7.1.1.3 Session IDs
 
@@ -580,7 +583,7 @@ server public identity key caching, but no home server issued identity key certi
     malicious message. The foreign server then sends that message to Bob, who will then request
     Alice's public identity key from Server B, who will then send Bob the malicious public identity
     key. Bob will succeed in verifying the signature of the message, and not notice that the message
-    is malicious.
+    has been crafted by a malicious server.
 
 The above scenario is not possible with home server issued identity key certificates, as the
 malicious server cannot generate an identity key pair for Alice, which is signed by Server A.
@@ -593,7 +596,7 @@ Request to the home server, along with at least one new KeyPackage and a corresp
 KeyPackage, if encryption is offered. The home server will then generate the new ID-Cert, given that
 the CSR is valid and that the server accepts the creation of new ID-Certs at this time.
 
-Rotating keys is done by using an API route which requires authorization.
+Rotating keys is done by using an API route, which requires authorization.
 
 !!! note
 
@@ -692,13 +695,15 @@ for more information about the certificate.
 
 #### 7.2.1 Message verification
 
-To ensure message integrity via signing, clients and servers must verify message signatures.
+To ensure message integrity through signing, clients and servers must verify message signatures.
 This involves cross-checking the message signature against the sender's ID-Cert and the senders'
-home server's root certificate, while also confirming the validity of the ID-Cert attached to the
+home server's ID-Cert, while also confirming the validity of the ID-Cert attached to the
 message and ensuring its public key matches the sender's.
 
-Signature verification must always be "strict", meaning that signature schemes producing malleable
-signatures and [weak public keys](https://en.wikipedia.org/wiki/Weak_key) must be rejected.
+!!! info
+
+    Signature verification must always be "strict", meaning that signature schemes producing malleable
+    signatures and [weak public keys](https://en.wikipedia.org/wiki/Weak_key) must be rejected.
 
 **Example:** Given a signed message from Alice, such as Bob would receive from Server B, Bob's
 client would verify the signature of the message such as this:
@@ -760,10 +765,11 @@ As described in previous sections, actors must hold on to their past identity ke
 want or need to migrate their account.
 
 Home servers must offer a way for actors to upload and recover their private identity keys. Private
-identity keys should be encrypted with a strong password and symmetric encryption schemes such as AES
-and CRYSTALS-KYBER before being uploaded to the server. Authenticated actors can download their
+identity keys should be encrypted with a strong password and symmetric encryption schemes such as AES,
+before being uploaded to the server. Authenticated actors can download their
 encrypted private identity keys from the server at any time. All encryption and decryption operations
-must be done client-side.
+must be done client-side. A password based key derivation function (PBKDF) should be used to derive
+the encryption key from the password used to encrypt the private identity key.
 
 If any uncertainty about the availability of the home server exists, clients should regularly
 download their encrypted private identity keys from the server and store them in a secure location.
@@ -779,9 +785,9 @@ download their encrypted private identity keys from the server and store them in
   valid and, if set, has an expiry date less than or equal to the expiry date of the server's own ID-Cert.
 - Due to the fact that a `SERVER_KEY_CHANGE` gateway event is bound to generate a large amount of
   traffic, servers should only manually generate a new identity key pair when absolutely necessary
-  and instead choose a fitting expiry date interval for their identity key certificates. It might
+  and instead select a fitting expiry date interval for their ID-Certs. It might
   also be a good idea to stagger the sending of `SERVER_KEY_CHANGE` gateway events, to prevent a
-  server from initiating a DDoS attack on itself.
+  server from initiating a DDoS attack on itself. <!--TODO: What does this mean??-->
 - When a client or server receives the information that an actor's client identity key has been
   changed, the client/server in question should update their cached ID-Cert for the actor in
   question, taking into account the session ID of the new identity key pair.
@@ -818,7 +824,7 @@ with the new signature is created, preserving the old message.
 
 All challenge strings and their responses created in the context of account migration must be made
 public to ensure that a chain of trust can be maintained. A third party should be able to verify that
-the challenge string which authorized the ownership change of an accounts' data was signed by the
+the challenge string, which authorized the ownership change of an accounts' data was signed by the
 correct private key.
 
 Implementations and protocol extensions should carefully consider the extent of messages that can be
@@ -905,7 +911,7 @@ sb->>ab: New account data
 Fig. 5: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account,
 where Server A is unreachable or uncooperative.
 
-!!! question "If the old home server is not needed for the migration, why try to contact it in the first place?"
+!!! question "If the old home server is not needed to migrate, why try to contact it in the first place?"
 
     It is generally preferrable to have the old home server cooperate with the migration, as it
     allows for a more seamless migration. A cooperative homeserver will be able to provide the new
