@@ -167,7 +167,7 @@ Fig. 1: Sequence diagram of a WebSocket connection to a polyproto server.
 For some implementation contexts, a constant WebSocket connection might not be wanted. A client can
 instead opt to query an API endpoint to receive events, which would normally be sent through the WebSocket
 connection. Concrete polyproto-implementations and extensions can decide whether this alternative
-behaviour is supported.
+behavior is supported.
 
 !!! example
 
@@ -181,7 +181,7 @@ the session has missed since last querying the endpoint.
 
 Depending on how many events the session has
 missed, the earliest events might be excluded from the response to limit the response bodies size. This
-behaviour should be explicitly documented in implementations or extensions of polyproto.
+behavior should be explicitly documented in implementations or extensions of polyproto.
 
 Due to the
 intended use cases for retrieving events through REST rather than WebSockets, this endpoint is not
