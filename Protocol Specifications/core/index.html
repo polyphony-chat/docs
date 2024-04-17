@@ -982,6 +982,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="4.1 Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#411-authenticating-on-a-foreign-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1.1 Authenticating on a foreign server
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#412-sensitive-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1.2 Sensitive actions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -994,9 +1018,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#43-misuse-prevention" class="md-nav__link">
+  <a href="#43-protection-against-misuse-by-malicious-home-servers" class="md-nav__link">
     <span class="md-ellipsis">
-      4.3 Misuse prevention
+      4.3 Protection against misuse by malicious home servers
     </span>
   </a>
   
@@ -1115,6 +1139,15 @@
   <a href="#713-key-rotation" class="md-nav__link">
     <span class="md-ellipsis">
       7.1.3 Key rotation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#714-early-revocation-of-id-certs" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1.4 Early revocation of ID-Certs
     </span>
   </a>
   
@@ -1856,6 +1889,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="4.1 Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#411-authenticating-on-a-foreign-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1.1 Authenticating on a foreign server
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#412-sensitive-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1.2 Sensitive actions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1868,9 +1925,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#43-misuse-prevention" class="md-nav__link">
+  <a href="#43-protection-against-misuse-by-malicious-home-servers" class="md-nav__link">
     <span class="md-ellipsis">
-      4.3 Misuse prevention
+      4.3 Protection against misuse by malicious home servers
     </span>
   </a>
   
@@ -1989,6 +2046,15 @@
   <a href="#713-key-rotation" class="md-nav__link">
     <span class="md-ellipsis">
       7.1.3 Key rotation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#714-early-revocation-of-id-certs" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1.4 Early revocation of ID-Certs
     </span>
   </a>
   
@@ -2173,7 +2239,7 @@
 
 
 <h1 id="polyproto-specification">polyproto Specification<a class="headerlink" href="#polyproto-specification" title="Permanent link">&para;</a></h1>
-<p><strong>v0.0.0</strong> - Treat this as an unfinished draft.
+<p><strong>v1.0.0-alpha-1</strong> - Treat this as an unfinished draft.
 <a href="https://semver.org/spec/v2.0.0.html">Semantic versioning v2.0.0</a> is used to version this specification.
 The version number specified here also applies to the API documentation.</p>
 <ul>
@@ -2187,8 +2253,10 @@ The version number specified here also applies to the API documentation.</p>
 </li>
 <li><a href="#4-federated-identity">4. Federated identity</a><ul>
 <li><a href="#41-authentication">4.1 Authentication</a></li>
+<li><a href="#411-authenticating-on-a-foreign-server">4.1.1 Authenticating on a foreign server</a></li>
+<li><a href="#412-sensitive-actions">4.1.2 Sensitive actions</a></li>
 <li><a href="#42-challenge-strings">4.2 Challenge strings</a></li>
-<li><a href="#43-misuse-prevention">4.3 Misuse prevention</a></li>
+<li><a href="#43-protection-against-misuse-by-malicious-home-servers">4.3 Protection against misuse by malicious home servers</a></li>
 </ul>
 </li>
 <li><a href="#5-federation-ids-fids">5. Federation IDs (FIDs)</a></li>
@@ -2208,10 +2276,8 @@ The version number specified here also applies to the API documentation.</p>
 </ul>
 </li>
 <li><a href="#712-necessity-of-id-certs">7.1.2 Necessity of ID-Certs</a></li>
-<li><a href="#713-key-rotation">7.1.3 Key rotation</a><ul>
-<li><a href="#7131-a-note-about-crls-certificate-revocation-lists">7.1.3.1 A note about CRLs (Certificate revocation lists)</a></li>
-</ul>
-</li>
+<li><a href="#713-key-rotation">7.1.3 Key rotation</a></li>
+<li><a href="#714-early-revocation-of-id-certs">7.1.4 Early revocation of ID-Certs</a></li>
 <li><a href="#72-actor-identity-keys-and-message-signing">7.2 Actor identity keys and message signing</a></li>
 <li><a href="#721-message-verification">7.2.1 Message verification</a></li>
 <li><a href="#73-private-key-loss-prevention-and-private-key-recovery">7.3 Private key loss prevention and private key recovery</a></li>
@@ -2374,25 +2440,73 @@ are employed to sign messages that the actor sends to other servers.</p>
 </div>
 <h3 id="41-authentication">4.1 Authentication<a class="headerlink" href="#41-authentication" title="Permanent link">&para;</a></h3>
 <p>Authentication tasks such as registering a new actor, authenticating a new client, and authenticating
-on a foreign server are not strictly defined in polyproto. Instead, polyproto defines a set of
-requirements that must be met by any polyproto implementation. This allows for a wide range of
-authentication methods to be used, provided they meet the requirements.</p>
+on a foreign server are not strictly defined in polyproto. This allows for a wide range of
+authentication methods to be used. However, public-facing polyproto implementations should <strong>highly</strong>
+consider implementing the <a href="../auth/">polyproto-auth</a> standard for authenticating on home servers
+and foreign servers alike.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Federation is only possible if all involved polyproto implementations have an
+overlapping set of supported authentication methods. It is thus highly recommended to implement
+and use the polyproto-auth standard in any given polyproto implementation, unless your use case
+requires strictly requires a different authentication method. Of course, other authentication
+methods can be implemented in addition to polyproto-auth.</p>
+</div>
+<p>When successfully authenticated, a client receives a session token, which can then be used to
+access authenticated routes on the REST API and to establish a WebSocket connection. Each ID-Cert
+can only have one active session token at a time.</p>
+<h4 id="411-authenticating-on-a-foreign-server">4.1.1 Authenticating on a foreign server<a class="headerlink" href="#411-authenticating-on-a-foreign-server" title="Permanent link">&para;</a></h4>
+<p>Regardless of the authentication method used, the foreign server must verify the actor's identity
+before allowing them to perform any actions. This verification must be done by proving the cryptographic
+connection between an actors' home servers' public identity key and the actors' ID-Cert. Challenge
+strings, as described in <a href="#42-challenge-strings">Section 4.2</a> and in <a href="../auth/">polyproto-auth</a>
+are recommended for this purpose.</p>
+<p>Servers must also check with the actors' home server to ensure that the ID-Cert has not been revoked.
+APIs for this purpose are defined in the <a href="/APIs">API documentation</a>.</p>
+<h4 id="412-sensitive-actions">4.1.2 Sensitive actions<a class="headerlink" href="#412-sensitive-actions" title="Permanent link">&para;</a></h4>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Sensitive actions should require a second factor of authentication, apart from the actors'
+private key. This second factor can be anything from a password to TOTP or hardware keys, depending
+on the authentication standard used.</p>
+<p>If this is not done, a malicious user who gained access to an actors' private key can lock that
+actor out of their account entirely, as the malicious user could <a href="#714-early-revocation-of-id-certs">revoke the actors' other ID-Certs</a>,
+and thus prevent the actor from logging in again.</p>
+<p>Sensitive actions include, but are not limited to:
+- Generating a new ID-Cert
+- Revoking an ID-Cert
+- Changing the actors' federation ID
+- Changing the actors' other factors of authentication
+- Server administration actions</p>
+<p>Clients should be prepared to gracefully handle the case where a sensitive action fails due to
+a lack of a second factor of authentication, and should prompt the user to provide the second
+factor of authentication. Clients should also be prepared to gracefully handle the case where a
+sensitive action succeeds, even though the second factor of authentication was not provided, as
+a home server might not require a second factor of authentication for all sensitive actions.</p>
+</div>
 <h3 id="42-challenge-strings">4.2 Challenge strings<a class="headerlink" href="#42-challenge-strings" title="Permanent link">&para;</a></h3>
 <p>Servers generate alphanumeric challenge strings to verify an actor's private identity key
 possession. These strings, ranging from 32 to 256 characters, have a UNIX timestamp lifetime. If the
 current timestamp surpasses this lifetime, the challenge fails. The actor signs the string, sending
-the signature and their ID-Cert to the server, enabling identity confirmation.</p>
+the signature and their ID-Cert to the server, which verifies the signature's authenticity.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For public-facing polyproto implementations, it is recommended to use a challenge string length
+of at least 64 characters, including at least one character from each of the alphanumeric
+character classes (<code>[a-zA-Z0-9]</code>). Server implementations should ensure that challenge strings
+are unique per actor. If this is not the case, actors could potentially be the target of replay attacks.</p>
+</div>
 <p>Challenge strings counteract replay attacks. Their uniqueness ensures that even identical requests
 have different signatures, preventing malicious servers from successfully replaying requests.</p>
-<h3 id="43-misuse-prevention">4.3 Misuse prevention<a class="headerlink" href="#43-misuse-prevention" title="Permanent link">&para;</a></h3>
+<h3 id="43-protection-against-misuse-by-malicious-home-servers">4.3 Protection against misuse by malicious home servers<a class="headerlink" href="#43-protection-against-misuse-by-malicious-home-servers" title="Permanent link">&para;</a></h3>
 <p>To protect users from misuse by malicious home servers, a mechanism is needed to prevent home
 servers from generating federation tokens for users without their consent and knowledge.</p>
 <div class="admonition example">
 <p class="admonition-title">Potential misuse scenario</p>
 <p>A malicious home server can potentially request a federation token on behalf of one of its
-users, and use it to generate a session token on the actor's behalf. This is a problem, as the
-malicious server can then impersonate the actor on another server, as well as read unencrypted
-data (such as messages, in the context of a chat application) sent on the other server.</p>
+users, and use it to generate a session token on the actor's behalf. The malicious server can
+then impersonate the actor on another server, as well as read unencrypted data (such as messages,
+in the context of a chat application) sent on the other server.</p>
 </div>
 <div class="admonition abstract">
 <p class="admonition-title">Abstract</p>
@@ -2401,10 +2515,10 @@ protocols, like ActivityPub, have as well. There is no real solution to this pro
 be mitigated a bit by making it more difficult for malicious home servers to do something like
 this without the actor noticing.</p>
 </div>
-<p>Polyproto servers need to inform users of new session tokens. This visibility hampers malicious home
+<p>Polyproto servers need to inform users of new sessions. This visibility hampers malicious home
 servers, but does not solve the issue of them being able to create federation tokens for servers the
 actor does not connect to. This is because, naturally, users cannot receive notifications without a
-connection. Clients re-establishing server connections must be updated on any new session tokens
+connection. Clients re-establishing server connections must be updated on any new sessions
 generated during their absence. The <code>NEW_SESSION</code> gateway event must be dispatched to all sessions,
 excluding the new session. The <code>NEW_SESSION</code> event's stored data can be accessed in the
 <a href="/docs/APIs/Core/WebSockets/gateway_events.md#new_session">Gateway Events documentation</a>.</p>
@@ -2525,9 +2639,11 @@ distinct KeyPackages and an own ID-Cert.</p>
 <h2 id="7-cryptography-and-id-certs">7. Cryptography and ID-Certs<a class="headerlink" href="#7-cryptography-and-id-certs" title="Permanent link">&para;</a></h2>
 <h3 id="71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">7.1 Home server signed certificates for public client identity keys (ID-Cert)<a class="headerlink" href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert" title="Permanent link">&para;</a></h3>
 <p>The ID-Cert, a <a href="https://en.wikipedia.org/wiki/X.509">X.509</a> certificate, validates a public actor
-identity key. It is an actor-generated CSR (<a href="https://en.wikipedia.org/wiki/Certificate_signing_request">Certificate Signing Request</a>)
-, signed by a home server, encompassing actor identity information and the client's public identity key.
-Clients can get an ID-Cert in return for a valid and well-formed CSR.</p>
+identity key. It is an actor-generated CSR (<a href="https://en.wikipedia.org/wiki/Certificate_signing_request">Certificate Signing Request</a>),
+signed by a home server, encompassing actor identity information and the client's public identity key.
+Clients can get an ID-Cert in return for a valid and well-formed CSR. Generating a new ID-Cert is
+considered a <a href="#412-sensitive-actions">sensitive action</a> and therefore should require a second factor
+of authentication.</p>
 <p>A CSR in the context of polyproto will be referred to as an ID-CSR. ID-CSRs are DER- or PEM-encoded
 <a href="https://datatracker.ietf.org/doc/html/rfc2986">PKCS #10</a> CSRs, with a few additional requirements.</p>
 <p>All ID-Certs are valid X.509 certificates. However, not all X.509 certificates are valid ID-Certs.</p>
@@ -2549,7 +2665,12 @@ client.</p>
 This includes checking whether the signature matches the certificates' contents and checking the
 certificate's validity period.</p>
 </div>
-<p>The resulting ID-Cert then holds the following information:</p>
+<p>Actors must use a separate ID-Cert for each client or session they use.</p>
+<h4 id="711-structure-of-an-id-cert">7.1.1 Structure of an ID-Cert<a class="headerlink" href="#711-structure-of-an-id-cert" title="Permanent link">&para;</a></h4>
+<p>The ID-Cert is a valid X.509 certificate, and as such, it has a specific structure. The structure of
+an X.509 certificate is defined in <a href="https://tools.ietf.org/html/rfc5280">RFC5280</a>.
+ID-Certs encompass a subset of the structure of an X.509 certificate.</p>
+<p>ID-Certs have the following structure:</p>
 <table>
 <thead>
 <tr>
@@ -2616,10 +2737,6 @@ certificate's validity period.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="711-structure-of-an-id-cert">7.1.1 Structure of an ID-Cert<a class="headerlink" href="#711-structure-of-an-id-cert" title="Permanent link">&para;</a></h4>
-<p>The ID-Cert is a valid X.509 certificate, and as such, it has a specific structure. The structure of
-an X.509 certificate is defined in <a href="https://tools.ietf.org/html/rfc5280">RFC5280</a>.
-ID-Certs encompass a subset of the structure of an X.509 certificate.</p>
 <h5 id="7111-identity-descriptors-idds">7.1.1.1 Identity Descriptors (IDDs)<a class="headerlink" href="#7111-identity-descriptors-idds" title="Permanent link">&para;</a></h5>
 <p>polyproto Identity Descriptors are a subset of the X.509 certificate's distinguished name. Distinguished
 Names (<code>DNs</code>), according to the <a href="https://en.wikipedia.org/wiki/LDAP_Data_Interchange_Format">LDAP Data Interchange Format (LDIF)</a>.
@@ -2688,17 +2805,8 @@ malicious server cannot generate an identity key pair for Alice, which is signed
 <p>A session can choose to rotate their ID-Cert at any time. This is done by generating a new identity
 key pair, using the new private key to generate a new CSR, and sending the new Certificate Signing
 Request to the home server, along with at least one new KeyPackage and a corresponding 'last resort'
-KeyPackage, if encryption is offered. The home server will then generate the new ID-Cert, send it to
-the client, and let all associated clients know that this clients' public identity key has changed.
-The server does this by sending a <a href="/docs/APIs/Core/WebSockets/gateway_events.md#client_key_change"><code>CLIENT_KEY_CHANGE</code></a>
-gateway event to those clients.</p>
-<p>For example, in the context of a chat application built with polyproto-chat, an associating
-relationship between two clients exists, if:</p>
-<ul>
-<li>the two clients share a guild, a group or a direct message channel</li>
-<li>they are friends</li>
-<li>they have a pending friend request between each other.</li>
-</ul>
+KeyPackage, if encryption is offered. The home server will then generate the new ID-Cert, given that
+the CSR is valid and that the server accepts the creation of new ID-Certs at this time.</p>
 <p>Rotating keys is done by using an API route which requires authorization.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -2708,8 +2816,6 @@ devices they no longer use. Depending on your use case, this might be a security
 potentially simplifies account takeovers. Whether and how this risk is mitigated is up to 
 concrete implementations.</p>
 </div>
-<p>Before sending any messages to a server, a client that performed a key rotation should inform the
-server of that change. This is to ensure that the server has cached the correct ID-Cert for this session.</p>
 <p>Home servers must keep track of the ID-Certs of all users (and their clients) registered on them,
 and must provide a clients' ID-Cert for a given timestamp on request. This is to ensure messages
 sent by users, even ones sent a long time ago, can be verified by other servers and their users.
@@ -2719,8 +2825,7 @@ perpetually, to potentially verify its identity in case of a migration.</p>
 <p>Users must hold on to all of their past key pairs, as they might need them to
 <a href="#8-account-migration">migrate their account in the future</a>. How this is done is specified in
 <a href="#73-private-key-loss-prevention-and-private-key-recovery">section 7.3: Private key loss prevention and private key recovery</a>.</p>
-<div class="language-text highlight"><span class="filename">Text Only</span><pre><span></span><code>```mermaid
-sequenceDiagram
+<pre class="mermaid"><code>sequenceDiagram
 autonumber
 
 actor c as Client
@@ -2732,19 +2837,16 @@ s-&gt;&gt;s: Verify validity of claims presented in the CSR
 alt verify success
   s-&gt;&gt;s: Create ID-Cert for Client
   s-&gt;&gt;c: Respond with ID-Cert
-end
-Note right of s: Send CLIENT_KEY_CHANGE to associated clients
-```
-</code></pre></div>
-<p>Fig. 2: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert
+end</code></pre>
+<p>Fig. 2: Sequence diagram depicting the process of a client that uses a CSR to request a new ID-Cert
 from their home server.</p>
 <p>A server identity key's lifetime might come to an early or unexpected end, perhaps due to some sort
 of leak of the corresponding private key. When this happens, the server should generate a new
 identity key pair and broadcast the
 <a href="/docs/APIs/Core/WebSockets/gateway_events.md#server_key_change"><code>SERVER_KEY_CHANGE</code></a> and
 <a href="/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages"><code>LOW_KEY_PACKAGES</code></a> gateway events
-to all clients. Clients should regenerate their identity keys, request a new ID-Cert (through a CSR),
-and respond appropriately to the <a href="/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages"><code>LOW_KEY_PACKAGES</code></a>
+to all clients. Clients must request new ID-Certs (through a CSR), and respond appropriately to the
+<a href="/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages"><code>LOW_KEY_PACKAGES</code></a>
 event. Should a client be offline at the time of the key change, it must be informed of the change
 upon reconnection.</p>
 <div class="admonition note">
@@ -2752,19 +2854,31 @@ upon reconnection.</p>
 <p>A <code>LOW_KEY_PACKAGES</code> event is only sent by servers which use MLS encryption. Server/Clients not
 implementing MLS encryption can safely ignore this event.</p>
 </div>
-<h5 id="7131-a-note-about-crls-certificate-revocation-lists">7.1.3.1 A note about CRLs (Certificate revocation lists)<a class="headerlink" href="#7131-a-note-about-crls-certificate-revocation-lists" title="Permanent link">&para;</a></h5>
+<h4 id="714-early-revocation-of-id-certs">7.1.4 Early revocation of ID-Certs<a class="headerlink" href="#714-early-revocation-of-id-certs" title="Permanent link">&para;</a></h4>
+<div class="admonition abstract">
+<p class="admonition-title">A note about CRLs</p>
 <p>It is common for systems relying on X.509 certificates for user authentication to use Certificate
 Revocation Lists (CRLs) to keep track of which certificates are no longer valid. This is done to
 prevent a user from using a certificate that has been revoked.</p>
 <p>CRLs are difficult to implement well, often requiring many resources to keep up to date, and
 are also not always reliable. OCSP (Online Certificate Status Protocol) is a more modern, reliable
 and easier to implement alternative. Still, it potentially requires many resources to
-keep up with demand, while introducing a more immediate single point of failure.</p>
+keep up with demand, while introducing potential privacy concerns.</p>
 <p>polyproto inherently mitigates some of the possible misuse of a revoked certificate, as the validity
 of a certificate is usually checked by many parties. Especially, if the revocation process is
-initiated by the actor themselves, the actor already lets all servers they are connected to know that
-the certificate in question is no longer valid.</p>
+initiated by the actor themselves, the actor already lets all servers they are connected to know
+that the certificate in question is no longer valid. </p>
 <p>polyproto does not require the use of CRLs or OCSP.</p>
+</div>
+<p>An ID-Cert can be revoked by the home server or the actor at any time. This can be done for various
+reasons, such as a suspected leak of the private identity key. When an ID-Cert is revoked, the server
+must revoke the session associated with the revoked ID-Cert. Revoking an ID-Cert is considered a
+<a href="#412-sensitive-actions">sensitive action</a> and therefore should require a second factor of authentication.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>The above paragraph is true for both foreign and home servers. The API routes associated with
+revoking an ID-Cert are the same regardless of the server type.</p>
+</div>
 <h3 id="72-actor-identity-keys-and-message-signing">7.2 Actor identity keys and message signing<a class="headerlink" href="#72-actor-identity-keys-and-message-signing" title="Permanent link">&para;</a></h3>
 <p>As briefly mentioned section <a href="#4-federated-identity">#4</a>, users must hold on to an identity key pair
 at all times. This key pair is used to represent an actor's identity and to verify message integrity,
@@ -2871,7 +2985,8 @@ download their encrypted private identity keys from the server and store them in
 This allows users to switch home servers while not losing ownership of messages sent by them.</p>
 <p>Migrating an actor always involves reassigning the ownership of all actor-associated data in the
 distributed network to the new actor. Should the old actor want to additionally move all data from
-the old home server to another home server, more steps are needed.</p>
+the old home server to another home server, more steps are needed. Account migration is not considered
+a sensitive action.</p>
 <h3 id="81-challenges-and-trust">8.1 Challenges and trust<a class="headerlink" href="#81-challenges-and-trust" title="Permanent link">&para;</a></h3>
 <p>Changing the publicly visible ownership of actor data requires the chain of trust to be maintained.
 Whenever an "old" account wants to change the publicly visible ownership of its data to a "new"
@@ -3071,7 +3186,7 @@ aa-xsa: Deactivate account</code></pre>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-04-16T12:45:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-04-16</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-04-17T17:22:42+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-04-17</span>
   </span>
 
     
