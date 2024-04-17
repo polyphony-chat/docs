@@ -5,7 +5,7 @@ weight: 0
 
 # polyproto Specification
 
-**v0.0.0** - Treat this as an unfinished draft.
+**v1.0.0-alpha-1** - Treat this as an unfinished draft.
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 The version number specified here also applies to the API documentation.
 
@@ -17,8 +17,10 @@ The version number specified here also applies to the API documentation.
       - [3.3.1 Events over REST](#331-events-over-rest)
   - [4. Federated identity](#4-federated-identity)
     - [4.1 Authentication](#41-authentication)
+      - [4.1.1 Authenticating on a foreign server](#411-authenticating-on-a-foreign-server)
+      - [4.1.2 Authenticating on a home server](#412-authenticating-on-a-home-server)
     - [4.2 Challenge strings](#42-challenge-strings)
-    - [4.3 Misuse prevention](#43-misuse-prevention)
+    - [4.3 Protection against misuse by malicious home servers](#43-protection-against-misuse-by-malicious-home-servers)
   - [5. Federation IDs (FIDs)](#5-federation-ids-fids)
   - [6. Encryption](#6-encryption)
     - [6.1. KeyPackages](#61-keypackages)
@@ -33,7 +35,7 @@ The version number specified here also applies to the API documentation.
         - [7.1.1.3 Session IDs](#7113-session-ids)
       - [7.1.2 Necessity of ID-Certs](#712-necessity-of-id-certs)
       - [7.1.3 Key rotation](#713-key-rotation)
-        - [7.1.3.1 A note about CRLs (Certificate revocation lists)](#7131-a-note-about-crls-certificate-revocation-lists)
+      - [7.1.4 Early revocation of ID-Certs](#714-early-revocation-of-id-certs)
     - [7.2 Actor identity keys and message signing](#72-actor-identity-keys-and-message-signing)
       - [7.2.1 Message verification](#721-message-verification)
     - [7.3 Private key loss prevention and private key recovery](#73-private-key-loss-prevention-and-private-key-recovery)
@@ -218,21 +220,65 @@ are employed to sign messages that the actor sends to other servers.
 ### 4.1 Authentication
 
 Authentication tasks such as registering a new actor, authenticating a new client, and authenticating
-on a foreign server are not strictly defined in polyproto. Instead, polyproto defines a set of
-requirements that must be met by any polyproto implementation. This allows for a wide range of
-authentication methods to be used, provided they meet the requirements.
+on a foreign server are not strictly defined in polyproto. This allows for a wide range of
+authentication methods to be used. However, public-facing polyproto implementations should **highly**
+consider implementing the [polyproto-auth](./auth.md) standard for authenticating on home servers
+and foreign servers alike.
+
+!!! warning
+
+    Federation is only possible if all involved polyproto implementations have an
+    overlapping set of supported authentication methods. It is thus highly recommended to implement
+    and use the polyproto-auth standard in any given polyproto implementation, unless your use case
+    requires strictly requires a different authentication method. Of course, other authentication
+    methods can be implemented in addition to polyproto-auth.
+
+When successfully authenticated, a client receives a session token, which can then be used to
+access authenticated routes on the REST API and to establish a WebSocket connection. Each ID-Cert
+can only have one active session token at a time.
+
+#### 4.1.1 Authenticating on a foreign server
+
+Regardless of the authentication method used, the foreign server must verify the actor's identity
+before allowing them to perform any actions. This verification must be done by proving the cryptographic
+connection between an actors' home servers' public identity key and the actors' ID-Cert. Challenge
+strings, as described in [Section 4.2](#42-challenge-strings) and in [polyproto-auth](./auth.md)
+are recommended for this purpose.
+
+Servers must also check with the actors' home server to ensure that the ID-Cert has not been revoked.
+APIs for this purpose are defined in the [API documentation](/APIs).
+
+#### 4.1.2 Authenticating on a home server
+
+!!! warning
+
+    Sensitive actions, such as revoking an ID-Cert, generating a new ID-Cert or any administrative
+    action, should require a second factor of authentication, apart from the actors' private key.
+    This second factor can be anything from a password to TOTP or hardware keys, depending on the
+    authentication standard used.
+
+    If this is not done, a malicious user who gained access to an actors' private key can lock that
+    actor out of their account entirely, as the malicious user could [revoke the actors' other ID-Certs](#714-early-revocation-of-id-certs),
+    and thus prevent the actor from logging in again.
 
 ### 4.2 Challenge strings
 
 Servers generate alphanumeric challenge strings to verify an actor's private identity key
 possession. These strings, ranging from 32 to 256 characters, have a UNIX timestamp lifetime. If the
 current timestamp surpasses this lifetime, the challenge fails. The actor signs the string, sending
-the signature and their ID-Cert to the server, enabling identity confirmation.
+the signature and their ID-Cert to the server, which verifies the signature's authenticity.
+
+!!! tip
+
+    For public-facing polyproto implementations, it is recommended to use a challenge string length
+    of at least 64 characters, including at least one character from each of the alphanumeric
+    character classes (`[a-zA-Z0-9]`). Server implementations should ensure that challenge strings
+    are unique per actor. If this is not the case, actors could potentially be the target of replay attacks.
 
 Challenge strings counteract replay attacks. Their uniqueness ensures that even identical requests
 have different signatures, preventing malicious servers from successfully replaying requests.
 
-### 4.3 Misuse prevention
+### 4.3 Protection against misuse by malicious home servers
 
 To protect users from misuse by malicious home servers, a mechanism is needed to prevent home
 servers from generating federation tokens for users without their consent and knowledge.
@@ -240,9 +286,9 @@ servers from generating federation tokens for users without their consent and kn
 !!! example "Potential misuse scenario"
 
     A malicious home server can potentially request a federation token on behalf of one of its
-    users, and use it to generate a session token on the actor's behalf. This is a problem, as the
-    malicious server can then impersonate the actor on another server, as well as read unencrypted
-    data (such as messages, in the context of a chat application) sent on the other server.
+    users, and use it to generate a session token on the actor's behalf. The malicious server can
+    then impersonate the actor on another server, as well as read unencrypted data (such as messages,
+    in the context of a chat application) sent on the other server.
 
 !!! abstract
 
@@ -251,10 +297,10 @@ servers from generating federation tokens for users without their consent and kn
     be mitigated a bit by making it more difficult for malicious home servers to do something like
     this without the actor noticing.
 
-Polyproto servers need to inform users of new session tokens. This visibility hampers malicious home
+Polyproto servers need to inform users of new sessions. This visibility hampers malicious home
 servers, but does not solve the issue of them being able to create federation tokens for servers the
 actor does not connect to. This is because, naturally, users cannot receive notifications without a
-connection. Clients re-establishing server connections must be updated on any new session tokens
+connection. Clients re-establishing server connections must be updated on any new sessions
 generated during their absence. The `NEW_SESSION` gateway event must be dispatched to all sessions,
 excluding the new session. The `NEW_SESSION` event's stored data can be accessed in the
 [Gateway Events documentation](/docs/APIs/Core/WebSockets/gateway_events.md#new_session).
@@ -400,8 +446,8 @@ distinct KeyPackages and an own ID-Cert.
 ### 7.1 Home server signed certificates for public client identity keys (ID-Cert)
 
 The ID-Cert, a [X.509](https://en.wikipedia.org/wiki/X.509) certificate, validates a public actor
-identity key. It is an actor-generated CSR ([Certificate Signing Request](https://en.wikipedia.org/wiki/Certificate_signing_request))
-, signed by a home server, encompassing actor identity information and the client's public identity key.
+identity key. It is an actor-generated CSR ([Certificate Signing Request](https://en.wikipedia.org/wiki/Certificate_signing_request)),
+signed by a home server, encompassing actor identity information and the client's public identity key.
 Clients can get an ID-Cert in return for a valid and well-formed CSR.
 
 A CSR in the context of polyproto will be referred to as an ID-CSR. ID-CSRs are DER- or PEM-encoded
@@ -429,7 +475,15 @@ When signing an ID-CSR, the home server must verify the correctness of all claim
     This includes checking whether the signature matches the certificates' contents and checking the
     certificate's validity period.
 
-The resulting ID-Cert then holds the following information:
+Actors must use a separate ID-Cert for each client or session they use.
+
+#### 7.1.1 Structure of an ID-Cert
+
+The ID-Cert is a valid X.509 certificate, and as such, it has a specific structure. The structure of
+an X.509 certificate is defined in [RFC5280](https://tools.ietf.org/html/rfc5280).
+ID-Certs encompass a subset of the structure of an X.509 certificate.
+
+ID-Certs have the following structure:
 
 | Field Description                                                                            | Special requirements, if any                                                                    | X.509 equivalent                                         |
 | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
@@ -444,12 +498,6 @@ The resulting ID-Cert then holds the following information:
 | The public key algorithm used to generate the client's public identity key.                  |                                                                                                 | Subject Public Key Info: Public Key Algorithm            |
 | The session ID of the client.                                                                | No two valid certificates for one session ID can exist. Session IDs have to be unique per user. | Subject Unique Identifier                                |
 | Extensions                                                                                   | [Extensions and Constraints](#7112-extensions-and-constraints)                                  | Extensions                                               |
-
-#### 7.1.1 Structure of an ID-Cert
-
-The ID-Cert is a valid X.509 certificate, and as such, it has a specific structure. The structure of
-an X.509 certificate is defined in [RFC5280](https://tools.ietf.org/html/rfc5280).
-ID-Certs encompass a subset of the structure of an X.509 certificate.
 
 ##### 7.1.1.1 Identity Descriptors (IDDs)
 
@@ -528,17 +576,8 @@ malicious server cannot generate an identity key pair for Alice, which is signed
 A session can choose to rotate their ID-Cert at any time. This is done by generating a new identity
 key pair, using the new private key to generate a new CSR, and sending the new Certificate Signing
 Request to the home server, along with at least one new KeyPackage and a corresponding 'last resort'
-KeyPackage, if encryption is offered. The home server will then generate the new ID-Cert, send it to
-the client, and let all associated clients know that this clients' public identity key has changed.
-The server does this by sending a [`CLIENT_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#client_key_change)
-gateway event to those clients.
-
-For example, in the context of a chat application built with polyproto-chat, an associating
-relationship between two clients exists, if:
-
-- the two clients share a guild, a group or a direct message channel
-- they are friends
-- they have a pending friend request between each other.
+KeyPackage, if encryption is offered. The home server will then generate the new ID-Cert, given that
+the CSR is valid and that the server accepts the creation of new ID-Certs at this time.
 
 Rotating keys is done by using an API route which requires authorization.
 
@@ -549,9 +588,6 @@ Rotating keys is done by using an API route which requires authorization.
     devices they no longer use. Depending on your use case, this might be a security concern, as it
     potentially simplifies account takeovers. Whether and how this risk is mitigated is up to 
     concrete implementations.
-
-Before sending any messages to a server, a client that performed a key rotation should inform the
-server of that change. This is to ensure that the server has cached the correct ID-Cert for this session.
 
 Home servers must keep track of the ID-Certs of all users (and their clients) registered on them,
 and must provide a clients' ID-Cert for a given timestamp on request. This is to ensure messages
@@ -564,24 +600,23 @@ Users must hold on to all of their past key pairs, as they might need them to
 [migrate their account in the future](#8-account-migration). How this is done is specified in
 [section 7.3: Private key loss prevention and private key recovery](#73-private-key-loss-prevention-and-private-key-recovery).
 
-    ```mermaid
-    sequenceDiagram
-    autonumber
+```mermaid
+sequenceDiagram
+autonumber
 
-    actor c as Client
-    participant s as Server
+actor c as Client
+participant s as Server
 
-    c->>c: Create CSR for own identity key
-    c->>s: Request key rotation/CSR signing, CSR attached
-    s->>s: Verify validity of claims presented in the CSR
-    alt verify success
-      s->>s: Create ID-Cert for Client
-      s->>c: Respond with ID-Cert
-    end
-    Note right of s: Send CLIENT_KEY_CHANGE to associated clients
-    ```
+c->>c: Create CSR for own identity key
+c->>s: Request key rotation/CSR signing, CSR attached
+s->>s: Verify validity of claims presented in the CSR
+alt verify success
+  s->>s: Create ID-Cert for Client
+  s->>c: Respond with ID-Cert
+end
+```
 
-Fig. 2: Sequence diagram depicting the process of a client using a CSR to request a new ID-Cert
+Fig. 2: Sequence diagram depicting the process of a client that uses a CSR to request a new ID-Cert
 from their home server.
 
 A server identity key's lifetime might come to an early or unexpected end, perhaps due to some sort
@@ -589,8 +624,8 @@ of leak of the corresponding private key. When this happens, the server should g
 identity key pair and broadcast the
 [`SERVER_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#server_key_change) and
 [`LOW_KEY_PACKAGES`](/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages) gateway events
-to all clients. Clients should regenerate their identity keys, request a new ID-Cert (through a CSR),
-and respond appropriately to the [`LOW_KEY_PACKAGES`](/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages)
+to all clients. Clients must request new ID-Certs (through a CSR), and respond appropriately to the
+[`LOW_KEY_PACKAGES`](/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages)
 event. Should a client be offline at the time of the key change, it must be informed of the change
 upon reconnection.
 
@@ -599,23 +634,34 @@ upon reconnection.
     A `LOW_KEY_PACKAGES` event is only sent by servers which use MLS encryption. Server/Clients not
     implementing MLS encryption can safely ignore this event.
 
-##### 7.1.3.1 A note about CRLs (Certificate revocation lists)
+#### 7.1.4 Early revocation of ID-Certs
 
-It is common for systems relying on X.509 certificates for user authentication to use Certificate
-Revocation Lists (CRLs) to keep track of which certificates are no longer valid. This is done to
-prevent a user from using a certificate that has been revoked.
+!!! abstract "A note about CRLs"
 
-CRLs are difficult to implement well, often requiring many resources to keep up to date, and
-are also not always reliable. OCSP (Online Certificate Status Protocol) is a more modern, reliable
-and easier to implement alternative. Still, it potentially requires many resources to
-keep up with demand, while introducing a more immediate single point of failure.
+    It is common for systems relying on X.509 certificates for user authentication to use Certificate
+    Revocation Lists (CRLs) to keep track of which certificates are no longer valid. This is done to
+    prevent a user from using a certificate that has been revoked.
 
-polyproto inherently mitigates some of the possible misuse of a revoked certificate, as the validity
-of a certificate is usually checked by many parties. Especially, if the revocation process is
-initiated by the actor themselves, the actor already lets all servers they are connected to know that
-the certificate in question is no longer valid.
+    CRLs are difficult to implement well, often requiring many resources to keep up to date, and
+    are also not always reliable. OCSP (Online Certificate Status Protocol) is a more modern, reliable
+    and easier to implement alternative. Still, it potentially requires many resources to
+    keep up with demand, while introducing potential privacy concerns.
 
-polyproto does not require the use of CRLs or OCSP.
+    polyproto inherently mitigates some of the possible misuse of a revoked certificate, as the validity
+    of a certificate is usually checked by many parties. Especially, if the revocation process is
+    initiated by the actor themselves, the actor already lets all servers they are connected to know
+    that the certificate in question is no longer valid. 
+
+    polyproto does not require the use of CRLs or OCSP.
+
+An ID-Cert can be revoked by the home server or the actor at any time. This can be done for various
+reasons, such as a suspected leak of the private identity key. When an ID-Cert is revoked, the server
+must revoke the session associated with the revoked ID-Cert.
+
+!!! info
+
+    The above paragraph is true for both foreign and home servers. The API routes associated with
+    revoking an ID-Cert are the same regardless of the server type.
 
 ### 7.2 Actor identity keys and message signing
 
