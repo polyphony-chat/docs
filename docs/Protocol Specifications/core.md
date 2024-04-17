@@ -809,9 +809,9 @@ a sensitive action.
 ### 8.1 Challenges and trust
 
 Changing the publicly visible ownership of actor data requires the chain of trust to be maintained.
-Whenever an "old" account wants to change the publicly visible ownership of its data to a "new"
-account, the old account will need to prove that it is in possession of the private
-keys that were used to sign the messages. This is done by signing a challenge string with the private
+If an "old" account wants to change the publicly visible ownership of its data, the "old"
+account must prove that it possesses the private keys that were used to
+sign the messages. This is done by signing a challenge string with the private
 keys. If the server verifies the challenge, it authorizes the new account to re-sign the old
 account's messages signed with the verified key. Instead of overwriting the message, a new message variant
 with the new signature is created, preserving the old message.
