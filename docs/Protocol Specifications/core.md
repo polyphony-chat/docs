@@ -18,7 +18,7 @@ The version number specified here also applies to the API documentation.
   - [4. Federated identity](#4-federated-identity)
     - [4.1 Authentication](#41-authentication)
       - [4.1.1 Authenticating on a foreign server](#411-authenticating-on-a-foreign-server)
-      - [4.1.2 Authenticating on a home server](#412-authenticating-on-a-home-server)
+      - [4.1.2 Sensitive actions](#412-sensitive-actions)
     - [4.2 Challenge strings](#42-challenge-strings)
     - [4.3 Protection against misuse by malicious home servers](#43-protection-against-misuse-by-malicious-home-servers)
   - [5. Federation IDs (FIDs)](#5-federation-ids-fids)
@@ -248,18 +248,30 @@ are recommended for this purpose.
 Servers must also check with the actors' home server to ensure that the ID-Cert has not been revoked.
 APIs for this purpose are defined in the [API documentation](/APIs).
 
-#### 4.1.2 Authenticating on a home server
+#### 4.1.2 Sensitive actions
 
 !!! warning
 
-    Sensitive actions, such as revoking an ID-Cert, generating a new ID-Cert or any administrative
-    action, should require a second factor of authentication, apart from the actors' private key.
-    This second factor can be anything from a password to TOTP or hardware keys, depending on the
-    authentication standard used.
+    Sensitive actions should require a second factor of authentication, apart from the actors'
+    private key. This second factor can be anything from a password to TOTP or hardware keys, depending
+    on the authentication standard used.
 
     If this is not done, a malicious user who gained access to an actors' private key can lock that
     actor out of their account entirely, as the malicious user could [revoke the actors' other ID-Certs](#714-early-revocation-of-id-certs),
     and thus prevent the actor from logging in again.
+
+    Sensitive actions include, but are not limited to:
+    - Generating a new ID-Cert
+    - Revoking an ID-Cert
+    - Changing the actors' federation ID
+    - Changing the actors' other factors of authentication
+    - Server administration actions
+
+    Clients should be prepared to gracefully handle the case where a sensitive action fails due to
+    a lack of a second factor of authentication, and should prompt the user to provide the second
+    factor of authentication. Clients should also be prepared to gracefully handle the case where a
+    sensitive action succeeds, even though the second factor of authentication was not provided, as
+    a home server might not require a second factor of authentication for all sensitive actions.
 
 ### 4.2 Challenge strings
 
@@ -448,7 +460,9 @@ distinct KeyPackages and an own ID-Cert.
 The ID-Cert, a [X.509](https://en.wikipedia.org/wiki/X.509) certificate, validates a public actor
 identity key. It is an actor-generated CSR ([Certificate Signing Request](https://en.wikipedia.org/wiki/Certificate_signing_request)),
 signed by a home server, encompassing actor identity information and the client's public identity key.
-Clients can get an ID-Cert in return for a valid and well-formed CSR.
+Clients can get an ID-Cert in return for a valid and well-formed CSR. Generating a new ID-Cert is
+considered a [sensitive action](#412-sensitive-actions) and therefore should require a second factor
+of authentication.
 
 A CSR in the context of polyproto will be referred to as an ID-CSR. ID-CSRs are DER- or PEM-encoded
 [PKCS #10](https://datatracker.ietf.org/doc/html/rfc2986) CSRs, with a few additional requirements.
@@ -656,7 +670,8 @@ upon reconnection.
 
 An ID-Cert can be revoked by the home server or the actor at any time. This can be done for various
 reasons, such as a suspected leak of the private identity key. When an ID-Cert is revoked, the server
-must revoke the session associated with the revoked ID-Cert.
+must revoke the session associated with the revoked ID-Cert. Revoking an ID-Cert is considered a
+[sensitive action](#412-sensitive-actions) and therefore should require a second factor of authentication.
 
 !!! info
 
@@ -788,7 +803,8 @@ This allows users to switch home servers while not losing ownership of messages 
 
 Migrating an actor always involves reassigning the ownership of all actor-associated data in the
 distributed network to the new actor. Should the old actor want to additionally move all data from
-the old home server to another home server, more steps are needed.
+the old home server to another home server, more steps are needed. Account migration is not considered
+a sensitive action.
 
 ### 8.1 Challenges and trust
 
