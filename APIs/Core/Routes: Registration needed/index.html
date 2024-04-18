@@ -1629,13 +1629,8 @@ can also be accessed from a foreign server, or with no authentication at all, se
 </tr>
 <tr>
 <td><code>csr</code></td>
-<td>String, Base64</td>
+<td>String, PEM</td>
 <td>A <a href="/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">certificate signing request (CSR)</a></td>
-</tr>
-<tr>
-<td><code>password</code> <span class="twemoji" title="This field is optional."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 19h3v3h-3v-3m2-17c5.35.22 7.68 5.62 4.5 9.67-.83 1-2.17 1.66-2.83 2.5C13 15 13 16 13 17h-3c0-1.67 0-3.08.67-4.08.66-1 2-1.59 2.83-2.25C15.92 8.43 15.32 5.26 12 5a3 3 0 0 0-3 3H6a6 6 0 0 1 6-6Z"/></svg></span></td>
-<td>String</td>
-<td>The password for this identity.</td>
 </tr>
 <tr>
 <td><code>auth_payload</code> <span class="twemoji" title="This field is optional."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 19h3v3h-3v-3m2-17c5.35.22 7.68 5.62 4.5 9.67-.83 1-2.17 1.66-2.83 2.5C13 15 13 16 13 17h-3c0-1.67 0-3.08.67-4.08.66-1 2-1.59 2.83-2.25C15.92 8.43 15.32 5.26 12 5a3 3 0 0 0-3 3H6a6 6 0 0 1 6-6Z"/></svg></span> <span class="twemoji" title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 3a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2H3v2h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h2v-2H8v-5a2 2 0 0 0-2-2 2 2 0 0 0 2-2V5h2V3m6 0a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1v2h-1a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-2v-2h2v-5a2 2 0 0 1 2-2 2 2 0 0 1-2-2V5h-2V3h2Z"/></svg></span></td>
@@ -1660,7 +1655,7 @@ can also be accessed from a foreign server, or with no authentication at all, se
 <tbody>
 <tr>
 <td><code>id_cert</code></td>
-<td>String, Base64</td>
+<td>String, PEM</td>
 <td>The <a href="/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">ID-Cert</a> for this unique Identity-Session combination</td>
 </tr>
 <tr>
@@ -1694,7 +1689,7 @@ session token used in the <code>authorization</code>-Header.</p>
 <tbody>
 <tr>
 <td><code>csr</code></td>
-<td>String, Base64</td>
+<td>String, PEM</td>
 <td>A <a href="/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">certificate signing request (CSR)</a> containing a new public key for this session ID.</td>
 </tr>
 </tbody>
@@ -1720,7 +1715,7 @@ session token used in the <code>authorization</code>-Header.</p>
 <tbody>
 <tr>
 <td><code>id_cert</code></td>
-<td>String, Base64</td>
+<td>String, PEM</td>
 <td>The generated <a href="/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">ID-Cert</a>.</td>
 </tr>
 <tr>
@@ -1862,7 +1857,7 @@ corresponding to the session token used in the <code>authorization</code>-Header
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-02-01T16:02:07+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-02-01</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-04-18T20:44:25+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-04-18</span>
   </span>
 
     
