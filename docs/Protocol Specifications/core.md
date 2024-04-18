@@ -5,7 +5,7 @@ weight: 0
 
 # polyproto Specification
 
-**v1.0.0-alpha.2** - Treat this as an unfinished draft.
+**v1.0.0-alpha.3** - Treat this as an unfinished draft.
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 The version number specified here also applies to the API documentation.
 
@@ -562,7 +562,10 @@ as "critical". ID-Certs not adhering to this standard must be treated as malform
 The session ID is an [`ASN.1`](https://en.wikipedia.org/wiki/ASN.1) [`Ia5String`](https://en.wikipedia.org/wiki/IA5STRING)
 chosen by the entity requesting the ID-Cert. It is used to uniquely identify a session. The session
 ID must be unique for each certificate issued to that entity. A session ID can be re-used if the
-previous certificate with that session ID has expired.
+session belonging to that session ID has become invalid. Session ID re-use in this case also applies,
+when a different ID-Cert wants to use the same session ID, provided that the session ID is not currently
+in use. If the session ID is currently in use, the entity requesting the ID-Cert must select a different
+session ID, as session IDs must not be overridden silently.
 
 Session IDs are 1 - 32 characters long and. They can contain any character permitted by the `ASN.1`
 `IA5String` type.
@@ -573,7 +576,7 @@ malicious session has been created.
 #### 7.1.2 Necessity of ID-Certs
 
 The addition of a certificate is necessary to prevent a malicious foreign server from abusing public
-identity key caching to impersonate an actor. Consider the following example which employs foreign
+identity key caching to impersonate an actor. Consider the following example, which employs foreign
 server public identity key caching, but no home server issued identity key certificates:
 
 !!! example "Potential misuse scenario"
@@ -607,7 +610,7 @@ Rotating keys is done by using an API route, which requires authorization.
     concrete implementations.
 
 Home servers must keep track of the ID-Certs of all users (and their clients) registered on them,
-and must provide a clients' ID-Cert for a given timestamp on request. This is to ensure messages
+and must offer a clients' ID-Cert for a given timestamp on request. This is to ensure messages
 sent by users, even ones sent a long time ago, can be verified by other servers and their users.
 This is because the public key of an actor likely changes over time and users must sign all messages
 they send to servers. Likewise, a client should also keep all of its own ID-Certs stored
