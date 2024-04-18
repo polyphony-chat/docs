@@ -35,18 +35,16 @@ Creates an identity on a given server.
 
 TODO: Re-evaluate if `auth_payload` is needed here.
 
-| Name                                                                                                                                                                                                                           | Type        | Description                                   |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- | --------------------------------------------- |
-| `actor_name`                                                                                                                                                                                                                     | String      | The preferred name for this new identity. |
-| `password` :material-help:{title="This field is optional."}                                                                                                                                                                    | String      | The password for this new identity.           |
-| `auth_payload` :material-help:{title="This field is optional."} :material-code-braces:{title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."} | JSON-Object | n. A.                                              |
+| Name                                                                                                                                                                                                                            | Type        | Description                               |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ----------------------------------------- |
+| `actor_name`                                                                                                                                                                                                                    | String      | The preferred name for this new identity. |
+| `auth_payload` :material-help:{title="This field is optional."} :material-code-braces:{title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."} | JSON-Object | n. A.                                     |
 
 ```json
 {
     "actor_name": "alice",
-    "password": "s3cr3t",
     "auth_payload": {
-        "email": "alice@example.com"
+        "password": "3c4589y70masfnmAML2"
     }
 }
 ```
@@ -98,26 +96,18 @@ Request a challenge string. See [the type definition](../types.md#challenge-stri
 
 ##### Body
 
-| Name       | Type   | Description                                                                |
-| ---------- | ------ | -------------------------------------------------------------------------- |
-| `session_id` | String | The session ID of the session for which the challenge should be generated. |
-
-```json
-{
-    "session_id": "G5a6hjv2ijcnr3ghjHV74jahUH675678rbnFGNHJV..."
-}
-```
+This request has no body.
 
 #### Response
 
-    === "200 OK"
+=== "200 OK"
 
     ##### Body
 
-    | Name            | Type   | Description                                                                                                       |
-    | --------------- | ------ | ----------------------------------------------------------------------------------------------------------------- |
-    | `challenge`     | String | The [challenge string](../types.md#challenge-string), which the client should sign with its private identity key. |
-    | `expires` | String | The UNIX timestamp after which the challenge expires.                                                             |
+    | Name        | Type    | Description                                                                                                       |
+    | ----------- | ------- | ----------------------------------------------------------------------------------------------------------------- |
+    | `challenge` | String  | The [challenge string](../types.md#challenge-string), which the client should sign with its private identity key. |
+    | `expires`   | integer | The UNIX timestamp after which the challenge expires. u64 integer                                                 |
 
     ```json
     {

@@ -35,8 +35,7 @@ Creates a new `id_cert` and a session token from a `csr`.
 | Name                                                                                                                                                                                                                            | Type           | Description                                                                                                                         |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | `actor_name`                                                                                                                                                                                                                      | String         | The actor name of the identity to authenticate as.                                                                                       |
-| `csr`                                                                                                                                                                                                                           | String, Base64 | A [certificate signing request (CSR)](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) |
-| `password` :material-help:{title="This field is optional."}                                                                                                                                                                     | String         | The password for this identity.                                                                                                     |
+| `csr`                                                                                                                                                                                                                           | String, PEM | A [certificate signing request (CSR)](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) |                                                                                                  |
 | `auth_payload` :material-help:{title="This field is optional."} :material-code-braces:{title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."} | JSON-Object    | n. A.                                                                                                                                |
 
 #### Response
@@ -45,10 +44,10 @@ Creates a new `id_cert` and a session token from a `csr`.
 
     ##### Body
 
-    | Name      | Type           | Description                                                                                                                                                             |
-    | --------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-    | `id_cert` | String, Base64 | The [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) for this unique Identity-Session combination |
-    | `token`   | String         | An authorization secret, called a "token", valid for this `id_cert`. |
+    | Name      | Type        | Description                                                                                                                                                             |
+    | --------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | `id_cert` | String, PEM | The [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) for this unique Identity-Session combination |
+    | `token`   | String      | An authorization secret, called a "token", valid for this `id_cert`.                                                                                                    |
 
 ---
 
@@ -69,9 +68,9 @@ session token used in the `authorization`-Header.
 
 ##### Body
 
-| Name  | Type           | Description                                                                                                                                                                                         |
-| ----- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `csr` | String, Base64 | A [certificate signing request (CSR)](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) containing a new public key for this session ID. |
+| Name  | Type        | Description                                                                                                                                                                                         |
+| ----- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `csr` | String, PEM | A [certificate signing request (CSR)](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) containing a new public key for this session ID. |
 
 ```json
 {
@@ -87,10 +86,10 @@ session token used in the `authorization`-Header.
 
     ##### Body
 
-    | Name      | Type           | Description                                                                                                                           |
-    | --------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-    | `id_cert` | String, Base64 | The generated [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert). |
-    | `token`   | String         | An authorization secret, called a "token", valid for this `id_cert`. |
+    | Name      | Type        | Description                                                                                                                           |
+    | --------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+    | `id_cert` | String, PEM | The generated [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert). |
+    | `token`   | String      | An authorization secret, called a "token", valid for this `id_cert`.                                                                  |
 
     ```json
     { 
