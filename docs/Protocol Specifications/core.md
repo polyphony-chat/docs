@@ -524,9 +524,9 @@ ID-Certs have the following structure:
 
 ##### 7.1.1.1 Identity Descriptors (IDDs)
 
-polyproto Identity Descriptors are a subset of the X.509 certificate's distinguished name. Distinguished
-Names (`DNs`), according to the [LDAP Data Interchange Format (LDIF)](https://en.wikipedia.org/wiki/LDAP_Data_Interchange_Format).
-The `DN` is a sequence of relative distinguished names (`RDNs`).
+polyproto Identity Descriptors are a subset of the X.509 certificate's distinguished name. [Distinguished
+Names (`DNs`)](https://ldap.com/ldap-dns-and-rdns/), according to the [LDAP Data Interchange Format (LDIF)](https://en.wikipedia.org/wiki/LDAP_Data_Interchange_Format).
+The `DN` is a sequence of [relative distinguished names (`RDNs`)](https://ldap.com/ldap-dns-and-rdns/).
 
 The identity descriptor must be unique for each certificate issued by a home server. The `DN` of an ID-Cert
 must meet all of the following requirements:
