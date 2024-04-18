@@ -5,7 +5,7 @@ weight: 0
 
 # polyproto Specification
 
-**v1.0.0-alpha.3** - Treat this as an unfinished draft.
+**v1.0.0-alpha.4** - Treat this as an unfinished draft.
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 The version number specified here also applies to the API documentation.
 
@@ -220,13 +220,14 @@ are employed to sign messages that the actor sends to other servers.
 ### 4.1 Authentication
 
 The core polyproto specification does not contain a strict definition of authentication procedures
-and endpoints. This allows for a wide range of authentication methods to be used. However,
-public-facing polyproto implementations should **highly** consider implementing the
-[polyproto-auth](./auth.md) standard for authenticating on home servers and foreign servers alike.
+and endpoints. This allows for a wide range of authentication methods to be used. However, if
+implementations want to closely interoperate with each other, they should **highly** consider
+implementing the [polyproto-auth](./auth.md) standard for authenticating on home servers and
+foreign servers alike.
 
 !!! warning
 
-    Federation is only possible if all involved polyproto implementations have an
+    Close interoperation is only possible if all involved polyproto implementations have an
     overlapping set of supported authentication methods. Therefore, it is highly recommended to implement
     and use the polyproto-auth standard, unless your use case requires strictly requires a different
     authentication method. Of course, other authentication methods can be implemented in addition to
@@ -235,6 +236,12 @@ public-facing polyproto implementations should **highly** consider implementing 
 When successfully authenticated, a client receives a session token, which can then be used to
 access authenticated routes on the REST API and to establish a WebSocket connection. Each ID-Cert
 can only have one active session token at a time.
+
+!!! info "About session tokens"
+
+    Session tokens are used to authenticate a user over a longer period of time, instead of, for
+    example, requiring the user to solve a challenge string every time they want to access a
+    protected route.
 
 #### 4.1.1 Authenticating on a foreign server
 
@@ -248,6 +255,8 @@ Servers must also check with the actors' home server to ensure that the ID-Cert 
 APIs for this purpose are defined in the [API documentation](/APIs).
 
 #### 4.1.2 Sensitive actions
+
+<!--TODO: Don't session tokens solve this already?-->
 
 !!! warning
 
