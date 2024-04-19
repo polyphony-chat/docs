@@ -5,7 +5,7 @@ weight: 0
 
 # polyproto Specification
 
-**v1.0.0-alpha.4** - Treat this as an unfinished draft.
+**v1.0.0-alpha.5** - Treat this as an unfinished draft.
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 The version number specified here also applies to the API documentation.
 
@@ -525,7 +525,7 @@ ID-Certs have the following structure:
 ##### 7.1.1.1 Identity Descriptors (IDDs)
 
 polyproto Identity Descriptors are a subset of the X.509 certificate's distinguished name. [Distinguished
-Names (`DNs`)](https://ldap.com/ldap-dns-and-rdns/), according to the [LDAP Data Interchange Format (LDIF)](https://en.wikipedia.org/wiki/LDAP_Data_Interchange_Format).
+Names (`DNs`)](https://ldap.com/ldap-dns-and-rdns/), according to the LDAP Data Interchange Format (LDIF).
 The `DN` is a sequence of [relative distinguished names (`RDNs`)](https://ldap.com/ldap-dns-and-rdns/).
 
 The identity descriptor must be unique for each certificate issued by a home server. The `DN` of an ID-Cert
