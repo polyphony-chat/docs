@@ -53,3 +53,4 @@
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto is a federated protocol, engineered around what is most important in any application: Users.\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto is a federated protocol, engineered around what is most important in any application: User Experience.\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qpolyproto - The core federation protocol and APIs of polyproto, enabling identification and authorization on 'foreign' servers.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QSee \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q\nFederation ID - A unique identifier; In public contexts, usually **actor@**subdomain.example.com, where bolded parts are required and non-bolded parts are optional.\\E$"}
