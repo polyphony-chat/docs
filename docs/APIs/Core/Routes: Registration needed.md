@@ -1,5 +1,5 @@
 ---
-title: Client-Home Server API Routes
+title: "Core Routes: Registration needed"
 weight: -1000
 ---
 

@@ -1,11 +1,10 @@
 ---
-title: Client-Foreign Server API Routes
+title: "Core Routes: No registration needed"
 weight: -900
 ---
 
 All API endpoints needed for Client-Home Server communication.
 This Page only includes routes, for which a client does not need a "Client-Home Server relationship" with the server.
-Routes explicitly requiring a Client->Home Server relationship are documented [here](../Client-Home%20Server%20API/index.md)
 
 !!! bug "Unfinished section"
 
