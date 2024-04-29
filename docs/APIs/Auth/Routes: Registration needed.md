@@ -15,3 +15,30 @@ can also be accessed from a foreign server, or with no authentication at all, se
 --8<-- "snippets/api.md"
 
 ---
+
+### <span class="request-h"><span class="request request-post">POST</span> Authenticate new Session</span>
+
+`/p2core/session/trust`
+
+Creates a new `id_cert` and a session token from a `csr`.
+
+#### Request
+
+##### Body
+
+| Name                                                                                                                                                                                                                            | Type           | Description                                                                                                                         |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `actor_name`                                                                                                                                                                                                                      | String         | The actor name of the identity to authenticate as.                                                                                       |
+| `csr`                                                                                                                                                                                                                           | String, PEM | A [certificate signing request (CSR)](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) |                                                                                                  |
+| `auth_payload` :material-help:{title="This field is optional."} :material-code-braces:{title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."} | JSON-Object    | n. A.                                                                                                                                |
+
+#### Response
+
+=== "201 Created"
+
+    ##### Body
+
+    | Name      | Type        | Description                                                                                                                                                             |
+    | --------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | `id_cert` | String, PEM | The [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) for this unique Identity-Session combination |
+    | `token`   | String      | An authorization secret, called a "token", valid for this `id_cert`.                                                                                                    |
