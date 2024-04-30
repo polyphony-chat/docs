@@ -45,35 +45,36 @@ TODO: Re-evaluate if `auth_payload` is needed here.
 
 === "201 Created"
 
-    ##### Body
 
-    | Name                                                                                                                                                                                                                       | Type        | Description                                                               |
-    | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------- |
-    | `fid`                                                                                                                                                                                                                      | String      | The [Federation ID](../../Glossary.md#federation-id) of the new identity. |
-    | `payload` :material-help:{title="This field is optional."} :material-code-braces:{title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."} | JSON-Object | n.A. |
+        ##### Body
 
-    ```json
-    {
-        "fid": "xenia@example.com",
-        "payload": {
-            "some_account_information": "important information",
-            "is_awesome": true
+        | Name                                                                                                                                                                                                                       | Type        | Description                                                               |
+        | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------- |
+        | `fid`                                                                                                                                                                                                                      | String      | The [Federation ID](../../Glossary.md#federation-id) of the new identity. |
+        | `payload` :material-help:{title="This field is optional."} :material-code-braces:{title="The actual contents of this attribute are implementation-specific. polyproto-core does not provide any defaults for this field."} | JSON-Object | n.A.                                                                      |
+
+        ```json
+        {
+            "fid": "xenia@example.com",
+            "payload": {
+                "some_account_information": "important information",
+                "is_awesome": true
+            }
         }
-    }
-    ```
+        ```
 
 === "409 Conflict"
 
-    Returned when the requested actor name is already taken within the namespace.
+        Returned when the requested actor name is already taken within the namespace.
 
-    ##### Body
+        ##### Body
 
-    ```json
-    {
-        "errcode": 409,
-        "error": "P2CORE_FEDERATION_ID_TAKEN"
-    }
-    ```
+        ```json
+        {
+            "errcode": 409,
+            "error": "P2CORE_FEDERATION_ID_TAKEN"
+        }
+        ```
 
 ---
 
