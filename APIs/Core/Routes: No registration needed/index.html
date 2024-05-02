@@ -1885,7 +1885,7 @@ This Page only includes routes, for which a client does not need a "Client-Home 
 <p>Routes concerning federated identities, such as authentication and ID-Cert management.</p>
 <hr />
 <h3 id="get-challenge-string"><span class="request-h"><span class="request request-get">GET</span> Challenge string</span><a class="headerlink" href="#get-challenge-string" title="Permanent link">&para;</a></h3>
-<p><code>/p2core/challenge</code></p>
+<p><code>/.p2/core/v1/challenge</code></p>
 <p>Request a challenge string. See <a href="../types.md#challenge-string">the type definition</a> or the corresponding
 <a href="/Protocol%20Specifications/core/#">protocol definition chapter</a> for more information.</p>
 <h4 id="request">Request<a class="headerlink" href="#request" title="Permanent link">&para;</a></h4>
@@ -1927,7 +1927,7 @@ This Page only includes routes, for which a client does not need a "Client-Home 
 </div>
 <hr />
 <h3 id="put-rotate-server-identity-key"><span class="request-h"><span class="request request-put">PUT</span> Rotate Server Identity Key <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a> <a href="" title="This route is only available to server administrators"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 1 9 4v6c0 5.55-3.84 10.74-9 12-5.16-1.26-9-6.45-9-12V5l9-4m0 2.18L5 6.3v4.92C5 15.54 8.25 20 12 21c3.75-1 7-5.46 7-9.78V6.3l-7-3.12M16 14v1.59c-.04.22-.22.37-.47.41H8.47c-.25-.04-.43-.19-.47-.41V14h8m1-6-1 5H8L7 8l2.67 2.67L12 8.34l2.33 2.33L17 8Z"/></svg></span></a></span><a class="headerlink" href="#put-rotate-server-identity-key" title="Permanent link">&para;</a></h3>
-<p><code>/p2core/key/server</code></p>
+<p><code>/.p2/core/v1/key/server</code></p>
 <p>Rotate the server's identity key.</p>
 <h4 id="request_1">Request<a class="headerlink" href="#request_1" title="Permanent link">&para;</a></h4>
 <h5 id="body_2">Body<a class="headerlink" href="#body_2" title="Permanent link">&para;</a></h5>
@@ -1946,8 +1946,8 @@ This Page only includes routes, for which a client does not need a "Client-Home 
 </thead>
 <tbody>
 <tr>
-<td>String</td>
-<td>The servers' new public identity key, in ASCII-representation.</td>
+<td>String, PEM</td>
+<td>The servers' new public identity key, encoded as PEM</td>
 </tr>
 </tbody>
 </table>
@@ -1963,7 +1963,7 @@ This Page only includes routes, for which a client does not need a "Client-Home 
 </div>
 <hr />
 <h3 id="get-server-public-identity-key"><span class="request-h"><span class="request request-get">GET</span> Server Public Identity Key</span><a class="headerlink" href="#get-server-public-identity-key" title="Permanent link">&para;</a></h3>
-<p><code>/p2core/key/server</code></p>
+<p><code>/.p2/core/v1/key/server</code></p>
 <p>Request the server's public identity key.</p>
 <h4 id="request_2">Request<a class="headerlink" href="#request_2" title="Permanent link">&para;</a></h4>
 <h5 id="body_4">Body<a class="headerlink" href="#body_4" title="Permanent link">&para;</a></h5>
@@ -2004,7 +2004,7 @@ This Page only includes routes, for which a client does not need a "Client-Home 
 </code></pre></div>
 <hr />
 <h3 id="get-actor-id-certs"><span class="request-h"><span class="request request-get">GET</span> Actor ID-Cert(s)</span><a class="headerlink" href="#get-actor-id-certs" title="Permanent link">&para;</a></h3>
-<p><code>/p2core/key/actor/:fid</code></p>
+<p><code>/.p2/core/v1/key/actor/:fid</code></p>
 <p>Request the ID-Certs of a specific actor. The specified actor must be registered on this
 server.</p>
 <h4 id="request_3">Request<a class="headerlink" href="#request_3" title="Permanent link">&para;</a></h4>
@@ -2078,7 +2078,7 @@ server.</p>
 </div>
 <hr />
 <h3 id="post-update-session-id-cert"><span class="request-h"><span class="request request-post">POST</span> Update session ID-Cert <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a></span><a class="headerlink" href="#post-update-session-id-cert" title="Permanent link">&para;</a></h3>
-<p><code>/p2core/session/idcert/extern</code></p>
+<p><code>/.p2/core/v1/session/idcert/extern</code></p>
 <p>Lets a foreign server know that the ID-Cert of this session has changed.</p>
 <h4 id="request_4">Request<a class="headerlink" href="#request_4" title="Permanent link">&para;</a></h4>
 <h5 id="body_8">Body<a class="headerlink" href="#body_8" title="Permanent link">&para;</a></h5>
@@ -2112,7 +2112,7 @@ server.</p>
 <p>Client-Foreign Server API endpoints concerned with encryption related tasks.</p>
 <hr />
 <h3 id="get-keypackages"><span class="request-h"><span class="request request-get">GET</span> KeyPackage(s) <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a> <span class="twemoji" title="This route is optional. Consult the documentation of a specific polyproto extension to check whether it exists."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16c0 1.11.89 2 2 2h12c1.11 0 2-.89 2-2V8l-6-6m4 18H6V4h7v5h5v11m-3-7c0 1.89-2.25 2.07-2.25 3.76h-1.5c0-2.44 2.25-2.26 2.25-3.76 0-.82-.67-1.5-1.5-1.5s-1.5.68-1.5 1.5H9c0-1.65 1.34-3 3-3s3 1.35 3 3m-2.25 4.5V19h-1.5v-1.5h1.5Z"/></svg></span></span><a class="headerlink" href="#get-keypackages" title="Permanent link">&para;</a></h3>
-<p><code>/p2core/keypackage/:fid</code></p>
+<p><code>/.p2/core/v1/keypackage/:fid</code></p>
 <p>Request KeyPackages - initial encryption keying material - for a specific actor from the server.
 The requested actor must be registered on this server.</p>
 <h4 id="request_5">Request<a class="headerlink" href="#request_5" title="Permanent link">&para;</a></h4>
@@ -2164,7 +2164,7 @@ The requested actor must be registered on this server.</p>
 <p>Routes not fitting into another category.</p>
 <hr />
 <h3 id="get-events"><span class="request-h"><span class="request request-get">GET</span> Events <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a> <span class="twemoji" title="This route is optional. Consult the documentation of a specific polyproto extension to check whether it exists."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16c0 1.11.89 2 2 2h12c1.11 0 2-.89 2-2V8l-6-6m4 18H6V4h7v5h5v11m-3-7c0 1.89-2.25 2.07-2.25 3.76h-1.5c0-2.44 2.25-2.26 2.25-3.76 0-.82-.67-1.5-1.5-1.5s-1.5.68-1.5 1.5H9c0-1.65 1.34-3 3-3s3 1.35 3 3m-2.25 4.5V19h-1.5v-1.5h1.5Z"/></svg></span></span><a class="headerlink" href="#get-events" title="Permanent link">&para;</a></h3>
-<p><code>/p2core/events</code></p>
+<p><code>/.p2/core/v1/events</code></p>
 <p>Fetch Gateway events via REST.</p>
 <h4 id="request_6">Request<a class="headerlink" href="#request_6" title="Permanent link">&para;</a></h4>
 <h5 id="body_12">Body<a class="headerlink" href="#body_12" title="Permanent link">&para;</a></h5>
@@ -2254,7 +2254,7 @@ The requested actor must be registered on this server.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-04-29T20:18:18+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-04-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-05-02T20:14:59+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-05-02</span>
   </span>
 
     
