@@ -17,7 +17,7 @@ with the server.
 
 ### <span class="request-h"><span class="request request-post">POST</span> Create Identity</span>
 
-`/p2core/register`
+`/.p2/core/v1/register`
 
 Creates an identity on a given server.
 
@@ -80,7 +80,7 @@ TODO: Re-evaluate if `auth_payload` is needed here.
 
 ### <span class="request-h"><span class="request request-post">POST</span> Identify</span>
 
-`/p2core/session/identify`
+`/.p2/core/v1/session/identify`
 
 Identify on a foreign server and receive a session token.
 
@@ -130,7 +130,7 @@ Identify on a foreign server and receive a session token.
 
 ### <span class="request-h"><span class="request request-put">PUT</span> Revoke session authentication [:material-lock-outline:](#authorization "Authorization required")</span>
 
-`/p2core/session/revoke`
+`/.p2/core/v1/session/revoke`
 
 Revoke the current session's authentication by having the server invalidate the session token.
 Can also be seen as a "logout" operation.

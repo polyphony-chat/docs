@@ -24,7 +24,7 @@ Routes concerning federated identities, such as authentication and ID-Cert manag
 
 ### <span class="request-h"><span class="request request-get">GET</span> Challenge string</span>
 
-`/p2core/challenge`
+`/.p2/core/v1/challenge`
 
 Request a challenge string. See [the type definition](../types.md#challenge-string) or the corresponding
 [protocol definition chapter](/Protocol%20Specifications/core/#) for more information.
@@ -57,7 +57,7 @@ This request has no body.
 
 ### <span class="request-h"><span class="request request-put">PUT</span> Rotate Server Identity Key [:material-lock-outline:](#authorization "Authorization required") [:material-shield-crown-outline:]("This route is only available to server administrators")</span>
 
-`/p2core/key/server`
+`/.p2/core/v1/key/server`
 
 Rotate the server's identity key.
 
@@ -90,7 +90,7 @@ This request has no body.
 
 ### <span class="request-h"><span class="request request-get">GET</span> Server Public Identity Key</span>
 
-`/p2core/key/server`
+`/.p2/core/v1/key/server`
 
 Request the server's public identity key.
 
@@ -126,7 +126,7 @@ Request the server's public identity key.
 
 ### <span class="request-h"><span class="request request-get">GET</span> Actor ID-Cert(s)</span>
 
-`/p2core/key/actor/:fid`
+`/.p2/core/v1/key/actor/:fid`
 
 Request the ID-Certs of a specific actor. The specified actor must be registered on this
 server.
@@ -171,7 +171,7 @@ server.
 
 ### <span class="request-h"><span class="request request-post">POST</span> Update session ID-Cert [:material-lock-outline:](#authorization "Authorization required")</span>
 
-`/p2core/session/idcert/extern`
+`/.p2/core/v1/session/idcert/extern`
 
 Lets a foreign server know that the ID-Cert of this session has changed.
 
@@ -205,7 +205,7 @@ Client-Foreign Server API endpoints concerned with encryption related tasks.
 
 ### <span class="request-h"><span class="request request-get">GET</span> KeyPackage(s) [:material-lock-outline:](#authorization "Authorization required") :material-file-question-outline:{title="This route is optional. Consult the documentation of a specific polyproto extension to check whether it exists."}</span>
 
-`/p2core/keypackage/:fid`
+`/.p2/core/v1/keypackage/:fid`
 
 Request KeyPackages - initial encryption keying material - for a specific actor from the server.
 The requested actor must be registered on this server.
@@ -246,7 +246,7 @@ Routes not fitting into another category.
 
 ### <span class="request-h"><span class="request request-get">GET</span> Events [:material-lock-outline:](#authorization "Authorization required") :material-file-question-outline:{title="This route is optional. Consult the documentation of a specific polyproto extension to check whether it exists."}</span>
 
-`/p2core/events`
+`/.p2/core/v1/events`
 
 Fetch Gateway events via REST.
 

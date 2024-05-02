@@ -18,7 +18,7 @@ can also be accessed from a foreign server, or with no authentication at all, se
 
 ### <span class="request-h"><span class="request request-post">POST</span> Authenticate new Session</span>
 
-`/p2core/session/trust`
+`/.p2/core/v1/session/trust`
 
 Creates a new `id_cert` and a session token from a `csr`.
 

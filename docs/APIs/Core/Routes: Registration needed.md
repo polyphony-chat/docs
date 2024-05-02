@@ -24,7 +24,7 @@ Client-Home Server API endpoints concerned with Federated Identity and managing 
 
 ### <span class="request-h"><span class="request request-post">POST</span> Rotate session ID-Cert [:material-lock-outline:](#authorization "Authorization required")</span>
 
-`/p2core/session/idcert`
+`/.p2/core/v1/session/idcert`
 
 Rotate your keys for a given session. The `session_id` in the supplied `csr` must correspond to the
 session token used in the `authorization`-Header.
@@ -73,7 +73,7 @@ Client-Home Server API endpoints concerned with encryption, such as KeyPackage m
 
 ### <span class="request-h"><span class="request request-post">POST</span> Add KeyPackage [:material-lock-outline:](#authorization "Authorization required") :material-file-question-outline:{title="This route is optional. Consult the documentation of a specific polyproto extension to check whether it exists."}</span>
 
-`/p2core/keypackage/@me`
+`/.p2/core/v1/keypackage/@me`
 
 Add a KeyPackage to your KeyPackage store on the server. Only adds KeyPackages to the ID-Cert corresponding
 to the session token used in the `authorization`-Header.
@@ -102,7 +102,7 @@ to the session token used in the `authorization`-Header.
 
 ### <span class="request-h"><span class="request request-put">PUT</span> Replace Last Resort KeyPackage [:material-lock-outline:](#authorization "Authorization required") :material-file-question-outline:{title="This route is optional. Consult the documentation of a specific polyproto extension to check whether it exists."}</span>
 
-`/p2core/keypackage_lr`
+`/.p2/core/v1/keypackage_lr`
 
 Replace a Last Resort KeyPackage with a new one. Only manipulates Last Resort KeyPackages for the ID-Cert
 corresponding to the session token used in the `authorization`-Header.
