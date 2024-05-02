@@ -73,9 +73,9 @@ This request has no body.
 
     ##### Body
 
-    | Type   | Description                                                    |
-    | ------ | -------------------------------------------------------------- |
-    | String | The servers' new public identity key, in ASCII-representation. |
+    | Type        | Description                                          |
+    | ----------- | ---------------------------------------------------- |
+    | String, PEM | The servers' new public identity key, encoded as PEM |
 
     ```json
     "-----BEGIN PGP PUBLIC KEY BLOCK-----

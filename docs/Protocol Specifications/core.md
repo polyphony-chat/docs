@@ -5,7 +5,7 @@ weight: 0
 
 # polyproto Specification
 
-**v1.0.0-alpha.5** - Treat this as an unfinished draft.
+**v1.0.0-alpha.6** - Treat this as an unfinished draft.
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 The version number specified here also applies to the API documentation.
 
@@ -614,9 +614,8 @@ Rotating keys is done by using an API route, which requires authorization.
 
     Sessions can request a new ID-Cert for any session of the same actor. Most other, currently existing
     services also allow for this, as it is a common use case for user to want to, perhaps, log out of
-    devices they no longer use. Depending on your use case, this might be a security concern, as it
-    potentially simplifies account takeovers. Whether and how this risk is mitigated is up to 
-    concrete implementations.
+    devices they no longer use. Depending on your use case, this might be a security concern. Whether
+    and how this risk is mitigated is up to concrete implementations.
 
 Home servers must keep track of the ID-Certs of all users (and their clients) registered on them,
 and must offer a clients' ID-Cert for a given timestamp on request. This is to ensure messages

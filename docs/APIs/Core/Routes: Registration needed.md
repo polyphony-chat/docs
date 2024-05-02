@@ -26,7 +26,7 @@ Client-Home Server API endpoints concerned with Federated Identity and managing 
 
 `/p2core/session/idcert`
 
-Rotate your keys for a given ID-Cert. The `session_id` in the supplied `csr` must correspond to the
+Rotate your keys for a given session. The `session_id` in the supplied `csr` must correspond to the
 session token used in the `authorization`-Header.
 
 #### Request
