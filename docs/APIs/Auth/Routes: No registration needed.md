@@ -1,6 +1,6 @@
 ---
 title: "Authentication Routes: No registration needed"
-weight: -1000
+weight: -900
 ---
 
 All API endpoints needed for implementing polyproto-auth.
