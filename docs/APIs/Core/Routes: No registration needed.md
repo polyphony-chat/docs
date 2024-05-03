@@ -162,10 +162,29 @@ server.
     | Type                                | Description                                                          |
     | ----------------------------------- | -------------------------------------------------------------------- |
     | JSON-Array of Strings (PEM, Base64) | The actor's public identity certificate(s), encoded in PEM (Base64). |
+    | JSON-Array of boolean               | Whether the ID-Cert has been manually invalidated                    |
 
     ```json
-    [...]
+    {
+        "idcerts": [
+            "-----BEGIN PGP PUBLIC KEY BLOCK-----
+            mQINBGSDs58BEADCXP1ArorBtOvGnQdAD26gsOMasyLMqnJyUp8XXCdmTx5+gREs
+            vtItmjIshHU6CLUyTwO2IqIb2Fds+AmDsdM1Qx/vM0fVtPAS13T3Tu9rknldJvvN
+            GyT3urrgvZ1leqQnwvuHd3WMdtgQ29lc7F/XaP4v2RIlqUiV+bnBoe/6LL7HXTaW
+            zy2oKXr/odOD4+476J5APxxXCWVLXr3qfAXmSBQERznYuuRmhyL...
+            -----END PGP PUBLIC KEY BLOCK-----"
+        ],
+        "invalidated": [
+            false
+        ]
+    }
     ```
+
+    !!! note
+
+        The `invalidated` array contains a boolean for each ID-Cert in the `idcerts` array. The
+        position of the boolean in the `invalidated` array corresponds to the position of the
+        ID-Cert in the `idcerts` array.
 
 ---
 
