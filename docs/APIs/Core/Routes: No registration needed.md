@@ -197,6 +197,36 @@ Lets a foreign server know that the ID-Cert of this session has changed.
 
     ---
 
+---
+
+### <span class="request-h"><span class="request request-delete">DELETE</span> Delete Session</span>
+
+`/.p2/core/v1/session`
+
+Invalidate a session token by naming the session ID associated with it.
+
+#### Request
+
+##### Body
+
+| Name         | Type   | Description                   |
+| ------------ | ------ | ----------------------------- |
+| `session_id` | String | The session ID to invalidate. |
+
+```json
+{
+    "session_id": "593b30d8-0c98-4393-9331-988281b46782"
+}
+```
+
+#### Response
+
+=== "204 No Content"
+
+    This response has no body.
+
+---
+
 ## <span class="group-h">Encryption</span>
 
 Client-Foreign Server API endpoints concerned with encryption related tasks.
