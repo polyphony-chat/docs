@@ -1037,11 +1037,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Auth/Routes%3A%20No%20registration%20needed/" class="md-nav__link">
+      <a href="../../Auth/Routes%3A%20Registration%20needed/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Authentication Routes: No registration needed
+    Authentication Routes: Registration needed
   </span>
   
 
@@ -1058,11 +1058,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Auth/Routes%3A%20Registration%20needed/" class="md-nav__link">
+      <a href="../../Auth/Routes%3A%20No%20registration%20needed/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Authentication Routes: Registration needed
+    Authentication Routes: No registration needed
   </span>
   
 
@@ -1388,6 +1388,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#delete-delete-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      DELETE Delete Session
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DELETE Delete Session">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#request_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Request
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Response
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1414,7 +1447,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#request_5" class="md-nav__link">
+  <a href="#request_6" class="md-nav__link">
     <span class="md-ellipsis">
       Request
     </span>
@@ -1423,7 +1456,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#response_5" class="md-nav__link">
+  <a href="#response_6" class="md-nav__link">
     <span class="md-ellipsis">
       Response
     </span>
@@ -1462,7 +1495,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#request_6" class="md-nav__link">
+  <a href="#request_7" class="md-nav__link">
     <span class="md-ellipsis">
       Request
     </span>
@@ -1471,7 +1504,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#response_6" class="md-nav__link">
+  <a href="#response_7" class="md-nav__link">
     <span class="md-ellipsis">
       Response
     </span>
@@ -1739,6 +1772,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#delete-delete-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      DELETE Delete Session
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DELETE Delete Session">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#request_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Request
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Response
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1765,7 +1831,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#request_5" class="md-nav__link">
+  <a href="#request_6" class="md-nav__link">
     <span class="md-ellipsis">
       Request
     </span>
@@ -1774,7 +1840,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#response_5" class="md-nav__link">
+  <a href="#response_6" class="md-nav__link">
     <span class="md-ellipsis">
       Response
     </span>
@@ -1813,7 +1879,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#request_6" class="md-nav__link">
+  <a href="#request_7" class="md-nav__link">
     <span class="md-ellipsis">
       Request
     </span>
@@ -1822,7 +1888,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#response_6" class="md-nav__link">
+  <a href="#response_7" class="md-nav__link">
     <span class="md-ellipsis">
       Response
     </span>
@@ -2108,6 +2174,41 @@ server.</p>
 </div>
 </div>
 </div>
+<hr />
+<h3 id="delete-delete-session"><span class="request-h"><span class="request request-delete">DELETE</span> Delete Session</span><a class="headerlink" href="#delete-delete-session" title="Permanent link">&para;</a></h3>
+<p><code>/.p2/core/v1/session</code></p>
+<p>Invalidate a session token by naming the session ID associated with it.</p>
+<h4 id="request_5">Request<a class="headerlink" href="#request_5" title="Permanent link">&para;</a></h4>
+<h5 id="body_10">Body<a class="headerlink" href="#body_10" title="Permanent link">&para;</a></h5>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>session_id</code></td>
+<td>String</td>
+<td>The session ID to invalidate.</td>
+</tr>
+</tbody>
+</table>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;593b30d8-0c98-4393-9331-988281b46782&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="p">}</span>
+</code></pre></div>
+<h4 id="response_5">Response<a class="headerlink" href="#response_5" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:1"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">204 No Content</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>This response has no body.</p>
+</div>
+</div>
+</div>
+<hr />
 <h2 id="encryption"><span class="group-h">Encryption</span><a class="headerlink" href="#encryption" title="Permanent link">&para;</a></h2>
 <p>Client-Foreign Server API endpoints concerned with encryption related tasks.</p>
 <hr />
@@ -2115,7 +2216,7 @@ server.</p>
 <p><code>/.p2/core/v1/keypackage/:fid</code></p>
 <p>Request KeyPackages - initial encryption keying material - for a specific actor from the server.
 The requested actor must be registered on this server.</p>
-<h4 id="request_5">Request<a class="headerlink" href="#request_5" title="Permanent link">&para;</a></h4>
+<h4 id="request_6">Request<a class="headerlink" href="#request_6" title="Permanent link">&para;</a></h4>
 <h5 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">&para;</a></h5>
 <table>
 <thead>
@@ -2133,13 +2234,13 @@ The requested actor must be registered on this server.</p>
 </tr>
 </tbody>
 </table>
-<h5 id="body_10">Body<a class="headerlink" href="#body_10" title="Permanent link">&para;</a></h5>
+<h5 id="body_11">Body<a class="headerlink" href="#body_11" title="Permanent link">&para;</a></h5>
 <p>This request has no body.</p>
-<h4 id="response_5">Response<a class="headerlink" href="#response_5" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="6:1"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">200 OK</label></div>
+<h4 id="response_6">Response<a class="headerlink" href="#response_6" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:1"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<h5 id="body_11">Body<a class="headerlink" href="#body_11" title="Permanent link">&para;</a></h5>
+<h5 id="body_12">Body<a class="headerlink" href="#body_12" title="Permanent link">&para;</a></h5>
 <table>
 <thead>
 <tr>
@@ -2154,7 +2255,7 @@ The requested actor must be registered on this server.</p>
 </tr>
 </tbody>
 </table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">[</span><span class="err">...</span><span class="p">]</span>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">[</span><span class="err">...</span><span class="p">]</span>
 </code></pre></div>
 </div>
 </div>
@@ -2166,14 +2267,14 @@ The requested actor must be registered on this server.</p>
 <h3 id="get-events"><span class="request-h"><span class="request request-get">GET</span> Events <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a> <span class="twemoji" title="This route is optional. Consult the documentation of a specific polyproto extension to check whether it exists."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16c0 1.11.89 2 2 2h12c1.11 0 2-.89 2-2V8l-6-6m4 18H6V4h7v5h5v11m-3-7c0 1.89-2.25 2.07-2.25 3.76h-1.5c0-2.44 2.25-2.26 2.25-3.76 0-.82-.67-1.5-1.5-1.5s-1.5.68-1.5 1.5H9c0-1.65 1.34-3 3-3s3 1.35 3 3m-2.25 4.5V19h-1.5v-1.5h1.5Z"/></svg></span></span><a class="headerlink" href="#get-events" title="Permanent link">&para;</a></h3>
 <p><code>/.p2/core/v1/events</code></p>
 <p>Fetch Gateway events via REST.</p>
-<h4 id="request_6">Request<a class="headerlink" href="#request_6" title="Permanent link">&para;</a></h4>
-<h5 id="body_12">Body<a class="headerlink" href="#body_12" title="Permanent link">&para;</a></h5>
+<h4 id="request_7">Request<a class="headerlink" href="#request_7" title="Permanent link">&para;</a></h4>
+<h5 id="body_13">Body<a class="headerlink" href="#body_13" title="Permanent link">&para;</a></h5>
 <p>This request has no body.</p>
-<h4 id="response_6">Response<a class="headerlink" href="#response_6" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="7:2"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">200 OK</label><label for="__tabbed_7_2">409 No Content</label></div>
+<h4 id="response_7">Response<a class="headerlink" href="#response_7" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">200 OK</label><label for="__tabbed_8_2">409 No Content</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<h5 id="body_13">Body<a class="headerlink" href="#body_13" title="Permanent link">&para;</a></h5>
+<h5 id="body_14">Body<a class="headerlink" href="#body_14" title="Permanent link">&para;</a></h5>
 <table>
 <thead>
 <tr>
@@ -2191,7 +2292,7 @@ The requested actor must be registered on this server.</p>
 </div>
 <div class="tabbed-block">
 <p>Returned if there are no events to inform the client about.</p>
-<h5 id="body_14">Body<a class="headerlink" href="#body_14" title="Permanent link">&para;</a></h5>
+<h5 id="body_15">Body<a class="headerlink" href="#body_15" title="Permanent link">&para;</a></h5>
 <p>This response has no body.</p>
 </div>
 </div>
@@ -2254,7 +2355,7 @@ The requested actor must be registered on this server.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-05-02T20:14:59+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-05-02</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-05-03T19:21:09+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-05-03</span>
   </span>
 
     
