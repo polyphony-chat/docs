@@ -73,34 +73,34 @@ This request has no body.
 
     ##### Body
 
-    | Type        | Description                                          |
-    | ----------- | ---------------------------------------------------- |
-    | String, PEM | The servers' new public identity key, encoded as PEM |
+    | Type        | Description                              |
+    | ----------- | ---------------------------------------- |
+    | String, PEM | The servers' new ID-Cert, encoded as PEM |
 
     ```json
-    "-----BEGIN PGP PUBLIC KEY BLOCK-----
-    mQINBGSDs58BEADCXP1ArorBtOvGnQdAD26gsOMasyLMqnJyUp8XXCdmTx5+gREs
-    vtItmjIshHU6CLUyTwO2IqIb2Fds+AmDsdM1Qx/vM0fVtPAS13T3Tu9rknldJvvN
-    GyT3urrgvZ1leqQnwvuHd3WMdtgQ29lc7F/XaP4v2RIlqUiV+bnBoe/6LL7HXTaW
-    zy2oKXr/odOD4+476J5APxxXCWVLXr3qfAXmSBQERznYuuRmhyL...
-    -----END PGP PUBLIC KEY BLOCK-----"
+    -----BEGIN CERTIFICATE-----
+    MIIH/TCCBeWgAwIBAgIQaBYE3/M08XHYCnNVmcFBcjANBgkqhkiG9w0BAQsFADBy
+    MQswCQYDVQQGEwJVUzEOMAwGA1UECAwFVGV4YXMxEDAOBgNVBAcMB0hvdXN0b24x
+    ETAPBgNVBAoMCFNTTCBDb3JwMS4wLAYDVQQDDCVTU0wuY29tIEVWIFNTTCBJbnRl
+    cm1lZGlhdGUgQ0EgUlNBIFIzMB4XDTIwMDQwMTAwNTgzM1oXDTIxMDcxNjAwN...
+    -----END CERTIFICATE-----
     ```
 
 ---
 
-### <span class="request-h"><span class="request request-get">GET</span> Server Public Identity Key</span>
+### <span class="request-h"><span class="request request-get">GET</span> Server Public ID-Cert</span>
 
 `/.p2/core/v1/key/server`
 
-Request the server's public identity key.
+Request the server's public identity certificate.
 
 #### Request
 
 ##### Body
 
-| Name                                                         | Type   | Description                                                                                         |
-| ------------------------------------------------------------ | ------ | --------------------------------------------------------------------------------------------------- |
-| `timestamp` :material-help:{title="This field is optional."} | String | UNIX-Timestamp. If specified, the server will return the ID-Cert which it had at the specified time |
+| Name                                                         | Type   | Description                                                                                        |
+| ------------------------------------------------------------ | ------ | -------------------------------------------------------------------------------------------------- |
+| `timestamp` :material-help:{title="This field is optional."} | String | UNIX-Timestamp. If specified, the server will return the ID-Cert that it had at the specified time |
 
 ```json
 {
@@ -112,14 +112,60 @@ Request the server's public identity key.
 
 === "200 OK"
 
-##### Body
+    ##### Body
 
-    | Type             | Description                                                    |
-    | ---------------- | -------------------------------------------------------------- |
-    | String, PEM, Base64  | The servers' public [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert).     |
+    | Type        | Description                                                                                                                                              |
+    | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | String, PEM | The servers' public [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert), PEM encoded. |
 
     ```json
-    [...]
+    -----BEGIN CERTIFICATE-----
+    MIIH/TCCBeWgAwIBAgIQaBYE3/M08XHYCnNVmcFBcjANBgkqhkiG9w0BAQsFADBy
+    MQswCQYDVQQGEwJVUzEOMAwGA1UECAwFVGV4YXMxEDAOBgNVBAcMB0hvdXN0b24x
+    ETAPBgNVBAoMCFNTTCBDb3JwMS4wLAYDVQQDDCVTU0wuY29tIEVWIFNTTCBJbnRl
+    cm1lZGlhdGUgQ0EgUlNBIFIzMB4XDTIwMDQwMTAwNTgzM1oXDTIxMDcxNjAwN...
+    -----END CERTIFICATE-----
+    ```
+
+---
+
+### <span class="request-h"><span class="request request-get">GET</span> Server Public Key</span>
+
+`/.p2/core/v1/key/server`
+
+Request the server's public key.
+
+#### Request
+
+##### Body
+
+| Name                                                         | Type   | Description                                                                                           |
+| ------------------------------------------------------------ | ------ | ----------------------------------------------------------------------------------------------------- |
+| `timestamp` :material-help:{title="This field is optional."} | String | UNIX-Timestamp. If specified, the server will return the public key that it had at the specified time |
+
+```json
+{
+    "timestamp": "1620000000"
+}
+```
+
+#### Response
+
+=== "200 OK"
+
+    ##### Body
+
+    | Type        | Description                                                                                  |
+    | ----------- | -------------------------------------------------------------------------------------------- |
+    | String, PEM | PEM encoded X.509 `SubjectPublicKeyInfo` information about the server's public identity key. |
+
+    ```json
+    -----BEGIN PUBLIC KEY-----
+    MIIH/TCCBeWgAwIBAgIQaBYE3/M08XHYCnNVmcFBcjANBgkqhkiG9w0BAQsFADBy
+    MQswCQYDVQQGEwJVUzEOMAwGA1UECAwFVGV4YXMxEDAOBgNVBAcMB0hvdXN0b24x
+    ETAPBgNVBAoMCFNTTCBDb3JwMS4wLAYDVQQDDCVTU0wuY29tIEVWIFNTTCBJbnRl
+    cm1lZGlhdGUgQ0EgUlNBIFIzMB4XDTIwMDQwMTAwNTgzM1oXDTIxMDcxNjAwN...
+    -----END PUBLIC KEY-----
     ```
 
 ---
@@ -167,12 +213,12 @@ server.
     ```json
     {
         "idcerts": [
-            "-----BEGIN PGP PUBLIC KEY BLOCK-----
+            "-----BEGIN CERTIFICATE-----
             mQINBGSDs58BEADCXP1ArorBtOvGnQdAD26gsOMasyLMqnJyUp8XXCdmTx5+gREs
             vtItmjIshHU6CLUyTwO2IqIb2Fds+AmDsdM1Qx/vM0fVtPAS13T3Tu9rknldJvvN
             GyT3urrgvZ1leqQnwvuHd3WMdtgQ29lc7F/XaP4v2RIlqUiV+bnBoe/6LL7HXTaW
             zy2oKXr/odOD4+476J5APxxXCWVLXr3qfAXmSBQERznYuuRmhyL...
-            -----END PGP PUBLIC KEY BLOCK-----"
+            -----END CERTIFICATE-----"
         ],
         "invalidated": [
             false
