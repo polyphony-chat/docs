@@ -5,6 +5,7 @@
 
 .request {
     margin-right: 10px;
+    font-weight: bold;
 }
 
 .request-get {
@@ -33,4 +34,12 @@
 
 h1, h2 {
     font-weight: 500 !important;
+}
+
+hr {
+    padding-top: 2em;
+}
+
+h3 {
+    padding-top: 1em;
 }
