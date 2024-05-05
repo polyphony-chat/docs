@@ -9,23 +9,23 @@
 }
 
 .request-get {
-    color: #00BA00;
+    color: #4ece4e;
 }
 
 .request-post {
-    color: #00e4e8;
+    color: #4ee2c9;
 }
 
 .request-put {
-    color: #0080ff;
+    color: #4999e9;
 }
 
 .request-patch {
-    color: #9500ba;
+    color: #c857e4;
 }
 
 .request-delete {
-    color: #ba0c00;
+    color: #e2544a;
 }
 
 .group-h {
