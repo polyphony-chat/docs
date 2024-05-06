@@ -2080,7 +2080,7 @@
 
 
 <h1 id="polyproto-specification">polyproto Specification<a class="headerlink" href="#polyproto-specification" title="Permanent link">&para;</a></h1>
-<p><strong>v1.0.0-alpha.6</strong> - Treat this as an unfinished draft.
+<p><strong>v1.0.0-alpha.7</strong> - Treat this as an unfinished draft.
 <a href="https://semver.org/spec/v2.0.0.html">Semantic versioning v2.0.0</a> is used to version this specification.
 The version number specified here also applies to the API documentation.</p>
 <ul>
@@ -2756,32 +2756,62 @@ message and ensuring its public key matches the sender's.</p>
 <p>Signature verification must always be "strict", meaning that signature schemes producing malleable
 signatures and <a href="https://en.wikipedia.org/wiki/Weak_key">weak public keys</a> must be rejected.</p>
 </div>
-<p><strong>Example:</strong> Given a signed message from Alice, such as Bob would receive from Server B, Bob's
-client would verify the signature of the message such as this:</p>
+<p><strong>Example:</strong> Say we have two actors. Alice, who is registered on Server A, and Bob, who is registered
+on Server B. Alice and Bob are having a conversation on Server B. Given a signed message from Alice,
+such as Bob would receive from Server B, the process of verifying the signature would look like this:</p>
 <pre class="mermaid"><code>sequenceDiagram
 autonumber
 
 actor b as Bob
-participant sa as Server A
 participant sb as Server B
+participant sa as Server A
 
 sb-&gt;&gt;b: Alice's signed message
-b-&gt;&gt;sb: Request Alice's ID-Cert
-sb-&gt;&gt;b: Alice's ID-Cert
-b-&gt;&gt;sa: Request Server A ID-Cert
-sa-&gt;&gt;b: Server A ID-Cert
-b-&gt;&gt;b: Verify signature of Alice's message
-</code></pre>
-<p>Fig. 3: Sequence diagram of a successful message signature verification.</p>
-<p>Bob's client and Server B should now cache Server A's public identity key and Alice's ID-Cert,
-to avoid having to request them again.</p>
+opt Alice's ID-Cert is not cached on Bob's client
+  b-&gt;&gt;sb: Request Alice's ID-Cert
+  opt Alice's ID-Cert is not cached on Server B
+  sb-&gt;&gt;sa: Request Alice's ID-Cert
+  sa-&gt;&gt;sb: Alice's ID-Cert
+  end
+  sb-&gt;&gt;b: Alice's ID-Cert
+end
+opt Server A's ID-Cert is not cached on Bob's client
+  b-&gt;&gt;sa: Request Server A ID-Cert
+  sa-&gt;&gt;b: Server A ID-Cert
+end
+b-&gt;&gt;b: Verify signature of Alice's message</code></pre>
+<p><em>Fig. 3: Sequence diagram of a successful message signature verification.</em></p>
+<p>Bob's client and Server B should now cache Server A's and Alice's ID-Certs, to avoid having to
+request them again.</p>
+<p>The TTL (time to live) of these cached items should be relatively short. Recommended values
+are between one (1) and twelve (12) hours. Cached ID-Certs must be evicted from
+the cache, after the TTL has expired. Expired cached ID-Certs must not be used for signature
+verification of new messages, even if the client cannot renew its cache.</p>
+<details class="question">
+<summary>Why not select longer lived TTLs for cached ID-Certs?</summary>
+<p>Suppose that an actors' private identity key is compromised. The actor notices this, and revokes
+their ID-Cert. If the TTL of cached ID-Certs is too long, the compromised ID-Cert might still be
+used for signature verification for a long amount of time, even after the ID-Cert has been revoked.
+This is a problem in the following hypothetical scenario with malicious actor "Eve" and victim
+"Alice":</p>
+<ol>
+<li>Alice's private identity key is compromised.</li>
+<li>Malicious actor Eve logs onto Server X, which Alice has never connected to before.</li>
+<li>Alice notices the breach, requesting the revocation of her ID-Cert on all servers she is
+   connected to.</li>
+<li>Server X does not get this revocation message, as Alice does not know about her connection to
+   Server X.</li>
+<li>Eve can now impersonate Alice on Server X, for as long as the TTL of the cached ID-Cert on
+   Server X has not expired.</li>
+</ol>
+</details>
 <p>If the verification fails, Bob's client should try to re-request the key from Server B first.
 Should the verification fail again, Bob's client can try to request Alice's public identity key
 and ID-Cert from Server A (Alice's home server). The signature verification process should then be
 re-tried. Should the verification still not succeed, the message should be treated with extreme
 caution.</p>
-<div class="admonition question">
-<p class="admonition-title">Why does Bob's client not request Alice's public identity key from Server A?</p>
+<details class="question">
+<summary>Why should Bob's client request Alice's public identity key from his own server first?</summary>
 <p>Bob's client could request Alice's public identity key from Server A, instead of Server B.
 However, this is discouraged, as it</p>
 <ul>
@@ -2796,12 +2826,13 @@ However, this is discouraged, as it</p>
 <p>Clients should only use Server A as a fallback for public identity key verification, if Server B
 does not respond to the request for Alice's public identity key, or if the verification fails
 with the public identity key from Server B.</p>
-</div>
+</details>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>A failed signature verification does not always mean that the message is invalid. It may be that
 the actor's identity key has changed, and that Server B has not yet received the new public
-identity key for some reason.</p>
+identity key for some reason. However, if the signature cannot be verified at a certain time,
+this information must be communicated to the actor performing the verification.</p>
 </div>
 <h3 id="73-private-key-loss-prevention-and-private-key-recovery">7.3 Private key loss prevention and private key recovery<a class="headerlink" href="#73-private-key-loss-prevention-and-private-key-recovery" title="Permanent link">&para;</a></h3>
 <p>As described in previous sections, actors must hold on to their past identity key pairs, should they
@@ -3048,7 +3079,7 @@ aa-xsa: Deactivate account</code></pre>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-05-02T19:52:42+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-05-02</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-05-06T13:18:16+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-05-06</span>
   </span>
 
     
