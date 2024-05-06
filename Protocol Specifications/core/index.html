@@ -2080,7 +2080,7 @@
 
 
 <h1 id="polyproto-specification">polyproto Specification<a class="headerlink" href="#polyproto-specification" title="Permanent link">&para;</a></h1>
-<p><strong>v1.0.0-alpha.7</strong> - Treat this as an unfinished draft.
+<p><strong>v1.0.0-alpha.8</strong> - Treat this as an unfinished draft.
 <a href="https://semver.org/spec/v2.0.0.html">Semantic versioning v2.0.0</a> is used to version this specification.
 The version number specified here also applies to the API documentation.</p>
 <ul>
@@ -2228,7 +2228,7 @@ opt Resume connection#59;&lt;br /&gt;otherwise, repeat from step 1
   g-&gt;&gt;c: Send resumed event
 end
 </code></pre>
-<p>Fig. 1: Sequence diagram of a WebSocket connection to a polyproto server.</p>
+<p><em>Fig. 1: Sequence diagram of a WebSocket connection to a polyproto server.</em> </p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>To learn more about polyproto WebSockets and WebSocket Events, consult the <a href="/docs/APIs/Core/WebSockets/index.md">WebSockets documentation</a>.</p>
@@ -2695,8 +2695,8 @@ alt verify success
   s-&gt;&gt;s: Create ID-Cert for Client
   s-&gt;&gt;c: Respond with ID-Cert
 end</code></pre>
-<p>Fig. 2: Sequence diagram depicting the process of a client that uses a CSR to request a new ID-Cert
-from their home server.</p>
+<p><em>Fig. 2: Sequence diagram depicting the process of a client that uses a CSR to request a new ID-Cert
+from their home server.</em></p>
 <p>A server identity key's lifetime might come to an early or unexpected end, perhaps due to some sort
 of leak of the corresponding private key. When this happens, the server should generate a new
 identity key pair and broadcast the
@@ -2779,7 +2779,7 @@ opt Server A's ID-Cert is not cached on Bob's client
   b-&gt;&gt;sa: Request Server A ID-Cert
   sa-&gt;&gt;b: Server A ID-Cert
 end
-b-&gt;&gt;b: Verify signature of Alice's message</code></pre>
+b-&gt;&gt;b: Verify signature of Alice's message (Fig. 4)</code></pre>
 <p><em>Fig. 3: Sequence diagram of a successful message signature verification.</em></p>
 <p>Bob's client and Server B should now cache Server A's and Alice's ID-Certs, to avoid having to
 request them again.</p>
@@ -2810,6 +2810,31 @@ Should the verification fail again, Bob's client can try to request Alice's publ
 and ID-Cert from Server A (Alice's home server). The signature verification process should then be
 re-tried. Should the verification still not succeed, the message should be treated with extreme
 caution.</p>
+<pre class="mermaid"><code>sequenceDiagram
+autonumber
+
+actor b as Bob
+participant sb as Server B
+participant sa as Server A
+
+b-&gt;&gt;b: Verify signature of Alice's message, attempt 1
+alt Verification fails
+  b-&gt;&gt;sb: Request Alice's ID-Cert
+  sb-&gt;&gt;b: Alice's ID-Cert
+  b-&gt;&gt;b: Verify signature of Alice's message, attempt 2
+  opt Verification fails again
+    b-&gt;&gt;sa: Request Alice's ID-Cert
+    sa-&gt;&gt;b: Alice's ID-Cert
+    b-&gt;&gt;b: Verify signature of Alice's message, final attempt
+    opt Verification is still unsuccessful
+      b--&gt;b: Treat Alice's message with extreme caution.
+    end
+  end
+else Verification succeeds
+  b--&gt;b: Treat Alice's message as verified.
+end</code></pre>
+<p><em>Fig. 4: Sequence diagram showing how message verification should be handled if the first attempt
+to verify the signature fails.</em></p>
 <details class="question">
 <summary>Why should Bob's client request Alice's public identity key from his own server first?</summary>
 <p>Bob's client could request Alice's public identity key from Server A, instead of Server B.
@@ -2940,8 +2965,8 @@ sb-&gt;&gt;sb: Verify, replace Alice B with Alice A
 sb-&gt;&gt;ab: New account data
 sa-&gt;&gt;sa: Deactivate Alice A's account
 sa-&gt;&gt;sa: Setup redirect from Alice A to Alice B</code></pre>
-<p>Fig. 4: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account,
-where Server A is reachable and cooperative.</p>
+<p><em>Fig. 5: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account,
+where Server A is reachable and cooperative.</em></p>
 <p>Alternatively, if Server A is offline or deemed uncooperative, the following sequence diagram depicts
 how the migration can be done without Server A's cooperation:</p>
 <pre class="mermaid"><code>sequenceDiagram
@@ -2960,8 +2985,8 @@ aa-&gt;&gt;sb: Full profile of Self
 sb-&gt;&gt;sb: Verify, replace Alice B profile with Alice A
 sb-&gt;&gt;ab: New account data
 </code></pre>
-<p>Fig. 5: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account,
-where Server A is unreachable or uncooperative.</p>
+<p><em>Fig. 6: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account,
+where Server A is unreachable or uncooperative.</em></p>
 <div class="admonition question">
 <p class="admonition-title">If the old home server is not needed to migrate, why try to contact it in the first place?</p>
 <p>It is generally preferrable to have the old home server cooperate with the migration, as it
@@ -2988,7 +3013,7 @@ ab-&gt;&gt;ab: Verify that Server C has not tampered with messages
 ab-&gt;&gt;ab: Re-sign messages with own keys
 ab-&gt;&gt;sc: Send new messages
 sc-&gt;&gt;sc: Verify that only FID and signature related fields have changed</code></pre>
-<p>Fig. 6: Sequence diagram depicting the re-signing procedure.</p>
+<p><em>Fig. 7: Sequence diagram depicting the re-signing procedure.</em></p>
 <h3 id="83-moving-data">8.3 Moving data<a class="headerlink" href="#83-moving-data" title="Permanent link">&para;</a></h3>
 <p>In cases of an imminent server shutdown or distrust in the old server, moving data from the old server
 is necessary to prevent data loss. This process extends upon the reassigning ownership process, and
@@ -3020,7 +3045,7 @@ ab-&gt;&gt;sb: Request data import
 sb-&gt;&gt;sb: Verify data integrity
 sb-&gt;&gt;ab: Data import successful
 aa-xsa: Deactivate account</code></pre>
-<p>Fig. 7: Sequence diagram depicting the data moving process.</p>
+<p><em>Fig. 8: Sequence diagram depicting the data moving process.</em></p>
 <hr />
 <h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
 <ul>
@@ -3079,7 +3104,7 @@ aa-xsa: Deactivate account</code></pre>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-05-06T13:18:16+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-05-06</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-05-06T14:34:58+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-05-06</span>
   </span>
 
     
