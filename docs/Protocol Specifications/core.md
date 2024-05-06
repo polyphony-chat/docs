@@ -5,7 +5,7 @@ weight: 0
 
 # polyproto Specification
 
-**v1.0.0-alpha.6** - Treat this as an unfinished draft.
+**v1.0.0-alpha.7** - Treat this as an unfinished draft.
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 The version number specified here also applies to the API documentation.
 
@@ -716,30 +716,60 @@ message and ensuring its public key matches the sender's.
     Signature verification must always be "strict", meaning that signature schemes producing malleable
     signatures and [weak public keys](https://en.wikipedia.org/wiki/Weak_key) must be rejected.
 
-**Example:** Given a signed message from Alice, such as Bob would receive from Server B, Bob's
-client would verify the signature of the message such as this:
+**Example:** Say we have two actors. Alice, who is registered on Server A, and Bob, who is registered
+on Server B. Alice and Bob are having a conversation on Server B. Given a signed message from Alice,
+such as Bob would receive from Server B, the process of verifying the signature would look like this:
 
 ```mermaid
 sequenceDiagram
 autonumber
 
 actor b as Bob
-participant sa as Server A
 participant sb as Server B
+participant sa as Server A
 
 sb->>b: Alice's signed message
-b->>sb: Request Alice's ID-Cert
-sb->>b: Alice's ID-Cert
-b->>sa: Request Server A ID-Cert
-sa->>b: Server A ID-Cert
+opt Alice's ID-Cert is not cached on Bob's client
+  b->>sb: Request Alice's ID-Cert
+  opt Alice's ID-Cert is not cached on Server B
+  sb->>sa: Request Alice's ID-Cert
+  sa->>sb: Alice's ID-Cert
+  end
+  sb->>b: Alice's ID-Cert
+end
+opt Server A's ID-Cert is not cached on Bob's client
+  b->>sa: Request Server A ID-Cert
+  sa->>b: Server A ID-Cert
+end
 b->>b: Verify signature of Alice's message
-
 ```
 
-Fig. 3: Sequence diagram of a successful message signature verification.
+*Fig. 3: Sequence diagram of a successful message signature verification.*
 
-Bob's client and Server B should now cache Server A's public identity key and Alice's ID-Cert,
-to avoid having to request them again.
+Bob's client and Server B should now cache Server A's and Alice's ID-Certs, to avoid having to
+request them again.
+
+The TTL (time to live) of these cached items should be relatively short. Recommended values
+are between one (1) and twelve (12) hours. Cached ID-Certs must be evicted from
+the cache, after the TTL has expired. Expired cached ID-Certs must not be used for signature
+verification of new messages, even if the client cannot renew its cache.
+
+??? question "Why not select longer lived TTLs for cached ID-Certs?"
+
+    Suppose that an actors' private identity key is compromised. The actor notices this, and revokes
+    their ID-Cert. If the TTL of cached ID-Certs is too long, the compromised ID-Cert might still be
+    used for signature verification for a long amount of time, even after the ID-Cert has been revoked.
+    This is a problem in the following hypothetical scenario with malicious actor "Eve" and victim
+    "Alice":
+
+    1. Alice's private identity key is compromised.
+    2. Malicious actor Eve logs onto Server X, which Alice has never connected to before.
+    3. Alice notices the breach, requesting the revocation of her ID-Cert on all servers she is
+       connected to.
+    4. Server X does not get this revocation message, as Alice does not know about her connection to
+       Server X.
+    5. Eve can now impersonate Alice on Server X, for as long as the TTL of the cached ID-Cert on
+       Server X has not expired.
 
 If the verification fails, Bob's client should try to re-request the key from Server B first.
 Should the verification fail again, Bob's client can try to request Alice's public identity key
@@ -747,7 +777,7 @@ and ID-Cert from Server A (Alice's home server). The signature verification proc
 re-tried. Should the verification still not succeed, the message should be treated with extreme
 caution.
 
-!!! question "Why does Bob's client not request Alice's public identity key from Server A?"
+??? question "Why should Bob's client request Alice's public identity key from his own server first?"
 
     Bob's client could request Alice's public identity key from Server A, instead of Server B.
     However, this is discouraged, as it
@@ -768,7 +798,8 @@ caution.
 
     A failed signature verification does not always mean that the message is invalid. It may be that
     the actor's identity key has changed, and that Server B has not yet received the new public
-    identity key for some reason.
+    identity key for some reason. However, if the signature cannot be verified at a certain time,
+    this information must be communicated to the actor performing the verification.
 
 ### 7.3 Private key loss prevention and private key recovery
 
