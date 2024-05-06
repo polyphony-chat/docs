@@ -65,6 +65,175 @@ session token used in the `authorization`-Header.
 
 ---
 
+### <span class="request-h"><span class="request request-post">POST</span> Upload encrypted private key material [:material-lock-outline:](#authorization "Authorization required")</span>
+
+`/.p2/core/v1/session/keymaterial`
+
+Upload encrypted private key material to the server for later retrieval. The upload size must not exceed
+the server's maximum upload size for this route. This is usually not more than 10kb and can be as
+low as 800 bytes, depending on the server configuration.
+
+#### Request
+
+##### Body
+
+| Name                                                            | Type                         | Description                                                            |
+| --------------------------------------------------------------- | ---------------------------- | ---------------------------------------------------------------------- |
+| `key_data`                                                      | String, PEM, `PublicKeyInfo` | The encrypted private key material, PEM-encoded                        |
+| `serial_number`:material-help:{title="This field is optional."} | String                       | The serial number of the ID-Cert this key material is associated with. |
+
+```json
+{
+    "key_data": "LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWS0tLS0tCk1JSUJqRENDQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYm...",
+    "serial_number": "123456789"
+}
+```
+
+#### Response
+
+=== "201 Created"
+
+    ##### Body
+
+    This response has no body.
+
+=== "404 Not Found"
+
+    Used, if the `serial_number` does not match any known ID-Cert from this actor.
+
+    ##### Body
+
+    This response has no body.
+
+=== "409 Conflict"
+
+    Status code for when the server already has key material for the given `serial_number`. The client
+    would need to delete the existing key material before uploading new key material.
+
+    ##### Body
+
+    This response has no body.
+
+=== "413 Request Entity Too Large"
+
+    Uploaded key material exceeds the server's maximum upload size.
+
+    ##### Body
+
+    This response has no body.
+
+---
+
+### <span class="request-h"><span class="request request-get">GET</span> Get encrypted private key material [:material-lock-outline:](#authorization "Authorization required")</span>
+
+`/.p2/core/v1/session/keymaterial`
+
+Retrieve encrypted private key material from the server. The `serial_numbers`, if provided, must
+match the serial numbers of ID-Certs that the client has uploaded key material for. If no `serial_numbers`
+are provided, the server will return all key material that the client has uploaded.
+
+#### Request
+
+##### Body
+
+| Name                                                             | Type            | Description                                                      |
+| ---------------------------------------------------------------- | --------------- | ---------------------------------------------------------------- |
+| `serial_numbers`:material-help:{title="This field is optional."} | Array of String | The serial numbers of the ID-Certs to retrieve key material for. |
+
+```json
+{
+    "serial_numbers": ["123456789", "987654321"]
+}
+```
+
+#### Response
+
+=== "200 OK"
+
+    ##### Body
+
+    | Type             | Description                                                                           |
+    | ---------------- | ------------------------------------------------------------------------------------- |
+    | Array of objects | The encrypted private key material, PEM-encoded, and the corresponding serial number. |
+
+    ```json
+    [
+        {
+            "key_data": "LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWS0tLS0tCk1JSUJqRENDQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYm...",
+            "serial_number": "123456789"
+        },
+        {
+            "key_data": "LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWS0tLS0tCk1JSUJqRENDQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYm...",
+            "serial_number": "987654321"
+        }
+    ]
+    ```
+
+=== "404 Not Found"
+
+    ##### Body
+
+    | Type            | Description                                                            |
+    | --------------- | ---------------------------------------------------------------------- |
+    | Array of String | The serial numbers of the ID-Certs that no key material was found for. |
+
+    ```json
+    ["123456789", "987654321"]
+    ```
+
+---
+
+### <span class="request-h"><span class="request request-delete">DELETE</span> Delete encrypted private key material [:material-lock-outline:](#authorization "Authorization required") :material-eye-lock-outline:{title="This route is considered a sensitive action."} </span>
+
+`/.p2/core/v1/session/keymaterial`
+
+Delete encrypted private key material from the server. The `serial_number(s)`, must match the
+serial numbers of ID-Certs that the client has uploaded key material for.
+
+#### Request
+
+##### Body
+
+| Type            | Description                                                      |
+| --------------- | ---------------------------------------------------------------- |
+| Array of String | The serial number(s) of the ID-Certs to delete key material for. |
+
+```json
+["123456789", "987654321"]
+```
+
+#### Response
+
+=== "204 No Content"
+
+    ##### Body
+
+    This response has no body.
+
+---
+
+### <span class="request-h"><span class="request request-options">OPTIONS</span> Get encrypted private key material upload size limit</span>
+
+`/.p2/core/v1/session/keymaterial`
+
+Retrieve the maximum upload size for encrypted private key material, in bytes.
+
+#### Response
+
+=== "200 OK"
+
+    ##### Headers
+
+    | Name               | Type   | Description                      |
+    | ------------------ | ------ | -------------------------------- |
+    | X-Max-Payload-Size | Number | The upload size limit, in bytes. |
+
+    ##### Body
+
+    This response has no body.
+
+---
+
 ## <span class="group-h">Encryption</span>
 
 Client-Home Server API endpoints concerned with encryption, such as KeyPackage management.
