@@ -5,7 +5,7 @@ weight: 0
 
 # polyproto Specification
 
-**v1.0.0-alpha.7** - Treat this as an unfinished draft.
+**v1.0.0-alpha.8** - Treat this as an unfinished draft.
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 The version number specified here also applies to the API documentation.
 
@@ -156,7 +156,7 @@ end
 
 ```
 
-Fig. 1: Sequence diagram of a WebSocket connection to a polyproto server.
+*Fig. 1: Sequence diagram of a WebSocket connection to a polyproto server.* 
 
 !!! info
 
@@ -644,8 +644,8 @@ alt verify success
 end
 ```
 
-Fig. 2: Sequence diagram depicting the process of a client that uses a CSR to request a new ID-Cert
-from their home server.
+*Fig. 2: Sequence diagram depicting the process of a client that uses a CSR to request a new ID-Cert
+from their home server.*
 
 A server identity key's lifetime might come to an early or unexpected end, perhaps due to some sort
 of leak of the corresponding private key. When this happens, the server should generate a new
@@ -741,7 +741,7 @@ opt Server A's ID-Cert is not cached on Bob's client
   b->>sa: Request Server A ID-Cert
   sa->>b: Server A ID-Cert
 end
-b->>b: Verify signature of Alice's message
+b->>b: Verify signature of Alice's message (Fig. 4)
 ```
 
 *Fig. 3: Sequence diagram of a successful message signature verification.*
@@ -776,6 +776,35 @@ Should the verification fail again, Bob's client can try to request Alice's publ
 and ID-Cert from Server A (Alice's home server). The signature verification process should then be
 re-tried. Should the verification still not succeed, the message should be treated with extreme
 caution.
+
+```mermaid
+sequenceDiagram
+autonumber
+
+actor b as Bob
+participant sb as Server B
+participant sa as Server A
+
+b->>b: Verify signature of Alice's message, attempt 1
+alt Verification fails
+  b->>sb: Request Alice's ID-Cert
+  sb->>b: Alice's ID-Cert
+  b->>b: Verify signature of Alice's message, attempt 2
+  opt Verification fails again
+    b->>sa: Request Alice's ID-Cert
+    sa->>b: Alice's ID-Cert
+    b->>b: Verify signature of Alice's message, final attempt
+    opt Verification is still unsuccessful
+      b-->b: Treat Alice's message with extreme caution.
+    end
+  end
+else Verification succeeds
+  b-->b: Treat Alice's message as verified.
+end
+```
+
+*Fig. 4: Sequence diagram showing how message verification should be handled if the first attempt
+to verify the signature fails.*
 
 ??? question "Why should Bob's client request Alice's public identity key from his own server first?"
 
@@ -925,8 +954,8 @@ sa->>sa: Deactivate Alice A's account
 sa->>sa: Setup redirect from Alice A to Alice B
 ```
 
-Fig. 4: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account,
-where Server A is reachable and cooperative.
+*Fig. 5: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account,
+where Server A is reachable and cooperative.*
 
 Alternatively, if Server A is offline or deemed uncooperative, the following sequence diagram depicts
 how the migration can be done without Server A's cooperation:
@@ -950,8 +979,8 @@ sb->>ab: New account data
 
 ```
 
-Fig. 5: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account,
-where Server A is unreachable or uncooperative.
+*Fig. 6: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account,
+where Server A is unreachable or uncooperative.*
 
 !!! question "If the old home server is not needed to migrate, why try to contact it in the first place?"
 
@@ -983,7 +1012,7 @@ ab->>sc: Send new messages
 sc->>sc: Verify that only FID and signature related fields have changed
 ```
 
-Fig. 6: Sequence diagram depicting the re-signing procedure.
+*Fig. 7: Sequence diagram depicting the re-signing procedure.*
 
 ### 8.3 Moving data
 
@@ -1020,7 +1049,7 @@ sb->>ab: Data import successful
 aa-xsa: Deactivate account
 ```
 
-Fig. 7: Sequence diagram depicting the data moving process.
+*Fig. 8: Sequence diagram depicting the data moving process.*
 
 ---
 
