@@ -835,15 +835,24 @@ to verify the signature fails.*
 As described in previous sections, actors must hold on to their past identity key pairs, should they
 want or need to migrate their account.
 
-Home servers must offer a way for actors to upload and recover their private identity keys. Private
-identity keys should be encrypted with a strong password and symmetric encryption schemes such as AES,
-before being uploaded to the server. Authenticated actors can download their
-encrypted private identity keys from the server at any time. All encryption and decryption operations
-must be done client-side. A password based key derivation function (PBKDF) should be used to derive
-the encryption key from the password used to encrypt the private identity key.
+Home servers must offer a way for actors to upload and recover their private identity keys while not 
+having access to the private keys themselves. Private identity keys must be encrypted with
+strong passphrases and encryption schemes such as AES, before being uploaded to the server.
+Authenticated actors can download their encrypted private identity keys from the server at any time.
+All encryption and decryption operations must be done client-side.
 
 If any uncertainty about the availability of the home server exists, clients should regularly
 download their encrypted private identity keys from the server and store them in a secure location.
+
+Whether an actor uploads their encrypted private identity keys to the server is their own choice.
+It is also recommended backing up the encrypted private identity keys in some other secure location.
+
+The APIs for managing encrypted private identity keys are documented in the API documentation.
+
+- [Upload encrypted private key material](/APIs/Core/Routes%3A Registration needed/#post-upload-encrypted-private-key-material)
+- [Get encrypted private key material](/APIs/Core/Routes%3A Registration needed/#get-get-encrypted-private-key-material)
+- [Delete encrypted private key material](/APIs/Core/Routes%3A Registration needed/#delete-delete-encrypted-private-key-material)
+- [Get encrypted private key material upload size limit](/APIs/Core/Routes%3A Registration needed/#options-get-encrypted-private-key-material-upload-size-limit)
 
 ### 7.4 Best practices
 
