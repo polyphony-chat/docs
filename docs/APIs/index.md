@@ -1,7 +1,8 @@
 ---
-weight: 1
+weight: 10
 ---
 
 # APIs
 
-TODO: Add content
+- [Core](./Core/index.md)
+- [Auth](./Auth/index.md)
