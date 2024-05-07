@@ -77,10 +77,10 @@ low as 800 bytes, depending on the server configuration.
 
 ##### Body
 
-| Name                                                            | Type                         | Description                                                            |
-| --------------------------------------------------------------- | ---------------------------- | ---------------------------------------------------------------------- |
-| `key_data`                                                      | String, PEM, `PublicKeyInfo` | The encrypted private key material, PEM-encoded                        |
-| `serial_number`:material-help:{title="This field is optional."} | String                       | The serial number of the ID-Cert this key material is associated with. |
+| Name                                                            | Type                                 | Description                                                            |
+| --------------------------------------------------------------- | ------------------------------------ | ---------------------------------------------------------------------- |
+| `key_data`                                                      | String, PEM-encoded `PrivateKeyInfo` | The encrypted private key material, PEM-encoded                        |
+| `serial_number`:material-help:{title="This field is optional."} | String                               | The serial number of the ID-Cert this key material is associated with. |
 
 ```json
 {
@@ -154,7 +154,7 @@ are provided, the server will return all key material that the client has upload
 
     | Type             | Description                                                                           |
     | ---------------- | ------------------------------------------------------------------------------------- |
-    | Array of objects | The encrypted private key material, PEM-encoded, and the corresponding serial number. |
+    | Array of objects | The encrypted private key material, PEM-encoded `PrivateKeyInfo`, and the corresponding serial number. |
 
     ```json
     [
