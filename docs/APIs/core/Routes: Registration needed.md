@@ -77,16 +77,24 @@ low as 800 bytes, depending on the server configuration.
 
 ##### Body
 
+Array of objects, each containing the following fields:
+
 | Name                                                            | Type                                 | Description                                                            |
 | --------------------------------------------------------------- | ------------------------------------ | ---------------------------------------------------------------------- |
 | `key_data`                                                      | String, PEM-encoded `PrivateKeyInfo` | The encrypted private key material, PEM-encoded                        |
 | `serial_number`:material-help:{title="This field is optional."} | String                               | The serial number of the ID-Cert this key material is associated with. |
 
 ```json
-{
-    "key_data": "LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWS0tLS0tCk1JSUJqRENDQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYm...",
-    "serial_number": "123456789"
-}
+[
+    {
+        "key_data": "LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWS0tLS0tCk1JSUJqRENDQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYm...",
+        "serial_number": "123456789"
+    },
+    {
+        "key_data": "LS01tLS2aXJUQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYmGa7cadSH9vAVKOMb478bnm43v5VS789...",
+        "serial_number": "987654321"
+    }
+]
 ```
 
 #### Response
