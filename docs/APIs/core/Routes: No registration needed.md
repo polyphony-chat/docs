@@ -90,7 +90,7 @@ This request has no body.
 
 ### <span class="request-h"><span class="request request-get">GET</span> Server Public ID-Cert</span>
 
-`/.p2/core/v1/key/server`
+`/.p2/core/v1/idcert/server`
 
 Request the server's public identity certificate.
 
@@ -172,7 +172,7 @@ Request the server's public key.
 
 ### <span class="request-h"><span class="request request-get">GET</span> Actor ID-Cert(s)</span>
 
-`/.p2/core/v1/key/actor/:fid`
+`/.p2/core/v1/idcert/actor/:fid`
 
 Request the ID-Certs of a specific actor. The specified actor must be registered on this
 server.
@@ -234,7 +234,7 @@ server.
 
 ---
 
-### <span class="request-h"><span class="request request-post">POST</span> Update session ID-Cert [:material-lock-outline:](#authorization "Authorization required")</span>
+### <span class="request-h"><span class="request request-put">PUT</span> Update session ID-Cert [:material-lock-outline:](#authorization "Authorization required")</span>
 
 `/.p2/core/v1/session/idcert/extern`
 
