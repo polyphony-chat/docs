@@ -1327,13 +1327,13 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#post-update-session-id-cert" class="md-nav__link">
+  <a href="#put-update-session-id-cert" class="md-nav__link">
     <span class="md-ellipsis">
-      POST Update session ID-Cert
+      PUT Update session ID-Cert
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="POST Update session ID-Cert">
+    <nav class="md-nav" aria-label="PUT Update session ID-Cert">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1965,13 +1965,13 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#post-update-session-id-cert" class="md-nav__link">
+  <a href="#put-update-session-id-cert" class="md-nav__link">
     <span class="md-ellipsis">
-      POST Update session ID-Cert
+      PUT Update session ID-Cert
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="POST Update session ID-Cert">
+    <nav class="md-nav" aria-label="PUT Update session ID-Cert">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2254,7 +2254,7 @@ This Page only includes routes, for which a client does not need a "Client-Home 
 </div>
 <hr />
 <h3 id="get-server-public-id-cert"><span class="request-h"><span class="request request-get">GET</span> Server Public ID-Cert</span><a class="headerlink" href="#get-server-public-id-cert" title="Permanent link">&para;</a></h3>
-<p><code>/.p2/core/v1/key/server</code></p>
+<p><code>/.p2/core/v1/idcert/server</code></p>
 <p>Request the server's public identity certificate.</p>
 <h4 id="request_2">Request<a class="headerlink" href="#request_2" title="Permanent link">&para;</a></h4>
 <h5 id="body_4">Body<a class="headerlink" href="#body_4" title="Permanent link">&para;</a></h5>
@@ -2364,7 +2364,7 @@ This Page only includes routes, for which a client does not need a "Client-Home 
 </div>
 <hr />
 <h3 id="get-actor-id-certs"><span class="request-h"><span class="request request-get">GET</span> Actor ID-Cert(s)</span><a class="headerlink" href="#get-actor-id-certs" title="Permanent link">&para;</a></h3>
-<p><code>/.p2/core/v1/key/actor/:fid</code></p>
+<p><code>/.p2/core/v1/idcert/actor/:fid</code></p>
 <p>Request the ID-Certs of a specific actor. The specified actor must be registered on this
 server.</p>
 <h4 id="request_4">Request<a class="headerlink" href="#request_4" title="Permanent link">&para;</a></h4>
@@ -2459,7 +2459,7 @@ ID-Cert in the <code>idcerts</code> array.</p>
 </div>
 </div>
 <hr />
-<h3 id="post-update-session-id-cert"><span class="request-h"><span class="request request-post">POST</span> Update session ID-Cert <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a></span><a class="headerlink" href="#post-update-session-id-cert" title="Permanent link">&para;</a></h3>
+<h3 id="put-update-session-id-cert"><span class="request-h"><span class="request request-put">PUT</span> Update session ID-Cert <a href="#authorization" title="Authorization required"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 1-2-2c0-1.11.89-2 2-2a2 2 0 0 1 2 2 2 2 0 0 1-2 2m6 3V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10c0-1.11.89-2 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></span></a></span><a class="headerlink" href="#put-update-session-id-cert" title="Permanent link">&para;</a></h3>
 <p><code>/.p2/core/v1/session/idcert/extern</code></p>
 <p>Lets a foreign server know that the ID-Cert of this session has changed.</p>
 <h4 id="request_5">Request<a class="headerlink" href="#request_5" title="Permanent link">&para;</a></h4>
@@ -2671,7 +2671,7 @@ The requested actor must be registered on this server.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-05-07T13:28:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-05-07</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-05-25T17:11:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-05-25</span>
   </span>
 
     
