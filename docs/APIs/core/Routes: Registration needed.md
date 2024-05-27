@@ -144,14 +144,12 @@ are provided, the server will return all key material that the client has upload
 
 ##### Body
 
-| Name                                                             | Type            | Description                                                      |
-| ---------------------------------------------------------------- | --------------- | ---------------------------------------------------------------- |
-| `serial_numbers`:material-help:{title="This field is optional."} | Array of String | The serial numbers of the ID-Certs to retrieve key material for. |
+| Type            | Description                                                      |
+| --------------- | ---------------------------------------------------------------- |
+| Array of String | The serial number(s) of the ID-Certs to delete key material for. |
 
 ```json
-{
-    "serial_numbers": ["123456789", "987654321"]
-}
+["123456789", "987654321"]
 ```
 
 #### Response
@@ -160,21 +158,12 @@ are provided, the server will return all key material that the client has upload
 
     ##### Body
 
-    | Type             | Description                                                                           |
-    | ---------------- | ------------------------------------------------------------------------------------- |
-    | Array of objects | The encrypted private key material, PEM-encoded `PrivateKeyInfo`, and the corresponding serial number. |
+    | Type            | Description                                                      |
+    | --------------- | ---------------------------------------------------------------- |
+    | Array of String | The serial number(s) of the ID-Certs to delete key material for. |
 
     ```json
-    [
-        {
-            "key_data": "LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWS0tLS0tCk1JSUJqRENDQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYm...",
-            "serial_number": "123456789"
-        },
-        {
-            "key_data": "LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWS0tLS0tCk1JSUJqRENDQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYm...",
-            "serial_number": "987654321"
-        }
-    ]
+    ["123456789", "987654321"]
     ```
 
 === "404 Not Found"
