@@ -5,6 +5,10 @@ weight: 2
 
 # P2 Protocol Extension: polyproto-auth
 
+**v1.0.0-alpha.1** - Treat this as an unfinished draft.
+[Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
+The version number specified here also applies to the API documentation.
+
 The `polyproto-auth` extension is a protocol extension for polyproto that provides a basic
 authentication mechanism to register new users and authenticate existing users.
 

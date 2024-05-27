@@ -8,6 +8,7 @@ weight: 1
 !!! bug "TODO"
 
     TODO: This is a work in progress. Chat-related content is currently being migrated over from the polyproto-core specification.
+    This document is not at all complete.
 
 ## 4. Federating direct/group messages
 
