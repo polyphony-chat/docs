@@ -205,25 +205,15 @@ server.
 
     ##### Body
 
-    | Type                                | Description                                                          |
-    | ----------------------------------- | -------------------------------------------------------------------- |
-    | JSON-Array of Strings (PEM, Base64) | The actor's public identity certificate(s), encoded in PEM (Base64). |
-    | JSON-Array of boolean               | Whether the ID-Cert has been manually invalidated                    |
+    JSON-Array of Object(s), each object containing "id_cert" (PEM encoded ID-Cert) and "invalidated" (boolean).
 
     ```json
-    {
-        "idcerts": [
-            "-----BEGIN CERTIFICATE-----
-            mQINBGSDs58BEADCXP1ArorBtOvGnQdAD26gsOMasyLMqnJyUp8XXCdmTx5+gREs
-            vtItmjIshHU6CLUyTwO2IqIb2Fds+AmDsdM1Qx/vM0fVtPAS13T3Tu9rknldJvvN
-            GyT3urrgvZ1leqQnwvuHd3WMdtgQ29lc7F/XaP4v2RIlqUiV+bnBoe/6LL7HXTaW
-            zy2oKXr/odOD4+476J5APxxXCWVLXr3qfAXmSBQERznYuuRmhyL...
-            -----END CERTIFICATE-----"
-        ],
-        "invalidated": [
-            false
-        ]
-    }
+    [
+        {
+            "id_cert": " -----BEGIN CERTIFICATE-----MIIH/TC...",
+            "invalidated": false
+        }
+    ]
     ```
 
     !!! note
