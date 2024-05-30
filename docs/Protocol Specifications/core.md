@@ -5,7 +5,7 @@ weight: 0
 
 # polyproto Specification
 
-**v1.0.0-alpha.10** - Treat this as an unfinished draft.
+**v1.0.0-alpha.11** - Treat this as an unfinished draft.
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 The version number specified here also applies to the API documentation.
 
@@ -532,7 +532,8 @@ The identity descriptor must be unique for each certificate issued by a home ser
 must meet all of the following requirements:
 
 - Identity descriptor (IDD) must have "common name" attribute. If the ID-Cert is for an actor, the
-  common name must be the federation ID of the actor. If the ID-Cert is a self-signed home server
+  common name must be the local name of the actor. In the case of an actor with an FID of
+  `xenia@example.com`, the "common name" would be `xenia`. If the ID-Cert is a self-signed home server
   certificate, the "common name" attribute must not be present.
 - Must have at least one domain component, specifying the home servers' FQDN
   (fully qualified domain name).
