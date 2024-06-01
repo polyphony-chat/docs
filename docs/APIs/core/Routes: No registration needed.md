@@ -187,10 +187,10 @@ server.
 
 ##### Body
 
-| Name                                                          | Type   | Description                                                                                                   |
-| ------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------- |
-| `timestamp` :material-help:{title="This field is optional."}  | String | UNIX-Timestamp. If specified, the server will return the ID-Cert(s) which the actor had at the specified time |
-| `session_id` :material-help:{title="This field is optional."} | String | Request the ID-Cert for a specific session ID.                                                                |
+| Name                                                          | Type                    | Description                                                                                                   |
+| ------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `timestamp` :material-help:{title="This field is optional."}  | Unsigned 64-Bit Integer | UNIX-Timestamp. If specified, the server will return the ID-Cert(s) which the actor had at the specified time |
+| `session_id` :material-help:{title="This field is optional."} | String                  | Request the ID-Cert for a specific session ID.                                                                |
 
 ```json
 {
