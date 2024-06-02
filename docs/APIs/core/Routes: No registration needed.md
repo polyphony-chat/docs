@@ -238,7 +238,7 @@ Lets a foreign server know that the ID-Cert of this session has changed.
 | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | String, PEM, Base64 | The new [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) for this session ID. |
 
-```json
+```text
 [...]
 ```
 
