@@ -5,7 +5,7 @@ weight: 0
 
 # polyproto Specification
 
-**v1.0.0-alpha.12** - Treat this as an unfinished draft.
+**v1.0.0-alpha.13** - Treat this as an unfinished draft.
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 The version number specified here also applies to the API documentation.
 
@@ -22,34 +22,30 @@ The version number specified here also applies to the API documentation.
     - [4.2 Challenge strings](#42-challenge-strings)
     - [4.3 Protection against misuse by malicious home servers](#43-protection-against-misuse-by-malicious-home-servers)
   - [5. Federation IDs (FIDs)](#5-federation-ids-fids)
-  - [6. Encryption](#6-encryption)
-    - [6.1. KeyPackages](#61-keypackages)
-      - [6.1.1 Last resort KeyPackages](#611-last-resort-keypackages)
-    - [6.2 Initial authentication](#62-initial-authentication)
-    - [6.3 Multi-device support](#63-multi-device-support)
-  - [7. Cryptography and ID-Certs](#7-cryptography-and-id-certs)
-    - [7.1 Home server signed certificates for public client identity keys (ID-Cert)](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
-      - [7.1.1 Structure of an ID-Cert](#711-structure-of-an-id-cert)
-        - [7.1.1.1 Identity Descriptors (IDDs)](#7111-identity-descriptors-idds)
-        - [7.1.1.2 Extensions and constraints](#7112-extensions-and-constraints)
-        - [7.1.1.3 Session IDs](#7113-session-ids)
-      - [7.1.2 Necessity of ID-Certs](#712-necessity-of-id-certs)
-      - [7.1.3 Key rotation](#713-key-rotation)
-      - [7.1.4 Early revocation of ID-Certs](#714-early-revocation-of-id-certs)
-    - [7.2 Actor identity keys and message signing](#72-actor-identity-keys-and-message-signing)
-      - [7.2.1 Message verification](#721-message-verification)
-    - [7.3 Private key loss prevention and private key recovery](#73-private-key-loss-prevention-and-private-key-recovery)
-    - [7.4 Best practices](#74-best-practices)
-      - [7.4.1 Signing keys and ID-Certs](#741-signing-keys-and-id-certs)
-      - [7.4.2 Home server operation and design](#742-home-server-operation-and-design)
-      - [7.4.3 Private key loss prevention and private key recovery](#743-private-key-loss-prevention-and-private-key-recovery)
-  - [8. Account migration](#8-account-migration)
-    - [8.1 Challenges and trust](#81-challenges-and-trust)
-    - [8.2 Reassigning ownership](#82-reassigning-ownership)
-      - [8.2.1 Migrating an actor](#821-migrating-an-actor)
-      - [8.2.2 Re-signing data](#822-re-signing-data)
-    - [8.3 Moving data](#83-moving-data)
+  - [6. Cryptography and ID-Certs](#6-cryptography-and-id-certs)
+    - [6.1 Home server signed certificates for public client identity keys (ID-Cert)](#61-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
+      - [6.1.1 Structure of an ID-Cert](#611-structure-of-an-id-cert)
+        - [6.1.1.1 Identity Descriptors (IDDs)](#6111-identity-descriptors-idds)
+        - [6.1.1.2 Extensions and constraints](#6112-extensions-and-constraints)
+        - [6.1.1.3 Session IDs](#6113-session-ids)
+      - [6.1.2 Necessity of ID-Certs](#612-necessity-of-id-certs)
+      - [6.1.3 Key rotation](#613-key-rotation)
+      - [6.1.4 Early revocation of ID-Certs](#614-early-revocation-of-id-certs)
+    - [6.2 Actor identity keys and message signing](#62-actor-identity-keys-and-message-signing)
+      - [6.2.1 Message verification](#621-message-verification)
+    - [6.3 Private key loss prevention and private key recovery](#63-private-key-loss-prevention-and-private-key-recovery)
+    - [6.4 Best practices](#64-best-practices)
+      - [6.4.1 Signing keys and ID-Certs](#641-signing-keys-and-id-certs)
+      - [6.4.2 Home server operation and design](#642-home-server-operation-and-design)
+      - [6.4.3 Private key loss prevention and private key recovery](#643-private-key-loss-prevention-and-private-key-recovery)
+  - [7. Account migration](#7-account-migration)
+    - [7.1 Challenges and trust](#71-challenges-and-trust)
+    - [7.2 Reassigning ownership](#72-reassigning-ownership)
+      - [7.2.1 Migrating an actor](#721-migrating-an-actor)
+      - [7.2.2 Re-signing data](#722-re-signing-data)
+    - [7.3 Moving data](#73-moving-data)
 
+// TODO: Rework this introductory section
 The polyproto protocol is a home-server-based identity federation protocol specification intended
 for use in applications where actor identity is needed. polyproto focuses on federated identity,
 and apart from the usage of Messaging Layer Security (MLS) for encryption, does not specify any
@@ -95,10 +91,9 @@ polyproto operates under the following trust assumptions:
 2. Users only distrust their home servers in case of irregularities or conflicting information.
 3. In a federated context, users trust foreign servers with all unencrypted data they send
    to them.
-4. Users trust MLS channel or group members with their data and attached metadata.
-5. Foreign servers cannot impersonate users without explicit consent.
-6. Users rely on their home servers for identity key certification, without the home servers
-7. possessing the identity.
+4. Foreign servers cannot impersonate users without explicit consent.
+5. Users rely on their home servers for identity key certification, without the home servers
+6. possessing the identity.
 
 ## 3. APIs and communication protocols
 
@@ -156,7 +151,7 @@ end
 
 ```
 
-*Fig. 1: Sequence diagram of a WebSocket connection to a polyproto server.* 
+*Fig. 1: Sequence diagram of a WebSocket connection to a polyproto server.*
 
 !!! info
 
@@ -204,8 +199,8 @@ The federation of actor identities allows users to engage with foreign servers a
 home servers. For example, in polyproto-chat, an actor can send direct messages to users from a
 different server or join the Guilds of other servers.
 
-Identity certificates defined in sections [#7. Cryptography and ID-Certs](#7-cryptography-and-id-certs)
-and [#7.1 Home server signed certificates for public client identity keys (ID-Cert)](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
+Identity certificates defined in sections [#6. Cryptography and ID-Certs](#6-cryptography-and-id-certs)
+and [#6.1 Home server signed certificates for public client identity keys (ID-Cert)](#61-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
 are employed to sign messages that the actor sends to other servers.
 
 !!! note "Using one identity for several polyproto implementations"
@@ -330,9 +325,10 @@ excluding the new session. The `NEW_SESSION` event's stored data can be accessed
 
     With proper safety precautions and strong encryption, it is extremely unlikely for a malicious
     server to be able to listen in on encrypted conversations, without all users in that 
-    conversation noticing. MLS's forward secrecy guarantees ensure that, in theory, a malicious
-    session cannot decrypt any messages sent before its' join epoch. If secrecy or confidentiality
-    are of concern, users should host their own home server and use end-to-end encryption.
+    conversation noticing. When implementing the polyproto-mls P2 extension, MLS's forward secrecy
+    guarantees ensure that, in theory, a malicious session cannot decrypt any messages sent before
+    its' join epoch. If secrecy or confidentiality are of concern, users should host their own home
+    server and use end-to-end encryption, such as polyproto-mls.
 
 ## 5. Federation IDs (FIDs)
 
@@ -355,116 +351,12 @@ The following regular expression can be used to validate actor IDs: `\b([a-z0-9.
     indicates that the federation ID is formatted correctly.
 
 For all intents and purposes, a federation ID is a display of identity. However, verifying identity
-claims is crucial. See [Section #7.1](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
-and [Section #7.2.2](#721-message-verification) for more information.
+claims is crucial. See [Section #6.1](#61-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
+and [Section #6.2.2](#621-message-verification) for more information.
 
-## 6. Encryption
+## 6. Cryptography and ID-Certs
 
-!!! abstract "About MLS"
-
-    Polyproto offers end-to-end encryption for messages via
-    [Message Layer Security (MLS)](https://messaginglayersecurity.rocks/). polyproto compliant
-    servers take on the role of both an Authentication Service and a Delivery Service in the context
-    of MLS.
-
-    MLS is a cryptographic protocol that provides confidentiality, integrity, and authenticity
-    guarantees for group messaging applications. It builds on top of the
-    [Double Ratchet Algorithm](https://signal.org/docs/specifications/doubleratchet/) and
-    [X3DH](https://signal.org/docs/specifications/x3dh/) to provide these security guarantees.
-
-Implementations of polyproto can opt to support encryption to secure communication channels.
-The selected security protocol for all polyproto implementations is the Messaging Layer Security
-protocol, given its feasibility within the implementation context. MLS inherently supports
-negotiation of protocol versions, cipher suites, extensions, credential types, and extra proposal
-types. For two implementations of polyproto to be compatible with each other in the context of
-encryption, they must have overlapping capabilities in these areas.
-
-The following sections explain the additional behavior that polyproto implementations utilizing MLS
-must implement.
-
-### 6.1. KeyPackages
-
-!!! warning
-
-    The sections 6.1 and 6.1.1 are not exhaustive and do not cover all aspects of MLS and
-    KeyPackages. They exist solely to give a general overview of how KeyPackages are used in
-    polyproto. Please read and understand the MLS specification (RFC9420) to implement polyproto
-    correctly.
-
-A polyproto compliant server must store KeyPackages for all clients registered on it. The
-KeyPackage is a JSON object that contains the following information:
-
-```json
-{
-  "protocol_version": "<Version>",
-  "cipher_suite": "<CipherSuite>",
-  "init_key": "<HPKEPublicKey>",
-  "leaf_node": "<LeafNode>",
-  "extensions": "<Extensions>",
-}
-```
-
-- `protocol_version` denotes the MLS protocol version.
-- `cipher_suite` indicates the used cipher suite for this KeyPackage. Note that a server can store
-  many KeyPackages for a single actor, to support various cipher suites.
-- `init_key` is a public key for encrypting initial group secrets.
-- `leaf_node` is a signed `LeafNodeTBS` struct as defined in section `7.2. Leaf Node Contents` in
-  RFC9420. A `LeafNode` has information representing a users' identity, in the form of the users'
-  **ID-Cert** for a given session or client. The `LeafNodeTBS` is signed by using the actor's
-  private identity key.
-- `extensions` can be used to add additional information to the protocol, as defined in section
-  `13. Extensibility` in RFC9420.
-
-A KeyPackage is supposed to be used only once. Servers must ensure the following things:
-
-- That any KeyPackage is not given out to clients more than once.
-- That the `init_key` values of all KeyPackages are unique, as the `init_key` is what makes the
-  KeyPackage one-time use.
-- That the contents of the `LeafNode` and the `init_key` were signed by the actor who submitted the KeyPackage.
-
-Because KeyPackages are supposed to be used only once, servers should retain multiple valid
-KeyPackages for each actor, alerting clients when their stock is running low. Consult the
-["Registration needed"-API](/APIs/Core/Routes%3A Registration needed) for more information about
-how servers should request new KeyPackages from clients. Servers should delete KeyPackages when
-their validity lapses.
-
-Servers only store KeyPackages for home server users, not for foreign users.
-
-!!! note "About keys"
-
-    It is recommended that keys are generated using the `EdDSA` signature scheme, however, other
-    signature schemes may be used as well.
-    Consider, that intercompatibility can only be guaranteed if all communicating parties have an
-    overlapping set of supported signature schemes.
-
-#### 6.1.1 Last resort KeyPackages
-
-A "last resort" KeyPackage, which, contrasting regular KeyPackages, is reusable, is issued when a
-server runs out of regular KeyPackages for an actor. This is to prevent `DoS` attacks, where
-malicious clients deplete all KeyPackages for a given actor, blocking that actor's inclusion into
-encrypted groups or guild channels.
-
-Servers are to replace a "last resort" KeyPackage after it has been used at least once by requesting
-one from the client.
-
-### 6.2 Initial authentication
-
-During the initial authentication process, a client must provide at least one
-[KeyPackage](#61-keypackages) and one ["last resort" KeyPackage](#611-last-resort-keypackages) to
-the server, in addition to the required registration information.
-
-The public identity key inside the `LeafNode` of this KeyPackage corresponds to the public identity
-key found inside a clients' ID-Cert.
-
-### 6.3 Multi-device support
-
-polyproto servers and clients employing encryption must support multi-device use. The MLS protocol
-assigns each device a unique `LeafNode` and prohibits key sharing across devices. Each device offers
-distinct KeyPackages and an own ID-Cert.
-
-## 7. Cryptography and ID-Certs
-
-### 7.1 Home server signed certificates for public client identity keys (ID-Cert)
+### 6.1 Home server signed certificates for public client identity keys (ID-Cert)
 
 The ID-Cert, a [X.509](https://en.wikipedia.org/wiki/X.509) certificate, validates a public actor
 identity key. It is an actor-generated CSR ([Certificate Signing Request](https://en.wikipedia.org/wiki/Certificate_signing_request)),
@@ -486,7 +378,7 @@ An ID-CSR includes the following information, according to the X.509 standard:
 
 - The public identity key of the client.
 - An identity descriptor (IDD), describing the actor the certificate is issued to. The IDD must be
-  formatted according to [Section 7.1.1.1](#7111-identity-descriptors-idds).
+  formatted according to [Section 6.1.1.1](#6111-identity-descriptors-idds).
 - The signature algorithm used to sign the certificate.
 - The signature of the certificate, generated by using the entities' private identity key.
 
@@ -500,7 +392,7 @@ When signing an ID-CSR, the home server must verify the correctness of all claim
 
 Actors must use a separate ID-Cert for each client or session they use.
 
-#### 7.1.1 Structure of an ID-Cert
+#### 6.1.1 Structure of an ID-Cert
 
 The ID-Cert is a valid X.509 certificate, and as such, it has a specific structure. The structure of
 an X.509 certificate is defined in [RFC5280](https://tools.ietf.org/html/rfc5280).
@@ -510,7 +402,7 @@ ID-Certs have the following structure:
 
 | Field Description                                                                            | Special requirements, if any                                                                    | X.509 equivalent                                         |
 | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| Correctly formatted Name attribute, according to [#7.1.1.1](#7111-identity-descriptors-idds) | [Identity descriptor](#7111-identity-descriptors-idds)                                          | Issuer Name                                              |
+| Correctly formatted Name attribute, according to [#6.1.1.1](#6111-identity-descriptors-idds) | [Identity descriptor](#6111-identity-descriptors-idds)                                          | Issuer Name                                              |
 | A unique identifier for the certificate, used by the CA to identify this certificate.        | Must be unique across all certificates issued by a home server.                                 | Serial Number                                            |
 | The algorithm used to sign the certificate.                                                  |                                                                                                 | Certificate Signature Algorithm & Signature Algorithm ID |
 | The signature of the certificate, generated by using the home servers' private identity key. |                                                                                                 | Certificate Signature                                    |
@@ -520,9 +412,9 @@ ID-Certs have the following structure:
 | The public identity key of the client.                                                       |                                                                                                 | Subject Public Key Info: Subject Public Key              |
 | The public key algorithm used to generate the client's public identity key.                  |                                                                                                 | Subject Public Key Info: Public Key Algorithm            |
 | The session ID of the client.                                                                | No two valid certificates for one session ID can exist. Session IDs have to be unique per user. | Subject Unique Identifier                                |
-| Extensions                                                                                   | [Extensions and Constraints](#7112-extensions-and-constraints)                                  | Extensions                                               |
+| Extensions                                                                                   | [Extensions and Constraints](#6112-extensions-and-constraints)                                  | Extensions                                               |
 
-##### 7.1.1.1 Identity Descriptors (IDDs)
+##### 6.1.1.1 Identity Descriptors (IDDs)
 
 polyproto Identity Descriptors are a subset of the X.509 certificate's distinguished name. [Distinguished
 Names (`DNs`)](https://ldap.com/ldap-dns-and-rdns/), according to the LDAP Data Interchange Format (LDIF).
@@ -549,7 +441,7 @@ must meet all of the following requirements:
 If the home server does not have a subdomain or top level domain, the `dc` fields for these
 components should be omitted.
 
-##### 7.1.1.2 Extensions and constraints
+##### 6.1.1.2 Extensions and constraints
 
 The following constraints must be met by ID-Certs:
 
@@ -567,7 +459,7 @@ The following constraints must be met by ID-Certs:
 are critical extensions. Therefore, if any of these X.509 extensions are present, they must be marked
 as "critical". ID-Certs not adhering to this standard must be treated as malformed.
 
-##### 7.1.1.3 Session IDs
+##### 6.1.1.3 Session IDs
 
 The session ID is an [`ASN.1`](https://en.wikipedia.org/wiki/ASN.1) [`Ia5String`](https://en.wikipedia.org/wiki/IA5STRING)
 chosen by the actor requesting the ID-Cert. It is used to uniquely identify a session. The session
@@ -583,7 +475,7 @@ Session IDs are 1 - 32 characters long and. They can contain any character permi
 Session IDs can be used to identify a session across devices, or to detect if a new, perhaps
 malicious session has been created.
 
-#### 7.1.2 Necessity of ID-Certs
+#### 6.1.2 Necessity of ID-Certs
 
 The addition of a certificate is necessary to prevent a malicious foreign server from abusing public
 identity key caching to impersonate an actor. Consider the following example, which employs foreign
@@ -601,7 +493,7 @@ server public identity key caching, but no home server issued identity key certi
 The above scenario is not possible with home server issued identity key certificates, as the
 malicious server cannot generate an identity key pair for Alice, which is signed by Server A.
 
-#### 7.1.3 Key rotation
+#### 6.1.3 Key rotation
 
 A session can choose to rotate their ID-Cert at any time. This is done by generating a new identity
 key pair, using the new private key to generate a new CSR, and sending the new Certificate Signing
@@ -626,8 +518,8 @@ they send to servers. Likewise, a client should also keep all of its own ID-Cert
 perpetually, to potentially verify its identity in case of a migration.
 
 Users must hold on to all of their past key pairs, as they might need them to
-[migrate their account in the future](#8-account-migration). How this is done is specified in
-[section 7.3: Private key loss prevention and private key recovery](#73-private-key-loss-prevention-and-private-key-recovery).
+[migrate their account in the future](#7-account-migration). How this is done is specified in
+[section 6.3: Private key loss prevention and private key recovery](#63-private-key-loss-prevention-and-private-key-recovery).
 
 ```mermaid
 sequenceDiagram
@@ -651,19 +543,11 @@ from their home server.*
 A server identity key's lifetime might come to an early or unexpected end, perhaps due to some sort
 of leak of the corresponding private key. When this happens, the server should generate a new
 identity key pair and broadcast the
-[`SERVER_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#server_key_change) and
-[`LOW_KEY_PACKAGES`](/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages) gateway events
-to all clients. Clients must request new ID-Certs (through a CSR), and respond appropriately to the
-[`LOW_KEY_PACKAGES`](/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages)
-event. Should a client be offline at the time of the key change, it must be informed of the change
-upon reconnection.
+[`SERVER_KEY_CHANGE`](/docs/APIs/Core/WebSockets/gateway_events.md#server_key_change) gateway event
+to all clients. Clients must request new ID-Certs through a CSR. Should a client be offline at the time
+of the key change, it must be informed of the change upon reconnection.
 
-!!! note
-
-    A `LOW_KEY_PACKAGES` event is only sent by servers which use MLS encryption. Server/Clients not
-    implementing MLS encryption can safely ignore this event.
-
-#### 7.1.4 Early revocation of ID-Certs
+#### 6.1.4 Early revocation of ID-Certs
 
 !!! abstract "A note about CRLs"
 
@@ -693,7 +577,7 @@ must revoke the session associated with the revoked ID-Cert. Revoking an ID-Cert
     The above paragraph is true for both foreign and home servers. The API routes associated with
     revoking an ID-Cert are the same regardless of the server type.
 
-### 7.2 Actor identity keys and message signing
+### 6.2 Actor identity keys and message signing
 
 As briefly mentioned section [#4](#4-federated-identity), users must hold on to an identity key pair
 at all times. This key pair is used to represent an actor's identity and to verify message integrity,
@@ -702,10 +586,10 @@ generated by the actor. An actor-generated identity key certificate signing requ
 to the actor's home server when first connecting to the server with a new session, or when rotating
 keys. The key is stored in the client's local storage. Upon receiving a new identity key CSR, a
 home server will sign this CSR and send the resulting ID-Cert to the client. This certificate is
-proof that the home server attests to the clients key. Read [section 7.1](#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
+proof that the home server attests to the clients key. Read [section 6.1](#61-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
 for more information about the certificate.
 
-#### 7.2.1 Message verification
+#### 6.2.1 Message verification
 
 To ensure message integrity through signing, clients and servers must verify message signatures.
 This involves cross-checking the message signature against the sender's ID-Cert and the senders'
@@ -831,7 +715,7 @@ to verify the signature fails.*
     identity key for some reason. However, if the signature cannot be verified at a certain time,
     this information must be communicated to the actor performing the verification.
 
-### 7.3 Private key loss prevention and private key recovery
+### 6.3 Private key loss prevention and private key recovery
 
 As described in previous sections, actors must hold on to their past identity key pairs, should they
 want or need to migrate their account.
@@ -855,9 +739,9 @@ The APIs for managing encrypted private identity keys are documented in the API 
 - [Delete encrypted private key material](/APIs/Core/Routes%3A Registration needed/#delete-delete-encrypted-private-key-material)
 - [Get encrypted private key material upload size limit](/APIs/Core/Routes%3A Registration needed/#options-get-encrypted-private-key-material-upload-size-limit)
 
-### 7.4 Best practices
+### 6.4 Best practices
 
-#### 7.4.1 Signing keys and ID-Certs
+#### 6.4.1 Signing keys and ID-Certs
 
 - Actor and client signing keys should be rotated regularly (every 20-60 days). This is to ensure
   that a compromised key can only be used for a limited amount of time. Server identity keys should be
@@ -873,17 +757,17 @@ The APIs for managing encrypted private identity keys are documented in the API 
   changed, the client/server in question should update their cached ID-Cert for the actor in
   question, taking into account the session ID of the new identity key pair.
 
-#### 7.4.2 Home server operation and design
+#### 6.4.2 Home server operation and design
 
 - Use a caching layer for your home server to handle the potentially large amount of requests for
   ID-Certs without putting unnecessary strain on the database.
 
-#### 7.4.3 Private key loss prevention and private key recovery
+#### 6.4.3 Private key loss prevention and private key recovery
 
 - It is a good idea for home servers to limit the upload size and available upload slots for encrypted
   private identity keys.
 
-## 8. Account migration
+## 7. Account migration
 
 Account migration allows users to move their account and associated data to another identity.
 This allows users to switch home servers while not losing ownership of messages sent by them.
@@ -893,7 +777,7 @@ distributed network to the new actor. Should the old actor want to additionally 
 the old home server to another home server, more steps are needed. Account migration is not considered
 a sensitive action.
 
-### 8.1 Challenges and trust
+### 7.1 Challenges and trust
 
 Changing the publicly visible ownership of actor data requires the chain of trust to be maintained.
 If an "old" account wants to change the publicly visible ownership of its data, the "old"
@@ -918,7 +802,7 @@ re-signed.
     signature of the quoted post, which would be undesirable. Edge cases like these are up to
     implementations to handle, and should be well documented.
 
-### 8.2 Reassigning ownership
+### 7.2 Reassigning ownership
 
 Transferring message ownership from an old to a new account, known as re-signing messages, necessitates
 coordination between the two accounts, initiated by the old account. To start, the old account sends
@@ -942,7 +826,7 @@ Migrating an account is done with the following steps:
    messages to the new account. To have all messages from a server re-signed, an actor must
    prove that they are the owner of the private keys used to sign the messages.
 
-#### 8.2.1 Migrating an actor
+#### 7.2.1 Migrating an actor
 
 ```mermaid
 sequenceDiagram
@@ -1000,7 +884,7 @@ where Server A is unreachable or uncooperative.*
     regarding the old account to the new server, which makes the process more seamless for other
     users. The "non-cooperative homeserver migration method" is only a last resort.
 
-#### 8.2.2 Re-signing data
+#### 7.2.2 Re-signing data
 
 ```mermaid
 sequenceDiagram
@@ -1024,7 +908,7 @@ sc->>sc: Verify that only FID and signature related fields have changed
 
 *Fig. 7: Sequence diagram depicting the re-signing procedure.*
 
-### 8.3 Moving data
+### 7.3 Moving data
 
 In cases of an imminent server shutdown or distrust in the old server, moving data from the old server
 is necessary to prevent data loss. This process extends upon the reassigning ownership process, and
