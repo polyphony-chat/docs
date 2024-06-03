@@ -32,4 +32,4 @@ requests==2.32.3
 six==1.16.0
 smmap==5.0.1
 urllib3==2.2.1
-watchdog==4.0.0
+watchdog==4.0.1
