@@ -12,7 +12,7 @@
         <link rel="prev" href="../../Overviews/core/">
       
       
-        <link rel="next" href="../chat/">
+        <link rel="next" href="../P2%20Extensions/auth/">
       
       
         <link rel="alternate" type="application/rss+xml" title="RSS feed" href="../../feed_rss_created.xml">
@@ -840,8 +840,6 @@
       
         
       
-        
-      
     
     
       
@@ -1061,29 +1059,56 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#6-encryption" class="md-nav__link">
+  <a href="#6-cryptography-and-id-certs" class="md-nav__link">
     <span class="md-ellipsis">
-      6. Encryption
+      6. Cryptography and ID-Certs
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="6. Encryption">
+    <nav class="md-nav" aria-label="6. Cryptography and ID-Certs">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#61-keypackages" class="md-nav__link">
+  <a href="#61-home-server-signed-certificates-for-public-client-identity-keys-id-cert" class="md-nav__link">
     <span class="md-ellipsis">
-      6.1. KeyPackages
+      6.1 Home server signed certificates for public client identity keys (ID-Cert)
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="6.1. KeyPackages">
+    <nav class="md-nav" aria-label="6.1 Home server signed certificates for public client identity keys (ID-Cert)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#611-last-resort-keypackages" class="md-nav__link">
+  <a href="#611-structure-of-an-id-cert" class="md-nav__link">
     <span class="md-ellipsis">
-      6.1.1 Last resort KeyPackages
+      6.1.1 Structure of an ID-Cert
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#612-necessity-of-id-certs" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1.2 Necessity of ID-Certs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#613-key-rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1.3 Key rotation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#614-early-revocation-of-id-certs" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1.4 Early revocation of ID-Certs
     </span>
   </a>
   
@@ -1095,79 +1120,19 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#62-initial-authentication" class="md-nav__link">
+  <a href="#62-actor-identity-keys-and-message-signing" class="md-nav__link">
     <span class="md-ellipsis">
-      6.2 Initial authentication
+      6.2 Actor identity keys and message signing
     </span>
   </a>
   
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#63-multi-device-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      6.3 Multi-device support
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-cryptography-and-id-certs" class="md-nav__link">
-    <span class="md-ellipsis">
-      7. Cryptography and ID-Certs
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="7. Cryptography and ID-Certs">
+    <nav class="md-nav" aria-label="6.2 Actor identity keys and message signing">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert" class="md-nav__link">
+  <a href="#621-message-verification" class="md-nav__link">
     <span class="md-ellipsis">
-      7.1 Home server signed certificates for public client identity keys (ID-Cert)
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="7.1 Home server signed certificates for public client identity keys (ID-Cert)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#711-structure-of-an-id-cert" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.1.1 Structure of an ID-Cert
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#712-necessity-of-id-certs" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.1.2 Necessity of ID-Certs
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#713-key-rotation" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.1.3 Key rotation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#714-early-revocation-of-id-certs" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.1.4 Early revocation of ID-Certs
+      6.2.1 Message verification
     </span>
   </a>
   
@@ -1179,70 +1144,46 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#72-actor-identity-keys-and-message-signing" class="md-nav__link">
+  <a href="#63-private-key-loss-prevention-and-private-key-recovery" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2 Actor identity keys and message signing
+      6.3 Private key loss prevention and private key recovery
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.2 Actor identity keys and message signing">
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.4 Best practices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.4 Best practices">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#721-message-verification" class="md-nav__link">
+  <a href="#641-signing-keys-and-id-certs" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2.1 Message verification
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#73-private-key-loss-prevention-and-private-key-recovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.3 Private key loss prevention and private key recovery
+      6.4.1 Signing keys and ID-Certs
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#74-best-practices" class="md-nav__link">
+  <a href="#642-home-server-operation-and-design" class="md-nav__link">
     <span class="md-ellipsis">
-      7.4 Best practices
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="7.4 Best practices">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#741-signing-keys-and-id-certs" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.4.1 Signing keys and ID-Certs
+      6.4.2 Home server operation and design
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#742-home-server-operation-and-design" class="md-nav__link">
+  <a href="#643-private-key-loss-prevention-and-private-key-recovery" class="md-nav__link">
     <span class="md-ellipsis">
-      7.4.2 Home server operation and design
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#743-private-key-loss-prevention-and-private-key-recovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.4.3 Private key loss prevention and private key recovery
+      6.4.3 Private key loss prevention and private key recovery
     </span>
   </a>
   
@@ -1259,47 +1200,47 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#8-account-migration" class="md-nav__link">
+  <a href="#7-account-migration" class="md-nav__link">
     <span class="md-ellipsis">
-      8. Account migration
+      7. Account migration
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="8. Account migration">
+    <nav class="md-nav" aria-label="7. Account migration">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#81-challenges-and-trust" class="md-nav__link">
+  <a href="#71-challenges-and-trust" class="md-nav__link">
     <span class="md-ellipsis">
-      8.1 Challenges and trust
+      7.1 Challenges and trust
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#82-reassigning-ownership" class="md-nav__link">
+  <a href="#72-reassigning-ownership" class="md-nav__link">
     <span class="md-ellipsis">
-      8.2 Reassigning ownership
+      7.2 Reassigning ownership
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="8.2 Reassigning ownership">
+    <nav class="md-nav" aria-label="7.2 Reassigning ownership">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#821-migrating-an-actor" class="md-nav__link">
+  <a href="#721-migrating-an-actor" class="md-nav__link">
     <span class="md-ellipsis">
-      8.2.1 Migrating an actor
+      7.2.1 Migrating an actor
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#822-re-signing-data" class="md-nav__link">
+  <a href="#722-re-signing-data" class="md-nav__link">
     <span class="md-ellipsis">
-      8.2.2 Re-signing data
+      7.2.2 Re-signing data
     </span>
   </a>
   
@@ -1311,9 +1252,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#83-moving-data" class="md-nav__link">
+  <a href="#73-moving-data" class="md-nav__link">
     <span class="md-ellipsis">
-      8.3 Moving data
+      7.3 Moving data
     </span>
   </a>
   
@@ -1348,8 +1289,77 @@
   
   
   
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    P2 Extensions
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            P2 Extensions
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
-      <a href="../chat/" class="md-nav__link">
+      <a href="../P2%20Extensions/auth/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    polyproto-auth
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../P2%20Extensions/chat/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1370,15 +1380,23 @@
   
   
     <li class="md-nav__item">
-      <a href="../auth/" class="md-nav__link">
+      <a href="../P2%20Extensions/mls/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    polyproto-auth
+    polyproto-mls
   </span>
   
 
       </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -1946,29 +1964,56 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#6-encryption" class="md-nav__link">
+  <a href="#6-cryptography-and-id-certs" class="md-nav__link">
     <span class="md-ellipsis">
-      6. Encryption
+      6. Cryptography and ID-Certs
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="6. Encryption">
+    <nav class="md-nav" aria-label="6. Cryptography and ID-Certs">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#61-keypackages" class="md-nav__link">
+  <a href="#61-home-server-signed-certificates-for-public-client-identity-keys-id-cert" class="md-nav__link">
     <span class="md-ellipsis">
-      6.1. KeyPackages
+      6.1 Home server signed certificates for public client identity keys (ID-Cert)
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="6.1. KeyPackages">
+    <nav class="md-nav" aria-label="6.1 Home server signed certificates for public client identity keys (ID-Cert)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#611-last-resort-keypackages" class="md-nav__link">
+  <a href="#611-structure-of-an-id-cert" class="md-nav__link">
     <span class="md-ellipsis">
-      6.1.1 Last resort KeyPackages
+      6.1.1 Structure of an ID-Cert
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#612-necessity-of-id-certs" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1.2 Necessity of ID-Certs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#613-key-rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1.3 Key rotation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#614-early-revocation-of-id-certs" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1.4 Early revocation of ID-Certs
     </span>
   </a>
   
@@ -1980,79 +2025,19 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#62-initial-authentication" class="md-nav__link">
+  <a href="#62-actor-identity-keys-and-message-signing" class="md-nav__link">
     <span class="md-ellipsis">
-      6.2 Initial authentication
+      6.2 Actor identity keys and message signing
     </span>
   </a>
   
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#63-multi-device-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      6.3 Multi-device support
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-cryptography-and-id-certs" class="md-nav__link">
-    <span class="md-ellipsis">
-      7. Cryptography and ID-Certs
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="7. Cryptography and ID-Certs">
+    <nav class="md-nav" aria-label="6.2 Actor identity keys and message signing">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert" class="md-nav__link">
+  <a href="#621-message-verification" class="md-nav__link">
     <span class="md-ellipsis">
-      7.1 Home server signed certificates for public client identity keys (ID-Cert)
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="7.1 Home server signed certificates for public client identity keys (ID-Cert)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#711-structure-of-an-id-cert" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.1.1 Structure of an ID-Cert
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#712-necessity-of-id-certs" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.1.2 Necessity of ID-Certs
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#713-key-rotation" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.1.3 Key rotation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#714-early-revocation-of-id-certs" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.1.4 Early revocation of ID-Certs
+      6.2.1 Message verification
     </span>
   </a>
   
@@ -2064,70 +2049,46 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#72-actor-identity-keys-and-message-signing" class="md-nav__link">
+  <a href="#63-private-key-loss-prevention-and-private-key-recovery" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2 Actor identity keys and message signing
+      6.3 Private key loss prevention and private key recovery
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.2 Actor identity keys and message signing">
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.4 Best practices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.4 Best practices">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#721-message-verification" class="md-nav__link">
+  <a href="#641-signing-keys-and-id-certs" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2.1 Message verification
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#73-private-key-loss-prevention-and-private-key-recovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.3 Private key loss prevention and private key recovery
+      6.4.1 Signing keys and ID-Certs
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#74-best-practices" class="md-nav__link">
+  <a href="#642-home-server-operation-and-design" class="md-nav__link">
     <span class="md-ellipsis">
-      7.4 Best practices
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="7.4 Best practices">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#741-signing-keys-and-id-certs" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.4.1 Signing keys and ID-Certs
+      6.4.2 Home server operation and design
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#742-home-server-operation-and-design" class="md-nav__link">
+  <a href="#643-private-key-loss-prevention-and-private-key-recovery" class="md-nav__link">
     <span class="md-ellipsis">
-      7.4.2 Home server operation and design
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#743-private-key-loss-prevention-and-private-key-recovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.4.3 Private key loss prevention and private key recovery
+      6.4.3 Private key loss prevention and private key recovery
     </span>
   </a>
   
@@ -2144,47 +2105,47 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#8-account-migration" class="md-nav__link">
+  <a href="#7-account-migration" class="md-nav__link">
     <span class="md-ellipsis">
-      8. Account migration
+      7. Account migration
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="8. Account migration">
+    <nav class="md-nav" aria-label="7. Account migration">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#81-challenges-and-trust" class="md-nav__link">
+  <a href="#71-challenges-and-trust" class="md-nav__link">
     <span class="md-ellipsis">
-      8.1 Challenges and trust
+      7.1 Challenges and trust
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#82-reassigning-ownership" class="md-nav__link">
+  <a href="#72-reassigning-ownership" class="md-nav__link">
     <span class="md-ellipsis">
-      8.2 Reassigning ownership
+      7.2 Reassigning ownership
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="8.2 Reassigning ownership">
+    <nav class="md-nav" aria-label="7.2 Reassigning ownership">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#821-migrating-an-actor" class="md-nav__link">
+  <a href="#721-migrating-an-actor" class="md-nav__link">
     <span class="md-ellipsis">
-      8.2.1 Migrating an actor
+      7.2.1 Migrating an actor
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#822-re-signing-data" class="md-nav__link">
+  <a href="#722-re-signing-data" class="md-nav__link">
     <span class="md-ellipsis">
-      8.2.2 Re-signing data
+      7.2.2 Re-signing data
     </span>
   </a>
   
@@ -2196,9 +2157,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#83-moving-data" class="md-nav__link">
+  <a href="#73-moving-data" class="md-nav__link">
     <span class="md-ellipsis">
-      8.3 Moving data
+      7.3 Moving data
     </span>
   </a>
   
@@ -2237,7 +2198,7 @@
 
 
 <h1 id="polyproto-specification">polyproto Specification<a class="headerlink" href="#polyproto-specification" title="Permanent link">&para;</a></h1>
-<p><strong>v1.0.0-alpha.12</strong> - Treat this as an unfinished draft.
+<p><strong>v1.0.0-alpha.13</strong> - Treat this as an unfinished draft.
 <a href="https://semver.org/spec/v2.0.0.html">Semantic versioning v2.0.0</a> is used to version this specification.
 The version number specified here also applies to the API documentation.</p>
 <ul>
@@ -2258,43 +2219,37 @@ The version number specified here also applies to the API documentation.</p>
 </ul>
 </li>
 <li><a href="#5-federation-ids-fids">5. Federation IDs (FIDs)</a></li>
-<li><a href="#6-encryption">6. Encryption</a><ul>
-<li><a href="#61-keypackages">6.1. KeyPackages</a></li>
-<li><a href="#611-last-resort-keypackages">6.1.1 Last resort KeyPackages</a></li>
-<li><a href="#62-initial-authentication">6.2 Initial authentication</a></li>
-<li><a href="#63-multi-device-support">6.3 Multi-device support</a></li>
+<li><a href="#6-cryptography-and-id-certs">6. Cryptography and ID-Certs</a><ul>
+<li><a href="#61-home-server-signed-certificates-for-public-client-identity-keys-id-cert">6.1 Home server signed certificates for public client identity keys (ID-Cert)</a></li>
+<li><a href="#611-structure-of-an-id-cert">6.1.1 Structure of an ID-Cert</a><ul>
+<li><a href="#6111-identity-descriptors-idds">6.1.1.1 Identity Descriptors (IDDs)</a></li>
+<li><a href="#6112-extensions-and-constraints">6.1.1.2 Extensions and constraints</a></li>
+<li><a href="#6113-session-ids">6.1.1.3 Session IDs</a></li>
 </ul>
 </li>
-<li><a href="#7-cryptography-and-id-certs">7. Cryptography and ID-Certs</a><ul>
-<li><a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">7.1 Home server signed certificates for public client identity keys (ID-Cert)</a></li>
-<li><a href="#711-structure-of-an-id-cert">7.1.1 Structure of an ID-Cert</a><ul>
-<li><a href="#7111-identity-descriptors-idds">7.1.1.1 Identity Descriptors (IDDs)</a></li>
-<li><a href="#7112-extensions-and-constraints">7.1.1.2 Extensions and constraints</a></li>
-<li><a href="#7113-session-ids">7.1.1.3 Session IDs</a></li>
+<li><a href="#612-necessity-of-id-certs">6.1.2 Necessity of ID-Certs</a></li>
+<li><a href="#613-key-rotation">6.1.3 Key rotation</a></li>
+<li><a href="#614-early-revocation-of-id-certs">6.1.4 Early revocation of ID-Certs</a></li>
+<li><a href="#62-actor-identity-keys-and-message-signing">6.2 Actor identity keys and message signing</a></li>
+<li><a href="#621-message-verification">6.2.1 Message verification</a></li>
+<li><a href="#63-private-key-loss-prevention-and-private-key-recovery">6.3 Private key loss prevention and private key recovery</a></li>
+<li><a href="#64-best-practices">6.4 Best practices</a></li>
+<li><a href="#641-signing-keys-and-id-certs">6.4.1 Signing keys and ID-Certs</a></li>
+<li><a href="#642-home-server-operation-and-design">6.4.2 Home server operation and design</a></li>
+<li><a href="#643-private-key-loss-prevention-and-private-key-recovery">6.4.3 Private key loss prevention and private key recovery</a></li>
 </ul>
 </li>
-<li><a href="#712-necessity-of-id-certs">7.1.2 Necessity of ID-Certs</a></li>
-<li><a href="#713-key-rotation">7.1.3 Key rotation</a></li>
-<li><a href="#714-early-revocation-of-id-certs">7.1.4 Early revocation of ID-Certs</a></li>
-<li><a href="#72-actor-identity-keys-and-message-signing">7.2 Actor identity keys and message signing</a></li>
-<li><a href="#721-message-verification">7.2.1 Message verification</a></li>
-<li><a href="#73-private-key-loss-prevention-and-private-key-recovery">7.3 Private key loss prevention and private key recovery</a></li>
-<li><a href="#74-best-practices">7.4 Best practices</a></li>
-<li><a href="#741-signing-keys-and-id-certs">7.4.1 Signing keys and ID-Certs</a></li>
-<li><a href="#742-home-server-operation-and-design">7.4.2 Home server operation and design</a></li>
-<li><a href="#743-private-key-loss-prevention-and-private-key-recovery">7.4.3 Private key loss prevention and private key recovery</a></li>
-</ul>
-</li>
-<li><a href="#8-account-migration">8. Account migration</a><ul>
-<li><a href="#81-challenges-and-trust">8.1 Challenges and trust</a></li>
-<li><a href="#82-reassigning-ownership">8.2 Reassigning ownership</a></li>
-<li><a href="#821-migrating-an-actor">8.2.1 Migrating an actor</a></li>
-<li><a href="#822-re-signing-data">8.2.2 Re-signing data</a></li>
-<li><a href="#83-moving-data">8.3 Moving data</a></li>
+<li><a href="#7-account-migration">7. Account migration</a><ul>
+<li><a href="#71-challenges-and-trust">7.1 Challenges and trust</a></li>
+<li><a href="#72-reassigning-ownership">7.2 Reassigning ownership</a></li>
+<li><a href="#721-migrating-an-actor">7.2.1 Migrating an actor</a></li>
+<li><a href="#722-re-signing-data">7.2.2 Re-signing data</a></li>
+<li><a href="#73-moving-data">7.3 Moving data</a></li>
 </ul>
 </li>
 </ul>
-<p>The polyproto protocol is a home-server-based identity federation protocol specification intended
+<p>// TODO: Rework this introductory section
+The polyproto protocol is a home-server-based identity federation protocol specification intended
 for use in applications where actor identity is needed. polyproto focuses on federated identity,
 and apart from the usage of Messaging Layer Security (MLS) for encryption, does not specify any
 further application-specific features. Instead, it is intended to be used as a base for application
@@ -2333,7 +2288,6 @@ document.</p>
 <li>Users only distrust their home servers in case of irregularities or conflicting information.</li>
 <li>In a federated context, users trust foreign servers with all unencrypted data they send
    to them.</li>
-<li>Users trust MLS channel or group members with their data and attached metadata.</li>
 <li>Foreign servers cannot impersonate users without explicit consent.</li>
 <li>Users rely on their home servers for identity key certification, without the home servers</li>
 <li>possessing the identity.</li>
@@ -2385,7 +2339,7 @@ opt Resume connection#59;&lt;br /&gt;otherwise, repeat from step 1
   g-&gt;&gt;c: Send resumed event
 end
 </code></pre>
-<p><em>Fig. 1: Sequence diagram of a WebSocket connection to a polyproto server.</em> </p>
+<p><em>Fig. 1: Sequence diagram of a WebSocket connection to a polyproto server.</em></p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>To learn more about polyproto WebSockets and WebSocket Events, consult the <a href="/docs/APIs/Core/WebSockets/index.md">WebSockets documentation</a>.</p>
@@ -2424,8 +2378,8 @@ then a WebSocket connection should be considered.</p>
 <p>The federation of actor identities allows users to engage with foreign servers as if they were their
 home servers. For example, in polyproto-chat, an actor can send direct messages to users from a
 different server or join the Guilds of other servers.</p>
-<p>Identity certificates defined in sections <a href="#7-cryptography-and-id-certs">#7. Cryptography and ID-Certs</a>
-and <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">#7.1 Home server signed certificates for public client identity keys (ID-Cert)</a>
+<p>Identity certificates defined in sections <a href="#6-cryptography-and-id-certs">#6. Cryptography and ID-Certs</a>
+and <a href="#61-home-server-signed-certificates-for-public-client-identity-keys-id-cert">#6.1 Home server signed certificates for public client identity keys (ID-Cert)</a>
 are employed to sign messages that the actor sends to other servers.</p>
 <div class="admonition note">
 <p class="admonition-title">Using one identity for several polyproto implementations</p>
@@ -2440,7 +2394,7 @@ are employed to sign messages that the actor sends to other servers.</p>
 <p>The core polyproto specification does not contain a strict definition of authentication procedures
 and endpoints. This allows for a wide range of authentication methods to be used. However, if
 implementations want to closely interoperate with each other, they should <strong>highly</strong> consider
-implementing the <a href="../auth/">polyproto-auth</a> standard for authenticating on home servers and
+implementing the <a href="./auth.md">polyproto-auth</a> standard for authenticating on home servers and
 foreign servers alike.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -2463,7 +2417,7 @@ protected route.</p>
 <p>Regardless of the authentication method used, the foreign server must verify the actor's identity
 before allowing them to perform any actions. This verification must be done by proving the cryptographic
 connection between an actors' home servers' public identity key and the actors' ID-Cert. Challenge
-strings, as described in <a href="#42-challenge-strings">Section 4.2</a> and in <a href="../auth/">polyproto-auth</a>
+strings, as described in <a href="#42-challenge-strings">Section 4.2</a> and in <a href="./auth.md">polyproto-auth</a>
 are recommended for this purpose.</p>
 <p>Servers must also check with the actors' home server to ensure that the ID-Cert has not been revoked.
 APIs for this purpose are defined in the <a href="/APIs">API documentation</a>.</p>
@@ -2533,9 +2487,10 @@ excluding the new session. The <code>NEW_SESSION</code> event's stored data can 
 <p class="admonition-title">Note</p>
 <p>With proper safety precautions and strong encryption, it is extremely unlikely for a malicious
 server to be able to listen in on encrypted conversations, without all users in that 
-conversation noticing. MLS's forward secrecy guarantees ensure that, in theory, a malicious
-session cannot decrypt any messages sent before its' join epoch. If secrecy or confidentiality
-are of concern, users should host their own home server and use end-to-end encryption.</p>
+conversation noticing. When implementing the polyproto-mls P2 extension, MLS's forward secrecy
+guarantees ensure that, in theory, a malicious session cannot decrypt any messages sent before
+its' join epoch. If secrecy or confidentiality are of concern, users should host their own home
+server and use end-to-end encryption, such as polyproto-mls.</p>
 </div>
 <h2 id="5-federation-ids-fids">5. Federation IDs (FIDs)<a class="headerlink" href="#5-federation-ids-fids" title="Permanent link">&para;</a></h2>
 <p>Every client requires an associated actor identity. Actors are distinguished by a unique federation
@@ -2554,97 +2509,10 @@ adapted to other languages.</p>
 indicates that the federation ID is formatted correctly.</p>
 </div>
 <p>For all intents and purposes, a federation ID is a display of identity. However, verifying identity
-claims is crucial. See <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">Section #7.1</a>
-and <a href="#721-message-verification">Section #7.2.2</a> for more information.</p>
-<h2 id="6-encryption">6. Encryption<a class="headerlink" href="#6-encryption" title="Permanent link">&para;</a></h2>
-<div class="admonition abstract">
-<p class="admonition-title">About MLS</p>
-<p>Polyproto offers end-to-end encryption for messages via
-<a href="https://messaginglayersecurity.rocks/">Message Layer Security (MLS)</a>. polyproto compliant
-servers take on the role of both an Authentication Service and a Delivery Service in the context
-of MLS.</p>
-<p>MLS is a cryptographic protocol that provides confidentiality, integrity, and authenticity
-guarantees for group messaging applications. It builds on top of the
-<a href="https://signal.org/docs/specifications/doubleratchet/">Double Ratchet Algorithm</a> and
-<a href="https://signal.org/docs/specifications/x3dh/">X3DH</a> to provide these security guarantees.</p>
-</div>
-<p>Implementations of polyproto can opt to support encryption to secure communication channels.
-The selected security protocol for all polyproto implementations is the Messaging Layer Security
-protocol, given its feasibility within the implementation context. MLS inherently supports
-negotiation of protocol versions, cipher suites, extensions, credential types, and extra proposal
-types. For two implementations of polyproto to be compatible with each other in the context of
-encryption, they must have overlapping capabilities in these areas.</p>
-<p>The following sections explain the additional behavior that polyproto implementations utilizing MLS
-must implement.</p>
-<h3 id="61-keypackages">6.1. KeyPackages<a class="headerlink" href="#61-keypackages" title="Permanent link">&para;</a></h3>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>The sections 6.1 and 6.1.1 are not exhaustive and do not cover all aspects of MLS and
-KeyPackages. They exist solely to give a general overview of how KeyPackages are used in
-polyproto. Please read and understand the MLS specification (RFC9420) to implement polyproto
-correctly.</p>
-</div>
-<p>A polyproto compliant server must store KeyPackages for all clients registered on it. The
-KeyPackage is a JSON object that contains the following information:</p>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;protocol_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;Version&gt;&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">&quot;cipher_suite&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;CipherSuite&gt;&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">&quot;init_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;HPKEPublicKey&gt;&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">&quot;leaf_node&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;LeafNode&gt;&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nt">&quot;extensions&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;Extensions&gt;&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">}</span>
-</code></pre></div>
-<ul>
-<li><code>protocol_version</code> denotes the MLS protocol version.</li>
-<li><code>cipher_suite</code> indicates the used cipher suite for this KeyPackage. Note that a server can store
-  many KeyPackages for a single actor, to support various cipher suites.</li>
-<li><code>init_key</code> is a public key for encrypting initial group secrets.</li>
-<li><code>leaf_node</code> is a signed <code>LeafNodeTBS</code> struct as defined in section <code>7.2. Leaf Node Contents</code> in
-  RFC9420. A <code>LeafNode</code> has information representing a users' identity, in the form of the users'
-  <strong>ID-Cert</strong> for a given session or client. The <code>LeafNodeTBS</code> is signed by using the actor's
-  private identity key.</li>
-<li><code>extensions</code> can be used to add additional information to the protocol, as defined in section
-  <code>13. Extensibility</code> in RFC9420.</li>
-</ul>
-<p>A KeyPackage is supposed to be used only once. Servers must ensure the following things:</p>
-<ul>
-<li>That any KeyPackage is not given out to clients more than once.</li>
-<li>That the <code>init_key</code> values of all KeyPackages are unique, as the <code>init_key</code> is what makes the
-  KeyPackage one-time use.</li>
-<li>That the contents of the <code>LeafNode</code> and the <code>init_key</code> were signed by the actor who submitted the KeyPackage.</li>
-</ul>
-<p>Because KeyPackages are supposed to be used only once, servers should retain multiple valid
-KeyPackages for each actor, alerting clients when their stock is running low. Consult the
-<a href="/APIs/Core/Routes%3A Registration needed">"Registration needed"-API</a> for more information about
-how servers should request new KeyPackages from clients. Servers should delete KeyPackages when
-their validity lapses.</p>
-<p>Servers only store KeyPackages for home server users, not for foreign users.</p>
-<div class="admonition note">
-<p class="admonition-title">About keys</p>
-<p>It is recommended that keys are generated using the <code>EdDSA</code> signature scheme, however, other
-signature schemes may be used as well.
-Consider, that intercompatibility can only be guaranteed if all communicating parties have an
-overlapping set of supported signature schemes.</p>
-</div>
-<h4 id="611-last-resort-keypackages">6.1.1 Last resort KeyPackages<a class="headerlink" href="#611-last-resort-keypackages" title="Permanent link">&para;</a></h4>
-<p>A "last resort" KeyPackage, which, contrasting regular KeyPackages, is reusable, is issued when a
-server runs out of regular KeyPackages for an actor. This is to prevent <code>DoS</code> attacks, where
-malicious clients deplete all KeyPackages for a given actor, blocking that actor's inclusion into
-encrypted groups or guild channels.</p>
-<p>Servers are to replace a "last resort" KeyPackage after it has been used at least once by requesting
-one from the client.</p>
-<h3 id="62-initial-authentication">6.2 Initial authentication<a class="headerlink" href="#62-initial-authentication" title="Permanent link">&para;</a></h3>
-<p>During the initial authentication process, a client must provide at least one
-<a href="#61-keypackages">KeyPackage</a> and one <a href="#611-last-resort-keypackages">"last resort" KeyPackage</a> to
-the server, in addition to the required registration information.</p>
-<p>The public identity key inside the <code>LeafNode</code> of this KeyPackage corresponds to the public identity
-key found inside a clients' ID-Cert.</p>
-<h3 id="63-multi-device-support">6.3 Multi-device support<a class="headerlink" href="#63-multi-device-support" title="Permanent link">&para;</a></h3>
-<p>polyproto servers and clients employing encryption must support multi-device use. The MLS protocol
-assigns each device a unique <code>LeafNode</code> and prohibits key sharing across devices. Each device offers
-distinct KeyPackages and an own ID-Cert.</p>
-<h2 id="7-cryptography-and-id-certs">7. Cryptography and ID-Certs<a class="headerlink" href="#7-cryptography-and-id-certs" title="Permanent link">&para;</a></h2>
-<h3 id="71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">7.1 Home server signed certificates for public client identity keys (ID-Cert)<a class="headerlink" href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert" title="Permanent link">&para;</a></h3>
+claims is crucial. See <a href="#61-home-server-signed-certificates-for-public-client-identity-keys-id-cert">Section #6.1</a>
+and <a href="#621-message-verification">Section #6.2.2</a> for more information.</p>
+<h2 id="6-cryptography-and-id-certs">6. Cryptography and ID-Certs<a class="headerlink" href="#6-cryptography-and-id-certs" title="Permanent link">&para;</a></h2>
+<h3 id="61-home-server-signed-certificates-for-public-client-identity-keys-id-cert">6.1 Home server signed certificates for public client identity keys (ID-Cert)<a class="headerlink" href="#61-home-server-signed-certificates-for-public-client-identity-keys-id-cert" title="Permanent link">&para;</a></h3>
 <p>The ID-Cert, a <a href="https://en.wikipedia.org/wiki/X.509">X.509</a> certificate, validates a public actor
 identity key. It is an actor-generated CSR (<a href="https://en.wikipedia.org/wiki/Certificate_signing_request">Certificate Signing Request</a>),
 signed by a home server, encompassing actor identity information and the client's public identity key.
@@ -2661,7 +2529,7 @@ client.</p>
 <ul>
 <li>The public identity key of the client.</li>
 <li>An identity descriptor (IDD), describing the actor the certificate is issued to. The IDD must be
-  formatted according to <a href="#7111-identity-descriptors-idds">Section 7.1.1.1</a>.</li>
+  formatted according to <a href="#6111-identity-descriptors-idds">Section 6.1.1.1</a>.</li>
 <li>The signature algorithm used to sign the certificate.</li>
 <li>The signature of the certificate, generated by using the entities' private identity key.</li>
 </ul>
@@ -2673,7 +2541,7 @@ This includes checking whether the signature matches the certificates' contents 
 certificate's validity period.</p>
 </div>
 <p>Actors must use a separate ID-Cert for each client or session they use.</p>
-<h4 id="711-structure-of-an-id-cert">7.1.1 Structure of an ID-Cert<a class="headerlink" href="#711-structure-of-an-id-cert" title="Permanent link">&para;</a></h4>
+<h4 id="611-structure-of-an-id-cert">6.1.1 Structure of an ID-Cert<a class="headerlink" href="#611-structure-of-an-id-cert" title="Permanent link">&para;</a></h4>
 <p>The ID-Cert is a valid X.509 certificate, and as such, it has a specific structure. The structure of
 an X.509 certificate is defined in <a href="https://tools.ietf.org/html/rfc5280">RFC5280</a>.
 ID-Certs encompass a subset of the structure of an X.509 certificate.</p>
@@ -2688,8 +2556,8 @@ ID-Certs encompass a subset of the structure of an X.509 certificate.</p>
 </thead>
 <tbody>
 <tr>
-<td>Correctly formatted Name attribute, according to <a href="#7111-identity-descriptors-idds">#7.1.1.1</a></td>
-<td><a href="#7111-identity-descriptors-idds">Identity descriptor</a></td>
+<td>Correctly formatted Name attribute, according to <a href="#6111-identity-descriptors-idds">#6.1.1.1</a></td>
+<td><a href="#6111-identity-descriptors-idds">Identity descriptor</a></td>
 <td>Issuer Name</td>
 </tr>
 <tr>
@@ -2739,12 +2607,12 @@ ID-Certs encompass a subset of the structure of an X.509 certificate.</p>
 </tr>
 <tr>
 <td>Extensions</td>
-<td><a href="#7112-extensions-and-constraints">Extensions and Constraints</a></td>
+<td><a href="#6112-extensions-and-constraints">Extensions and Constraints</a></td>
 <td>Extensions</td>
 </tr>
 </tbody>
 </table>
-<h5 id="7111-identity-descriptors-idds">7.1.1.1 Identity Descriptors (IDDs)<a class="headerlink" href="#7111-identity-descriptors-idds" title="Permanent link">&para;</a></h5>
+<h5 id="6111-identity-descriptors-idds">6.1.1.1 Identity Descriptors (IDDs)<a class="headerlink" href="#6111-identity-descriptors-idds" title="Permanent link">&para;</a></h5>
 <p>polyproto Identity Descriptors are a subset of the X.509 certificate's distinguished name. <a href="https://ldap.com/ldap-dns-and-rdns/">Distinguished
 Names (<code>DNs</code>)</a>, according to the LDAP Data Interchange Format (LDIF).
 The <code>DN</code> is a sequence of <a href="https://ldap.com/ldap-dns-and-rdns/">relative distinguished names (<code>RDNs</code>)</a>.</p>
@@ -2770,7 +2638,7 @@ must meet all of the following requirements:</p>
 </ul>
 <p>If the home server does not have a subdomain or top level domain, the <code>dc</code> fields for these
 components should be omitted.</p>
-<h5 id="7112-extensions-and-constraints">7.1.1.2 Extensions and constraints<a class="headerlink" href="#7112-extensions-and-constraints" title="Permanent link">&para;</a></h5>
+<h5 id="6112-extensions-and-constraints">6.1.1.2 Extensions and constraints<a class="headerlink" href="#6112-extensions-and-constraints" title="Permanent link">&para;</a></h5>
 <p>The following constraints must be met by ID-Certs:</p>
 <ul>
 <li>If the ID-Cert is a root certificate<ul>
@@ -2790,7 +2658,7 @@ components should be omitted.</p>
 <a href="https://cryptography.io/en/latest/x509/reference/#cryptography.x509.BasicConstraints">Basic Constraints</a>
 are critical extensions. Therefore, if any of these X.509 extensions are present, they must be marked
 as "critical". ID-Certs not adhering to this standard must be treated as malformed.</p>
-<h5 id="7113-session-ids">7.1.1.3 Session IDs<a class="headerlink" href="#7113-session-ids" title="Permanent link">&para;</a></h5>
+<h5 id="6113-session-ids">6.1.1.3 Session IDs<a class="headerlink" href="#6113-session-ids" title="Permanent link">&para;</a></h5>
 <p>The session ID is an <a href="https://en.wikipedia.org/wiki/ASN.1"><code>ASN.1</code></a> <a href="https://en.wikipedia.org/wiki/IA5STRING"><code>Ia5String</code></a>
 chosen by the actor requesting the ID-Cert. It is used to uniquely identify a session. The session
 ID must be unique for each certificate issued to that actor. A session ID can be re-used if the
@@ -2802,7 +2670,7 @@ session ID, as session IDs must not be overridden silently.</p>
 <code>IA5String</code> type.</p>
 <p>Session IDs can be used to identify a session across devices, or to detect if a new, perhaps
 malicious session has been created.</p>
-<h4 id="712-necessity-of-id-certs">7.1.2 Necessity of ID-Certs<a class="headerlink" href="#712-necessity-of-id-certs" title="Permanent link">&para;</a></h4>
+<h4 id="612-necessity-of-id-certs">6.1.2 Necessity of ID-Certs<a class="headerlink" href="#612-necessity-of-id-certs" title="Permanent link">&para;</a></h4>
 <p>The addition of a certificate is necessary to prevent a malicious foreign server from abusing public
 identity key caching to impersonate an actor. Consider the following example, which employs foreign
 server public identity key caching, but no home server issued identity key certificates:</p>
@@ -2817,7 +2685,7 @@ has been crafted by a malicious server.</p>
 </div>
 <p>The above scenario is not possible with home server issued identity key certificates, as the
 malicious server cannot generate an identity key pair for Alice, which is signed by Server A.</p>
-<h4 id="713-key-rotation">7.1.3 Key rotation<a class="headerlink" href="#713-key-rotation" title="Permanent link">&para;</a></h4>
+<h4 id="613-key-rotation">6.1.3 Key rotation<a class="headerlink" href="#613-key-rotation" title="Permanent link">&para;</a></h4>
 <p>A session can choose to rotate their ID-Cert at any time. This is done by generating a new identity
 key pair, using the new private key to generate a new CSR, and sending the new Certificate Signing
 Request to the home server, along with at least one new KeyPackage and a corresponding 'last resort'
@@ -2838,8 +2706,8 @@ This is because the public key of an actor likely changes over time and users mu
 they send to servers. Likewise, a client should also keep all of its own ID-Certs stored
 perpetually, to potentially verify its identity in case of a migration.</p>
 <p>Users must hold on to all of their past key pairs, as they might need them to
-<a href="#8-account-migration">migrate their account in the future</a>. How this is done is specified in
-<a href="#73-private-key-loss-prevention-and-private-key-recovery">section 7.3: Private key loss prevention and private key recovery</a>.</p>
+<a href="#7-account-migration">migrate their account in the future</a>. How this is done is specified in
+<a href="#63-private-key-loss-prevention-and-private-key-recovery">section 6.3: Private key loss prevention and private key recovery</a>.</p>
 <pre class="mermaid"><code>sequenceDiagram
 autonumber
 
@@ -2858,18 +2726,10 @@ from their home server.</em></p>
 <p>A server identity key's lifetime might come to an early or unexpected end, perhaps due to some sort
 of leak of the corresponding private key. When this happens, the server should generate a new
 identity key pair and broadcast the
-<a href="/docs/APIs/Core/WebSockets/gateway_events.md#server_key_change"><code>SERVER_KEY_CHANGE</code></a> and
-<a href="/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages"><code>LOW_KEY_PACKAGES</code></a> gateway events
-to all clients. Clients must request new ID-Certs (through a CSR), and respond appropriately to the
-<a href="/docs/APIs/Core/WebSockets/gateway_events.md#low_key_packages"><code>LOW_KEY_PACKAGES</code></a>
-event. Should a client be offline at the time of the key change, it must be informed of the change
-upon reconnection.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>A <code>LOW_KEY_PACKAGES</code> event is only sent by servers which use MLS encryption. Server/Clients not
-implementing MLS encryption can safely ignore this event.</p>
-</div>
-<h4 id="714-early-revocation-of-id-certs">7.1.4 Early revocation of ID-Certs<a class="headerlink" href="#714-early-revocation-of-id-certs" title="Permanent link">&para;</a></h4>
+<a href="/docs/APIs/Core/WebSockets/gateway_events.md#server_key_change"><code>SERVER_KEY_CHANGE</code></a> gateway event
+to all clients. Clients must request new ID-Certs through a CSR. Should a client be offline at the time
+of the key change, it must be informed of the change upon reconnection.</p>
+<h4 id="614-early-revocation-of-id-certs">6.1.4 Early revocation of ID-Certs<a class="headerlink" href="#614-early-revocation-of-id-certs" title="Permanent link">&para;</a></h4>
 <div class="admonition abstract">
 <p class="admonition-title">A note about CRLs</p>
 <p>It is common for systems relying on X.509 certificates for user authentication to use Certificate
@@ -2894,7 +2754,7 @@ must revoke the session associated with the revoked ID-Cert. Revoking an ID-Cert
 <p>The above paragraph is true for both foreign and home servers. The API routes associated with
 revoking an ID-Cert are the same regardless of the server type.</p>
 </div>
-<h3 id="72-actor-identity-keys-and-message-signing">7.2 Actor identity keys and message signing<a class="headerlink" href="#72-actor-identity-keys-and-message-signing" title="Permanent link">&para;</a></h3>
+<h3 id="62-actor-identity-keys-and-message-signing">6.2 Actor identity keys and message signing<a class="headerlink" href="#62-actor-identity-keys-and-message-signing" title="Permanent link">&para;</a></h3>
 <p>As briefly mentioned section <a href="#4-federated-identity">#4</a>, users must hold on to an identity key pair
 at all times. This key pair is used to represent an actor's identity and to verify message integrity,
 by having an actor sign all messages they send with their private identity key. The key pair is
@@ -2902,9 +2762,9 @@ generated by the actor. An actor-generated identity key certificate signing requ
 to the actor's home server when first connecting to the server with a new session, or when rotating
 keys. The key is stored in the client's local storage. Upon receiving a new identity key CSR, a
 home server will sign this CSR and send the resulting ID-Cert to the client. This certificate is
-proof that the home server attests to the clients key. Read <a href="#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert">section 7.1</a>
+proof that the home server attests to the clients key. Read <a href="#61-home-server-signed-certificates-for-public-client-identity-keys-id-cert">section 6.1</a>
 for more information about the certificate.</p>
-<h4 id="721-message-verification">7.2.1 Message verification<a class="headerlink" href="#721-message-verification" title="Permanent link">&para;</a></h4>
+<h4 id="621-message-verification">6.2.1 Message verification<a class="headerlink" href="#621-message-verification" title="Permanent link">&para;</a></h4>
 <p>To ensure message integrity through signing, clients and servers must verify message signatures.
 This involves cross-checking the message signature against the sender's ID-Cert and the senders'
 home server's ID-Cert, while also confirming the validity of the ID-Cert attached to the
@@ -3017,7 +2877,7 @@ the actor's identity key has changed, and that Server B has not yet received the
 identity key for some reason. However, if the signature cannot be verified at a certain time,
 this information must be communicated to the actor performing the verification.</p>
 </div>
-<h3 id="73-private-key-loss-prevention-and-private-key-recovery">7.3 Private key loss prevention and private key recovery<a class="headerlink" href="#73-private-key-loss-prevention-and-private-key-recovery" title="Permanent link">&para;</a></h3>
+<h3 id="63-private-key-loss-prevention-and-private-key-recovery">6.3 Private key loss prevention and private key recovery<a class="headerlink" href="#63-private-key-loss-prevention-and-private-key-recovery" title="Permanent link">&para;</a></h3>
 <p>As described in previous sections, actors must hold on to their past identity key pairs, should they
 want or need to migrate their account.</p>
 <p>Home servers must offer a way for actors to upload and recover their private identity keys while not 
@@ -3036,8 +2896,8 @@ It is also recommended backing up the encrypted private identity keys in some ot
 <li><a href="/APIs/Core/Routes%3A Registration needed/#delete-delete-encrypted-private-key-material">Delete encrypted private key material</a></li>
 <li><a href="/APIs/Core/Routes%3A Registration needed/#options-get-encrypted-private-key-material-upload-size-limit">Get encrypted private key material upload size limit</a></li>
 </ul>
-<h3 id="74-best-practices">7.4 Best practices<a class="headerlink" href="#74-best-practices" title="Permanent link">&para;</a></h3>
-<h4 id="741-signing-keys-and-id-certs">7.4.1 Signing keys and ID-Certs<a class="headerlink" href="#741-signing-keys-and-id-certs" title="Permanent link">&para;</a></h4>
+<h3 id="64-best-practices">6.4 Best practices<a class="headerlink" href="#64-best-practices" title="Permanent link">&para;</a></h3>
+<h4 id="641-signing-keys-and-id-certs">6.4.1 Signing keys and ID-Certs<a class="headerlink" href="#641-signing-keys-and-id-certs" title="Permanent link">&para;</a></h4>
 <ul>
 <li>Actor and client signing keys should be rotated regularly (every 20-60 days). This is to ensure
   that a compromised key can only be used for a limited amount of time. Server identity keys should be
@@ -3053,24 +2913,24 @@ It is also recommended backing up the encrypted private identity keys in some ot
   changed, the client/server in question should update their cached ID-Cert for the actor in
   question, taking into account the session ID of the new identity key pair.</li>
 </ul>
-<h4 id="742-home-server-operation-and-design">7.4.2 Home server operation and design<a class="headerlink" href="#742-home-server-operation-and-design" title="Permanent link">&para;</a></h4>
+<h4 id="642-home-server-operation-and-design">6.4.2 Home server operation and design<a class="headerlink" href="#642-home-server-operation-and-design" title="Permanent link">&para;</a></h4>
 <ul>
 <li>Use a caching layer for your home server to handle the potentially large amount of requests for
   ID-Certs without putting unnecessary strain on the database.</li>
 </ul>
-<h4 id="743-private-key-loss-prevention-and-private-key-recovery">7.4.3 Private key loss prevention and private key recovery<a class="headerlink" href="#743-private-key-loss-prevention-and-private-key-recovery" title="Permanent link">&para;</a></h4>
+<h4 id="643-private-key-loss-prevention-and-private-key-recovery">6.4.3 Private key loss prevention and private key recovery<a class="headerlink" href="#643-private-key-loss-prevention-and-private-key-recovery" title="Permanent link">&para;</a></h4>
 <ul>
 <li>It is a good idea for home servers to limit the upload size and available upload slots for encrypted
   private identity keys.</li>
 </ul>
-<h2 id="8-account-migration">8. Account migration<a class="headerlink" href="#8-account-migration" title="Permanent link">&para;</a></h2>
+<h2 id="7-account-migration">7. Account migration<a class="headerlink" href="#7-account-migration" title="Permanent link">&para;</a></h2>
 <p>Account migration allows users to move their account and associated data to another identity.
 This allows users to switch home servers while not losing ownership of messages sent by them.</p>
 <p>Migrating an actor always involves reassigning the ownership of all actor-associated data in the
 distributed network to the new actor. Should the old actor want to additionally move all data from
 the old home server to another home server, more steps are needed. Account migration is not considered
 a sensitive action.</p>
-<h3 id="81-challenges-and-trust">8.1 Challenges and trust<a class="headerlink" href="#81-challenges-and-trust" title="Permanent link">&para;</a></h3>
+<h3 id="71-challenges-and-trust">7.1 Challenges and trust<a class="headerlink" href="#71-challenges-and-trust" title="Permanent link">&para;</a></h3>
 <p>Changing the publicly visible ownership of actor data requires the chain of trust to be maintained.
 If an "old" account wants to change the publicly visible ownership of its data, the "old"
 account must prove that it possesses the private keys that were used to
@@ -3091,7 +2951,7 @@ assume that re-signing a quoted post is allowed. However, this would likely chan
 signature of the quoted post, which would be undesirable. Edge cases like these are up to
 implementations to handle, and should be well documented.</p>
 </div>
-<h3 id="82-reassigning-ownership">8.2 Reassigning ownership<a class="headerlink" href="#82-reassigning-ownership" title="Permanent link">&para;</a></h3>
+<h3 id="72-reassigning-ownership">7.2 Reassigning ownership<a class="headerlink" href="#72-reassigning-ownership" title="Permanent link">&para;</a></h3>
 <p>Transferring message ownership from an old to a new account, known as re-signing messages, necessitates
 coordination between the two accounts, initiated by the old account. To start, the old account sends
 an API request containing the new account's federation ID to the server where messages should be
@@ -3113,7 +2973,7 @@ a challenge string.</p>
    messages to the new account. To have all messages from a server re-signed, an actor must
    prove that they are the owner of the private keys used to sign the messages.</li>
 </ol>
-<h4 id="821-migrating-an-actor">8.2.1 Migrating an actor<a class="headerlink" href="#821-migrating-an-actor" title="Permanent link">&para;</a></h4>
+<h4 id="721-migrating-an-actor">7.2.1 Migrating an actor<a class="headerlink" href="#721-migrating-an-actor" title="Permanent link">&para;</a></h4>
 <pre class="mermaid"><code>sequenceDiagram
 autonumber
 
@@ -3161,7 +3021,7 @@ home server with all information associated with the old account. It can also fo
 regarding the old account to the new server, which makes the process more seamless for other
 users. The "non-cooperative homeserver migration method" is only a last resort.</p>
 </div>
-<h4 id="822-re-signing-data">8.2.2 Re-signing data<a class="headerlink" href="#822-re-signing-data" title="Permanent link">&para;</a></h4>
+<h4 id="722-re-signing-data">7.2.2 Re-signing data<a class="headerlink" href="#722-re-signing-data" title="Permanent link">&para;</a></h4>
 <pre class="mermaid"><code>sequenceDiagram
 autonumber
 
@@ -3180,7 +3040,7 @@ ab-&gt;&gt;ab: Re-sign messages with own keys
 ab-&gt;&gt;sc: Send new messages
 sc-&gt;&gt;sc: Verify that only FID and signature related fields have changed</code></pre>
 <p><em>Fig. 7: Sequence diagram depicting the re-signing procedure.</em></p>
-<h3 id="83-moving-data">8.3 Moving data<a class="headerlink" href="#83-moving-data" title="Permanent link">&para;</a></h3>
+<h3 id="73-moving-data">7.3 Moving data<a class="headerlink" href="#73-moving-data" title="Permanent link">&para;</a></h3>
 <p>In cases of an imminent server shutdown or distrust in the old server, moving data from the old server
 is necessary to prevent data loss. This process extends upon the reassigning ownership process, and
 involves the following steps:</p>
@@ -3270,7 +3130,7 @@ aa-xsa: Deactivate account</code></pre>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-06-01T20:57:33+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-06-01</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-06-03T10:43:40+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-06-03</span>
   </span>
 
     
