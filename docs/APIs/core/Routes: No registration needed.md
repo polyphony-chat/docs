@@ -282,47 +282,6 @@ Invalidate a session token by naming the session ID associated with it.
 
 ---
 
-## <span class="group-h">Encryption</span>
-
-Client-Foreign Server API endpoints concerned with encryption related tasks.
-
----
-
-### <span class="request-h"><span class="request request-get">GET</span> KeyPackage(s) [:material-lock-outline:](#authorization "Authorization required") :material-file-question-outline:{title="This route is optional. Consult the documentation of a specific polyproto extension to check whether it exists."}</span>
-
-`/.p2/core/v1/keypackage/:fid`
-
-Request KeyPackages - initial encryption keying material - for a specific actor from the server.
-The requested actor must be registered on this server.
-
-#### Request
-
-##### Parameters
-
-| Name  | Type                  | Description                                                            |
-| ----- | --------------------- | ---------------------------------------------------------------------- |
-| `fid` | String, Federation ID | The Federation ID of the actor whose KeyPackage(s) should be returned. |
-
-##### Body
-
-This request has no body.
-
-#### Response
-
-=== "200 OK"
-
-    ##### Body
-
-    | Type                                | Description                                                                                                                                   |
-    | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-    | JSON-Array of KeyPackage(s), Base64 | The actor's KeyPackage(s), Base64 encoded. Each entry in the array corresponds to a different client the requested actor is authenticated on. |
-
-    ```json
-    [...]
-    ```
-
----
-
 ## <span class="group-h">Other</span>
 
 Routes not fitting into another category.
