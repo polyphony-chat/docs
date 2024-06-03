@@ -1,6 +1,5 @@
 ---
 title: polyproto-auth
-weight: 2
 ---
 
 # P2 Protocol Extension: polyproto-auth

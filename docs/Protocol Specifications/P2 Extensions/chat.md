@@ -1,6 +1,5 @@
 ---
 title: polyproto-chat
-weight: 1
 ---
 
 # P2 Protocol Extension: polyproto-chat
