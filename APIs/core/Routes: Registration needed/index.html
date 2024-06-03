@@ -2161,53 +2161,61 @@ are provided, the server will return all key material that the client has upload
 </thead>
 <tbody>
 <tr>
-<td>Array of String</td>
-<td>The serial number(s) of the ID-Certs to delete key material for.</td>
+<td>Array of String<span class="twemoji" title="This field is optional."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 19h3v3h-3v-3m2-17c5.35.22 7.68 5.62 4.5 9.67-.83 1-2.17 1.66-2.83 2.5C13 15 13 16 13 17h-3c0-1.67 0-3.08.67-4.08.66-1 2-1.59 2.83-2.25C15.92 8.43 15.32 5.26 12 5a3 3 0 0 0-3 3H6a6 6 0 0 1 6-6Z"/></svg></span></td>
+<td>The serial number(s) of the ID-Certs to get key material for.</td>
 </tr>
 </tbody>
 </table>
 <div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">[</span><span class="s2">&quot;123456789&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;987654321&quot;</span><span class="p">]</span>
 </code></pre></div>
 <h4 id="response_2">Response<a class="headerlink" href="#response_2" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">200 OK</label><label for="__tabbed_3_2">404 Not Found</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:3"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">200 OK</label><label for="__tabbed_3_2">204 No Content</label><label for="__tabbed_3_3">404 Not Found</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <h5 id="body_8">Body<a class="headerlink" href="#body_8" title="Permanent link">&para;</a></h5>
+<p>Array of objects, each containing the following fields:</p>
 <table>
 <thead>
 <tr>
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Array of String</td>
-<td>The serial number(s) of the ID-Certs to delete key material for.</td>
+<td><code>key_data</code></td>
+<td>String, PEM-encoded <code>PrivateKeyInfo</code></td>
+<td>The encrypted private key material, PEM-encoded</td>
+</tr>
+<tr>
+<td><code>serial_number</code></td>
+<td>String</td>
+<td>The serial number of the ID-Cert this key material is associated with.</td>
 </tr>
 </tbody>
 </table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">[</span><span class="s2">&quot;123456789&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;987654321&quot;</span><span class="p">]</span>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">[</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">        </span><span class="nt">&quot;key_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWS0tLS0tCk1JSUJqRENDQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYm...&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">        </span><span class="nt">&quot;serial_number&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456789&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span><span class="nt">&quot;key_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;LS01tLS2aXJUQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYmGa7cadSH9vAVKOMb478bnm43v5VS789...&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">        </span><span class="nt">&quot;serial_number&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;987654321&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="p">]</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
+<p>Returned, if no <code>serial_numbers</code> are provided and the client has not uploaded any key material.</p>
 <h5 id="body_9">Body<a class="headerlink" href="#body_9" title="Permanent link">&para;</a></h5>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Array of String</td>
-<td>The serial numbers of the ID-Certs that no key material was found for.</td>
-</tr>
-</tbody>
-</table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">[</span><span class="s2">&quot;123456789&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;987654321&quot;</span><span class="p">]</span>
-</code></pre></div>
+<p>This response has no body.</p>
+</div>
+<div class="tabbed-block">
+<p>Returned, if none of the <code>serial_numbers</code> match any known ID-Certs from this actor.</p>
+<h5 id="body_10">Body<a class="headerlink" href="#body_10" title="Permanent link">&para;</a></h5>
+<p>This response has no body.</p>
 </div>
 </div>
 </div>
@@ -2217,7 +2225,7 @@ are provided, the server will return all key material that the client has upload
 <p>Delete encrypted private key material from the server. The <code>serial_number(s)</code>, must match the
 serial numbers of ID-Certs that the client has uploaded key material for.</p>
 <h4 id="request_3">Request<a class="headerlink" href="#request_3" title="Permanent link">&para;</a></h4>
-<h5 id="body_10">Body<a class="headerlink" href="#body_10" title="Permanent link">&para;</a></h5>
+<h5 id="body_11">Body<a class="headerlink" href="#body_11" title="Permanent link">&para;</a></h5>
 <table>
 <thead>
 <tr>
@@ -2232,13 +2240,18 @@ serial numbers of ID-Certs that the client has uploaded key material for.</p>
 </tr>
 </tbody>
 </table>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">[</span><span class="s2">&quot;123456789&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;987654321&quot;</span><span class="p">]</span>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">[</span><span class="s2">&quot;123456789&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;987654321&quot;</span><span class="p">]</span>
 </code></pre></div>
 <h4 id="response_3">Response<a class="headerlink" href="#response_3" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="4:1"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">204 No Content</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">204 No Content</label><label for="__tabbed_4_2">404 Not Found</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<h5 id="body_11">Body<a class="headerlink" href="#body_11" title="Permanent link">&para;</a></h5>
+<h5 id="body_12">Body<a class="headerlink" href="#body_12" title="Permanent link">&para;</a></h5>
+<p>This response has no body.</p>
+</div>
+<div class="tabbed-block">
+<p>Returned, if none of the <code>serial_numbers</code> match any known ID-Certs from this actor.</p>
+<h5 id="body_13">Body<a class="headerlink" href="#body_13" title="Permanent link">&para;</a></h5>
 <p>This response has no body.</p>
 </div>
 </div>
@@ -2268,7 +2281,7 @@ serial numbers of ID-Certs that the client has uploaded key material for.</p>
 </tr>
 </tbody>
 </table>
-<h5 id="body_12">Body<a class="headerlink" href="#body_12" title="Permanent link">&para;</a></h5>
+<h5 id="body_14">Body<a class="headerlink" href="#body_14" title="Permanent link">&para;</a></h5>
 <p>This response has no body.</p>
 </div>
 </div>
@@ -2331,7 +2344,7 @@ serial numbers of ID-Certs that the client has uploaded key material for.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-06-03T10:51:57+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-06-03</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-06-03T13:24:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-06-03</span>
   </span>
 
     
