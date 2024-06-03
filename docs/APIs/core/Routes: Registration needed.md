@@ -142,9 +142,9 @@ are provided, the server will return all key material that the client has upload
 
 ##### Body
 
-| Type            | Description                                                      |
-| --------------- | ---------------------------------------------------------------- |
-| Array of String | The serial number(s) of the ID-Certs to delete key material for. |
+| Type                                                            | Description                                                      |
+| --------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Array of String:material-help:{title="This field is optional."} | The serial number(s) of the ID-Certs to get key material for. |
 
 ```json
 ["123456789", "987654321"]
@@ -156,25 +156,41 @@ are provided, the server will return all key material that the client has upload
 
     ##### Body
 
-    | Type            | Description                                                      |
-    | --------------- | ---------------------------------------------------------------- |
-    | Array of String | The serial number(s) of the ID-Certs to delete key material for. |
+    Array of objects, each containing the following fields:
+
+    | Name            | Type                                 | Description                                                            |
+    | --------------- | ------------------------------------ | ---------------------------------------------------------------------- |
+    | `key_data`      | String, PEM-encoded `PrivateKeyInfo` | The encrypted private key material, PEM-encoded                        |
+    | `serial_number` | String                               | The serial number of the ID-Cert this key material is associated with. |
 
     ```json
-    ["123456789", "987654321"]
+    [
+        {
+            "key_data": "LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWS0tLS0tCk1JSUJqRENDQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYm...",
+            "serial_number": "123456789"
+        },
+        {
+            "key_data": "LS01tLS2aXJUQWlNQ0NRRHdFTE1Ba0dBMVVFQ2d3R2FWTnZiV0ZwYmGa7cadSH9vAVKOMb478bnm43v5VS789...",
+            "serial_number": "987654321"
+        }
+    ]
     ```
 
-=== "404 Not Found"
+=== "204 No Content"
+
+    Returned, if no `serial_numbers` are provided and the client has not uploaded any key material.
 
     ##### Body
 
-    | Type            | Description                                                            |
-    | --------------- | ---------------------------------------------------------------------- |
-    | Array of String | The serial numbers of the ID-Certs that no key material was found for. |
+    This response has no body.
 
-    ```json
-    ["123456789", "987654321"]
-    ```
+=== "404 Not Found"
+
+    Returned, if none of the `serial_numbers` match any known ID-Certs from this actor.
+
+    ##### Body
+
+    This response has no body.
 
 ---
 
@@ -200,6 +216,14 @@ serial numbers of ID-Certs that the client has uploaded key material for.
 #### Response
 
 === "204 No Content"
+
+    ##### Body
+
+    This response has no body.
+
+=== "404 Not Found"
+
+    Returned, if none of the `serial_numbers` match any known ID-Certs from this actor.
 
     ##### Body
 
