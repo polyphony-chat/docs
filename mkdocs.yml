@@ -1,12 +1,14 @@
 # yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
 site_name: Polyphony
-repo_url: https://github.com/polyphony-chat/polyproto
+repo_url: https://github.com/polyphony-chat/docs
 edit_uri: edit/main/docs/
 extra_css:
   - stylesheets/extra.css
 theme:
   name: material
   logo: assets/lines.png
+  icon:
+    repo: fontawesome/brands/github
   favicon: assets/lines.png
   features:
     - navigation.instant
