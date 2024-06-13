@@ -2400,12 +2400,15 @@ serial numbers of ID-Certs that the client has uploaded key material for.</p>
 <li><strong>Identity Key Pair</strong> - A key pair associating an identity with a set of cryptographic keys used
   to sign and possibly encrypt messages.</li>
 <li><strong>Instance</strong> - A server hosting polyproto compliant software for clients.</li>
+<li><strong>P2 Extension</strong> - A <strong>p</strong>oly<strong>p</strong>roto (P2) extension/</li>
 <li><strong>polyproto-chat</strong> - The chat-API used by Polyphony. An extension of the polyproto protocol,
   defining the routes and capabilities of the chat-API used by Polyphony.</li>
 <li><strong>polyproto</strong> - The core federation protocol and APIs of polyproto, enabling identification and
   authorization on foreign servers. It is independent of the chat-API used.</li>
 <li><strong>Root Certificate</strong> - A certificate used to sign other certificates, establishing a chain of
   trust. In polyproto, only home servers have root certificates.</li>
+<li><strong>Service</strong> - "Service" describes an application-specific set of behaviors and routes packaged as a
+  P2 extension. polyproto-chat is a service, for example.</li>
 <li><strong>Session</strong> - A specific period of authenticated interaction between a client and an instance.
   During the lifetime of a session, the client can perform actions as the actor they are authenticated
   as.</li>
