@@ -22,12 +22,15 @@
 - **Identity Key Pair** - A key pair associating an identity with a set of cryptographic keys used
   to sign and possibly encrypt messages.
 - **Instance** - A server hosting polyproto compliant software for clients.
+- **P2 Extension** - A **p**oly**p**roto (P2) extension/
 - **polyproto-chat** - The chat-API used by Polyphony. An extension of the polyproto protocol,
   defining the routes and capabilities of the chat-API used by Polyphony.
 - **polyproto** - The core federation protocol and APIs of polyproto, enabling identification and
   authorization on foreign servers. It is independent of the chat-API used.
 - **Root Certificate** - A certificate used to sign other certificates, establishing a chain of
   trust. In polyproto, only home servers have root certificates.
+- **Service** - "Service" describes an application-specific set of behaviors and routes packaged as a
+  P2 extension. polyproto-chat is a service, for example.
 - **Session** - A specific period of authenticated interaction between a client and an instance.
   During the lifetime of a session, the client can perform actions as the actor they are authenticated
   as.

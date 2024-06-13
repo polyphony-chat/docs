@@ -46,7 +46,8 @@ The version number specified here also applies to the API documentation.
     - [7.3 Moving data](#73-moving-data)
   - [8. Protocol extensions (P2 extensions)](#8-protocol-extensions-p2-extensions)
     - [8.1 Dependencies](#81-dependencies)
-  - [9. RESERVED: Discoverability](#9-reserved-discoverability)
+  - [9. Services](#9-services)
+  - [9.1 Discoverability](#91-discoverability)
 
 // TODO: Rework this introductory section
 The polyproto protocol is a home-server-based identity federation protocol specification intended
@@ -1000,7 +1001,22 @@ P2 extensions can depend on other P2 extensions. If an extension depends on anot
 name of the dependency should be listed in the extension's documentation, along with a link to the
 dependencies' specification document.
 
-## 9. RESERVED: Discoverability
+## 9. Services
+
+!!! info
+
+    A "service" is any application-specific implementation of polyproto, defined by a P2 extension.
+
+Actors can use their identity to register with any server hosting polyproto services, such as polyproto-chat.
+These servers can be the actors' home server, but can also be foreign servers. There is no limitation
+to which and how many services any given actor can register with.
+
+Application specific implementations of polyproto should consider that users of their service might
+also want to register for services offered by other servers, using the same identity.
+
+## 9.1 Discoverability
+
+TODO
 
 ---
 
