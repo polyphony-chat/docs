@@ -1266,6 +1266,39 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#8-protocol-extensions-p2-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Protocol extensions (P2 extensions)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Protocol extensions (P2 extensions)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.1 Dependencies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-reserved-discoverability" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. RESERVED: Discoverability
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#glossary" class="md-nav__link">
     <span class="md-ellipsis">
       Glossary
@@ -2372,6 +2405,39 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#8-protocol-extensions-p2-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Protocol extensions (P2 extensions)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Protocol extensions (P2 extensions)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.1 Dependencies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-reserved-discoverability" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. RESERVED: Discoverability
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#glossary" class="md-nav__link">
     <span class="md-ellipsis">
       Glossary
@@ -2399,7 +2465,7 @@
 
 
 <h1 id="polyproto-specification">polyproto Specification<a class="headerlink" href="#polyproto-specification" title="Permanent link">&para;</a></h1>
-<p><strong>v1.0.0-alpha.13</strong> - Treat this as an unfinished draft.
+<p><strong>v1.0.0-alpha.14</strong> - Treat this as an unfinished draft.
 <a href="https://semver.org/spec/v2.0.0.html">Semantic versioning v2.0.0</a> is used to version this specification.
 The version number specified here also applies to the API documentation.</p>
 <ul>
@@ -2448,6 +2514,11 @@ The version number specified here also applies to the API documentation.</p>
 <li><a href="#73-moving-data">7.3 Moving data</a></li>
 </ul>
 </li>
+<li><a href="#8-protocol-extensions-p2-extensions">8. Protocol extensions (P2 extensions)</a><ul>
+<li><a href="#81-dependencies">8.1 Dependencies</a></li>
+</ul>
+</li>
+<li><a href="#9-reserved-discoverability">9. RESERVED: Discoverability</a></li>
 </ul>
 <p>// TODO: Rework this introductory section
 The polyproto protocol is a home-server-based identity federation protocol specification intended
@@ -3244,7 +3315,7 @@ sc-&gt;&gt;sc: Verify that only FID and signature related fields have changed</c
 <h3 id="73-moving-data">7.3 Moving data<a class="headerlink" href="#73-moving-data" title="Permanent link">&para;</a></h3>
 <p>In cases of an imminent server shutdown or distrust in the old server, moving data from the old server
 is necessary to prevent data loss. This process extends upon the reassigning ownership process, and
-involves the following steps:</p>
+usually involves the following steps:</p>
 <ol>
 <li>Using the old account, the client requests a data export from your old home server.</li>
 <li>The old home server sends a data export to the client. The client will check the signatures on
@@ -3273,6 +3344,51 @@ sb-&gt;&gt;sb: Verify data integrity
 sb-&gt;&gt;ab: Data import successful
 aa-xsa: Deactivate account</code></pre>
 <p><em>Fig. 8: Sequence diagram depicting the data moving process.</em></p>
+<p>Depending on the use case, this process can be adapted to fit the needs of the user. How this process
+is implemented is up to the concrete implementation.</p>
+<h2 id="8-protocol-extensions-p2-extensions">8. Protocol extensions (P2 extensions)<a class="headerlink" href="#8-protocol-extensions-p2-extensions" title="Permanent link">&para;</a></h2>
+<!-- TODO -->
+
+<div class="admonition bug">
+<p class="admonition-title">Subject to change</p>
+<p>This section will likely change in the future, and as such, should be treated as a draft.</p>
+</div>
+<p>polyproto leaves room for extensions, outsourcing concepts such as concrete message types to
+protocol extensions. This allows for a more flexible core protocol, which can be adapted to a wide
+variety of use cases. The following section defines how protocol extensions interact with the core protocol.</p>
+<p>P2 extensions must be either of the following:</p>
+<ul>
+<li>a major technological addition, which can be taken advantage of
+by other extensions. Examples of this are:</li>
+<li>a unified WebSocket Gateway connection scheme</li>
+<li>Message Layer Encryption (MLS)</li>
+<li>Compatibility with other protocols (e.g. Matrix, ActivityPub)</li>
+<li>a document or set of documents describing a set of routes and expected behaviors for a particular
+  application use case.
+  Examples of this are:</li>
+<li>A generic, federated chat application</li>
+<li>A generic, federated social media platform</li>
+</ul>
+<div class="admonition info">
+<p class="admonition-title">Which features should be included in a P2 extension?</p>
+<p>P2 extensions describing a particular application use case should always be basic versions
+of the applications, including only features that are deemed necessary for the application to work.
+Additional features can be implementation specific details, or further extensions.</p>
+<p>For example, a federated chat application extension may offer routes for adding reactions to messages.
+However, a route for adding reactions with full-screen animation effects would be better suited
+as an implementation-specific detail.</p>
+</div>
+<p>P2 extensions should not be both at the same time. If a P2 extension is both a major technological
+addition and a document describing a particular application use case, it should likely be split into
+two separate extensions.</p>
+<p>The name of a P2 extension should be short, descriptive, and should only contain lowercase letters,
+numbers, hyphens, and underscores. This name determines the path of the extension's routes. An
+extension named <code>chat</code> would have routes starting with <code>.p2/chat/</code>.</p>
+<h3 id="81-dependencies">8.1 Dependencies<a class="headerlink" href="#81-dependencies" title="Permanent link">&para;</a></h3>
+<p>P2 extensions can depend on other P2 extensions. If an extension depends on another extension, the
+name of the dependency should be listed in the extension's documentation, along with a link to the
+dependencies' specification document.</p>
+<h2 id="9-reserved-discoverability">9. RESERVED: Discoverability<a class="headerlink" href="#9-reserved-discoverability" title="Permanent link">&para;</a></h2>
 <hr />
 <h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
 <ul>
@@ -3331,7 +3447,7 @@ aa-xsa: Deactivate account</code></pre>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-06-03T10:43:40+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-06-03</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-06-13T17:31:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-06-13</span>
   </span>
 
     
