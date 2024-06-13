@@ -5,7 +5,7 @@ weight: 0
 
 # polyproto Specification
 
-**v1.0.0-alpha.13** - Treat this as an unfinished draft.
+**v1.0.0-alpha.14** - Treat this as an unfinished draft.
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 The version number specified here also applies to the API documentation.
 
@@ -44,6 +44,9 @@ The version number specified here also applies to the API documentation.
       - [7.2.1 Migrating an actor](#721-migrating-an-actor)
       - [7.2.2 Re-signing data](#722-re-signing-data)
     - [7.3 Moving data](#73-moving-data)
+  - [8. Protocol extensions (P2 extensions)](#8-protocol-extensions-p2-extensions)
+    - [8.1 Dependencies](#81-dependencies)
+  - [9. RESERVED: Discoverability](#9-reserved-discoverability)
 
 // TODO: Rework this introductory section
 The polyproto protocol is a home-server-based identity federation protocol specification intended
@@ -912,7 +915,7 @@ sc->>sc: Verify that only FID and signature related fields have changed
 
 In cases of an imminent server shutdown or distrust in the old server, moving data from the old server
 is necessary to prevent data loss. This process extends upon the reassigning ownership process, and
-involves the following steps:
+usually involves the following steps:
 
 1. Using the old account, the client requests a data export from your old home server.
 2. The old home server sends a data export to the client. The client will check the signatures on
@@ -944,6 +947,60 @@ aa-xsa: Deactivate account
 ```
 
 *Fig. 8: Sequence diagram depicting the data moving process.*
+
+Depending on the use case, this process can be adapted to fit the needs of the user. How this process
+is implemented is up to the concrete implementation.
+
+## 8. Protocol extensions (P2 extensions)
+
+<!-- TODO -->
+
+!!! bug "Subject to change"
+
+    This section will likely change in the future, and as such, should be treated as a draft.
+
+polyproto leaves room for extensions, outsourcing concepts such as concrete message types to
+protocol extensions. This allows for a more flexible core protocol, which can be adapted to a wide
+variety of use cases. The following section defines how protocol extensions interact with the core protocol.
+
+P2 extensions must be either of the following:
+
+- a major technological addition, which can be taken advantage of
+by other extensions. Examples of this are:
+  - a unified WebSocket Gateway connection scheme
+  - Message Layer Encryption (MLS)
+  - Compatibility with other protocols (e.g. Matrix, ActivityPub)
+- a document or set of documents describing a set of routes and expected behaviors for a particular
+  application use case.
+  Examples of this are:
+  - A generic, federated chat application
+  - A generic, federated social media platform
+
+!!! info "Which features should be included in a P2 extension?"
+
+    P2 extensions describing a particular application use case should always be basic versions
+    of the applications, including only features that are deemed necessary for the application to work.
+    Additional features can be implementation specific details, or further extensions.
+
+    For example, a federated chat application extension may offer routes for adding reactions to messages.
+    However, a route for adding reactions with full-screen animation effects would be better suited
+    as an implementation-specific detail.
+
+P2 extensions should not be both at the same time. If a P2 extension is both a major technological
+addition and a document describing a particular application use case, it should likely be split into
+two separate extensions.
+
+The name of a P2 extension should be short, descriptive, and should only contain lowercase letters,
+numbers, hyphens, and underscores. This name determines the path of the extension's routes. An
+extension named `chat` would have routes starting with `.p2/chat/`.
+
+### 8.1 Dependencies
+
+P2 extensions can depend on other P2 extensions. If an extension depends on another extension, the
+name of the dependency should be listed in the extension's documentation, along with a link to the
+dependencies' specification document.
+
+## 9. RESERVED: Discoverability
 
 ---
 

@@ -22,3 +22,6 @@ IDDs
 interoperate
 interoperability
 TTLs
+namespace
+Discoverability
+snippets/glossary
