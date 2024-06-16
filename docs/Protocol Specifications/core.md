@@ -5,7 +5,7 @@ weight: 0
 
 # polyproto Specification
 
-**v1.0.0-alpha.14** - Treat this as an unfinished draft.
+**v1.0.0-alpha.15** - Treat this as an unfinished draft.
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 The version number specified here also applies to the API documentation.
 
@@ -45,7 +45,15 @@ The version number specified here also applies to the API documentation.
       - [7.2.2 Re-signing data](#722-re-signing-data)
     - [7.3 Moving data](#73-moving-data)
   - [8. Protocol extensions (P2 extensions)](#8-protocol-extensions-p2-extensions)
-    - [8.1 Dependencies](#81-dependencies)
+  - [8.1 P2 extension design guidelines](#81-p2-extension-design-guidelines)
+    - [8.1.1 Routes](#811-routes)
+    - [8.1.2 Extension names](#812-extension-names)
+    - [8.1.3 Extending existing extensions](#813-extending-existing-extensions)
+  - [8.2 Namespaces](#82-namespaces)
+  - [8.3 Officially endorsed extensions](#83-officially-endorsed-extensions)
+  - [8.4 Versioning and yanking](#84-versioning-and-yanking)
+    - [8.4.1 Yanking](#841-yanking)
+    - [8.4 Dependencies](#84-dependencies)
   - [9. Services](#9-services)
   - [9.1 Discoverability](#91-discoverability)
 
@@ -962,54 +970,148 @@ is implemented is up to the concrete implementation.
 
 polyproto leaves room for extensions, outsourcing concepts such as concrete message types to
 protocol extensions. This allows for a more flexible core protocol, which can be adapted to a wide
-variety of use cases. The following section defines how protocol extensions interact with the core protocol.
+variety of use cases. The following sections define:
 
-P2 extensions must be either of the following:
+- protocol extensions, also called P2 extensions
+- how protocol extensions interact with the core protocol
+- requirements, which must be fulfilled by protocol extensions to become officially endorsed
+
+## 8.1 P2 extension design guidelines
+
+The following section is dedicated to listing design requirements, which should be met by all
+P2 extensions. These requirements are meant to ensure a certain level of quality in the
+extensions-ecosystem.
+
+P2 extensions should be either of the following:
 
 - a major technological addition, which can be taken advantage of
 by other extensions. Examples of this are:
   - a unified WebSocket Gateway connection scheme
   - Message Layer Encryption (MLS)
   - Compatibility with other protocols (e.g. Matrix, ActivityPub)
-- a document or set of documents describing a set of routes and expected behaviors for a particular
-  application use case.
-  Examples of this are:
-  - A generic, federated chat application
-  - A generic, federated social media platform
+- a definition of a [service](#9-services). Examples of this are:
+  - A federated chat application
+  - A federated social media platform
+
+TODO: Maybe move this to section 8.1.3
 
 !!! info "Which features should be included in a P2 extension?"
 
-    P2 extensions describing a particular application use case should always be basic versions
-    of the applications, including only features that are deemed necessary for the application to work.
-    Additional features can be implementation specific details, or further extensions.
+    Open source P2 extensions describing a  should always be *basic*
+    versions of that service, including only features that are deemed necessary for the service
+    to work. Additional features can be implementation specific details, or further extensions.
 
-    For example, a federated chat application extension may offer routes for adding reactions to messages.
-    However, a route for adding reactions with full-screen animation effects would be better suited
-    as an implementation-specific detail.
+    To grow the ecosystem of interoperable [services](#9-services), it is encouraged to first develop
+    a generic version of that service, which acts as a shared base for all implementations. This shared
+    base can then be extended with the exact, non-service-critical features that are needed for a
+    specific implementation.
 
-P2 extensions should not be both at the same time. If a P2 extension is both a major technological
-addition and a document describing a particular application use case, it should likely be split into
-two separate extensions.
+    For example, a generic, federated chat service extension may offer routes for adding
+    reactions to messages. However, a route for adding reactions with full-screen animation effects
+    would be better suited as an implementation-specific detail.
 
-The name of a P2 extension should be short, descriptive, and should only contain lowercase letters,
+A good P2 extension should never be both at the same time. If a P2 extension is both a
+major technological addition and a document describing a particular application use case, it should
+likely be split into two separate extensions.
+
+### 8.1.1 Routes
+
+Polyproto extensions should never change, add or remove routes defined by the extension they depend on.
+Instead, routes with alternating or new behavior must be added under a newly defined namespace, which
+must differ from the original namespace. Changing the behavior of existing routes breaks compatibility
+with other implementations of the same extension.
+
+Route paths should always start with `.p2/`, followed by the extensions' namespace. Namespaces are
+explained in [section 8.2](#82-namespaces).
+
+### 8.1.2 Extension names
+
+The name of a P2 extension should be unique, descriptive, and should only contain lowercase letters,
 numbers, hyphens, and underscores. This name determines the path of the extension's routes. An
 extension named `chat` would have routes starting with `.p2/chat/`.
 
-### 8.1 Dependencies
+### 8.1.3 Extending existing extensions
+
+If possible for the given use case, P2 extensions should depend on and extend already existing,
+officially endorsed P2 extensions.
+
+!!! example
+
+    Say, you are developing a social chat platform using polyproto. In this example, you would like
+    your chat platform to have a feature, which is not part of the officially endorsed
+    `polyproto-chat` extension. Instead of developing a new extension from scratch, your chat
+    extension should likely depend on `polyproto-chat`, and define only this new feature as part of
+    your own extension.
+
+Doing this ensures a high level of interoperability across all different implementations of a specific
+application group.
+
+## 8.2 Namespaces
+
+A namespace is a prefix used to group routes together. They prevent route name collisions between
+different extensions. Namespaces should be unique and descriptive. They should only contain lowercase
+letters, numbers, hyphens, and underscores.
+
+Officially endorsed P2 extensions have priority over selecting namespaces. If a namespace is already
+taken by an officially endorsed extension, a different namespace must be chosen. If a namespace
+collision exists between an officially endorsed extension and a regular P2 extension, the officially
+endorsed extension has priority.
+
+## 8.3 Officially endorsed extensions
+
+Officially endorsed extensions are extensions that either:
+
+- have undergone review and approval by the polyproto maintainers
+- have been developed by the maintainers themselves
+- have been developed by a third party and are now maintained by the polyproto maintainers
+
+Contact the polyphony-chat maintainers under [info@polyphony.chat](mailto:info@polyphony.chat)
+if you want to have your extension officially endorsed.
+
+Officially endorsed extensions must fulfill all the requirements listed in
+[section 8](#8-protocol-extensions-p2-extensions).
+
+## 8.4 Versioning and yanking
+
+Semantic Versioning v2.0.0 is used for versioning P2 extensions. The version number of an extension
+is defined in the extension's documentation. The version number must be updated whenever a change is
+made to the extension. The only exception to this rule is when marking an extension as deprecated
+(yanking).
+
+### 8.4.1 Yanking
+
+Yanking an extension means that the extension is no longer supported, and that it should not be used.
+A later version of the extension should be used instead. Yanked extension versions should prominently
+display the "yanked" status next to the version number in the extension's documentation.
+
+### 8.4 Dependencies
 
 P2 extensions can depend on other P2 extensions. If an extension depends on another extension, the
 name of the dependency should be listed in the extension's documentation, along with a link to the
 dependencies' specification document.
+
+The following syntax is used for indicating the version number of a dependency:
+
+| Syntax  | Meaning                                                                                                                             |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `1.0.0` | The exact version `1.0.0` of the dependency is required.                                                                            |
+| `1.0`   | Any version of the dependency with the major version `1` and the minor version `0` is required. The bug fix version is unimportant. |
+| `1`     | Any version of the dependency with the major version `1` is required. The minor and bug fix versions are unimportant.               |
+
+The name of the dependency along with the version number is to be listed right beneath the extension's
+version declaration in the extension's documentation. Ideally, a link to the dependencies' specification
+document should be included.
 
 ## 9. Services
 
 !!! info
 
     A "service" is any application-specific implementation of polyproto, defined by a P2 extension.
+    All services are P2 extensions, but not all P2 extensions are services.
 
 Actors can use their identity to register with any server hosting polyproto services, such as polyproto-chat.
 These servers can be the actors' home server, but can also be foreign servers. There is no limitation
-to which and how many services any given actor can register with.
+to how many services any given actor can register with, and what these services are.
 
 Application specific implementations of polyproto should consider that users of their service might
 also want to register for services offered by other servers, using the same identity.
