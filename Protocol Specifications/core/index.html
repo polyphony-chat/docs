@@ -1272,13 +1272,91 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="8. Protocol extensions (P2 extensions)">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#81-p2-extension-design-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.1 P2 extension design guidelines
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.1 P2 extension design guidelines">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#81-dependencies" class="md-nav__link">
+  <a href="#811-routes" class="md-nav__link">
     <span class="md-ellipsis">
-      8.1 Dependencies
+      8.1.1 Routes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#812-extension-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.1.2 Extension names
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#813-extending-existing-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.1.3 Extending existing extensions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#82-namespaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.2 Namespaces
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#83-officially-endorsed-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.3 Officially endorsed extensions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#84-versioning-and-yanking" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.4 Versioning and yanking
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.4 Versioning and yanking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#841-yanking" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.4.1 Yanking
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.4 Dependencies
     </span>
   </a>
   
@@ -2420,13 +2498,91 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="8. Protocol extensions (P2 extensions)">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#81-p2-extension-design-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.1 P2 extension design guidelines
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.1 P2 extension design guidelines">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#81-dependencies" class="md-nav__link">
+  <a href="#811-routes" class="md-nav__link">
     <span class="md-ellipsis">
-      8.1 Dependencies
+      8.1.1 Routes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#812-extension-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.1.2 Extension names
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#813-extending-existing-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.1.3 Extending existing extensions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#82-namespaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.2 Namespaces
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#83-officially-endorsed-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.3 Officially endorsed extensions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#84-versioning-and-yanking" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.4 Versioning and yanking
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.4 Versioning and yanking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#841-yanking" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.4.1 Yanking
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.4 Dependencies
     </span>
   </a>
   
@@ -2483,7 +2639,7 @@
 
 
 <h1 id="polyproto-specification">polyproto Specification<a class="headerlink" href="#polyproto-specification" title="Permanent link">&para;</a></h1>
-<p><strong>v1.0.0-alpha.14</strong> - Treat this as an unfinished draft.
+<p><strong>v1.0.0-alpha.15</strong> - Treat this as an unfinished draft.
 <a href="https://semver.org/spec/v2.0.0.html">Semantic versioning v2.0.0</a> is used to version this specification.
 The version number specified here also applies to the API documentation.</p>
 <ul>
@@ -2532,8 +2688,18 @@ The version number specified here also applies to the API documentation.</p>
 <li><a href="#73-moving-data">7.3 Moving data</a></li>
 </ul>
 </li>
-<li><a href="#8-protocol-extensions-p2-extensions">8. Protocol extensions (P2 extensions)</a><ul>
-<li><a href="#81-dependencies">8.1 Dependencies</a></li>
+<li><a href="#8-protocol-extensions-p2-extensions">8. Protocol extensions (P2 extensions)</a></li>
+<li><a href="#81-p2-extension-design-guidelines">8.1 P2 extension design guidelines</a><ul>
+<li><a href="#811-routes">8.1.1 Routes</a></li>
+<li><a href="#812-extension-names">8.1.2 Extension names</a></li>
+<li><a href="#813-extending-existing-extensions">8.1.3 Extending existing extensions</a></li>
+</ul>
+</li>
+<li><a href="#82-namespaces">8.2 Namespaces</a></li>
+<li><a href="#83-officially-endorsed-extensions">8.3 Officially endorsed extensions</a></li>
+<li><a href="#84-versioning-and-yanking">8.4 Versioning and yanking</a><ul>
+<li><a href="#841-yanking">8.4.1 Yanking</a></li>
+<li><a href="#84-dependencies">8.4 Dependencies</a></li>
 </ul>
 </li>
 <li><a href="#9-services">9. Services</a></li>
@@ -3374,47 +3540,135 @@ is implemented is up to the concrete implementation.</p>
 </div>
 <p>polyproto leaves room for extensions, outsourcing concepts such as concrete message types to
 protocol extensions. This allows for a more flexible core protocol, which can be adapted to a wide
-variety of use cases. The following section defines how protocol extensions interact with the core protocol.</p>
-<p>P2 extensions must be either of the following:</p>
+variety of use cases. The following sections define:</p>
+<ul>
+<li>protocol extensions, also called P2 extensions</li>
+<li>how protocol extensions interact with the core protocol</li>
+<li>requirements, which must be fulfilled by protocol extensions to become officially endorsed</li>
+</ul>
+<h2 id="81-p2-extension-design-guidelines">8.1 P2 extension design guidelines<a class="headerlink" href="#81-p2-extension-design-guidelines" title="Permanent link">&para;</a></h2>
+<p>The following section is dedicated to listing design requirements, which should be met by all
+P2 extensions. These requirements are meant to ensure a certain level of quality in the
+extensions-ecosystem.</p>
+<p>P2 extensions should be either of the following:</p>
 <ul>
 <li>a major technological addition, which can be taken advantage of
 by other extensions. Examples of this are:</li>
 <li>a unified WebSocket Gateway connection scheme</li>
 <li>Message Layer Encryption (MLS)</li>
 <li>Compatibility with other protocols (e.g. Matrix, ActivityPub)</li>
-<li>a document or set of documents describing a set of routes and expected behaviors for a particular
-  application use case.
-  Examples of this are:</li>
-<li>A generic, federated chat application</li>
-<li>A generic, federated social media platform</li>
+<li>a definition of a <a href="#9-services">service</a>. Examples of this are:</li>
+<li>A federated chat application</li>
+<li>A federated social media platform</li>
 </ul>
+<p>TODO: Maybe move this to section 8.1.3</p>
 <div class="admonition info">
 <p class="admonition-title">Which features should be included in a P2 extension?</p>
-<p>P2 extensions describing a particular application use case should always be basic versions
-of the applications, including only features that are deemed necessary for the application to work.
-Additional features can be implementation specific details, or further extensions.</p>
-<p>For example, a federated chat application extension may offer routes for adding reactions to messages.
-However, a route for adding reactions with full-screen animation effects would be better suited
-as an implementation-specific detail.</p>
+<p>Open source P2 extensions describing a  should always be <em>basic</em>
+versions of that service, including only features that are deemed necessary for the service
+to work. Additional features can be implementation specific details, or further extensions.</p>
+<p>To grow the ecosystem of interoperable <a href="#9-services">services</a>, it is encouraged to first develop
+a generic version of that service, which acts as a shared base for all implementations. This shared
+base can then be extended with the exact, non-service-critical features that are needed for a
+specific implementation.</p>
+<p>For example, a generic, federated chat service extension may offer routes for adding
+reactions to messages. However, a route for adding reactions with full-screen animation effects
+would be better suited as an implementation-specific detail.</p>
 </div>
-<p>P2 extensions should not be both at the same time. If a P2 extension is both a major technological
-addition and a document describing a particular application use case, it should likely be split into
-two separate extensions.</p>
-<p>The name of a P2 extension should be short, descriptive, and should only contain lowercase letters,
+<p>A good P2 extension should never be both at the same time. If a P2 extension is both a
+major technological addition and a document describing a particular application use case, it should
+likely be split into two separate extensions.</p>
+<h3 id="811-routes">8.1.1 Routes<a class="headerlink" href="#811-routes" title="Permanent link">&para;</a></h3>
+<p>Polyproto extensions should never change, add or remove routes defined by the extension they depend on.
+Instead, routes with alternating or new behavior must be added under a newly defined namespace, which
+must differ from the original namespace. Changing the behavior of existing routes breaks compatibility
+with other implementations of the same extension.</p>
+<p>Route paths should always start with <code>.p2/</code>, followed by the extensions' namespace. Namespaces are
+explained in <a href="#82-namespaces">section 8.2</a>.</p>
+<h3 id="812-extension-names">8.1.2 Extension names<a class="headerlink" href="#812-extension-names" title="Permanent link">&para;</a></h3>
+<p>The name of a P2 extension should be unique, descriptive, and should only contain lowercase letters,
 numbers, hyphens, and underscores. This name determines the path of the extension's routes. An
 extension named <code>chat</code> would have routes starting with <code>.p2/chat/</code>.</p>
-<h3 id="81-dependencies">8.1 Dependencies<a class="headerlink" href="#81-dependencies" title="Permanent link">&para;</a></h3>
+<h3 id="813-extending-existing-extensions">8.1.3 Extending existing extensions<a class="headerlink" href="#813-extending-existing-extensions" title="Permanent link">&para;</a></h3>
+<p>If possible for the given use case, P2 extensions should depend on and extend already existing,
+officially endorsed P2 extensions.</p>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p>Say, you are developing a social chat platform using polyproto. In this example, you would like
+your chat platform to have a feature, which is not part of the officially endorsed
+<code>polyproto-chat</code> extension. Instead of developing a new extension from scratch, your chat
+extension should likely depend on <code>polyproto-chat</code>, and define only this new feature as part of
+your own extension.</p>
+</div>
+<p>Doing this ensures a high level of interoperability across all different implementations of a specific
+application group.</p>
+<h2 id="82-namespaces">8.2 Namespaces<a class="headerlink" href="#82-namespaces" title="Permanent link">&para;</a></h2>
+<p>A namespace is a prefix used to group routes together. They prevent route name collisions between
+different extensions. Namespaces should be unique and descriptive. They should only contain lowercase
+letters, numbers, hyphens, and underscores.</p>
+<p>Officially endorsed P2 extensions have priority over selecting namespaces. If a namespace is already
+taken by an officially endorsed extension, a different namespace must be chosen. If a namespace
+collision exists between an officially endorsed extension and a regular P2 extension, the officially
+endorsed extension has priority.</p>
+<h2 id="83-officially-endorsed-extensions">8.3 Officially endorsed extensions<a class="headerlink" href="#83-officially-endorsed-extensions" title="Permanent link">&para;</a></h2>
+<p>Officially endorsed extensions are extensions that either:</p>
+<ul>
+<li>have undergone review and approval by the polyproto maintainers</li>
+<li>have been developed by the maintainers themselves</li>
+<li>have been developed by a third party and are now maintained by the polyproto maintainers</li>
+</ul>
+<p>Contact the polyphony-chat maintainers under <a href="mailto:info@polyphony.chat">info@polyphony.chat</a>
+if you want to have your extension officially endorsed.</p>
+<p>Officially endorsed extensions must fulfill all the requirements listed in
+<a href="#8-protocol-extensions-p2-extensions">section 8</a>.</p>
+<h2 id="84-versioning-and-yanking">8.4 Versioning and yanking<a class="headerlink" href="#84-versioning-and-yanking" title="Permanent link">&para;</a></h2>
+<p>Semantic Versioning v2.0.0 is used for versioning P2 extensions. The version number of an extension
+is defined in the extension's documentation. The version number must be updated whenever a change is
+made to the extension. The only exception to this rule is when marking an extension as deprecated
+(yanking).</p>
+<h3 id="841-yanking">8.4.1 Yanking<a class="headerlink" href="#841-yanking" title="Permanent link">&para;</a></h3>
+<p>Yanking an extension means that the extension is no longer supported, and that it should not be used.
+A later version of the extension should be used instead. Yanked extension versions should prominently
+display the "yanked" status next to the version number in the extension's documentation.</p>
+<h3 id="84-dependencies">8.4 Dependencies<a class="headerlink" href="#84-dependencies" title="Permanent link">&para;</a></h3>
 <p>P2 extensions can depend on other P2 extensions. If an extension depends on another extension, the
 name of the dependency should be listed in the extension's documentation, along with a link to the
 dependencies' specification document.</p>
+<p>The following syntax is used for indicating the version number of a dependency:</p>
+<table>
+<thead>
+<tr>
+<th>Syntax</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>1.0.0</code></td>
+<td>The exact version <code>1.0.0</code> of the dependency is required.</td>
+</tr>
+<tr>
+<td><code>1.0</code></td>
+<td>Any version of the dependency with the major version <code>1</code> and the minor version <code>0</code> is required. The bug fix version is unimportant.</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td>Any version of the dependency with the major version <code>1</code> is required. The minor and bug fix versions are unimportant.</td>
+</tr>
+</tbody>
+</table>
+<p>The name of the dependency along with the version number is to be listed right beneath the extension's
+version declaration in the extension's documentation. Ideally, a link to the dependencies' specification
+document should be included.</p>
 <h2 id="9-services">9. Services<a class="headerlink" href="#9-services" title="Permanent link">&para;</a></h2>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
-<p>A "service" is any application-specific implementation of polyproto, defined by a P2 extension.</p>
+<p>A "service" is any application-specific implementation of polyproto, defined by a P2 extension.
+All services are P2 extensions, but not all P2 extensions are services.</p>
 </div>
 <p>Actors can use their identity to register with any server hosting polyproto services, such as polyproto-chat.
 These servers can be the actors' home server, but can also be foreign servers. There is no limitation
-to which and how many services any given actor can register with.</p>
+to how many services any given actor can register with, and what these services are.</p>
 <p>Application specific implementations of polyproto should consider that users of their service might
 also want to register for services offered by other servers, using the same identity.</p>
 <h2 id="91-discoverability">9.1 Discoverability<a class="headerlink" href="#91-discoverability" title="Permanent link">&para;</a></h2>
@@ -3480,7 +3734,7 @@ also want to register for services offered by other servers, using the same iden
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-06-13T22:26:05+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-06-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-06-16T20:28:35+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-06-16</span>
   </span>
 
     
