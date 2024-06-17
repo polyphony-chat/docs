@@ -993,23 +993,6 @@ by other extensions. Examples of this are:
   - A federated chat application
   - A federated social media platform
 
-TODO: Maybe move this to section 8.1.3
-
-!!! info "Which features should be included in a P2 extension?"
-
-    Open source P2 extensions describing a  should always be *basic*
-    versions of that service, including only features that are deemed necessary for the service
-    to work. Additional features can be implementation specific details, or further extensions.
-
-    To grow the ecosystem of interoperable [services](#9-services), it is encouraged to first develop
-    a generic version of that service, which acts as a shared base for all implementations. This shared
-    base can then be extended with the exact, non-service-critical features that are needed for a
-    specific implementation.
-
-    For example, a generic, federated chat service extension may offer routes for adding
-    reactions to messages. However, a route for adding reactions with full-screen animation effects
-    would be better suited as an implementation-specific detail.
-
 A good P2 extension should never be both at the same time. If a P2 extension is both a
 major technological addition and a document describing a particular application use case, it should
 likely be split into two separate extensions.
@@ -1031,6 +1014,15 @@ numbers, hyphens, and underscores. This name determines the path of the extensio
 extension named `chat` would have routes starting with `.p2/chat/`.
 
 ### 8.1.3 Extending existing extensions
+
+To grow the ecosystem of interoperable [services](#9-services), it is encouraged to first develop
+a generic version of that service, which acts as a shared base for all implementations. This shared
+base can then be extended with the exact, non-service-critical features that are needed for a
+specific implementation.
+
+For example, a generic, federated chat service extension might offer routes for adding
+reactions to messages. However, a route for adding reactions with full-screen animation effects
+would be better suited as an implementation-specific detail.
 
 If possible for the given use case, P2 extensions should depend on and extend already existing,
 officially endorsed P2 extensions.
@@ -1080,9 +1072,11 @@ made to the extension. The only exception to this rule is when marking an extens
 
 ### 8.4.1 Yanking
 
-Yanking an extension means that the extension is no longer supported, and that it should not be used.
+Yanking an extension means that the extension is no longer supported, and that it **should not** be used.
 A later version of the extension should be used instead. Yanked extension versions should prominently
 display the "yanked" status next to the version number in the extension's documentation.
+
+Versions of officially endorsed P2 extensions can normally not be removed, only marked as yanked.
 
 ### 8.4 Dependencies
 
