@@ -1,7 +1,7 @@
 # Documentation
 
 Specification documents and API documentation for the polyproto federated messaging protocol
-Built with mkdocs-material and python3.10
+Built with mkdocs-material and python3.12
 
 ## File structure
 
@@ -19,7 +19,7 @@ You should also read our [Code of Conduct](https://github.com/polyphony-chat/.gi
 
 You will need the following things installed on your computer:
 
-- `python3.10`
+- `python3.12`
 - `pip`
 - Any sort of python virtual environment manager - use `venv` if in doubt
 - `git`
