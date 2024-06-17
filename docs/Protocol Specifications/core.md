@@ -45,15 +45,13 @@ The version number specified here also applies to the API documentation.
       - [7.2.2 Re-signing data](#722-re-signing-data)
     - [7.3 Moving data](#73-moving-data)
   - [8. Protocol extensions (P2 extensions)](#8-protocol-extensions-p2-extensions)
-  - [8.1 P2 extension design guidelines](#81-p2-extension-design-guidelines)
-    - [8.1.1 Routes](#811-routes)
-    - [8.1.2 Extension names](#812-extension-names)
-    - [8.1.3 Extending existing extensions](#813-extending-existing-extensions)
+  - [8.1 Extension design](#81-extension-design)
   - [8.2 Namespaces](#82-namespaces)
   - [8.3 Officially endorsed extensions](#83-officially-endorsed-extensions)
   - [8.4 Versioning and yanking](#84-versioning-and-yanking)
     - [8.4.1 Yanking](#841-yanking)
     - [8.4 Dependencies](#84-dependencies)
+  - [8.5 Routes](#85-routes)
   - [9. Services](#9-services)
   - [9.1 Discoverability](#91-discoverability)
 
@@ -962,12 +960,6 @@ is implemented is up to the concrete implementation.
 
 ## 8. Protocol extensions (P2 extensions)
 
-<!-- TODO -->
-
-!!! bug "Subject to change"
-
-    This section will likely change in the future, and as such, should be treated as a draft.
-
 polyproto leaves room for extensions, outsourcing concepts such as concrete message types to
 protocol extensions. This allows for a more flexible core protocol, which can be adapted to a wide
 variety of use cases. The following sections define:
@@ -976,15 +968,11 @@ variety of use cases. The following sections define:
 - how protocol extensions interact with the core protocol
 - requirements, which must be fulfilled by protocol extensions to become officially endorsed
 
-## 8.1 P2 extension design guidelines
+## 8.1 Extension design
 
-The following section is dedicated to listing design requirements, which should be met by all
-P2 extensions. These requirements are meant to ensure a certain level of quality in the
-extensions-ecosystem.
+P2 extensions *should* be either of the following:
 
-P2 extensions should be either of the following:
-
-- a major technological addition, which can be taken advantage of
+- a **major** technological addition, which can be taken advantage of
 by other extensions. Examples of this are:
   - a unified WebSocket Gateway connection scheme
   - Message Layer Encryption (MLS)
@@ -997,23 +985,73 @@ A good P2 extension should never be both at the same time. If a P2 extension is 
 major technological addition and a document describing a particular application use case, it should
 likely be split into two separate extensions.
 
-### 8.1.1 Routes
+Designing P2 extensions, which only specify a single route or a small set of behavior changes is
+discouraged. Instead, these should be implemented as part of a larger extension, which offers a
+more comprehensive set of features.
 
-Polyproto extensions should never change, add or remove routes defined by the extension they depend on.
-Instead, routes with alternating or new behavior must be added under a newly defined namespace, which
-must differ from the original namespace. Changing the behavior of existing routes breaks compatibility
-with other implementations of the same extension.
+## 8.2 Namespaces
 
-Route paths should always start with `.p2/`, followed by the extensions' namespace. Namespaces are
-explained in [section 8.2](#82-namespaces).
+A namespace is a string used to identify a specific P2 extension. Used as a prefix in URLs, they
+prevent route name collisions between different extensions. Namespaces should be unique
+and descriptive. They should only contain lowercase letters, numbers, hyphens, and underscores.
 
-### 8.1.2 Extension names
+Officially endorsed P2 extensions have priority over selecting namespaces. If a namespace is already
+taken by an officially endorsed extension, a different namespace must be chosen. If a namespace
+collision exists between an officially endorsed extension and a regular P2 extension, the officially
+endorsed extension has priority.
 
-The name of a P2 extension should be unique, descriptive, and should only contain lowercase letters,
-numbers, hyphens, and underscores. This name determines the path of the extension's routes. An
-extension named `chat` would have routes starting with `.p2/chat/`.
+## 8.3 Officially endorsed extensions
 
-### 8.1.3 Extending existing extensions
+Officially endorsed extensions are extensions that either:
+
+- have undergone review and approval by the polyproto maintainers
+- have been developed by the maintainers themselves
+- have been developed by a third party and are now maintained by the polyproto maintainers
+
+Contact the polyphony-chat maintainers under [info@polyphony.chat](mailto:info@polyphony.chat)
+if you want to have your extension officially endorsed.
+
+Officially endorsed extensions must fulfill all the requirements listed in
+[section 8](#8-protocol-extensions-p2-extensions).
+
+Each version of an extension developed by outside parties must undergo the review process before
+being officially endorsed.
+
+## 8.4 Versioning and yanking
+
+Semantic Versioning v2.0.0 is used for versioning P2 extensions. The version number of an extension
+is defined in the extension's documentation. The version number must be updated whenever a change is
+made to the extension. The only exception to this rule is when marking an extension as deprecated
+(yanking).
+
+### 8.4.1 Yanking
+
+Yanking an extension means that the extension is no longer supported, and that it **should not** be used.
+A later version of the extension should be used instead. Yanked extension versions should prominently
+display the "yanked" status next to the version number in the extension's documentation.
+
+Versions of officially endorsed P2 extensions can normally not be removed, only marked as yanked.
+
+### 8.4 Dependencies
+
+P2 extensions can depend on other P2 extensions. If an extension depends on another extension, the
+name of the dependency must be listed in the extension's documentation, along with a link to the
+dependencies' specification document.
+
+The following syntax is used for indicating the version number of a dependency:
+
+| Syntax  | Meaning                                                                                                                              |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `1.0.0` | Any version of the dependency with the major version `1`, a minor version of `0`, and a patch version of `0` or greater is required. |
+| `1.0`   | Any version of the dependency with the major version `1` and the minor version `0` is required. The patch version is unimportant.    |
+| `1`     | Any version of the dependency with the major version `1` is required. The minor and patch versions are unimportant.                  |
+
+When selecting a version number for a dependency, the highest possible version number that fulfills
+the requirements should be selected.
+
+The name of the dependency along with the version number is to be listed right beneath the extension's
+version declaration in the extension's documentation. Ideally, a link to the dependencies' specification
+document should be included.
 
 To grow the ecosystem of interoperable [services](#9-services), it is encouraged to first develop
 a generic version of that service, which acts as a shared base for all implementations. This shared
@@ -1038,63 +1076,15 @@ officially endorsed P2 extensions.
 Doing this ensures a high level of interoperability across all different implementations of a specific
 application group.
 
-## 8.2 Namespaces
+## 8.5 Routes
 
-A namespace is a prefix used to group routes together. They prevent route name collisions between
-different extensions. Namespaces should be unique and descriptive. They should only contain lowercase
-letters, numbers, hyphens, and underscores.
+Polyproto extensions must never change, add or remove routes defined by the extension they depend on.
+Instead, routes with alternating or new behavior must be added under a newly defined namespace, which
+must differ from the original namespace. Changing the behavior of existing routes breaks compatibility
+with other implementations of the same extension.
 
-Officially endorsed P2 extensions have priority over selecting namespaces. If a namespace is already
-taken by an officially endorsed extension, a different namespace must be chosen. If a namespace
-collision exists between an officially endorsed extension and a regular P2 extension, the officially
-endorsed extension has priority.
-
-## 8.3 Officially endorsed extensions
-
-Officially endorsed extensions are extensions that either:
-
-- have undergone review and approval by the polyproto maintainers
-- have been developed by the maintainers themselves
-- have been developed by a third party and are now maintained by the polyproto maintainers
-
-Contact the polyphony-chat maintainers under [info@polyphony.chat](mailto:info@polyphony.chat)
-if you want to have your extension officially endorsed.
-
-Officially endorsed extensions must fulfill all the requirements listed in
-[section 8](#8-protocol-extensions-p2-extensions).
-
-## 8.4 Versioning and yanking
-
-Semantic Versioning v2.0.0 is used for versioning P2 extensions. The version number of an extension
-is defined in the extension's documentation. The version number must be updated whenever a change is
-made to the extension. The only exception to this rule is when marking an extension as deprecated
-(yanking).
-
-### 8.4.1 Yanking
-
-Yanking an extension means that the extension is no longer supported, and that it **should not** be used.
-A later version of the extension should be used instead. Yanked extension versions should prominently
-display the "yanked" status next to the version number in the extension's documentation.
-
-Versions of officially endorsed P2 extensions can normally not be removed, only marked as yanked.
-
-### 8.4 Dependencies
-
-P2 extensions can depend on other P2 extensions. If an extension depends on another extension, the
-name of the dependency should be listed in the extension's documentation, along with a link to the
-dependencies' specification document.
-
-The following syntax is used for indicating the version number of a dependency:
-
-| Syntax  | Meaning                                                                                                                             |
-| ------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `1.0.0` | The exact version `1.0.0` of the dependency is required.                                                                            |
-| `1.0`   | Any version of the dependency with the major version `1` and the minor version `0` is required. The bug fix version is unimportant. |
-| `1`     | Any version of the dependency with the major version `1` is required. The minor and bug fix versions are unimportant.               |
-
-The name of the dependency along with the version number is to be listed right beneath the extension's
-version declaration in the extension's documentation. Ideally, a link to the dependencies' specification
-document should be included.
+Route paths must always start with `.p2/`, followed by the extensions' namespace. Namespaces are
+explained in [section 8.2](#82-namespaces).
 
 ## 9. Services
 
