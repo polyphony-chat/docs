@@ -2,7 +2,7 @@
 title: polyproto-mls
 ---
 
-# P2 Protocol Extension: polyproto-mls
+# P2 Extension: polyproto-mls
 
 !!! bug "TODO"
 
@@ -13,7 +13,7 @@ title: polyproto-mls
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 The version number specified here also applies to the API documentation.
 
-- [P2 Protocol Extension: polyproto-mls](#p2-protocol-extension-polyproto-mls)
+- [P2 Extension: polyproto-mls](#p2-extension-polyproto-mls)
   - [1. Encryption](#1-encryption)
     - [1.1. KeyPackages](#11-keypackages)
       - [1.1.1 Last resort KeyPackages](#111-last-resort-keypackages)

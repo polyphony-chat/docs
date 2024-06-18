@@ -2,7 +2,7 @@
 title: polyproto-chat
 ---
 
-# P2 Protocol Extension: polyproto-chat
+# P2 Extension: polyproto-chat
 
 !!! bug "TODO"
 

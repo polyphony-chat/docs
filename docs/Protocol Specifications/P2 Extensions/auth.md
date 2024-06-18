@@ -2,7 +2,7 @@
 title: polyproto-auth
 ---
 
-# P2 Protocol Extension: polyproto-auth
+# P2 Extension: polyproto-auth
 
 **v1.0.0-alpha.1** - Treat this as an unfinished draft.
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
@@ -11,7 +11,7 @@ The version number specified here also applies to the API documentation.
 The `polyproto-auth` extension is a protocol extension for polyproto that provides a basic
 authentication mechanism to register new users and authenticate existing users.
 
-- [P2 Protocol Extension: polyproto-auth](#p2-protocol-extension-polyproto-auth)
+- [P2 Extension: polyproto-auth](#p2-extension-polyproto-auth)
   - [1. Registration of a new actor](#1-registration-of-a-new-actor)
   - [1.1 Registering a new actor on a polyproto home server](#11-registering-a-new-actor-on-a-polyproto-home-server)
   - [1.2 Authenticating a new client on a polyproto home server](#12-authenticating-a-new-client-on-a-polyproto-home-server)
