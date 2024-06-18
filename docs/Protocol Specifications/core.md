@@ -773,10 +773,30 @@ polyproto empowers the end-user by defining straightforward mechanisms to change
 while preserving their identity, moving messages to another server, or both.
 
 Identity migration allows actors to transparently re-assign ownership of their identity and messages
-to a new identity. This allows users to switch home servers while not losing ownership of messages
+to a new identity. This allows actors to switch home servers while not losing ownership of messages
 sent by them.
 
-Message migration allows actors to move messages from one service-provider
+Message migration allows actors to move messages from one service-provider to another in a
+tamper-resistant way. This makes it possible for actors to switch service providers, taking some
+or all of their messages with them. Which messages can be moved is up to P2 extensions to define,
+as it might not always be possible to move all messages. Some messages might be tied to a
+specific context, which is unavailable on the new server.
+
+!!! example "Example: Information tied to a specific context"
+
+    In a chat application, there might exist a group chat with a lot of people in it. Moving your
+    messages from this group chat to another server might be impossible, depending on the architecture
+    of the chat application. Typically, the messages in a group chat are stored on the server
+    hosting the group. Moving the messages of one individual from one server to another is not
+    possible in these cases.
+
+!!! example "Example: Information not necessarily tied to a specific context"
+
+    Continuing the chat application example, it might very well be possible to move messages
+    written in a private chat between two actors from one server to another. An examplary
+    architecture where this is possible, is where all private messages are stored on the server of
+    the actor who sent the message. Here, an actor can move their messages to another server without
+    any issues.
 
 Migrating an actor always involves reassigning the ownership of all actor-associated data in the
 distributed network to the new actor. Should the old actor want to additionally move all data from
