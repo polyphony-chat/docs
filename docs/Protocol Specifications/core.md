@@ -55,6 +55,7 @@ The version number specified here also applies to the API documentation.
   - [8.5 Routes](#85-routes)
   - [9. Services](#9-services)
   - [9.1 Discoverability](#91-discoverability)
+    - [9.1.1 Changing a primary server](#911-changing-a-primary-server)
 
 // TODO: Rework this introductory section
 
@@ -1156,12 +1157,23 @@ federation ID of the actor they want to communicate with. Consider the following
 To be discoverable, an actor must add a key-value pair to their home server's database. The
 key is the name of the service, and the value is the base URL of the server hosting the service.
 
-Keys are unique in the actor-scoped actor-service table. This means that actors wanting to register
-for two or more different implementations of the same service must select, which server to use as
-a primary server for that service. If the actor is human, clients must not make this decision for
-the actor, and must instead ask the actor to make the decision.
-
 The API routes for managing discoverability are documented in the API documentation.
+
+### 9.1.1 Changing a primary server
+
+Keys are unique in the actor-scoped service-server table. This means that actors wanting to register
+for two or more different implementations of the same service must select, which server to use as
+a so-called "primary server" for that service.
+
+If the actor is human, clients must not override the existing
+key-value pair silently. Instead, clients must either ask the actor to confirm the change, or
+not change the key-value pair.
+
+Changing the primary server for a service is considered a sensitive action and should require a
+second factor of authentication.
+
+Messages do not get moved or re-signed when changing the primary server for a service. If an actor
+wants to move their messages to the new primary server, they must request a [migration](#7-account-migration).
 
 ---
 
