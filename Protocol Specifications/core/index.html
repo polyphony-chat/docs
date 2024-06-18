@@ -1200,13 +1200,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#7-account-migration" class="md-nav__link">
+  <a href="#7-migrations" class="md-nav__link">
     <span class="md-ellipsis">
-      7. Account migration
+      7. Migrations
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7. Account migration">
+    <nav class="md-nav" aria-label="7. Migrations">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1359,14 +1359,20 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#glossary" class="md-nav__link">
+    <nav class="md-nav" aria-label="9.1 Discoverability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#911-changing-a-primary-service-provider" class="md-nav__link">
     <span class="md-ellipsis">
-      Glossary
+      9.1.1 Changing a primary service provider
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2402,13 +2408,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#7-account-migration" class="md-nav__link">
+  <a href="#7-migrations" class="md-nav__link">
     <span class="md-ellipsis">
-      7. Account migration
+      7. Migrations
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7. Account migration">
+    <nav class="md-nav" aria-label="7. Migrations">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2561,14 +2567,20 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#glossary" class="md-nav__link">
+    <nav class="md-nav" aria-label="9.1 Discoverability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#911-changing-a-primary-service-provider" class="md-nav__link">
     <span class="md-ellipsis">
-      Glossary
+      9.1.1 Changing a primary service provider
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2632,7 +2644,7 @@ The version number specified here also applies to the API documentation.</p>
 <li><a href="#643-private-key-loss-prevention-and-private-key-recovery">6.4.3 Private key loss prevention and private key recovery</a></li>
 </ul>
 </li>
-<li><a href="#7-account-migration">7. Account migration</a><ul>
+<li><a href="#7-migrations">7. Migrations</a><ul>
 <li><a href="#71-challenges-and-trust">7.1 Challenges and trust</a></li>
 <li><a href="#72-reassigning-ownership">7.2 Reassigning ownership</a></li>
 <li><a href="#721-migrating-an-actor">7.2.1 Migrating an actor</a></li>
@@ -2651,10 +2663,13 @@ The version number specified here also applies to the API documentation.</p>
 </li>
 <li><a href="#85-routes">8.5 Routes</a></li>
 <li><a href="#9-services">9. Services</a></li>
-<li><a href="#91-discoverability">9.1 Discoverability</a></li>
+<li><a href="#91-discoverability">9.1 Discoverability</a><ul>
+<li><a href="#911-changing-a-primary-service-provider">9.1.1 Changing a primary service provider</a></li>
 </ul>
-<p>// TODO: Rework this introductory section
-The polyproto protocol is a home-server-based identity federation protocol specification intended
+</li>
+</ul>
+<p>// TODO: Rework this introductory section</p>
+<p>The polyproto protocol is a home-server-based identity federation protocol specification intended
 for use in applications where actor identity is needed. polyproto focuses on federated identity,
 and apart from the usage of Messaging Layer Security (MLS) for encryption, does not specify any
 further application-specific features. Instead, it is intended to be used as a base for application
@@ -2668,14 +2683,37 @@ as the necessity of encryption depends on the specific implementation.</p>
 <p>This document is intended to be used as a starting point for developers wanting to develop software,
 which can operate with other polyproto implementations.</p>
 <h2 id="1-terminology-used-in-this-document">1. Terminology used in this document<a class="headerlink" href="#1-terminology-used-in-this-document" title="Permanent link">&para;</a></h2>
-<p>In addition to the terminology found in the glossary located at the end of this document, the
-following terminology is used throughout this document:</p>
+<p>The following terminology is used throughout this document:</p>
 <ul>
-<li><strong>Message, Messages</strong>: In the context of this protocol specification, a <strong>message</strong> is any piece
+<li><strong>Actor</strong> - An entity represented by a federation ID, registered on a home server. Actors can be
+  users, bots, or any other entity with a federation ID.</li>
+<li><strong>CA, Certificate Authority</strong> - Any home server that issues and publicly attests to the validity
+  of ID-Certs. In polyproto, only home servers are CAs.</li>
+<li><strong>Client</strong> - Any application used by an actor to connect to an instance.</li>
+<li><strong>CSR, Certificate Signing Request</strong> - A request sent to a CA to obtain a certificate. It holds
+  information about the entity requesting the certificate, including their public identity key.</li>
+<li><strong>DN, Distinguished Name</strong> - A set of RDNs (Relative Distinguished Names) that uniquely identify
+  a certificate. See <a href="https://ldap.com/ldap-dns-and-rdns/">https://ldap.com/ldap-dns-and-rdns/</a></li>
+<li><strong>Federation ID</strong> - A unique identifier; In public contexts, usually <strong>actor@</strong>subdomain.<strong>example</strong>.com,
+  where bold parts are required and non-bold parts are optional.</li>
+<li><strong>Foreign server</strong> - An instance that an actor is not registered on; essentially a third party.</li>
+<li><strong>Home server</strong> - The instance that an actor is registered on. Any polyproto-core compliant server
+  hosted on the same domain is also considered a home server. A home server is the instance that
+  publicly attests to the validity of all legitimate ID-Certs issued under its <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name">FQDN</a>.
+  A domain can have many home servers, but only one per subdomain.</li>
+<li><strong>ID-CSR</strong> - A certificate signing request for a client's identity key pair. It is used to obtain
+  an ID-Cert.</li>
+<li><strong>Identity</strong> - Synonymous with "Federation ID".</li>
+<li><strong>Identity Key Pair</strong> - A key pair associating an identity with a set of cryptographic keys used
+  to sign and possibly encrypt messages.</li>
+<li><strong>Instance</strong> - A server hosting polyproto compliant software for clients.</li>
+<li>
+<p><strong>Message, Messages</strong>: In the context of this protocol specification, a <strong>message</strong> is any piece
   of data sent by a client that is intended to be identifiable as being sent by a specific actor.
   To qualify as a "message", this piece of data must also, at any point in time, and also if only
   briefly, be visible to other users or to the unauthenticated public. Examples of things that would
-  qualify as messages include:</li>
+  qualify as messages include:</p>
+<ul>
 <li>A message sent to another actor in a chat application</li>
 <li>A post on a social media platform</li>
 <li>A "like" interaction on a social media platform</li>
@@ -2683,8 +2721,25 @@ following terminology is used throughout this document:</p>
 <li>Group join or leave messages</li>
 <li>Reporting a post or actor, if the report is not anonymous</li>
 </ul>
-<p>Terminology not specified in this section or in the glossary has been defined somewhere else in this
-document.</p>
+</li>
+<li>
+<p><strong>P2</strong> - Shortened form of polyproto.</p>
+</li>
+<li><strong>P2 Extension</strong> - A polyproto extension.</li>
+<li><strong>polyproto-chat</strong> - The chat-API used by Polyphony. An extension of the polyproto protocol,
+  defining the routes and capabilities of the chat-API used by Polyphony.</li>
+<li><strong>polyproto</strong> - The core federation protocol and APIs of polyproto, enabling identification and
+  authorization on foreign servers. It is independent of the chat-API used.</li>
+<li><strong>Root Certificate</strong> - A certificate used to sign other certificates, establishing a chain of
+  trust. In polyproto, only home servers have root certificates.</li>
+<li><strong>Service</strong>: Any application-specific implementation of polyproto, defined by a P2 extension.
+  All services are P2 extensions, but not all P2 extensions are services. polyproto-chat is an
+  example of a service.</li>
+<li><strong>Session</strong> - A specific period of authenticated interaction between a client and an instance.
+  During the lifetime of a session, the client can perform actions as the actor they are authenticated
+  as.</li>
+<li><strong>Session ID</strong> - <a href="/Protocol%20Specifications/core#6113-session-ids">See polyproto specification: Section 6.1.1.3</a></li>
+</ul>
 <h2 id="2-trust-model">2. Trust model<a class="headerlink" href="#2-trust-model" title="Permanent link">&para;</a></h2>
 <p>polyproto operates under the following trust assumptions:</p>
 <ol>
@@ -3032,7 +3087,7 @@ must meet all of the following requirements:</p>
   (fully qualified domain name).</li>
 <li>If the ID-Cert or ID-CSR is for an actor, the IDD must include the <code>UID</code> (OID 0.9.2342.19200300.100.1.1)
   <strong>and</strong> <code>uniqueIdentifier</code> (OID 0.9.2342.19200300.100.1.44) fields.<ul>
-<li><code>UID</code> is the federation ID of the actor, e.g. <code>actor@fqdn-of-homeserver.example.com</code>.</li>
+<li><code>UID</code> is the federation ID of the actor, e.g. <code>actor@fqdn-of-home server.example.com</code>.</li>
 <li><code>uniqueIdentifier</code> is a Session ID.</li>
 </ul>
 </li>
@@ -3081,12 +3136,12 @@ identity key caching to impersonate an actor. Consider the following example, wh
 server public identity key caching, but no home server issued identity key certificates:</p>
 <div class="admonition example">
 <p class="admonition-title">Potential misuse scenario</p>
-<p>A malicious foreign server B can fake a message from Alice (Home server: Server A) to Bob
-(Home Server: Server B), by generating a new identity key pair and using it to sign the
-malicious message. The foreign server then sends that message to Bob, who will then request
-Alice's public identity key from Server B, who will then send Bob the malicious public identity
-key. Bob will succeed in verifying the signature of the message, and not notice that the message
-has been crafted by a malicious server.</p>
+<p>A malicious foreign server B can fake a message from Alice
+(Home server: Server A) to Bob (Home Server: Server B), by generating a new identity key pair
+and using it to sign the malicious message. The foreign server then sends that message to Bob,
+who will then request Alice's public identity key from Server B, who will then send Bob the
+malicious public identity key. Bob will succeed in verifying the signature of the message, and
+not notice that the message has been crafted by a malicious server.</p>
 </div>
 <p>The above scenario is not possible with home server issued identity key certificates, as the
 malicious server cannot generate an identity key pair for Alice, which is signed by Server A.</p>
@@ -3111,7 +3166,7 @@ This is because the public key of an actor likely changes over time and users mu
 they send to servers. Likewise, a client should also keep all of its own ID-Certs stored
 perpetually, to potentially verify its identity in case of a migration.</p>
 <p>Users must hold on to all of their past key pairs, as they might need them to
-<a href="#7-account-migration">migrate their account in the future</a>. How this is done is specified in
+<a href="#7-migrations">migrate their account in the future</a>. How this is done is specified in
 <a href="#63-private-key-loss-prevention-and-private-key-recovery">section 6.3: Private key loss prevention and private key recovery</a>.</p>
 <pre class="mermaid"><code>sequenceDiagram
 autonumber
@@ -3161,19 +3216,20 @@ revoking an ID-Cert are the same regardless of the server type.</p>
 </div>
 <h3 id="62-actor-identity-keys-and-message-signing">6.2 Actor identity keys and message signing<a class="headerlink" href="#62-actor-identity-keys-and-message-signing" title="Permanent link">&para;</a></h3>
 <p>As briefly mentioned section <a href="#4-federated-identity">#4</a>, users must hold on to an identity key pair
-at all times. This key pair is used to represent an actor's identity and to verify message integrity,
-by having an actor sign all messages they send with their private identity key. The key pair is
-generated by the actor. An actor-generated identity key certificate signing request (CSR) is sent
-to the actor's home server when first connecting to the server with a new session, or when rotating
-keys. The key is stored in the client's local storage. Upon receiving a new identity key CSR, a
-home server will sign this CSR and send the resulting ID-Cert to the client. This certificate is
-proof that the home server attests to the clients key. Read <a href="#61-home-server-signed-certificates-for-public-client-identity-keys-id-cert">section 6.1</a>
-for more information about the certificate.</p>
+at all times. This key pair is used to represent an actor's identity and to verify
+message integrity, by having an actor sign all messages they send with their
+private identity key. The key pair is generated by the actor. An actor-generated identity key
+certificate signing request (CSR) is sent to the actor's home server when first connecting to the
+server with a new session, or when rotating keys. The key is stored in the client's local storage.
+Upon receiving a new identity key CSR, a home server will sign this CSR and send the resulting ID-Cert
+to the client. This certificate is proof that the home server attests to the clients key. Read
+<a href="#61-home-server-signed-certificates-for-public-client-identity-keys-id-cert">section 6.1</a> for more
+information about the certificate.</p>
 <h4 id="621-message-verification">6.2.1 Message verification<a class="headerlink" href="#621-message-verification" title="Permanent link">&para;</a></h4>
-<p>To ensure message integrity through signing, clients and servers must verify message signatures.
-This involves cross-checking the message signature against the sender's ID-Cert and the senders'
-home server's ID-Cert, while also confirming the validity of the ID-Cert attached to the
-message and ensuring its public key matches the sender's.</p>
+<p>To ensure message integrity through signing, clients and servers must verify
+message signatures. This involves cross-checking the message signature against the sender's
+ID-Cert and the senders' home server's ID-Cert, while also confirming the validity of the
+ID-Cert attached to the message and ensuring its public key matches the sender's.</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>Signature verification must always be "strict", meaning that signature schemes producing malleable
@@ -3328,9 +3384,13 @@ It is also recommended backing up the encrypted private identity keys in some ot
 <li>It is a good idea for home servers to limit the upload size and available upload slots for encrypted
   private identity keys.</li>
 </ul>
-<h2 id="7-account-migration">7. Account migration<a class="headerlink" href="#7-account-migration" title="Permanent link">&para;</a></h2>
-<p>Account migration allows users to move their account and associated data to another identity.
-This allows users to switch home servers while not losing ownership of messages sent by them.</p>
+<h2 id="7-migrations">7. Migrations<a class="headerlink" href="#7-migrations" title="Permanent link">&para;</a></h2>
+<p>polyproto empowers the end-user by defining straightforward mechanisms to change their home server
+while preserving their identity, moving messages to another server, or both.</p>
+<p>Identity migration allows actors to transparently re-assign ownership of their identity and messages
+to a new identity. This allows users to switch home servers while not losing ownership of messages
+sent by them.</p>
+<p>Message migration allows actors to move messages from one service-provider</p>
 <p>Migrating an actor always involves reassigning the ownership of all actor-associated data in the
 distributed network to the new actor. Should the old actor want to additionally move all data from
 the old home server to another home server, more steps are needed. Account migration is not considered
@@ -3357,11 +3417,11 @@ signature of the quoted post, which would be undesirable. Edge cases like these 
 implementations to handle, and should be well documented.</p>
 </div>
 <h3 id="72-reassigning-ownership">7.2 Reassigning ownership<a class="headerlink" href="#72-reassigning-ownership" title="Permanent link">&para;</a></h3>
-<p>Transferring message ownership from an old to a new account, known as re-signing messages, necessitates
-coordination between the two accounts, initiated by the old account. To start, the old account sends
-an API request containing the new account's federation ID to the server where messages should be
-re-signed. The server responds with all ID-Certs used for signing the old account's messages, along with
-a challenge string.</p>
+<p>Transferring message ownership from an old to a new account, known as
+re-signing messages, necessitates coordination between the two accounts, initiated by the
+old account. To start, the old account sends an API request containing the new account's
+federation ID to the server where messages should be re-signed. The server responds with all
+ID-Certs used for signing the old account's messages, along with a challenge string.</p>
 <p>Migrating an account is done with the following steps:</p>
 <ol>
 <li>The actor creates a new account on a new home server.</li>
@@ -3421,10 +3481,10 @@ where Server A is unreachable or uncooperative.</em></p>
 <div class="admonition question">
 <p class="admonition-title">If the old home server is not needed to migrate, why try to contact it in the first place?</p>
 <p>It is generally preferrable to have the old home server cooperate with the migration, as it
-allows for a more seamless migration. A cooperative homeserver will be able to provide the new
+allows for a more seamless migration. A cooperative home server will be able to provide the new
 home server with all information associated with the old account. It can also forward requests
 regarding the old account to the new server, which makes the process more seamless for other
-users. The "non-cooperative homeserver migration method" is only a last resort.</p>
+users. The "non-cooperative home server migration method" is only a last resort.</p>
 </div>
 <h4 id="722-re-signing-data">7.2.2 Re-signing data<a class="headerlink" href="#722-re-signing-data" title="Permanent link">&para;</a></h4>
 <pre class="mermaid"><code>sequenceDiagram
@@ -3480,9 +3540,10 @@ aa-xsa: Deactivate account</code></pre>
 <p>Depending on the use case, this process can be adapted to fit the needs of the user. How this process
 is implemented is up to the concrete implementation.</p>
 <h2 id="8-protocol-extensions-p2-extensions">8. Protocol extensions (P2 extensions)<a class="headerlink" href="#8-protocol-extensions-p2-extensions" title="Permanent link">&para;</a></h2>
-<p>polyproto leaves room for extensions, outsourcing concepts such as concrete message types to
-protocol extensions. This allows for a more flexible core protocol, which can be adapted to a wide
-variety of use cases. The following sections define:</p>
+<p>polyproto leaves room for extensions, outsourcing concepts such as concrete
+message types to protocol extensions. This allows for a more flexible
+core protocol, which can be adapted to a wide variety of use cases. The following sections
+define:</p>
 <ul>
 <li>protocol extensions, also called P2 extensions</li>
 <li>how protocol extensions interact with the core protocol</li>
@@ -3506,6 +3567,13 @@ likely be split into two separate extensions.</p>
 <p>Designing P2 extensions, which only specify a single route or a small set of behavior changes is
 discouraged. Instead, these should be implemented as part of a larger extension, which offers a
 more comprehensive set of features.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are, say, developing a polyproto server implementation with a feature that is not part of
+the default polyproto specification, you do not have to create a P2 extension for this feature.
+P2 extensions are useful for defining interoperable services, which can be implemented by a variety
+of servers and clients.</p>
+</div>
 <h2 id="82-namespaces">8.2 Namespaces<a class="headerlink" href="#82-namespaces" title="Permanent link">&para;</a></h2>
 <p>A namespace is a string used to identify a specific P2 extension. Used as a prefix in URLs, they
 prevent route name collisions between different extensions. Namespaces should be unique
@@ -3574,7 +3642,7 @@ a generic version of that service, which acts as a shared base for all implement
 base can then be extended with the exact, non-service-critical features that are needed for a
 specific implementation.</p>
 <p>For example, a generic, federated chat service extension might offer routes for adding
-reactions to messages. However, a route for adding reactions with full-screen animation effects
+reactions to chat messages. However, a route for adding reactions with full-screen animation effects
 would be better suited as an implementation-specific detail.</p>
 <p>If possible for the given use case, P2 extensions should depend on and extend already existing,
 officially endorsed P2 extensions.</p>
@@ -3607,46 +3675,56 @@ to how many services any given actor can register with, and what these services 
 <p>Application specific implementations of polyproto should consider that users of their service might
 also want to register for services offered by other servers, using the same identity.</p>
 <h2 id="91-discoverability">9.1 Discoverability<a class="headerlink" href="#91-discoverability" title="Permanent link">&para;</a></h2>
-<p>TODO</p>
-<hr />
-<h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Actor</strong> - An entity represented by a federation ID, registered on a home server. Actors can be
-  users, bots, or any other entity with a federation ID.</li>
-<li><strong>CA, Certificate Authority</strong> - Any home server that issues and publicly attests to the validity
-  of ID-Certs. In polyproto, only home servers are CAs.</li>
-<li><strong>Client</strong> - Any application used by an actor to connect to an instance.</li>
-<li><strong>CSR, Certificate Signing Request</strong> - A request sent to a CA to obtain a certificate. It holds
-  information about the entity requesting the certificate, including their public identity key.</li>
-<li><strong>DN, Distinguished Name</strong> - A set of RDNs (Relative Distinguished Names) that uniquely identify
-  a certificate. See <a href="https://ldap.com/ldap-dns-and-rdns/">https://ldap.com/ldap-dns-and-rdns/</a></li>
-<li><strong>Federation ID</strong> - A unique identifier; In public contexts, usually <strong>actor@</strong>subdomain.<strong>example</strong>.com,
-  where bold parts are required and non-bold parts are optional.</li>
-<li><strong>Foreign server</strong> - An instance that an actor is not registered on; essentially a third party.</li>
-<li><strong>Home server</strong> - The instance that an actor is registered on. Any polyproto-core compliant server
-  hosted on the same domain is also considered a home server. A home server is the instance that
-  publicly attests to the validity of all legitimate ID-Certs issued under its <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name">FQDN</a>.
-  A domain can have many home servers, but only one per subdomain.</li>
-<li><strong>ID-CSR</strong> - A certificate signing request for a client's identity key pair. It is used to obtain
-  an ID-Cert.</li>
-<li><strong>Identity</strong> - Synonymous with "Federation ID".</li>
-<li><strong>Identity Key Pair</strong> - A key pair associating an identity with a set of cryptographic keys used
-  to sign and possibly encrypt messages.</li>
-<li><strong>Instance</strong> - A server hosting polyproto compliant software for clients.</li>
-<li><strong>P2 Extension</strong> - A <strong>p</strong>oly<strong>p</strong>roto (P2) extension/</li>
-<li><strong>polyproto-chat</strong> - The chat-API used by Polyphony. An extension of the polyproto protocol,
-  defining the routes and capabilities of the chat-API used by Polyphony.</li>
-<li><strong>polyproto</strong> - The core federation protocol and APIs of polyproto, enabling identification and
-  authorization on foreign servers. It is independent of the chat-API used.</li>
-<li><strong>Root Certificate</strong> - A certificate used to sign other certificates, establishing a chain of
-  trust. In polyproto, only home servers have root certificates.</li>
-<li><strong>Service</strong> - "Service" describes an application-specific set of behaviors and routes packaged as a
-  P2 extension. polyproto-chat is a service, for example.</li>
-<li><strong>Session</strong> - A specific period of authenticated interaction between a client and an instance.
-  During the lifetime of a session, the client can perform actions as the actor they are authenticated
-  as.</li>
-<li><strong>Session ID</strong> - <a href="/Protocol%20Specifications/core#7113-session-ids">See core.md</a></li>
-</ul>
+<p>The discoverability feature allows users who are registered with the same service but on different
+servers to communicate with each other. The actor initiating the communication only needs to know the
+federation ID of the actor they want to communicate with. Consider the following example:</p>
+<div class="admonition example">
+<p class="admonition-title">Example: Discovering services</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>The example below is simplified for the sake of clarity. In a real-world scenario, Alice
+and the Chat server would perform the foreign server authentication procedure described in
+<a href="#411-authenticating-on-a-foreign-server">section 4.1.1</a> before Alice can send a
+chat message to Bob. The example also uses a simplified example of how polyproto-chat works.</p>
+</div>
+<p>Alice and Bob want to communicate with each other. Both Alice and Bob are registered on servers
+which host the polyproto-chat service. However, Alice and Bob are not registered on the same
+server, and they do not share any chat rooms. Alice types in Bob's federation ID into her
+chat client. The client then queries Bob's home server to find out, which server Bob is using
+for the polyproto-chat service. Alice's client can then send the chat message to Bob's server,
+which will forward the chat message to Bob.</p>
+<pre class="mermaid"><code>sequenceDiagram
+autonumber
+
+participant sb as Bob's Home Server
+actor aa as Alice
+participant sc as Chat server Bob is registered on
+actor ab as Bob
+
+aa-&gt;&gt;sb: Query: Which server is Bob using for polyproto-chat?
+sb-&gt;&gt;aa: Response: URL of Chat server Bob is registered on
+aa-&gt;&gt;sc: Message to Bob
+sc-&gt;&gt;ab: Forward message from Alice to Bob</code></pre>
+<p><em>Fig. 9: Sequence diagram depicting how Alice's client discovers which server Bob is using for
+the examplary polyproto-chat service.</em></p>
+<p>The example demonstrates how Alice can communicate with Bob, even though they do not share any
+servers.</p>
+</div>
+<p>To be discoverable, an actor must add a key-value pair to their home server's database. The
+key is the name of the service, and the value is the base URL of the server hosting the service.</p>
+<p>The API routes for managing discoverability are documented in the API documentation.</p>
+<h3 id="911-changing-a-primary-service-provider">9.1.1 Changing a primary service provider<a class="headerlink" href="#911-changing-a-primary-service-provider" title="Permanent link">&para;</a></h3>
+<p>Keys are unique in the actor-scoped service-&gt;service-provider table. Actors wanting
+to register for two or more different implementations of the same service must select, which
+service provider to use as a so-called "primary service provider" for that service.</p>
+<p>If the actor is human, clients must not override the existing
+key-value pair silently. Instead, clients must either ask the actor to confirm the change, or
+not change the key-value pair.</p>
+<p>Changing a primary service provider entry is considered a sensitive action and should
+require a second factor of authentication.</p>
+<p>messages do not get moved or re-signed when changing the primary
+service provider for a given service. If an actor wants to move their messages to the new primary
+service provider, they must request a <a href="#7-migrations">migration</a>.</p>
 
 
 
@@ -3669,7 +3747,7 @@ also want to register for services offered by other servers, using the same iden
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-06-17T11:35:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-06-17</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-06-18T14:35:16+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-06-18</span>
   </span>
 
     
