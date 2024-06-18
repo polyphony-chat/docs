@@ -253,6 +253,10 @@ Retrieve the maximum upload size for encrypted private key material, in bytes.
 
 ---
 
+TODO: Add routes concerned with account and data migration.
+
+---
+
 ## Glossary
 
 --8<-- "snippets/glossary.md"

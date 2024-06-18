@@ -320,6 +320,12 @@ This request has no body.
 
 ---
 
+TODO: "All challenge strings and their responses created in the context of account migration must be made public to ensure that a chain of trust can be maintained"
+
+TODO: Add routes concerned with account and data migration.
+
+---
+
 ## Glossary
 
 --8<-- "snippets/glossary.md"
