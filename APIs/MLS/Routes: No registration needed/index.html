@@ -1567,6 +1567,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Glossary
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1774,6 +1783,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Glossary
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1852,6 +1870,63 @@ The requested actor must be registered on this server.</p>
 </div>
 </div>
 <hr />
+<h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Actor</strong> - An entity represented by a federation ID, registered on a home server. Actors can be
+  users, bots, or any other entity with a federation ID.</li>
+<li><strong>CA, Certificate Authority</strong> - Any home server that issues and publicly attests to the validity
+  of ID-Certs. In polyproto, only home servers are CAs.</li>
+<li><strong>Client</strong> - Any application used by an actor to connect to an instance.</li>
+<li><strong>CSR, Certificate Signing Request</strong> - A request sent to a CA to obtain a certificate. It holds
+  information about the entity requesting the certificate, including their public identity key.</li>
+<li><strong>DN, Distinguished Name</strong> - A set of RDNs (Relative Distinguished Names) that uniquely identify
+  a certificate. See <a href="https://ldap.com/ldap-dns-and-rdns/">https://ldap.com/ldap-dns-and-rdns/</a></li>
+<li><strong>Federation ID</strong> - A unique identifier; In public contexts, usually <strong>actor@</strong>subdomain.<strong>example</strong>.com,
+  where bold parts are required and non-bold parts are optional.</li>
+<li><strong>Foreign server</strong> - An instance that an actor is not registered on; essentially a third party.</li>
+<li><strong>Home server</strong> - The instance that an actor is registered on. Any polyproto-core compliant server
+  hosted on the same domain is also considered a home server. A home server is the instance that
+  publicly attests to the validity of all legitimate ID-Certs issued under its <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name">FQDN</a>.
+  A domain can have many home servers, but only one per subdomain.</li>
+<li><strong>ID-CSR</strong> - A certificate signing request for a client's identity key pair. It is used to obtain
+  an ID-Cert.</li>
+<li><strong>Identity</strong> - Synonymous with "Federation ID".</li>
+<li><strong>Identity Key Pair</strong> - A key pair associating an identity with a set of cryptographic keys used
+  to sign and possibly encrypt messages.</li>
+<li><strong>Instance</strong> - A server hosting polyproto compliant software for clients.</li>
+<li>
+<p><strong>Message, Messages</strong>: In the context of this protocol specification, a <strong>message</strong> is any piece
+  of data sent by a client that is intended to be identifiable as being sent by a specific actor.
+  To qualify as a "message", this piece of data must also, at any point in time, and also if only
+  briefly, be visible to other users or to the unauthenticated public. Examples of things that would
+  qualify as messages include:</p>
+<ul>
+<li>A message sent to another actor in a chat application</li>
+<li>A post on a social media platform</li>
+<li>A "like" interaction on a social media platform</li>
+<li>Reaction emojis in Discord-like chat applications</li>
+<li>Group join or leave messages</li>
+<li>Reporting a post or actor, if the report is not anonymous</li>
+</ul>
+</li>
+<li>
+<p><strong>P2</strong> - Shortened form of polyproto.</p>
+</li>
+<li><strong>P2 Extension</strong> - A polyproto extension.</li>
+<li><strong>polyproto-chat</strong> - The chat-API used by Polyphony. An extension of the polyproto protocol,
+  defining the routes and capabilities of the chat-API used by Polyphony.</li>
+<li><strong>polyproto</strong> - The core federation protocol and APIs of polyproto, enabling identification and
+  authorization on foreign servers. It is independent of the chat-API used.</li>
+<li><strong>Root Certificate</strong> - A certificate used to sign other certificates, establishing a chain of
+  trust. In polyproto, only home servers have root certificates.</li>
+<li><strong>Service</strong>: Any application-specific implementation of polyproto, defined by a P2 extension.
+  All services are P2 extensions, but not all P2 extensions are services. polyproto-chat is an
+  example of a service.</li>
+<li><strong>Session</strong> - A specific period of authenticated interaction between a client and an instance.
+  During the lifetime of a session, the client can perform actions as the actor they are authenticated
+  as.</li>
+<li><strong>Session ID</strong> - <a href="/Protocol%20Specifications/core#6113-session-ids">See polyproto specification: Section 6.1.1.3</a></li>
+</ul>
 
 
 
@@ -1874,7 +1949,7 @@ The requested actor must be registered on this server.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-06-03T10:51:57+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-06-03</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-06-18T17:03:35+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-06-18</span>
   </span>
 
     
