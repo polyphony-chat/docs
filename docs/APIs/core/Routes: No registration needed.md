@@ -320,5 +320,7 @@ This request has no body.
 
 ---
 
+## Glossary
+
 --8<-- "snippets/glossary.md"
 

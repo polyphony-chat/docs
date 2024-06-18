@@ -70,3 +70,9 @@ corresponding to the session token used in the `authorization`-Header.
     ##### Body
 
     This response has no body.
+
+---
+
+## Glossary
+
+--8<-- "snippets/glossary.md"

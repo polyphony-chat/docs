@@ -253,4 +253,6 @@ Retrieve the maximum upload size for encrypted private key material, in bytes.
 
 ---
 
+## Glossary
+
 --8<-- "snippets/glossary.md"

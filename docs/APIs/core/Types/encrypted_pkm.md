@@ -22,3 +22,9 @@ their home server to back up their private keys securely, and retrieve them late
 | `encryption_algorithm` | Array of Integer, DER-encoded ASN.1 `AlgorithmIdentifier`        | Information about the algorithm used to encrypt the data held by the `key_data` field.                                                                                                                                                                                               |
 
 All fields are required.
+
+---
+
+## Glossary
+
+--8<-- "snippets/glossary.md"

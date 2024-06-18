@@ -149,5 +149,8 @@ This request has no body.
 
     This response has no body.
 
-
 ---
+
+## Glossary
+
+--8<-- "snippets/glossary.md"

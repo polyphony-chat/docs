@@ -42,3 +42,9 @@ Creates a new `id_cert` and a session token from a `csr`.
     | --------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
     | `id_cert` | String, PEM | The [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) for this unique Identity-Session combination |
     | `token`   | String      | An authorization secret, called a "token", valid for this `id_cert`.                                                                                                    |
+
+---
+
+## Glossary
+
+--8<-- "snippets/glossary.md"

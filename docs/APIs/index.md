@@ -4,5 +4,5 @@ weight: 10
 
 # APIs
 
-- [Core](./Core/index.md)
-- [Auth](./Auth/index.md)
+- [Core](./core/index.md)
+- [Auth](./auth/index.md)
