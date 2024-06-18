@@ -1,5 +1,3 @@
-## Glossary
-
 - **Actor** - An entity represented by a federation ID, registered on a home server. Actors can be
   users, bots, or any other entity with a federation ID.
 - **CA, Certificate Authority** - Any home server that issues and publicly attests to the validity
@@ -22,16 +20,31 @@
 - **Identity Key Pair** - A key pair associating an identity with a set of cryptographic keys used
   to sign and possibly encrypt messages.
 - **Instance** - A server hosting polyproto compliant software for clients.
-- **P2 Extension** - A **p**oly**p**roto (P2) extension/
+- **Message, Messages**: In the context of this protocol specification, a **message** is any piece
+  of data sent by a client that is intended to be identifiable as being sent by a specific actor.
+  To qualify as a "message", this piece of data must also, at any point in time, and also if only
+  briefly, be visible to other users or to the unauthenticated public. Examples of things that would
+  qualify as messages include:
+
+    - A message sent to another actor in a chat application
+    - A post on a social media platform
+    - A "like" interaction on a social media platform
+    - Reaction emojis in Discord-like chat applications
+    - Group join or leave messages
+    - Reporting a post or actor, if the report is not anonymous
+
+- **P2** - Shortened form of polyproto.
+- **P2 Extension** - A polyproto extension.
 - **polyproto-chat** - The chat-API used by Polyphony. An extension of the polyproto protocol,
   defining the routes and capabilities of the chat-API used by Polyphony.
 - **polyproto** - The core federation protocol and APIs of polyproto, enabling identification and
   authorization on foreign servers. It is independent of the chat-API used.
 - **Root Certificate** - A certificate used to sign other certificates, establishing a chain of
   trust. In polyproto, only home servers have root certificates.
-- **Service** - "Service" describes an application-specific set of behaviors and routes packaged as a
-  P2 extension. polyproto-chat is a service, for example.
+- **Service**: Any application-specific implementation of polyproto, defined by a P2 extension.
+  All services are P2 extensions, but not all P2 extensions are services. polyproto-chat is an
+  example of a service.
 - **Session** - A specific period of authenticated interaction between a client and an instance.
   During the lifetime of a session, the client can perform actions as the actor they are authenticated
   as.
-- **Session ID** - [See core.md](/Protocol%20Specifications/core#7113-session-ids)
+- **Session ID** - [See polyproto specification: Section 6.1.1.3](/Protocol%20Specifications/core#6113-session-ids)
