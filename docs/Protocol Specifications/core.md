@@ -39,7 +39,7 @@ The version number specified here also applies to the API documentation.
       - [6.4.1 Signing keys and ID-Certs](#641-signing-keys-and-id-certs)
       - [6.4.2 Home server operation and design](#642-home-server-operation-and-design)
       - [6.4.3 Private key loss prevention and private key recovery](#643-private-key-loss-prevention-and-private-key-recovery)
-  - [7. Account migration](#7-account-migration)
+  - [7. Migrations](#7-migrations)
     - [7.1 Challenges and trust](#71-challenges-and-trust)
     - [7.2 Reassigning ownership](#72-reassigning-ownership)
       - [7.2.1 Migrating an actor](#721-migrating-an-actor)
@@ -532,7 +532,7 @@ they send to servers. Likewise, a client should also keep all of its own ID-Cert
 perpetually, to potentially verify its identity in case of a migration.
 
 Users must hold on to all of their past key pairs, as they might need them to
-[migrate their account in the future](#7-account-migration). How this is done is specified in
+[migrate their account in the future](#7-migrations). How this is done is specified in
 [section 6.3: Private key loss prevention and private key recovery](#63-private-key-loss-prevention-and-private-key-recovery).
 
 ```mermaid
@@ -781,7 +781,10 @@ The APIs for managing encrypted private identity keys are documented in the API 
 - It is a good idea for home servers to limit the upload size and available upload slots for encrypted
   private identity keys.
 
-## 7. Account migration
+## 7. Migrations
+
+polyproto empowers the end-user by defining straightforward mechanisms to change their home server
+while preserving their identity, moving messages to another server, or both.
 
 Account migration allows users to move their account and associated data to another identity.
 This allows users to switch home servers while not losing ownership of messages sent by them.
@@ -1173,7 +1176,7 @@ Changing the primary server for a service is considered a sensitive action and s
 second factor of authentication.
 
 Messages do not get moved or re-signed when changing the primary server for a service. If an actor
-wants to move their messages to the new primary server, they must request a [migration](#7-account-migration).
+wants to move their messages to the new primary server, they must request a [migration](#7-migrations).
 
 ---
 
