@@ -992,6 +992,13 @@ Designing P2 extensions, which only specify a single route or a small set of beh
 discouraged. Instead, these should be implemented as part of a larger extension, which offers a
 more comprehensive set of features.
 
+!!! note
+
+    If you are, say, developing a polyproto server implementation with a feature that is not part of
+    the default polyproto specification, you do not have to create a P2 extension for this feature.
+    P2 extensions are useful for defining interoperable services, which can be implemented by a variety
+    of servers and clients.
+
 ## 8.2 Namespaces
 
 A namespace is a string used to identify a specific P2 extension. Used as a prefix in URLs, they
@@ -1146,8 +1153,15 @@ federation ID of the actor they want to communicate with. Consider the following
     The example demonstrates how Alice can communicate with Bob, even though they do not share any
     servers.
 
-To be discoverable, an actor must add a key-value pair to their home server's database, which
-contains the 
+To be discoverable, an actor must add a key-value pair to their home server's database. The
+key is the name of the service, and the value is the base URL of the server hosting the service.
+
+Keys are unique in the actor-scoped actor-service table. This means that actors wanting to register
+for two or more different implementations of the same service must select, which server to use as
+a primary server for that service. If the actor is human, clients must not make this decision for
+the actor, and must instead ask the actor to make the decision.
+
+The API routes for managing discoverability are documented in the API documentation.
 
 ---
 
