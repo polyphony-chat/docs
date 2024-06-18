@@ -57,6 +57,7 @@ The version number specified here also applies to the API documentation.
   - [9.1 Discoverability](#91-discoverability)
 
 // TODO: Rework this introductory section
+
 The polyproto protocol is a home-server-based identity federation protocol specification intended
 for use in applications where actor identity is needed. polyproto focuses on federated identity,
 and apart from the usage of Messaging Layer Security (MLS) for encryption, does not specify any
@@ -83,6 +84,7 @@ following terminology is used throughout this document:
   To qualify as a "message", this piece of data must also, at any point in time, and also if only
   briefly, be visible to other users or to the unauthenticated public. Examples of things that would
   qualify as messages include:
+
   - A message sent to another actor in a chat application
   - A post on a social media platform
   - A "like" interaction on a social media platform
@@ -1103,7 +1105,49 @@ also want to register for services offered by other servers, using the same iden
 
 ## 9.1 Discoverability
 
-TODO
+The discoverability feature allows users who are registered with the same service but on different
+servers to communicate with each other. The actor initiating the communication only needs to know the
+federation ID of the actor they want to communicate with. Consider the following example:
+
+!!! example "Example: Discovering services"
+
+    !!! info
+
+        The example below is simplified for the sake of clarity. In a real-world scenario, Alice
+        and the Chat server would perform the foreign server authentication procedure described in
+        [section 4.1.1](#411-authenticating-on-a-foreign-server) before Alice can send a message to
+        Bob. The example also uses a simplified example of how polyproto-chat works.
+
+    Alice and Bob want to communicate with each other. Both Alice and Bob are registered on servers
+    which host the polyproto-chat service. However, Alice and Bob are not registered on the same
+    server, and they do not share any chat rooms. Alice types in Bob's federation ID into her
+    chat client. The client then queries Bob's home server to find out, which server Bob is using
+    for the polyproto-chat service. Alice's client can then send the message to Bob's server, which
+    will forward the message to Bob.
+
+    ```mermaid
+    sequenceDiagram
+    autonumber
+
+    participant sb as Bob's Home Server
+    actor aa as Alice
+    participant sc as Chat server Bob is registered on
+    actor ab as Bob
+
+    aa->>sb: Query: Which server is Bob using for polyproto-chat?
+    sb->>aa: Response: URL of Chat server Bob is registered on
+    aa->>sc: Message to Bob
+    sc->>ab: Forward message from Alice to Bob
+    ```
+
+    *Fig. 9: Sequence diagram depicting how Alice's client discovers which server Bob is using for
+    the examplary polyproto-chat service.*
+
+    The example demonstrates how Alice can communicate with Bob, even though they do not share any
+    servers.
+
+To be discoverable, an actor must add a key-value pair to their home server's database, which
+contains the 
 
 ---
 
