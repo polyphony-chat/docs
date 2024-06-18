@@ -80,6 +80,8 @@ which can operate with other polyproto implementations.
 In addition to the terminology found in the glossary located at the end of this document, the
 following terminology is used throughout this document:
 
+<a id="terminology-message"/>
+
 - **Message, Messages**: In the context of this protocol specification, a **message** is any piece
   of data sent by a client that is intended to be identifiable as being sent by a specific actor.
   To qualify as a "message", this piece of data must also, at any point in time, and also if only
@@ -215,7 +217,7 @@ different server or join the Guilds of other servers.
 
 Identity certificates defined in sections [#6. Cryptography and ID-Certs](#6-cryptography-and-id-certs)
 and [#6.1 Home server signed certificates for public client identity keys (ID-Cert)](#61-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
-are employed to sign messages that the actor sends to other servers.
+are employed to sign [messages](#terminology-message) that the actor sends to other servers.
 
 !!! note "Using one identity for several polyproto implementations"
 
@@ -384,7 +386,7 @@ A CSR in the context of polyproto will be referred to as an ID-CSR. ID-CSRs are 
 
 All ID-Certs are valid X.509 v3 certificates. However, not all X.509 v3 certificates are valid ID-Certs.
 
-ID-Certs form the basis of message signing and verification in polyproto.
+ID-Certs form the basis of [message](#terminology-message) signing and verification in polyproto.
 They are used to verify the identity of a client, and to verify the integrity of messages sent by a
 client.
 
@@ -445,7 +447,7 @@ must meet all of the following requirements:
   (fully qualified domain name).
 - If the ID-Cert or ID-CSR is for an actor, the IDD must include the `UID` (OID 0.9.2342.19200300.100.1.1)
   **and** `uniqueIdentifier` (OID 0.9.2342.19200300.100.1.44) fields.
-    - `UID` is the federation ID of the actor, e.g. `actor@fqdn-of-homeserver.example.com`.
+    - `UID` is the federation ID of the actor, e.g. `actor@fqdn-of-home server.example.com`.
     - `uniqueIdentifier` is a Session ID.
 - Can have other attributes, if the additional attributes do not conflict with the above
   requirements. Additional attributes might be ignored by other home servers and other clients, unless
@@ -497,12 +499,12 @@ server public identity key caching, but no home server issued identity key certi
 
 !!! example "Potential misuse scenario"
 
-    A malicious foreign server B can fake a message from Alice (Home server: Server A) to Bob
-    (Home Server: Server B), by generating a new identity key pair and using it to sign the
-    malicious message. The foreign server then sends that message to Bob, who will then request
-    Alice's public identity key from Server B, who will then send Bob the malicious public identity
-    key. Bob will succeed in verifying the signature of the message, and not notice that the message
-    has been crafted by a malicious server.
+    A malicious foreign server B can fake a [message](#terminology-message) from Alice
+    (Home server: Server A) to Bob (Home Server: Server B), by generating a new identity key pair
+    and using it to sign the malicious message. The foreign server then sends that message to Bob,
+    who will then request Alice's public identity key from Server B, who will then send Bob the
+    malicious public identity key. Bob will succeed in verifying the signature of the message, and
+    not notice that the message has been crafted by a malicious server.
 
 The above scenario is not possible with home server issued identity key certificates, as the
 malicious server cannot generate an identity key pair for Alice, which is signed by Server A.
@@ -525,7 +527,7 @@ Rotating keys is done by using an API route, which requires authorization.
     and how this risk is mitigated is up to concrete implementations.
 
 Home servers must keep track of the ID-Certs of all users (and their clients) registered on them,
-and must offer a clients' ID-Cert for a given timestamp on request. This is to ensure messages
+and must offer a clients' ID-Cert for a given timestamp on request. This is to ensure [messages](#terminology-message)
 sent by users, even ones sent a long time ago, can be verified by other servers and their users.
 This is because the public key of an actor likely changes over time and users must sign all messages
 they send to servers. Likewise, a client should also keep all of its own ID-Certs stored
@@ -594,21 +596,22 @@ must revoke the session associated with the revoked ID-Cert. Revoking an ID-Cert
 ### 6.2 Actor identity keys and message signing
 
 As briefly mentioned section [#4](#4-federated-identity), users must hold on to an identity key pair
-at all times. This key pair is used to represent an actor's identity and to verify message integrity,
-by having an actor sign all messages they send with their private identity key. The key pair is
-generated by the actor. An actor-generated identity key certificate signing request (CSR) is sent
-to the actor's home server when first connecting to the server with a new session, or when rotating
-keys. The key is stored in the client's local storage. Upon receiving a new identity key CSR, a
-home server will sign this CSR and send the resulting ID-Cert to the client. This certificate is
-proof that the home server attests to the clients key. Read [section 6.1](#61-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
-for more information about the certificate.
+at all times. This key pair is used to represent an actor's identity and to verify
+[message](#terminology-message) integrity, by having an actor sign all messages they send with their
+private identity key. The key pair is generated by the actor. An actor-generated identity key
+certificate signing request (CSR) is sent to the actor's home server when first connecting to the
+server with a new session, or when rotating keys. The key is stored in the client's local storage.
+Upon receiving a new identity key CSR, a home server will sign this CSR and send the resulting ID-Cert
+to the client. This certificate is proof that the home server attests to the clients key. Read
+[section 6.1](#61-home-server-signed-certificates-for-public-client-identity-keys-id-cert) for more
+information about the certificate.
 
 #### 6.2.1 Message verification
 
-To ensure message integrity through signing, clients and servers must verify message signatures.
-This involves cross-checking the message signature against the sender's ID-Cert and the senders'
-home server's ID-Cert, while also confirming the validity of the ID-Cert attached to the
-message and ensuring its public key matches the sender's.
+To ensure [message](#terminology-message) integrity through signing, clients and servers must verify
+message signatures. This involves cross-checking the message signature against the sender's
+ID-Cert and the senders' home server's ID-Cert, while also confirming the validity of the
+ID-Cert attached to the message and ensuring its public key matches the sender's.
 
 !!! info
 
@@ -784,10 +787,11 @@ The APIs for managing encrypted private identity keys are documented in the API 
 ## 7. Migrations
 
 polyproto empowers the end-user by defining straightforward mechanisms to change their home server
-while preserving their identity, moving messages to another server, or both.
+while preserving their identity, moving [messages](#terminology-message) to another server, or both.
 
-Account migration allows users to move their account and associated data to another identity.
-This allows users to switch home servers while not losing ownership of messages sent by them.
+Identity migration allows actors to transparently re-assign ownership of their identity and messages
+to a new identity. This allows users to switch home servers while not losing ownership of messages
+sent by them.
 
 Migrating an actor always involves reassigning the ownership of all actor-associated data in the
 distributed network to the new actor. Should the old actor want to additionally move all data from
@@ -799,7 +803,7 @@ a sensitive action.
 Changing the publicly visible ownership of actor data requires the chain of trust to be maintained.
 If an "old" account wants to change the publicly visible ownership of its data, the "old"
 account must prove that it possesses the private keys that were used to
-sign the messages. This is done by signing a challenge string with the private
+sign the [messages](#terminology-message). This is done by signing a challenge string with the private
 keys. If the server verifies the challenge, it authorizes the new account to re-sign the old
 account's messages signed with the verified key. Instead of overwriting the message, a new message variant
 with the new signature is created, preserving the old message.
@@ -821,11 +825,11 @@ re-signed.
 
 ### 7.2 Reassigning ownership
 
-Transferring message ownership from an old to a new account, known as re-signing messages, necessitates
-coordination between the two accounts, initiated by the old account. To start, the old account sends
-an API request containing the new account's federation ID to the server where messages should be
-re-signed. The server responds with all ID-Certs used for signing the old account's messages, along with
-a challenge string.
+Transferring [message](#terminology-message) ownership from an old to a new account, known as
+re-signing messages, necessitates coordination between the two accounts, initiated by the
+old account. To start, the old account sends an API request containing the new account's
+federation ID to the server where messages should be re-signed. The server responds with all
+ID-Certs used for signing the old account's messages, along with a challenge string.
 
 Migrating an account is done with the following steps:
 
@@ -896,10 +900,10 @@ where Server A is unreachable or uncooperative.*
 !!! question "If the old home server is not needed to migrate, why try to contact it in the first place?"
 
     It is generally preferrable to have the old home server cooperate with the migration, as it
-    allows for a more seamless migration. A cooperative homeserver will be able to provide the new
+    allows for a more seamless migration. A cooperative home server will be able to provide the new
     home server with all information associated with the old account. It can also forward requests
     regarding the old account to the new server, which makes the process more seamless for other
-    users. The "non-cooperative homeserver migration method" is only a last resort.
+    users. The "non-cooperative home server migration method" is only a last resort.
 
 #### 7.2.2 Re-signing data
 
@@ -967,9 +971,10 @@ is implemented is up to the concrete implementation.
 
 ## 8. Protocol extensions (P2 extensions)
 
-polyproto leaves room for extensions, outsourcing concepts such as concrete message types to
-protocol extensions. This allows for a more flexible core protocol, which can be adapted to a wide
-variety of use cases. The following sections define:
+polyproto leaves room for extensions, outsourcing concepts such as concrete
+[message](#terminology-message) types to protocol extensions. This allows for a more flexible
+core protocol, which can be adapted to a wide variety of use cases. The following sections
+define:
 
 - protocol extensions, also called P2 extensions
 - how protocol extensions interact with the core protocol
@@ -1073,7 +1078,7 @@ base can then be extended with the exact, non-service-critical features that are
 specific implementation.
 
 For example, a generic, federated chat service extension might offer routes for adding
-reactions to messages. However, a route for adding reactions with full-screen animation effects
+reactions to chat messages. However, a route for adding reactions with full-screen animation effects
 would be better suited as an implementation-specific detail.
 
 If possible for the given use case, P2 extensions should depend on and extend already existing,
@@ -1126,15 +1131,15 @@ federation ID of the actor they want to communicate with. Consider the following
 
         The example below is simplified for the sake of clarity. In a real-world scenario, Alice
         and the Chat server would perform the foreign server authentication procedure described in
-        [section 4.1.1](#411-authenticating-on-a-foreign-server) before Alice can send a message to
-        Bob. The example also uses a simplified example of how polyproto-chat works.
+        [section 4.1.1](#411-authenticating-on-a-foreign-server) before Alice can send a
+        chat message to Bob. The example also uses a simplified example of how polyproto-chat works.
 
     Alice and Bob want to communicate with each other. Both Alice and Bob are registered on servers
     which host the polyproto-chat service. However, Alice and Bob are not registered on the same
     server, and they do not share any chat rooms. Alice types in Bob's federation ID into her
     chat client. The client then queries Bob's home server to find out, which server Bob is using
-    for the polyproto-chat service. Alice's client can then send the message to Bob's server, which
-    will forward the message to Bob.
+    for the polyproto-chat service. Alice's client can then send the chat message to Bob's server,
+    which will forward the chat message to Bob.
 
     ```mermaid
     sequenceDiagram
@@ -1175,8 +1180,9 @@ not change the key-value pair.
 Changing the primary server for a service is considered a sensitive action and should require a
 second factor of authentication.
 
-Messages do not get moved or re-signed when changing the primary server for a service. If an actor
-wants to move their messages to the new primary server, they must request a [migration](#7-migrations).
+[Messages](#terminology-message) do not get moved or re-signed when changing the primary
+server for a service. If an actor wants to move their messages to the new primary server,
+they must request a [migration](#7-migrations).
 
 ---
 
