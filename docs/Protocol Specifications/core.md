@@ -55,7 +55,7 @@ The version number specified here also applies to the API documentation.
   - [8.5 Routes](#85-routes)
   - [9. Services](#9-services)
   - [9.1 Discoverability](#91-discoverability)
-    - [9.1.1 Changing a primary server](#911-changing-a-primary-server)
+    - [9.1.1 Changing a primary service provider](#911-changing-a-primary-service-provider)
 
 // TODO: Rework this introductory section
 
@@ -793,6 +793,8 @@ Identity migration allows actors to transparently re-assign ownership of their i
 to a new identity. This allows users to switch home servers while not losing ownership of messages
 sent by them.
 
+Message migration allows actors to move messages from one service-provider
+
 Migrating an actor always involves reassigning the ownership of all actor-associated data in the
 distributed network to the new actor. Should the old actor want to additionally move all data from
 the old home server to another home server, more steps are needed. Account migration is not considered
@@ -1167,22 +1169,22 @@ key is the name of the service, and the value is the base URL of the server host
 
 The API routes for managing discoverability are documented in the API documentation.
 
-### 9.1.1 Changing a primary server
+### 9.1.1 Changing a primary service provider
 
-Keys are unique in the actor-scoped service-server table. This means that actors wanting to register
-for two or more different implementations of the same service must select, which server to use as
-a so-called "primary server" for that service.
+Keys are unique in the actor-scoped service->service-provider table. Actors wanting
+to register for two or more different implementations of the same service must select, which
+service provider to use as a so-called "primary service provider" for that service.
 
 If the actor is human, clients must not override the existing
 key-value pair silently. Instead, clients must either ask the actor to confirm the change, or
 not change the key-value pair.
 
-Changing the primary server for a service is considered a sensitive action and should require a
-second factor of authentication.
+Changing a primary service provider entry is considered a sensitive action and should
+require a second factor of authentication.
 
 [Messages](#terminology-message) do not get moved or re-signed when changing the primary
-server for a service. If an actor wants to move their messages to the new primary server,
-they must request a [migration](#7-migrations).
+service provider for a given service. If an actor wants to move their messages to the new primary
+service provider, they must request a [migration](#7-migrations).
 
 ---
 
