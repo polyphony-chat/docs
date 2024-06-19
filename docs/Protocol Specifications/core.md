@@ -41,8 +41,8 @@ The version number specified here also applies to the API documentation.
       - [6.4.3 Private key loss prevention and private key recovery](#643-private-key-loss-prevention-and-private-key-recovery)
   - [7. Migrations](#7-migrations)
     - [7.1 Identity migration](#71-identity-migration)
-      - [7.1.1 Migrating an actor](#711-migrating-an-actor)
-      - [7.1.2 Re-signing data](#712-re-signing-data)
+    - [7.1.1 Redirects](#711-redirects)
+      - [7.2 Re-signing data](#72-re-signing-data)
     - [7.3 Moving data](#73-moving-data)
     - [7.4 Challenges and trust](#74-challenges-and-trust)
   - [8. Protocol extensions (P2 extensions)](#8-protocol-extensions-p2-extensions)
@@ -809,37 +809,20 @@ a sensitive action.
 ### 7.1 Identity migration
 
 Transferring message ownership from an old to a new account, known as
-identity migration, necessitates coordination between the two involved accounts. To start,
-the old account sends an API request containing the new account's federation ID to the server
-where messages should be re-signed. The server responds with all ID-Certs used for signing the
-old account's messages, along with a challenge string.
+identity migration, necessitates coordination between the two involved accounts.
 
-Identity migration is a two-step process:
+Identity migration is a two-step process, where the steps can be done in any order:
 
-1. The two accounts tell both involved home servers that the migration is happening.
-   [This is described in section 7.1.1](#711-migrating-an-actor).
-2. The old account re-signs all messages with keys from the new account.
-   [This is described in section 7.1.2](#712-re-signing-data).
+- [Setting up a redirect](#711-redirects)
+- [Re-signing data](#72-re-signing-data)
 
-#### 7.1.1 Migrating an actor
+TODO more text?
 
-TODO: Both of these diagrams have to be redone.
+### 7.1.1 Redirects
 
-```mermaid
-sequenceDiagram
-autonumber
-
-actor aa as Alice A
-actor ab as Alice B
-participant sa as Server A
-participant sb as Server B
-```
-
-*Fig. 5: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account,
-where Server A is reachable and cooperative.*
-
-Alternatively, if Server A is offline or deemed uncooperative, the following sequence diagram depicts
-how the migration can be done without Server A's cooperation:
+Setting up a redirect is an optional step in the identity migration process. It allows for a
+smoother transition from the old account to the new account. This step is not necessary for the
+migration to be successful.
 
 ```mermaid
 sequenceDiagram
@@ -849,20 +832,26 @@ actor aa as Alice A
 actor ab as Alice B
 participant sa as Server A
 participant sb as Server B
+
+aa->>sa: Request redirect to Alice B
+sa->>aa: List of keys to verify + challenge string
+aa->>sa: Completed challenge for each key on the list
+aa->>aa: Set redirect status to "unconfirmed by target"
+ab->>sa: Request redirect from Alice A
+sa->>sa: Set redirect status to "confirmed"
+sa->>sa: Use HTTP 307 to redirect all requests for Alice A to Alice B
 ```
 
-*Fig. 6: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account,
-where Server A is unreachable or uncooperative.*
+*Fig. 5: Sequence diagram depicting the setting up of a redirect.*
 
-!!! question "If the old home server is not needed to migrate, why try to contact it in the first place?"
+/// TODO Update Fig. numbers from here
 
-    It is generally preferrable to have the old home server cooperate with the migration, as it
-    allows for a more seamless migration. A cooperative home server will be able to provide the new
-    home server with all information associated with the old account. It can also forward requests
-    regarding the old account to the new server, which makes the process more seamless for other
-    users. The "non-cooperative home server migration method" is only a last resort.
+Until Alice A deletes her account, Server A should respond with a `307 Temporary Redirect` to
+requests for information about or for Alice A. After Alice A deletes her account, Server A should
+either respond with `308 Permanent Redirect` or remove the redirect entirely.
 
-#### 7.1.2 Re-signing data
+
+#### 7.2 Re-signing data
 
 ```mermaid
 sequenceDiagram
