@@ -40,11 +40,11 @@ The version number specified here also applies to the API documentation.
       - [6.4.2 Home server operation and design](#642-home-server-operation-and-design)
       - [6.4.3 Private key loss prevention and private key recovery](#643-private-key-loss-prevention-and-private-key-recovery)
   - [7. Migrations](#7-migrations)
-    - [7.1 Challenges and trust](#71-challenges-and-trust)
-    - [7.2 Reassigning ownership](#72-reassigning-ownership)
-      - [7.2.1 Migrating an actor](#721-migrating-an-actor)
-      - [7.2.2 Re-signing data](#722-re-signing-data)
+    - [7.1 Identity migration](#71-identity-migration)
+      - [7.1.1 Migrating an actor](#711-migrating-an-actor)
+      - [7.1.2 Re-signing data](#712-re-signing-data)
     - [7.3 Moving data](#73-moving-data)
+    - [7.4 Challenges and trust](#74-challenges-and-trust)
   - [8. Protocol extensions (P2 extensions)](#8-protocol-extensions-p2-extensions)
   - [8.1 Extension design](#81-extension-design)
   - [8.2 Namespaces](#82-namespaces)
@@ -58,6 +58,9 @@ The version number specified here also applies to the API documentation.
     - [9.1.1 Changing a primary service provider](#911-changing-a-primary-service-provider)
 
 // TODO: Rework this introductory section
+
+// TODO: Add section explaining how "external" messages should be handled, i.e. messages from
+//       non-polyproto clients, such as could be the case in ActivityPub federation.
 
 The polyproto protocol is a home-server-based identity federation protocol specification intended
 for use in applications where actor identity is needed. polyproto focuses on federated identity,
@@ -803,56 +806,24 @@ distributed network to the new actor. Should the old actor want to additionally 
 the old home server to another home server, more steps are needed. Account migration is not considered
 a sensitive action.
 
-### 7.1 Challenges and trust
-
-Changing the publicly visible ownership of actor data requires the chain of trust to be maintained.
-If an "old" account wants to change the publicly visible ownership of its data, the "old"
-account must prove that it possesses the private keys that were used to
-sign the messages. This is done by signing a challenge string with the private
-keys. If the server verifies the challenge, it authorizes the new account to re-sign the old
-account's messages signed with the verified key. Instead of overwriting the message, a new message variant
-with the new signature is created, preserving the old message.
-
-All challenge strings and their responses created in the context of account migration must be made
-public to ensure that a chain of trust can be maintained. A third party should be able to verify that
-the challenge string, which authorized the ownership change of an accounts' data was signed by the
-correct private key.
-
-Implementations and protocol extensions should carefully consider the extent of messages that can be
-re-signed.
-
-!!! example
-
-    In the case of a social media platform with quote-posting functionality, it is reasonable to
-    assume that re-signing a quoted post is allowed. However, this would likely change the
-    signature of the quoted post, which would be undesirable. Edge cases like these are up to
-    implementations to handle, and should be well documented.
-
-### 7.2 Reassigning ownership
+### 7.1 Identity migration
 
 Transferring message ownership from an old to a new account, known as
-re-signing messages, necessitates coordination between the two accounts, initiated by the
-old account. To start, the old account sends an API request containing the new account's
-federation ID to the server where messages should be re-signed. The server responds with all
-ID-Certs used for signing the old account's messages, along with a challenge string.
+identity migration, necessitates coordination between the two involved accounts. To start,
+the old account sends an API request containing the new account's federation ID to the server
+where messages should be re-signed. The server responds with all ID-Certs used for signing the
+old account's messages, along with a challenge string.
 
-Migrating an account is done with the following steps:
+Identity migration is a two-step process:
 
-1. The actor creates a new account on a new home server.
-2. The actor requests the migration from the new home server, specifying the old account's
-   federation ID.
-3. The old actor account confirms the migration request by sending a signed API request to the new home
-   server. The confirmation contains the federation ID of the new account.
-4. The new server sends this information to the old server, which then sends the new server all
-   information associated with the old account.
-   The old server now forward requests regarding the old account to the new server.
-   Alternatively, if the old server is shut down, the new server can request the information
-   from the old actor directly.
-5. The old account can now request the resigning of its messages, transferring ownership of the
-   messages to the new account. To have all messages from a server re-signed, an actor must
-   prove that they are the owner of the private keys used to sign the messages.
+1. The two accounts tell both involved home servers that the migration is happening.
+   [This is described in section 7.1.1](#711-migrating-an-actor).
+2. The old account re-signs all messages with keys from the new account.
+   [This is described in section 7.1.2](#712-re-signing-data).
 
-#### 7.2.1 Migrating an actor
+#### 7.1.1 Migrating an actor
+
+TODO: Both of these diagrams have to be redone.
 
 ```mermaid
 sequenceDiagram
@@ -862,16 +833,6 @@ actor aa as Alice A
 actor ab as Alice B
 participant sa as Server A
 participant sb as Server B
-
-ab->>sb: Migration request (signed, Alice B->Server B)
-aa->>sb: Migration request (signed, Alice A->Server B)
-sb->>sa: Fetch full profile of Alice A,<br />attached with migration request
-sa->>sa: Verify signed migration request
-sa->>sb: Full profile of Alice A
-sb->>sb: Verify, replace Alice B with Alice A
-sb->>ab: New account data
-sa->>sa: Deactivate Alice A's account
-sa->>sa: Setup redirect from Alice A to Alice B
 ```
 
 *Fig. 5: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account,
@@ -888,15 +849,6 @@ actor aa as Alice A
 actor ab as Alice B
 participant sa as Server A
 participant sb as Server B
-
-ab->>sb: Migration request (Signed, Alice B->Server B)
-aa->>sb: Migration request (Signed, Alice A->Server B)
-sb->>sa: Fetch full profile of Alice A,<br />attached with migration request
-sa--xsb: Server A offline send profile or abort?
-aa->>sb: Full profile of Self
-sb->>sb: Verify, replace Alice B profile with Alice A
-sb->>ab: New account data
-
 ```
 
 *Fig. 6: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account,
@@ -910,7 +862,7 @@ where Server A is unreachable or uncooperative.*
     regarding the old account to the new server, which makes the process more seamless for other
     users. The "non-cooperative home server migration method" is only a last resort.
 
-#### 7.2.2 Re-signing data
+#### 7.1.2 Re-signing data
 
 ```mermaid
 sequenceDiagram
@@ -926,7 +878,7 @@ aa->>sc: Completed challenge for each key on the list
 sc->>sc: Verify challenge, unlock re-signing for Alice B
 ab->>sc: Request message re-signing for Alice A's messages
 sc->>ab: List of old messages (including old signatures + certificates)
-ab->>ab: Verify that Server C has not tampered with messages
+ab->>ab: Verify that Server C has not tampered with messages // TODO: How?
 ab->>ab: Re-sign messages with own keys
 ab->>sc: Send new messages
 sc->>sc: Verify that only FID and signature related fields have changed
@@ -973,6 +925,31 @@ aa-xsa: Deactivate account
 
 Depending on the use case, this process can be adapted to fit the needs of the user. How this process
 is implemented is up to the concrete implementation.
+
+### 7.4 Challenges and trust
+
+Changing the publicly visible ownership of actor data requires the chain of trust to be maintained.
+If an "old" account wants to change the publicly visible ownership of its data, the "old"
+account must prove that it possesses the private keys that were used to
+sign the messages. This is done by signing a challenge string with the private
+keys. If the server verifies the challenge, it authorizes the new account to re-sign the old
+account's messages signed with the verified key. Instead of overwriting the message, a new message variant
+with the new signature is created, preserving the old message.
+
+All challenge strings and their responses created in the context of account migration must be made
+public to ensure that a chain of trust can be maintained. A third party should be able to verify that
+the challenge string, which authorized the ownership change of an accounts' data was signed by the
+correct private key.
+
+Implementations and protocol extensions should carefully consider the extent of messages that can be
+re-signed.
+
+!!! example
+
+    In the case of a social media platform with quote-posting functionality, it is reasonable to
+    assume that re-signing a quoted post is allowed. However, this would likely change the
+    signature of the quoted post, which would be undesirable. Edge cases like these are up to
+    implementations to handle, and should be well documented.
 
 ## 8. Protocol extensions (P2 extensions)
 
