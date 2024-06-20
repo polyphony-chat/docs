@@ -820,23 +820,27 @@ TODO more text?
 
 ### 7.1.1 Redirects
 
-Setting up a redirect is an optional step in the identity migration process. It allows for a
-smoother transition from the old account to the new account. This step is not necessary for the
-migration to be successful.
+Setting up a redirect is an optional step in the identity migration process, helping
+make the transition from the old account to the new account smoother.
+
+!!! info
+
+    "Optional" does not mean that home servers can choose to not implement this feature. Instead,
+    it means that actors can choose to not use this feature.
 
 ```mermaid
 sequenceDiagram
 autonumber
 
-actor aa as Alice A
-actor ab as Alice B
+actor aa as Alice A (Redirection source)
+actor ab as Alice B (Redirection target)
 participant sa as Server A
 participant sb as Server B
 
 aa->>sa: Request redirect to Alice B
 sa->>aa: List of keys to verify + challenge string
 aa->>sa: Completed challenge for each key on the list
-aa->>aa: Set redirect status to "unconfirmed by target"
+aa->>aa: Set redirect status to "unconfirmed by redirection source"
 ab->>sa: Request redirect from Alice A
 sa->>sa: Set redirect status to "confirmed"
 sa->>sa: Use HTTP 307 to redirect all requests for Alice A to Alice B
@@ -846,10 +850,10 @@ sa->>sa: Use HTTP 307 to redirect all requests for Alice A to Alice B
 
 /// TODO Update Fig. numbers from here
 
-Until Alice A deletes her account, Server A should respond with a `307 Temporary Redirect` to
-requests for information about or for Alice A. After Alice A deletes her account, Server A should
-either respond with `308 Permanent Redirect` or remove the redirect entirely.
-
+Until a redirection source actor deletes their account, the home server of that actor should respond
+with `307 Temporary Redirect` to requests for information about the redirection source. After
+the redirection source deletes their account, Server A can select to either respond with
+`308 Permanent Redirect`, or to remove the redirect entirely.
 
 #### 7.2 Re-signing data
 
