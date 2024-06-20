@@ -41,8 +41,8 @@ The version number specified here also applies to the API documentation.
       - [6.4.3 Private key loss prevention and private key recovery](#643-private-key-loss-prevention-and-private-key-recovery)
   - [7. Migrations](#7-migrations)
     - [7.1 Identity migration](#71-identity-migration)
-    - [7.1.1 Redirects](#711-redirects)
-      - [7.2 Re-signing data](#72-re-signing-data)
+      - [7.1.1 Redirects](#711-redirects)
+    - [7.2 Re-signing messages](#72-re-signing-messages)
     - [7.3 Moving data](#73-moving-data)
     - [7.4 Challenges and trust](#74-challenges-and-trust)
   - [8. Protocol extensions (P2 extensions)](#8-protocol-extensions-p2-extensions)
@@ -818,7 +818,7 @@ Identity migration is a two-step process, where the steps can be done in any ord
 
 TODO more text?
 
-### 7.1.1 Redirects
+#### 7.1.1 Redirects
 
 Setting up a redirect is an optional step in the identity migration process, helping
 make the transition from the old account to the new account smoother.
@@ -855,7 +855,15 @@ with `307 Temporary Redirect` to requests for information about the redirection 
 the redirection source deletes their account, Server A can select to either respond with
 `308 Permanent Redirect`, or to remove the redirect entirely.
 
-#### 7.2 Re-signing data
+### 7.2 Re-signing messages
+
+Re-signing messages is the process of changing ownership of messages from one actor to another. This
+enables seamless transitions between accounts, while preserving the integrity of the messages.
+Changing ownership of messages is the core of identity migration. Another use case for re-signing
+message is reducing the amount of keys that need to be remembered by an actor.
+
+Below is a sequence diagram depicting a typical re-signing process, which transfers ownership of
+messages from Alice A to Alice B.
 
 ```mermaid
 sequenceDiagram
@@ -863,21 +871,31 @@ autonumber
 
 actor aa as Alice A
 actor ab as Alice B
-participant sc as Server C
+participant sc as Server "C" with stored<br/>messages from Alice A
 
 aa->>sc: Request allow message re-signing for Alice B
-sc->>aa: List of keys to verify + challenge string
+sc->>aa: List of keys to verify + challenge string (Key trial)
 aa->>sc: Completed challenge for each key on the list
 sc->>sc: Verify challenge, unlock re-signing for Alice B
-ab->>sc: Request message re-signing for Alice A's messages
-sc->>ab: List of old messages (including old signatures + certificates)
-ab->>ab: Verify that Server C has not tampered with messages // TODO: How?
+ab->>sc: Request message re-signing<br/>for Alice A's messages
+sc->>ab: List of old messages<br/>(including old signatures + certificates)
+ab->>ab: Verify that Server C has not<br/>tampered with messages by<br/>checking old signatures with own keys
 ab->>ab: Re-sign messages with own keys
 ab->>sc: Send new messages
 sc->>sc: Verify that only FID and signature related fields have changed
 ```
 
 *Fig. 7: Sequence diagram depicting the re-signing procedure.*
+
+Actors must not be able to re-sign messages, to which they cannot prove signature-key ownership of.
+Servers must verify the following things:
+
+- The new signature matches the messages' contents and is valid
+- The ID-Cert corresponding to the new signature is a valid ID-Cert, issued by the correct home
+  server
+
+The amount of keys that can be used to re-sign messages must not exceed the amount of keys sent in
+the servers' key trial, but can be less.
 
 ### 7.3 Moving data
 
