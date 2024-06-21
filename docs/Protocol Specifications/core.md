@@ -814,7 +814,7 @@ identity migration, necessitates coordination between the two involved accounts.
 Identity migration is a two-step process, where the steps can be done in any order:
 
 - [Setting up a redirect](#711-redirects)
-- [Re-signing data](#72-re-signing-data)
+- [Re-signing data](#72-re-signing-messages)
 
 TODO more text?
 
@@ -862,6 +862,18 @@ enables seamless transitions between accounts, while preserving the integrity of
 Changing ownership of messages is the core of identity migration. Another use case for re-signing
 message is reducing the amount of keys that need to be remembered by an actor.
 
+Actors must not be able to re-sign messages, to which they cannot prove signature-key ownership of.
+Servers must verify the following things:
+
+- The new signature matches the messages' contents and is valid
+- The ID-Cert corresponding to the new signature is a valid ID-Cert, issued by the correct home
+  server
+
+The amount of keys that can be used to re-sign messages must not exceed the amount of keys sent in
+the servers' key trial, but can be less.
+
+Re-signing messages is done in batches, which have a server-defined maximum size.
+
 Below is a sequence diagram depicting a typical re-signing process, which transfers ownership of
 messages from Alice A to Alice B.
 
@@ -877,25 +889,20 @@ aa->>sc: Request allow message re-signing for Alice B
 sc->>aa: List of keys to verify + challenge string (Key trial)
 aa->>sc: Completed challenge for each key on the list
 sc->>sc: Verify challenge, unlock re-signing for Alice B
-ab->>sc: Request message re-signing<br/>for Alice A's messages
-sc->>ab: List of old messages<br/>(including old signatures + certificates)
-ab->>ab: Verify that Server C has not<br/>tampered with messages by<br/>checking old signatures with own keys
-ab->>ab: Re-sign messages with own keys
-ab->>sc: Send new messages
-sc->>sc: Verify that only FID and signature related fields have changed
+sc->>aa: Re-signing of messages for Alice B allowed
+loop Do, while there are messages left to be re-signed
+  ab->>sc: Request message re-signing<br/>for Alice A's messages
+  sc->>ab: Batch of old messages,<br/>including the signatures + actor certificates
+    Note over ab: The client should fetch missing information<br/>such as missing ID-Certs or server public keys<br/>needed to validate the messages from the<br/>corresponding servers, if applicable
+  ab->>ab: Verify that Server C has not<br/>tampered with messages by<br/>checking old signatures with own keys
+  ab->>ab: Re-sign messages with own keys
+  ab->>sc: Send new messages
+  sc->>sc: Verify that only FID and signature related fields have changed
+  sc->>ab: Acknowledge successful re-signing of batch
+end
 ```
 
 *Fig. 7: Sequence diagram depicting the re-signing procedure.*
-
-Actors must not be able to re-sign messages, to which they cannot prove signature-key ownership of.
-Servers must verify the following things:
-
-- The new signature matches the messages' contents and is valid
-- The ID-Cert corresponding to the new signature is a valid ID-Cert, issued by the correct home
-  server
-
-The amount of keys that can be used to re-sign messages must not exceed the amount of keys sent in
-the servers' key trial, but can be less.
 
 ### 7.3 Moving data
 
