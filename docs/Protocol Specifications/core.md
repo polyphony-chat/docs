@@ -246,7 +246,7 @@ Regardless of the authentication method used, the foreign server must verify the
 before allowing them to perform any actions. This verification must be done by proving the cryptographic
 connection between an actors' home servers' public identity key and the actors' ID-Cert. Challenge
 strings, as described in [Section 4.2](#42-challenge-strings) and in [polyproto-auth](./auth.md)
-are recommended for this purpose.
+are used for this purpose within this specification.
 
 Servers must also check with the actors' home server to ensure that the ID-Cert has not been revoked.
 APIs for this purpose are defined in the [API documentation](/APIs).
@@ -274,9 +274,7 @@ APIs for this purpose are defined in the [API documentation](/APIs).
 
     Clients should be prepared to gracefully handle the case where a sensitive action fails due to
     a lack of a second factor of authentication, and should prompt the user to provide the second
-    factor of authentication. Clients should also be prepared to gracefully handle the case where a
-    sensitive action succeeds, even though the second factor of authentication was not provided, as
-    a home server might not require a second factor of authentication for all sensitive actions.
+    factor of authentication.
 
 ### 4.2 Challenge strings
 
@@ -811,17 +809,24 @@ a sensitive action.
 Transferring message ownership from an old to a new account, known as
 identity migration, necessitates coordination between the two involved accounts.
 
-Identity migration is a two-step process, where the steps can be done in any order:
+Identity migration is a process, which can be broken down into the following steps:
 
 - [Setting up a redirect](#711-redirects)
 - [Re-signing data](#72-re-signing-messages)
 
-TODO more text?
+As shown by the API routes offered in the API documentation, both of these steps can be initiated
+through one API call.
+
+It is not required that the new account is located on another home server as the old account.
 
 #### 7.1.1 Redirects
 
 Setting up a redirect is an optional step in the identity migration process, helping
 make the transition from the old account to the new account smoother.
+
+A redirect has to be confirmed by both the redirection source and the redirection target. The redirect
+is only valid for one specific redirection target. Redirection targets must be valid actors and their
+home servers must be reachable when the redirect is being set up.
 
 !!! info
 
@@ -832,23 +837,34 @@ make the transition from the old account to the new account smoother.
 sequenceDiagram
 autonumber
 
-actor aa as Alice A (Redirection source)
-actor ab as Alice B (Redirection target)
-participant sa as Server A
-participant sb as Server B
+actor aa as Alice Old (Redirection source)
+participant sa as "Alice Old" Home Server
+actor ab as Alice New (Redirection target)
 
-aa->>sa: Request redirect to Alice B
-sa->>aa: List of keys to verify + challenge string
-aa->>sa: Completed challenge for each key on the list
-aa->>aa: Set redirect status to "unconfirmed by redirection source"
-ab->>sa: Request redirect from Alice A
-sa->>sa: Set redirect status to "confirmed"
-sa->>sa: Use HTTP 307 to redirect all requests for Alice A to Alice B
+Note over aa, ab: These steps may be done in any order<br/>and are not necessarily sequential
+par Verifying redirect intent by passing key trial
+  aa->>sa: Request redirect to Alice New
+  sa-)sa: Confirm "Alice New"<br/>is valid actor by resolving FID 
+  sa->>aa: List of keys to<br/>verify + challenge string
+  aa->>sa: Completed challenge<br/>for each key on the list
+  sa->>sa: Set redirect status to<br/>"confirmed by redirection source"
+and Notifying the redirection source's home server of the redirection target
+  ab->>sa: Request redirect from Alice Old
+  sa->>sa: Verify authenticity of Alice New's identity by verifying ID-Cert
+  note over sa: Alice New's ID-Cert is determined to be valid
+  sa->>ab: Challenge string (See section 4.1.1:<br/>Authenticating on a foreign server)
+  ab->>sa: Completed challenge
+  sa->>sa: Set redirect status to<br/>"confirmed by redirection target"
+end
+sa->>sa: Check, if both redirection source and target have confirmed the redirect
+alt If both redirection source and target have confirmed the redirect
+  sa->>sa: Use HTTP 307 to redirect all requests for<br/>Alice Old to Alice New
+else
+  Note over sa: Do nothing
+end
 ```
 
 *Fig. 5: Sequence diagram depicting the setting up of a redirect.*
-
-/// TODO Update Fig. numbers from here
 
 Until a redirection source actor deletes their account, the home server of that actor should respond
 with `307 Temporary Redirect` to requests for information about the redirection source. After
@@ -857,10 +873,24 @@ the redirection source deletes their account, Server A can select to either resp
 
 ### 7.2 Re-signing messages
 
-Re-signing messages is the process of changing ownership of messages from one actor to another. This
-enables seamless transitions between accounts, while preserving the integrity of the messages.
-Changing ownership of messages is the core of identity migration. Another use case for re-signing
-message is reducing the amount of keys that need to be remembered by an actor.
+Re-signing messages is the process of transparently changing the signature of messages while leaving
+the content of the messages unchanged. "Transparently" refers to the fact that an outsider can
+verify the following facts:
+
+- Both involved actors have agreed to the re-signing of the messages
+- The "old" actor has proven ownership of the signature keys used to produce the "old" signatures
+  of the messages
+- The message content has not changed during the re-signing process
+
+The intended use cases for re-signing messages are:
+
+- Changing ownership of messages from one actor to another. This enables seamless transitions
+  between accounts, while preserving the integrity of the messages.
+- Reducing the amount of keys that need to be remembered by an actor, done if the actor deems it to
+  be convenient. This is not required for polyproto to function.
+- "Rotate keys of past messages" - This is useful when an actor's private identity key has been
+  compromised, and the actor wants to ensure that all messages sent by them are still owned by them
+  and not at risk of being tampered with.
 
 Actors must not be able to re-sign messages, to which they cannot prove signature-key ownership of.
 Servers must verify the following things:
@@ -876,6 +906,11 @@ Re-signing messages is done in batches, which have a server-defined maximum size
 
 Below is a sequence diagram depicting a typical re-signing process, which transfers ownership of
 messages from Alice A to Alice B.
+
+<!--
+TODO: If we'd like to use re-signing to change the signatures of messages signed with now-compromised
+keys, we should make the below process more flexible.
+-->
 
 ```mermaid
 sequenceDiagram
@@ -899,6 +934,9 @@ loop Do, while there are messages left to be re-signed
   ab->>sc: Send new messages
   sc->>sc: Verify that only FID and signature related fields have changed
   sc->>ab: Acknowledge successful re-signing of batch
+  opt
+    ab--)ab: Pause for arbitrary amount of time
+  end
 end
 ```
 
