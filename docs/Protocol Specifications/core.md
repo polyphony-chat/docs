@@ -43,6 +43,10 @@ The version number specified here also applies to the API documentation.
     - [7.1 Identity migration](#71-identity-migration)
       - [7.1.1 Redirects](#711-redirects)
     - [7.2 Re-signing messages](#72-re-signing-messages)
+      - [7.2.1 Message batches](#721-message-batches)
+      - [7.2.2 Server imposed limits](#722-server-imposed-limits)
+        - [7.2.2.1 Body size](#7221-body-size)
+        - [7.2.2.2 Interval between re-signing batches](#7222-interval-between-re-signing-batches)
     - [7.3 Moving data](#73-moving-data)
     - [7.4 Challenges and trust](#74-challenges-and-trust)
   - [8. Protocol extensions (P2 extensions)](#8-protocol-extensions-p2-extensions)
@@ -887,30 +891,25 @@ The intended use cases for re-signing messages are:
 - Changing ownership of messages from one actor to another. This enables seamless transitions
   between accounts, while preserving the integrity of the messages.
 - Reducing the amount of keys that need to be remembered by an actor, done if the actor deems it to
-  be convenient. This is not required for polyproto to function.
+  be convenient.
 - "Rotate keys of past messages" - This is useful when an actor's private identity key has been
   compromised, and the actor wants to ensure that all messages sent by them are still owned by them
   and not at risk of being tampered with.
 
 Actors must not be able to re-sign messages, to which they cannot prove signature-key ownership of.
-Servers must verify the following things:
 
-- The new signature matches the messages' contents and is valid
+Additionally, servers must verify the following things about re-signed messages:
+
+- The new signature matches the messages' contents, and is valid
 - The ID-Cert corresponding to the new signature is a valid ID-Cert, issued by the correct home
   server
+- The contents of the message have not been changed during the re-signing process
 
 The amount of keys that can be used to re-sign messages must not exceed the amount of keys sent in
 the servers' key trial, but can be less.
 
-Re-signing messages is done in batches, which have a server-defined maximum size.
-
 Below is a sequence diagram depicting a typical re-signing process, which transfers ownership of
 messages from Alice A to Alice B.
-
-<!--
-TODO: If we'd like to use re-signing to change the signatures of messages signed with now-compromised
-keys, we should make the below process more flexible.
--->
 
 ```mermaid
 sequenceDiagram
@@ -939,6 +938,91 @@ loop Do, while there are messages left to be re-signed
   end
 end
 ```
+
+To allow for a singular set of behaviors, which fit the three intended use cases mentioned prior,
+not all messages stored by the server of an actor need to be re-signed.
+Besides querying for all non-re-signed messages, actors can also query or all non-resigned
+messages, whose signatures correspond to a specific ID-Cert or set of ID-Certs. The API routes
+for re-signing messages are documented in the API documentation.
+
+#### 7.2.1 Message batches
+
+Messages, which have not yet been re-signed are being delivered to an actor in batches. A batch is
+a JSON object, representing messages sent, using the same ID-Cert. An
+exemplary array of message batches, as returned by the server, might look as follows:
+
+```json
+[
+  {
+    id_cert: "QLASDiohs79034sjkldfny8eppqxncp7n4g9vozeyuiwofxb...",
+    messages: [
+      {
+        signature: "ASDiohs79034sjkldfny8eppqxncp7n4g9vozeyuiwofxb...",
+        content: {
+          message: "Hello!"
+        }
+      },
+      {
+        signature: "ASDiohs7902347sjkldfny8eafhjhjafdlk4g121ghjkz...",
+        content: {
+          message: "Hello again!"
+        }
+      }
+    ]
+  },
+  {
+    id_cert: "QLAxiohs79034sjkldfny8eppqxncp7n4g9vozeyuiwofxn...",
+    messages: [
+      {
+        ...
+      }
+    ]
+  }
+]
+```
+
+The concrete values held by a message batch are up to the concrete implementation. The prior JSON
+array depicting an array of message batches is only an example. However, it is mandatory that a
+message batch holds the following information:
+
+- The ID-Cert used to sign the messages in the batch
+- An array of messages, which must at least contain the following information:
+    - The signature of the message
+    - The full content of the message
+
+Returning re-signed messages to the server is done in the same format as the server sends them to
+the client.
+
+#### 7.2.2 Server imposed limits
+
+##### 7.2.2.1 Body size
+
+Servers can limit the size of an HTTP request body containing re-signed messages.
+If a body size limit is imposed, the server must communicate
+this to clients in their response to a query for messages, which have not yet been re-signed.
+Communicating the body size limit is done by adding a `X-P2-Return-Body-Size-Limit` header to the
+response. If this header is not present or has a value of `-1`, clients should assume that there is
+no body-size limit.
+
+##### 7.2.2.2 Interval between re-signing batches
+
+Servers can define an interval, which a client must wait for before sending a new batch of re-signed
+messages to the server.
+
+The server communicates this interval to the client as a response to receiving a batch of re-signed
+messages from the client. The interval is communicated by adding a
+`X-P2-Wait-Until` header to the response. The value of this header is a 64-bit integer. The integer
+represents a UNIX timestamp, which in turn represents the time, at which the client is allowed to
+send the next batch of re-signed messages.
+
+Clients should expect that the duration of the interval changes between batches. The server can
+dynamically adjust the duration, which a client must wait before being allowed to send the next
+batch of re-signed messages. The server can also select to not impose an interval between re-signing
+batches. Clients should also expect that the server suddenly decides to impose an interval between
+re-signing batches, even if it has not done so before.
+
+If this header is not present or has a value of `-1`, clients should assume that there is no interval
+between re-signing batches.
 
 *Fig. 7: Sequence diagram depicting the re-signing procedure.*
 
