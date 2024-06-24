@@ -46,13 +46,13 @@ The version number specified here also applies to the API documentation.
     - [7.3 Moving data](#73-moving-data)
     - [7.4 Challenges and trust](#74-challenges-and-trust)
   - [8. Protocol extensions (P2 extensions)](#8-protocol-extensions-p2-extensions)
-  - [8.1 Extension design](#81-extension-design)
-  - [8.2 Namespaces](#82-namespaces)
-  - [8.3 Officially endorsed extensions](#83-officially-endorsed-extensions)
-  - [8.4 Versioning and yanking](#84-versioning-and-yanking)
-    - [8.4.1 Yanking](#841-yanking)
-    - [8.4 Dependencies](#84-dependencies)
-  - [8.5 Routes](#85-routes)
+    - [8.1 Extension design](#81-extension-design)
+    - [8.2 Namespaces](#82-namespaces)
+    - [8.3 Officially endorsed extensions](#83-officially-endorsed-extensions)
+    - [8.4 Versioning and yanking](#84-versioning-and-yanking)
+      - [8.4.1 Yanking](#841-yanking)
+    - [8.5 Dependencies](#85-dependencies)
+    - [8.6 Routes](#86-routes)
   - [9. Services](#9-services)
   - [9.1 Discoverability](#91-discoverability)
     - [9.1.1 Changing a primary service provider](#911-changing-a-primary-service-provider)
@@ -1018,7 +1018,7 @@ define:
 - how protocol extensions interact with the core protocol
 - requirements, which must be fulfilled by protocol extensions to become officially endorsed
 
-## 8.1 Extension design
+### 8.1 Extension design
 
 P2 extensions *should* be either of the following:
 
@@ -1046,7 +1046,7 @@ more comprehensive set of features.
     P2 extensions are useful for defining interoperable services, which can be implemented by a variety
     of servers and clients.
 
-## 8.2 Namespaces
+### 8.2 Namespaces
 
 A namespace is a string used to identify a specific P2 extension. Used as a prefix in URLs, they
 prevent route name collisions between different extensions. Namespaces should be unique
@@ -1057,7 +1057,7 @@ taken by an officially endorsed extension, a different namespace must be chosen.
 collision exists between an officially endorsed extension and a regular P2 extension, the officially
 endorsed extension has priority.
 
-## 8.3 Officially endorsed extensions
+### 8.3 Officially endorsed extensions
 
 Officially endorsed extensions are extensions that either:
 
@@ -1074,14 +1074,14 @@ Officially endorsed extensions must fulfill all the requirements listed in
 Each version of an extension developed by outside parties must undergo the review process before
 being officially endorsed.
 
-## 8.4 Versioning and yanking
+### 8.4 Versioning and yanking
 
 Semantic Versioning v2.0.0 is used for versioning P2 extensions. The version number of an extension
 is defined in the extension's documentation. The version number must be updated whenever a change is
 made to the extension. The only exception to this rule is when marking an extension as deprecated
 (yanking).
 
-### 8.4.1 Yanking
+#### 8.4.1 Yanking
 
 Yanking an extension means that the extension is no longer supported, and that it **should not** be used.
 A later version of the extension should be used instead. Yanked extension versions should prominently
@@ -1089,7 +1089,7 @@ display the "yanked" status next to the version number in the extension's docume
 
 Versions of officially endorsed P2 extensions can normally not be removed, only marked as yanked.
 
-### 8.4 Dependencies
+### 8.5 Dependencies
 
 P2 extensions can depend on other P2 extensions. If an extension depends on another extension, the
 name of the dependency must be listed in the extension's documentation, along with a link to the
@@ -1133,7 +1133,7 @@ officially endorsed P2 extensions.
 Doing this ensures a high level of interoperability across all different implementations of a specific
 application group.
 
-## 8.5 Routes
+### 8.6 Routes
 
 Polyproto extensions must never change, add or remove routes defined by the extension they depend on.
 Instead, routes with alternating or new behavior must be added under a newly defined namespace, which
