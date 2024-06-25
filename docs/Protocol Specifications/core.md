@@ -1063,8 +1063,8 @@ aa-xsa: Deactivate account
 
 *Fig. 8: Sequence diagram depicting the data moving process.*
 
-Depending on the use case, this process can be adapted to fit the needs of the user. How this process
-is implemented is up to the concrete implementation.
+How this process is implemented is up to P2 extensions to define. The above steps are only a
+guideline. The API routes for data export and import are documented in the API documentation.
 
 ### 7.4 Challenges and trust
 
@@ -1079,7 +1079,8 @@ with the new signature is created, preserving the old message.
 All challenge strings and their responses created in the context of account migration must be made
 public to ensure that a chain of trust can be maintained. A third party should be able to verify that
 the challenge string, which authorized the ownership change of an accounts' data was signed by the
-correct private key.
+correct private key. The API routes needed to verify challenges as an outsider are documented in the
+API documentation.
 
 Implementations and protocol extensions should carefully consider the extent of messages that can be
 re-signed.
