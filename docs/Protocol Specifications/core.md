@@ -5,7 +5,7 @@ weight: 0
 
 # polyproto Specification
 
-**v1.0.0-alpha.18** - Treat this as an unfinished draft.
+**v1.0.0-alpha.19** - Treat this as an unfinished draft.
 
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 The version number specified here also applies to the API documentation.
@@ -40,24 +40,31 @@ The version number specified here also applies to the API documentation.
       - [6.4.2 Home server operation and design](#642-home-server-operation-and-design)
       - [6.4.3 Private key loss prevention and private key recovery](#643-private-key-loss-prevention-and-private-key-recovery)
   - [7. Migrations](#7-migrations)
-    - [7.1 Challenges and trust](#71-challenges-and-trust)
-    - [7.2 Reassigning ownership](#72-reassigning-ownership)
-      - [7.2.1 Migrating an actor](#721-migrating-an-actor)
-      - [7.2.2 Re-signing data](#722-re-signing-data)
+    - [7.1 Identity migration](#71-identity-migration)
+      - [7.1.1 Redirects](#711-redirects)
+    - [7.2 Re-signing messages](#72-re-signing-messages)
+      - [7.2.1 Message batches](#721-message-batches)
+      - [7.2.2 Server imposed limits](#722-server-imposed-limits)
+        - [7.2.2.1 Body size](#7221-body-size)
+        - [7.2.2.2 Interval between re-signing batches](#7222-interval-between-re-signing-batches)
     - [7.3 Moving data](#73-moving-data)
+    - [7.4 Challenges and trust](#74-challenges-and-trust)
   - [8. Protocol extensions (P2 extensions)](#8-protocol-extensions-p2-extensions)
-  - [8.1 Extension design](#81-extension-design)
-  - [8.2 Namespaces](#82-namespaces)
-  - [8.3 Officially endorsed extensions](#83-officially-endorsed-extensions)
-  - [8.4 Versioning and yanking](#84-versioning-and-yanking)
-    - [8.4.1 Yanking](#841-yanking)
-    - [8.4 Dependencies](#84-dependencies)
-  - [8.5 Routes](#85-routes)
+    - [8.1 Extension design](#81-extension-design)
+    - [8.2 Namespaces](#82-namespaces)
+    - [8.3 Officially endorsed extensions](#83-officially-endorsed-extensions)
+    - [8.4 Versioning and yanking](#84-versioning-and-yanking)
+      - [8.4.1 Yanking](#841-yanking)
+    - [8.5 Dependencies](#85-dependencies)
+    - [8.6 Routes](#86-routes)
   - [9. Services](#9-services)
   - [9.1 Discoverability](#91-discoverability)
     - [9.1.1 Changing a primary service provider](#911-changing-a-primary-service-provider)
 
 // TODO: Rework this introductory section
+
+// TODO: Add section explaining how "external" messages should be handled, i.e. messages from
+//       non-polyproto clients, such as could be the case in ActivityPub federation.
 
 The polyproto protocol is a home-server-based identity federation protocol specification intended
 for use in applications where actor identity is needed. polyproto focuses on federated identity,
@@ -243,7 +250,7 @@ Regardless of the authentication method used, the foreign server must verify the
 before allowing them to perform any actions. This verification must be done by proving the cryptographic
 connection between an actors' home servers' public identity key and the actors' ID-Cert. Challenge
 strings, as described in [Section 4.2](#42-challenge-strings) and in [polyproto-auth](./auth.md)
-are recommended for this purpose.
+are used for this purpose within this specification.
 
 Servers must also check with the actors' home server to ensure that the ID-Cert has not been revoked.
 APIs for this purpose are defined in the [API documentation](/APIs).
@@ -271,9 +278,7 @@ APIs for this purpose are defined in the [API documentation](/APIs).
 
     Clients should be prepared to gracefully handle the case where a sensitive action fails due to
     a lack of a second factor of authentication, and should prompt the user to provide the second
-    factor of authentication. Clients should also be prepared to gracefully handle the case where a
-    sensitive action succeeds, even though the second factor of authentication was not provided, as
-    a home server might not require a second factor of authentication for all sensitive actions.
+    factor of authentication.
 
 ### 4.2 Challenge strings
 
@@ -803,82 +808,108 @@ distributed network to the new actor. Should the old actor want to additionally 
 the old home server to another home server, more steps are needed. Account migration is not considered
 a sensitive action.
 
-### 7.1 Challenges and trust
-
-Changing the publicly visible ownership of actor data requires the chain of trust to be maintained.
-If an "old" account wants to change the publicly visible ownership of its data, the "old"
-account must prove that it possesses the private keys that were used to
-sign the messages. This is done by signing a challenge string with the private
-keys. If the server verifies the challenge, it authorizes the new account to re-sign the old
-account's messages signed with the verified key. Instead of overwriting the message, a new message variant
-with the new signature is created, preserving the old message.
-
-All challenge strings and their responses created in the context of account migration must be made
-public to ensure that a chain of trust can be maintained. A third party should be able to verify that
-the challenge string, which authorized the ownership change of an accounts' data was signed by the
-correct private key.
-
-Implementations and protocol extensions should carefully consider the extent of messages that can be
-re-signed.
-
-!!! example
-
-    In the case of a social media platform with quote-posting functionality, it is reasonable to
-    assume that re-signing a quoted post is allowed. However, this would likely change the
-    signature of the quoted post, which would be undesirable. Edge cases like these are up to
-    implementations to handle, and should be well documented.
-
-### 7.2 Reassigning ownership
+### 7.1 Identity migration
 
 Transferring message ownership from an old to a new account, known as
-re-signing messages, necessitates coordination between the two accounts, initiated by the
-old account. To start, the old account sends an API request containing the new account's
-federation ID to the server where messages should be re-signed. The server responds with all
-ID-Certs used for signing the old account's messages, along with a challenge string.
+identity migration, necessitates coordination between the two involved accounts.
 
-Migrating an account is done with the following steps:
+Identity migration is a process, which can be broken down into the following steps:
 
-1. The actor creates a new account on a new home server.
-2. The actor requests the migration from the new home server, specifying the old account's
-   federation ID.
-3. The old actor account confirms the migration request by sending a signed API request to the new home
-   server. The confirmation contains the federation ID of the new account.
-4. The new server sends this information to the old server, which then sends the new server all
-   information associated with the old account.
-   The old server now forward requests regarding the old account to the new server.
-   Alternatively, if the old server is shut down, the new server can request the information
-   from the old actor directly.
-5. The old account can now request the resigning of its messages, transferring ownership of the
-   messages to the new account. To have all messages from a server re-signed, an actor must
-   prove that they are the owner of the private keys used to sign the messages.
+- [Setting up a redirect](#711-redirects)
+- [Re-signing data](#72-re-signing-messages)
 
-#### 7.2.1 Migrating an actor
+As shown by the API routes offered in the API documentation, both of these steps can be initiated
+through one API call.
+
+It is not required that the new account is located on another home server as the old account.
+
+#### 7.1.1 Redirects
+
+Setting up a redirect is an optional step in the identity migration process, helping
+make the transition from the old account to the new account smoother.
+
+A redirect has to be confirmed by both the redirection source and the redirection target. The redirect
+is only valid for one specific redirection target. Redirection targets must be valid actors and their
+home servers must be reachable when the redirect is being set up.
+
+!!! info
+
+    "Optional" does not mean that home servers can choose to not implement this feature. Instead,
+    it means that actors can choose to not use this feature.
 
 ```mermaid
 sequenceDiagram
 autonumber
 
-actor aa as Alice A
-actor ab as Alice B
-participant sa as Server A
-participant sb as Server B
+actor aa as Alice Old (Redirection source)
+participant sa as "Alice Old" Home Server
+actor ab as Alice New (Redirection target)
 
-ab->>sb: Migration request (signed, Alice B->Server B)
-aa->>sb: Migration request (signed, Alice A->Server B)
-sb->>sa: Fetch full profile of Alice A,<br />attached with migration request
-sa->>sa: Verify signed migration request
-sa->>sb: Full profile of Alice A
-sb->>sb: Verify, replace Alice B with Alice A
-sb->>ab: New account data
-sa->>sa: Deactivate Alice A's account
-sa->>sa: Setup redirect from Alice A to Alice B
+Note over aa, ab: These steps may be done in any order<br/>and are not necessarily sequential
+par Verifying redirect intent by passing key trial
+  aa->>sa: Request redirect to Alice New
+  sa-)sa: Confirm "Alice New"<br/>is valid actor by resolving FID 
+  sa->>aa: List of keys to<br/>verify + challenge string
+  aa->>sa: Completed challenge<br/>for each key on the list
+  sa->>sa: Set redirect status to<br/>"confirmed by redirection source"
+and Notifying the redirection source's home server of the redirection target
+  ab->>sa: Request redirect from Alice Old
+  sa->>sa: Verify authenticity of Alice New's identity by verifying ID-Cert
+  note over sa: Alice New's ID-Cert is determined to be valid
+  sa->>ab: Challenge string (See section 4.1.1:<br/>Authenticating on a foreign server)
+  ab->>sa: Completed challenge
+  sa->>sa: Set redirect status to<br/>"confirmed by redirection target"
+end
+sa->>sa: Check, if both redirection source and target have confirmed the redirect
+alt If both redirection source and target have confirmed the redirect
+  sa->>sa: Use HTTP 307 to redirect all requests for<br/>Alice Old to Alice New
+else
+  Note over sa: Do nothing
+end
 ```
 
-*Fig. 5: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account,
-where Server A is reachable and cooperative.*
+*Fig. 5: Sequence diagram depicting the setting up of a redirect.*
 
-Alternatively, if Server A is offline or deemed uncooperative, the following sequence diagram depicts
-how the migration can be done without Server A's cooperation:
+Until a redirection source actor deletes their account, the home server of that actor should respond
+with `307 Temporary Redirect` to requests for information about the redirection source. After
+the redirection source deletes their account, Server A can select to either respond with
+`308 Permanent Redirect`, or to remove the redirect entirely.
+
+### 7.2 Re-signing messages
+
+Re-signing messages is the process of transparently changing the signature of messages while leaving
+the content of the messages unchanged. "Transparently" refers to the fact that an outsider can
+verify the following facts:
+
+- Both involved actors have agreed to the re-signing of the messages
+- The "old" actor has proven ownership of the signature keys used to produce the "old" signatures
+  of the messages
+- The message content has not changed during the re-signing process
+
+The intended use cases for re-signing messages are:
+
+- Changing ownership of messages from one actor to another. This enables seamless transitions
+  between accounts, while preserving the integrity of the messages.
+- Reducing the amount of keys that need to be remembered by an actor, done if the actor deems it to
+  be convenient.
+- "Rotate keys of past messages" - This is useful when an actor's private identity key has been
+  compromised, and the actor wants to ensure that all messages sent by them are still owned by them
+  and not at risk of being tampered with.
+
+Actors must not be able to re-sign messages, to which they cannot prove signature-key ownership of.
+
+Additionally, servers must verify the following things about re-signed messages:
+
+- The new signature matches the messages' contents, and is valid
+- The ID-Cert corresponding to the new signature is a valid ID-Cert, issued by the correct home
+  server
+- The contents of the message have not been changed during the re-signing process
+
+The amount of keys that can be used to re-sign messages must not exceed the amount of keys sent in
+the servers' key trial, but can be less.
+
+Below is a sequence diagram depicting a typical re-signing process, which transfers ownership of
+messages from Alice A to Alice B.
 
 ```mermaid
 sequenceDiagram
@@ -886,51 +917,112 @@ autonumber
 
 actor aa as Alice A
 actor ab as Alice B
-participant sa as Server A
-participant sb as Server B
-
-ab->>sb: Migration request (Signed, Alice B->Server B)
-aa->>sb: Migration request (Signed, Alice A->Server B)
-sb->>sa: Fetch full profile of Alice A,<br />attached with migration request
-sa--xsb: Server A offline send profile or abort?
-aa->>sb: Full profile of Self
-sb->>sb: Verify, replace Alice B profile with Alice A
-sb->>ab: New account data
-
-```
-
-*Fig. 6: Sequence diagram depicting a successful migration of Alice A's account to Alice B's account,
-where Server A is unreachable or uncooperative.*
-
-!!! question "If the old home server is not needed to migrate, why try to contact it in the first place?"
-
-    It is generally preferrable to have the old home server cooperate with the migration, as it
-    allows for a more seamless migration. A cooperative home server will be able to provide the new
-    home server with all information associated with the old account. It can also forward requests
-    regarding the old account to the new server, which makes the process more seamless for other
-    users. The "non-cooperative home server migration method" is only a last resort.
-
-#### 7.2.2 Re-signing data
-
-```mermaid
-sequenceDiagram
-autonumber
-
-actor aa as Alice A
-actor ab as Alice B
-participant sc as Server C
+participant sc as Server "C" with stored<br/>messages from Alice A
 
 aa->>sc: Request allow message re-signing for Alice B
-sc->>aa: List of keys to verify + challenge string
+sc->>aa: List of keys to verify + challenge string (Key trial)
 aa->>sc: Completed challenge for each key on the list
 sc->>sc: Verify challenge, unlock re-signing for Alice B
-ab->>sc: Request message re-signing for Alice A's messages
-sc->>ab: List of old messages (including old signatures + certificates)
-ab->>ab: Verify that Server C has not tampered with messages
-ab->>ab: Re-sign messages with own keys
-ab->>sc: Send new messages
-sc->>sc: Verify that only FID and signature related fields have changed
+sc->>aa: Re-signing of messages for Alice B allowed
+loop Do, while there are messages left to be re-signed
+  ab->>sc: Request message re-signing<br/>for Alice A's messages
+  sc->>ab: Batch of old messages,<br/>including the signatures + actor certificates
+    Note over ab: The client should fetch missing information<br/>such as missing ID-Certs or server public keys<br/>needed to validate the messages from the<br/>corresponding servers, if applicable
+  ab->>ab: Verify that Server C has not<br/>tampered with messages by<br/>checking old signatures with own keys
+  ab->>ab: Re-sign messages with own keys
+  ab->>sc: Send new messages
+  sc->>sc: Verify that only FID and signature related fields have changed
+  sc->>ab: Acknowledge successful re-signing of batch
+  opt
+    ab--)ab: Pause for arbitrary amount of time
+  end
+end
 ```
+
+To allow for a singular set of behaviors, which fit the three intended use cases mentioned prior,
+not all messages stored by the server of an actor need to be re-signed.
+Besides querying for all non-re-signed messages, actors can also query or all non-resigned
+messages, whose signatures correspond to a specific ID-Cert or set of ID-Certs. The API routes
+for re-signing messages are documented in the API documentation.
+
+#### 7.2.1 Message batches
+
+Messages, which have not yet been re-signed are being delivered to an actor in batches. A batch is
+a JSON object, representing messages sent, using the same ID-Cert. An
+exemplary array of message batches, as returned by the server, might look as follows:
+
+```json
+[
+  {
+    id_cert: "QLASDiohs79034sjkldfny8eppqxncp7n4g9vozeyuiwofxb...",
+    messages: [
+      {
+        signature: "ASDiohs79034sjkldfny8eppqxncp7n4g9vozeyuiwofxb...",
+        content: {
+          message: "Hello!"
+        }
+      },
+      {
+        signature: "ASDiohs7902347sjkldfny8eafhjhjafdlk4g121ghjkz...",
+        content: {
+          message: "Hello again!"
+        }
+      }
+    ]
+  },
+  {
+    id_cert: "QLAxiohs79034sjkldfny8eppqxncp7n4g9vozeyuiwofxn...",
+    messages: [
+      {
+        ...
+      }
+    ]
+  }
+]
+```
+
+The concrete values held by a message batch are up to the concrete implementation. The prior JSON
+array depicting an array of message batches is only an example. However, it is mandatory that a
+message batch holds the following information:
+
+- The ID-Cert used to sign the messages in the batch
+- An array of messages, which must at least contain the following information:
+    - The signature of the message
+    - The full content of the message
+
+Returning re-signed messages to the server is done in the same format as the server sends them to
+the client.
+
+#### 7.2.2 Server imposed limits
+
+##### 7.2.2.1 Body size
+
+Servers can limit the size of an HTTP request body containing re-signed messages.
+If a body size limit is imposed, the server must communicate
+this to clients in their response to a query for messages, which have not yet been re-signed.
+Communicating the body size limit is done by adding a `X-P2-Return-Body-Size-Limit` header to the
+response. If this header is not present or has a value of `-1`, clients should assume that there is
+no body-size limit.
+
+##### 7.2.2.2 Interval between re-signing batches
+
+Servers can define an interval, which a client must wait for before sending a new batch of re-signed
+messages to the server.
+
+The server communicates this interval to the client as a response to receiving a batch of re-signed
+messages from the client. The interval is communicated by adding a
+`X-P2-Wait-Until` header to the response. The value of this header is a 64-bit integer. The integer
+represents a UNIX timestamp, which in turn represents the time, at which the client is allowed to
+send the next batch of re-signed messages.
+
+Clients should expect that the duration of the interval changes between batches. The server can
+dynamically adjust the duration, which a client must wait before being allowed to send the next
+batch of re-signed messages. The server can also select to not impose an interval between re-signing
+batches. Clients should also expect that the server suddenly decides to impose an interval between
+re-signing batches, even if it has not done so before.
+
+If this header is not present or has a value of `-1`, clients should assume that there is no interval
+between re-signing batches.
 
 *Fig. 7: Sequence diagram depicting the re-signing procedure.*
 
@@ -971,8 +1063,34 @@ aa-xsa: Deactivate account
 
 *Fig. 8: Sequence diagram depicting the data moving process.*
 
-Depending on the use case, this process can be adapted to fit the needs of the user. How this process
-is implemented is up to the concrete implementation.
+How this process is implemented is up to P2 extensions to define. The above steps are only a
+guideline. The API routes for data export and import are documented in the API documentation.
+
+### 7.4 Challenges and trust
+
+Changing the publicly visible ownership of actor data requires the chain of trust to be maintained.
+If an "old" account wants to change the publicly visible ownership of its data, the "old"
+account must prove that it possesses the private keys that were used to
+sign the messages. This is done by signing a challenge string with the private
+keys. If the server verifies the challenge, it authorizes the new account to re-sign the old
+account's messages signed with the verified key. Instead of overwriting the message, a new message variant
+with the new signature is created, preserving the old message.
+
+All challenge strings and their responses created in the context of account migration must be made
+public to ensure that a chain of trust can be maintained. A third party should be able to verify that
+the challenge string, which authorized the ownership change of an accounts' data was signed by the
+correct private key. The API routes needed to verify challenges as an outsider are documented in the
+API documentation.
+
+Implementations and protocol extensions should carefully consider the extent of messages that can be
+re-signed.
+
+!!! example
+
+    In the case of a social media platform with quote-posting functionality, it is reasonable to
+    assume that re-signing a quoted post is allowed. However, this would likely change the
+    signature of the quoted post, which would be undesirable. Edge cases like these are up to
+    implementations to handle, and should be well documented.
 
 ## 8. Protocol extensions (P2 extensions)
 
@@ -985,7 +1103,7 @@ define:
 - how protocol extensions interact with the core protocol
 - requirements, which must be fulfilled by protocol extensions to become officially endorsed
 
-## 8.1 Extension design
+### 8.1 Extension design
 
 P2 extensions *should* be either of the following:
 
@@ -1013,7 +1131,7 @@ more comprehensive set of features.
     P2 extensions are useful for defining interoperable services, which can be implemented by a variety
     of servers and clients.
 
-## 8.2 Namespaces
+### 8.2 Namespaces
 
 A namespace is a string used to identify a specific P2 extension. Used as a prefix in URLs, they
 prevent route name collisions between different extensions. Namespaces should be unique
@@ -1024,7 +1142,7 @@ taken by an officially endorsed extension, a different namespace must be chosen.
 collision exists between an officially endorsed extension and a regular P2 extension, the officially
 endorsed extension has priority.
 
-## 8.3 Officially endorsed extensions
+### 8.3 Officially endorsed extensions
 
 Officially endorsed extensions are extensions that either:
 
@@ -1041,14 +1159,14 @@ Officially endorsed extensions must fulfill all the requirements listed in
 Each version of an extension developed by outside parties must undergo the review process before
 being officially endorsed.
 
-## 8.4 Versioning and yanking
+### 8.4 Versioning and yanking
 
 Semantic Versioning v2.0.0 is used for versioning P2 extensions. The version number of an extension
 is defined in the extension's documentation. The version number must be updated whenever a change is
 made to the extension. The only exception to this rule is when marking an extension as deprecated
 (yanking).
 
-### 8.4.1 Yanking
+#### 8.4.1 Yanking
 
 Yanking an extension means that the extension is no longer supported, and that it **should not** be used.
 A later version of the extension should be used instead. Yanked extension versions should prominently
@@ -1056,7 +1174,7 @@ display the "yanked" status next to the version number in the extension's docume
 
 Versions of officially endorsed P2 extensions can normally not be removed, only marked as yanked.
 
-### 8.4 Dependencies
+### 8.5 Dependencies
 
 P2 extensions can depend on other P2 extensions. If an extension depends on another extension, the
 name of the dependency must be listed in the extension's documentation, along with a link to the
@@ -1100,7 +1218,7 @@ officially endorsed P2 extensions.
 Doing this ensures a high level of interoperability across all different implementations of a specific
 application group.
 
-## 8.5 Routes
+### 8.6 Routes
 
 Polyproto extensions must never change, add or remove routes defined by the extension they depend on.
 Instead, routes with alternating or new behavior must be added under a newly defined namespace, which
