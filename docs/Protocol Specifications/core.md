@@ -5,7 +5,7 @@ weight: 0
 
 # polyproto Specification
 
-**v1.0.0-alpha.18** - Treat this as an unfinished draft.
+**v1.0.0-alpha.19** - Treat this as an unfinished draft.
 
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 The version number specified here also applies to the API documentation.
