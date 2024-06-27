@@ -258,28 +258,27 @@ APIs for this purpose are defined in the [API documentation](/APIs).
 
 #### 4.1.2 Sensitive actions
 
-<!--TODO: Don't session tokens solve this already?-->
-
 !!! warning
 
     Sensitive actions should require a second factor of authentication, apart from the actors'
     private key. This second factor can be anything from a password to TOTP or hardware keys, depending
-    on the authentication standard used.
+    on the authentication method or standard used.
 
     If this is not done, a malicious user who gained access to an actors' private key can lock that
     actor out of their account entirely, as the malicious user could [revoke the actors' other ID-Certs](#714-early-revocation-of-id-certs),
     and thus prevent the actor from logging in again.
 
-    Sensitive actions include, but are not limited to:
-    - Generating a new ID-Cert
-    - Revoking an ID-Cert
-    - Changing the actors' federation ID
-    - Changing the actors' other factors of authentication
-    - Server administration actions
+Sensitive actions include, but are not limited to:
 
-    Clients should be prepared to gracefully handle the case where a sensitive action fails due to
-    a lack of a second factor of authentication, and should prompt the user to provide the second
-    factor of authentication.
+- Generating a new ID-Cert
+- Revoking an ID-Cert
+- Changing the actors' federation ID
+- Changing the actors' other factors of authentication
+- Server administration actions
+
+Clients should be prepared to gracefully handle the case where a sensitive action fails due to
+a lack of a second factor of authentication, and should prompt the user to provide the second
+factor of authentication.
 
 ### 4.2 Challenge strings
 
