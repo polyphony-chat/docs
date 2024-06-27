@@ -5,7 +5,7 @@ weight: 0
 
 # polyproto Specification
 
-**v1.0.0-alpha.20** - Treat this as an unfinished draft.
+**v1.0.0-alpha.21** - Treat this as an unfinished draft.
 
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 The version number specified here also applies to the API documentation.
@@ -63,21 +63,14 @@ The version number specified here also applies to the API documentation.
   - [9.1 Discoverability](#91-discoverability)
     - [9.1.1 Changing a primary service provider](#911-changing-a-primary-service-provider)
 
-// TODO: Rework this introductory section
-
-
 The polyproto protocol is a home-server-based identity federation protocol specification intended
 for use in applications where actor identity is needed. polyproto focuses on federated identity,
-and apart from the usage of Messaging Layer Security (MLS) for encryption, does not specify any
-further application-specific features. Instead, it is intended to be used as a base for application
-implementations and other protocols, such as `polyproto-chat` - a chat protocol built on top of
-polyproto. Through a shared "base layer", polyproto implementations are intercompatible in a way
-where one identity can be used across various polyproto implementations.
-
-No part of polyproto is considered less important than any other part, and all parts of polyproto
-are required for a polyproto implementation to be considered compliant with the polyproto
-specification. The only exception to this is the encryption part of polyproto, which is optional,
-as the necessity of encryption depends on the specific implementation.
+and does not specify any further application-specific features. It can be used standalone, as a
+method of authenticating across many applications and services, or as a base for federated protocol
+extensions and application implementations. The use of cryptography - namely digital
+signatures and X.509 certificates - make polyproto identities verifiable and portable. polyproto
+empowers actors, as the home server can be changed at any time, without losing data or connections
+to other actors.
 
 This document is intended to be used as a starting point for developers wanting to develop software,
 which can operate with other polyproto implementations.
@@ -93,13 +86,21 @@ The following terminology is used throughout this document:
 polyproto operates under the following trust assumptions:
 
 1. Users entrust their home server and its admins with data security and discretion on actions
-   appearing as actor-performed.
-2. Users only distrust their home servers in case of irregularities or conflicting information.
-3. In a federated context, users trust foreign servers with all unencrypted data they send
+   appearing as actor-performed as, as with most home server based systems, it is
+   possible for a home server to impersonate an actor in unencrypted communications.
+2. Impersonation *can* be detected by users, as home servers never have access to private keys of
+   actors. To sign messages as an actor, a home server would have to use a different key pair.
+3. Users only trust information, which can be verified by cryptographic means. This includes
+   verifying the identity of other actors and verifying the integrity of messages.
+4. In a federated context, users trust foreign servers with all unencrypted data they send
    to them.
-4. Foreign servers cannot impersonate users without explicit consent.
-5. Users rely on their home servers for identity key certification, without the home servers
-6. possessing the identity.
+5. Foreign servers cannot impersonate users without immediate detection. Outsiders, meaning foreign
+   servers and other actors, are unable to produce signatures that have a cryptographic connection
+   to the actors' home server. This is assuming correct implementation of cryptographic
+   standards, secure home server operation and non-compromised client devices, all of which are
+   mostly out of the scope of this specification.
+6. Users rely on their home server for identity key certification, without the home server
+   possessing the identity.
 
 ## 3. APIs and communication protocols
 
