@@ -26,3 +26,4 @@ namespace
 Discoverability
 snippets/glossary
 may
+boolean

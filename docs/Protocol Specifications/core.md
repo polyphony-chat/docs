@@ -34,11 +34,13 @@ The version number specified here also applies to the API documentation.
       - [6.1.4 Early revocation of ID-Certs](#614-early-revocation-of-id-certs)
     - [6.2 Actor identity keys and message signing](#62-actor-identity-keys-and-message-signing)
       - [6.2.1 Message verification](#621-message-verification)
+      - [6.2.2 Handling of external messages](#622-handling-of-external-messages)
     - [6.3 Private key loss prevention and private key recovery](#63-private-key-loss-prevention-and-private-key-recovery)
-    - [6.4 Best practices](#64-best-practices)
-      - [6.4.1 Signing keys and ID-Certs](#641-signing-keys-and-id-certs)
-      - [6.4.2 Home server operation and design](#642-home-server-operation-and-design)
-      - [6.4.3 Private key loss prevention and private key recovery](#643-private-key-loss-prevention-and-private-key-recovery)
+    - [6.4 Cryptographic recommendations](#64-cryptographic-recommendations)
+    - [6.5 Best practices](#65-best-practices)
+      - [6.5.1 Signing keys and ID-Certs](#651-signing-keys-and-id-certs)
+      - [6.5.2 Home server operation and design](#652-home-server-operation-and-design)
+      - [6.5.3 Private key loss prevention and private key recovery](#653-private-key-loss-prevention-and-private-key-recovery)
   - [7. Migrations](#7-migrations)
     - [7.1 Identity migration](#71-identity-migration)
       - [7.1.1 Redirects](#711-redirects)
@@ -63,8 +65,6 @@ The version number specified here also applies to the API documentation.
 
 // TODO: Rework this introductory section
 
-// TODO: Add section explaining how "external" messages should be handled, i.e. messages from
-//       non-polyproto clients, such as could be the case in ActivityPub federation.
 
 The polyproto protocol is a home-server-based identity federation protocol specification intended
 for use in applications where actor identity is needed. polyproto focuses on federated identity,
@@ -396,6 +396,10 @@ When signing an ID-CSR, the home server must verify the correctness of all claim
 
 Actors must use a separate ID-Cert for each client or session they use.
 
+For two implementations of polyproto to be interoperable, they must support an overlapping set of
+digital signature algorithms. See [Section 6.4](#64-cryptographic-recommendations) for more
+information on cryptographic recommendations.
+
 #### 6.1.1 Structure of an ID-Cert
 
 The ID-Cert is a valid X.509 certificate, and as such, it has a specific structure. The structure of
@@ -720,6 +724,25 @@ to verify the signature fails.*
     identity key for some reason. However, if the signature cannot be verified at a certain time,
     this information must be communicated to the actor performing the verification.
 
+#### 6.2.2 Handling of external messages
+
+In the context of federation with other federation protocols, such as ActivityPub, it is possible
+for actors to receive messages, which do not have a signature attached to them. If a P2 extension
+explicitly allows for this, it is possible for a polyproto server to forward such messages to
+clients. If a P2 extension does not explicitly allow for this, both servers and clients must
+reject such messages. Clients receiving unexpected external messages should inform the actor about
+the fact that a server has tried to send them an invalid, possibly malicious message.
+
+Before a polyproto server forwards such a message to clients, it must add an "external" property to
+the message object. If possible in the data format used, this property should be set to a boolean
+value of `true`. If the data format does not support boolean values, the property should be set to
+a string value of `true` in all lowercase characters. This property must be passed along to the
+client or clients receiving the message.
+
+If the actor receiving this external message is human, the client must inform the actor that the
+message is external, and that the message has not been signed by the sender. External messages
+should be distinguishable from signed messages at first glance.
+
 ### 6.3 Private key loss prevention and private key recovery
 
 As described in previous sections, actors must hold on to their past identity key pairs, should they
@@ -744,9 +767,21 @@ The APIs for managing encrypted private identity keys are documented in the API 
 - [Delete encrypted private key material](/APIs/Core/Routes%3A Registration needed/#delete-delete-encrypted-private-key-material)
 - [Get encrypted private key material upload size limit](/APIs/Core/Routes%3A Registration needed/#options-get-encrypted-private-key-material-upload-size-limit)
 
-### 6.4 Best practices
+### 6.4 Cryptographic recommendations
 
-#### 6.4.1 Signing keys and ID-Certs
+For two implementations of polyproto to be interoperable, they must support an overlapping set of
+digital signature algorithms.
+
+If technically practical, all implementations of polyproto must support use of the Ed25519 digital
+signature algorithm for signing messages and generating ID-Certs. The use of the RSA algorithm for
+digital signatures [is heavily discouraged](https://blog.trailofbits.com/2019/07/08/fuck-rsa/).
+
+### 6.5 Best practices
+
+The following subsections are dedicated to documenting best practices to consider when
+implementing polyproto.
+
+#### 6.5.1 Signing keys and ID-Certs
 
 - Actor and client signing keys should be rotated regularly (every 20-60 days). This is to ensure
   that a compromised key can only be used for a limited amount of time. Server identity keys should be
@@ -762,12 +797,12 @@ The APIs for managing encrypted private identity keys are documented in the API 
   changed, the client/server in question should update their cached ID-Cert for the actor in
   question, taking into account the session ID of the new identity key pair.
 
-#### 6.4.2 Home server operation and design
+#### 6.5.2 Home server operation and design
 
 - Use a caching layer for your home server to handle the potentially large amount of requests for
   ID-Certs without putting unnecessary strain on the database.
 
-#### 6.4.3 Private key loss prevention and private key recovery
+#### 6.5.3 Private key loss prevention and private key recovery
 
 - It is a good idea for home servers to limit the upload size and available upload slots for encrypted
   private identity keys.
@@ -1298,11 +1333,11 @@ service provider to use as a so-called "primary service provider" for that servi
 
 If the actor is human, clients must not override the existing
 key-value pair silently. Instead, clients must either ask the actor to confirm the change, or
-not change the key-value pair.
+not change the key-value pair. Automated actors may override values as they see fit.
 
 Changing a primary service provider entry is considered a sensitive action and should
 require a second factor of authentication.
 
-messages do not get moved or re-signed when changing the primary
+Messages do not get moved or re-signed when changing the primary
 service provider for a given service. If an actor wants to move their messages to the new primary
 service provider, they must request a [migration](#7-migrations).
