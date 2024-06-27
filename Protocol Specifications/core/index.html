@@ -2699,7 +2699,7 @@
 
 
 <h1 id="polyproto-specification">polyproto Specification<a class="headerlink" href="#polyproto-specification" title="Permanent link">&para;</a></h1>
-<p><strong>v1.0.0-alpha.20</strong> - Treat this as an unfinished draft.</p>
+<p><strong>v1.0.0-alpha.21</strong> - Treat this as an unfinished draft.</p>
 <p><a href="https://semver.org/spec/v2.0.0.html">Semantic versioning v2.0.0</a> is used to version this specification.
 The version number specified here also applies to the API documentation.</p>
 <ul>
@@ -2772,18 +2772,14 @@ The version number specified here also applies to the API documentation.</p>
 </ul>
 </li>
 </ul>
-<p>// TODO: Rework this introductory section</p>
 <p>The polyproto protocol is a home-server-based identity federation protocol specification intended
 for use in applications where actor identity is needed. polyproto focuses on federated identity,
-and apart from the usage of Messaging Layer Security (MLS) for encryption, does not specify any
-further application-specific features. Instead, it is intended to be used as a base for application
-implementations and other protocols, such as <code>polyproto-chat</code> - a chat protocol built on top of
-polyproto. Through a shared "base layer", polyproto implementations are intercompatible in a way
-where one identity can be used across various polyproto implementations.</p>
-<p>No part of polyproto is considered less important than any other part, and all parts of polyproto
-are required for a polyproto implementation to be considered compliant with the polyproto
-specification. The only exception to this is the encryption part of polyproto, which is optional,
-as the necessity of encryption depends on the specific implementation.</p>
+and does not specify any further application-specific features. It can be used standalone, as a
+method of authenticating across many applications and services, or as a base for federated protocol
+extensions and application implementations. The use of cryptography - namely digital
+signatures and X.509 certificates - make polyproto identities verifiable and portable. polyproto
+empowers actors, as the home server can be changed at any time, without losing data or connections
+to other actors.</p>
 <p>This document is intended to be used as a starting point for developers wanting to develop software,
 which can operate with other polyproto implementations.</p>
 <h2 id="1-terminology-used-in-this-document">1. Terminology used in this document<a class="headerlink" href="#1-terminology-used-in-this-document" title="Permanent link">&para;</a></h2>
@@ -2848,13 +2844,21 @@ which can operate with other polyproto implementations.</p>
 <p>polyproto operates under the following trust assumptions:</p>
 <ol>
 <li>Users entrust their home server and its admins with data security and discretion on actions
-   appearing as actor-performed.</li>
-<li>Users only distrust their home servers in case of irregularities or conflicting information.</li>
+   appearing as actor-performed as, as with most home server based systems, it is
+   possible for a home server to impersonate an actor in unencrypted communications.</li>
+<li>Impersonation <em>can</em> be detected by users, as home servers never have access to private keys of
+   actors. To sign messages as an actor, a home server would have to use a different key pair.</li>
+<li>Users only trust information, which can be verified by cryptographic means. This includes
+   verifying the identity of other actors and verifying the integrity of messages.</li>
 <li>In a federated context, users trust foreign servers with all unencrypted data they send
    to them.</li>
-<li>Foreign servers cannot impersonate users without explicit consent.</li>
-<li>Users rely on their home servers for identity key certification, without the home servers</li>
-<li>possessing the identity.</li>
+<li>Foreign servers cannot impersonate users without immediate detection. Outsiders, meaning foreign
+   servers and other actors, are unable to produce signatures that have a cryptographic connection
+   to the actors' home server. This is assuming correct implementation of cryptographic
+   standards, secure home server operation and non-compromised client devices, all of which are
+   mostly out of the scope of this specification.</li>
+<li>Users rely on their home server for identity key certification, without the home server
+   possessing the identity.</li>
 </ol>
 <h2 id="3-apis-and-communication-protocols">3. APIs and communication protocols<a class="headerlink" href="#3-apis-and-communication-protocols" title="Permanent link">&para;</a></h2>
 <p>The polyproto specification defines a set of <a href="/APIs">APIs</a>.
@@ -3993,7 +3997,7 @@ service provider, they must request a <a href="#7-migrations">migration</a>.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-06-27T16:04:53+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-06-27</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-06-27T18:00:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-06-27</span>
   </span>
 
     
