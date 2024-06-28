@@ -263,11 +263,51 @@ Routes concerned with the "Services" and "Discoverability" sections of the core 
 
 `/.p2/core/v1/services`
 
----
+Add a service to the list of services discoverable by other actors.
 
-### <span clas="request-h"><span class="request request-put">PUT</span> Edit service to be discovered [:material-lock-outline:](#authorization "Authorization required")</span>
+#### Request
 
-`/.p2/core/v1/services`
+##### Body
+
+| Name      | Type   | Description                                                                   |
+| --------- | ------ | ----------------------------------------------------------------------------- |
+| `service` | String | The namespace of the service that should be made discoverable for this actor. |
+| `url`     | String | The base URL of the service. `.p2/<namespace>/` is not to be included here.    |
+
+```json
+{
+    "service": "example-service",
+    "url": "https://example.com"
+}
+```
+
+#### Response
+
+=== "201 Created"
+
+    ##### Body
+
+    | Name      | Type    | Description                                                                              |
+    | --------- | ------- | ---------------------------------------------------------------------------------------- |
+    | `service` | String  | The namespace of the service that should be made discoverable for this actor.            |
+    | `url`     | String  | The base URL of the service. `.p2/<namespace>/` is not to be included here.              |
+    | `primary` | Boolean | Whether the given service provider is the primary service provider for the given service |
+
+    ```json
+    {
+        "service": "example-service",
+        "url": "https://example.com",
+        "primary": false
+    }
+    ```
+
+=== "409 Conflict"
+
+    Returned, if the service and URL combination already exists in the list of discoverable services.
+
+    ##### Body
+
+    This response has no body.
 
 ---
 
@@ -275,11 +315,102 @@ Routes concerned with the "Services" and "Discoverability" sections of the core 
 
 `/.p2/core/v1/services`
 
+Remove a service from the list of services discoverable by other actors.
+
+#### Request
+
+##### Body
+
+| Name  | Type        | Description                                |
+| ----- | ----------- | ------------------------------------------ |
+| `url` | String, URL | The base URL of the service to be removed. |
+
+```json
+{
+    "url": "https://example.com"
+}
+```
+
+#### Response
+
+=== "204 No Content"
+
+    ##### Body
+
+    | Name  | Type        | Description                                   |
+    | ----- | ----------- | --------------------------------------------- |
+    | `url` | String, URL | The base URL of the service that was removed. |
+
+    ```json
+    {
+        "url": "https://example.com"
+    }
+    ```
+
+=== "404 Not Found"
+
+    Returned, if the service URL does not exist in the list of discoverable services.
+
+    ##### Body
+
+    This response has no body.
+
 ---
 
 ### <span clas="request-h"><span class="request request-put">PUT</span> Set primary service provider [:material-lock-outline:](#authorization "Authorization required") :material-eye-lock-outline:{title="This route is considered a sensitive action."}</span>
 
 `/.p2/core/v1/services/primary`
+
+Set a primary service provider for a given service namespace. This is used to indicate, which service
+provider should be used by default by other actors, when multiple service providers are available
+for a given service namespace.
+
+#### Request
+
+##### Body
+
+| Name  | Type        | Description                                                            |
+| ----- | ----------- | ---------------------------------------------------------------------- |
+| `url` | String, URL | The base URL of the service to be set as the primary service provider. |
+
+```json
+{
+    "url": "https://example.com"
+}
+```
+
+#### Response
+
+=== "200 OK"
+
+
+    ##### Body
+
+    An array of up to two objects, each containing the following fields:
+
+    | Name      | Type    | Description                                                                              |
+    | --------- | ------- | ---------------------------------------------------------------------------------------- |
+    | `service` | String  | The namespace of the service that should be made discoverable for this actor.            |
+    | `url`     | String  | The base URL of the service. `.p2/<namespace>/` is not to be included here.              |
+    | `primary` | Boolean | Whether the given service provider is the primary service provider for the given service |
+
+    ```json
+    [
+        {
+            "service": "example-service",
+            "url": "https://example.com",
+            "primary": false
+        },
+        {
+            "service": "other-example-service",
+            "url": "https://other.example.com",
+            "primary": true
+        }
+    ]
+    ```
+
+    The response will contain the updated previous primary service provider, if there was one, along
+    with the new primary service provider.
 
 ---
 
