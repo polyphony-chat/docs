@@ -253,6 +253,36 @@ Retrieve the maximum upload size for encrypted private key material, in bytes.
 
 ---
 
+## <span class="group-h">Services</span>
+
+Routes concerned with the "Services" and "Discoverability" sections of the core polyproto specification.
+
+---
+
+### <span clas="request-h"><span class="request request-post">POST</span> Add service to be discovered [:material-lock-outline:](#authorization "Authorization required")</span>
+
+`/.p2/core/v1/services`
+
+---
+
+### <span clas="request-h"><span class="request request-put">PUT</span> Edit service to be discovered [:material-lock-outline:](#authorization "Authorization required")</span>
+
+`/.p2/core/v1/services`
+
+---
+
+### <span clas="request-h"><span class="request request-delete">DELETE</span> Delete discoverable service [:material-lock-outline:](#authorization "Authorization required")</span>
+
+`/.p2/core/v1/services`
+
+---
+
+### <span clas="request-h"><span class="request request-put">PUT</span> Set primary service provider [:material-lock-outline:](#authorization "Authorization required") :material-eye-lock-outline:{title="This route is considered a sensitive action."}</span>
+
+`/.p2/core/v1/services/primary`
+
+---
+
 TODO: Add routes concerned with account and data migration.
 
 ---

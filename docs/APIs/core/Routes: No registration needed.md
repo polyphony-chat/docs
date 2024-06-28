@@ -282,6 +282,20 @@ Invalidate a session token by naming the session ID associated with it.
 
 ---
 
+## <span class="group-h">Services</span>
+
+Routes concerned with the "Services" and "Discoverability" sections of the core polyproto specification.
+
+---
+
+### <span clas="request-h"><span class="request request-get">GET</span> Discover services of user</span>
+
+---
+
+### <span clas="request-h"><span class="request request-post">GET</span> Discover single service of user</span>
+
+---
+
 ## <span class="group-h">Other</span>
 
 Routes not fitting into another category.
