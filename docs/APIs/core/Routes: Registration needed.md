@@ -287,11 +287,7 @@ Add a service to the list of services discoverable by other actors.
 
     ##### Body
 
-    | Name      | Type    | Description                                                                              |
-    | --------- | ------- | ---------------------------------------------------------------------------------------- |
-    | `service` | String  | The namespace of the service that should be made discoverable for this actor.            |
-    | `url`     | String  | The base URL of the service. `.p2/<namespace>/` is not to be included here.              |
-    | `primary` | Boolean | Whether the given service provider is the primary service provider for the given service |
+    A singular [service](./Types/service.md) object, representing the service that was added.
 
     ```json
     {
@@ -383,16 +379,9 @@ for a given service namespace.
 
 === "200 OK"
 
-
     ##### Body
 
-    An array of up to two objects, each containing the following fields:
-
-    | Name      | Type    | Description                                                                              |
-    | --------- | ------- | ---------------------------------------------------------------------------------------- |
-    | `service` | String  | The namespace of the service that should be made discoverable for this actor.            |
-    | `url`     | String  | The base URL of the service. `.p2/<namespace>/` is not to be included here.              |
-    | `primary` | Boolean | Whether the given service provider is the primary service provider for the given service |
+    An array of at minimum one, and at maximum 2 [service](./Types/service.md) objects.
 
     ```json
     [
@@ -402,7 +391,7 @@ for a given service namespace.
             "primary": false
         },
         {
-            "service": "other-example-service",
+            "service": "example-service",
             "url": "https://other.example.com",
             "primary": true
         }
