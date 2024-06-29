@@ -1170,7 +1170,8 @@ more comprehensive set of features.
 
 A namespace is a string used to identify a specific P2 extension. Used as a prefix in URLs, they
 prevent route name collisions between different extensions. Namespaces should be unique
-and descriptive. They should only contain lowercase letters, numbers, hyphens, and underscores.
+and descriptive. They must only contain lowercase letters, numbers, hyphens, and underscores.
+Namespaces must be at least 2 characters long and at most 64 characters long.
 
 Officially endorsed P2 extensions have priority over selecting namespaces. If a namespace is already
 taken by an officially endorsed extension, a different namespace must be chosen. If a namespace
