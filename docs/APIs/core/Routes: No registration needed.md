@@ -288,11 +288,139 @@ Routes concerned with the "Services" and "Discoverability" sections of the core 
 
 ---
 
-### <span clas="request-h"><span class="request request-get">GET</span> Discover services of user</span>
+### <span clas="request-h"><span class="request request-get">GET</span> Discover services of actor</span>
+
+`.p2/core/v1/services/discover/:fid`
+
+Fetch a list of all services that the actor has made discoverable.
+
+#### Request
+
+##### Parameters
+
+| Name  | Type                  | Description                                              |
+| ----- | --------------------- | -------------------------------------------------------- |
+| `fid` | String, Federation ID | The ID of the actor whose services should be returned.   |
+
+##### Body
+
+| Name  | Type             | Description                               |
+| ----- | ---------------- | ----------------------------------------- |
+| limit | Unsigned Integer | The maximum number of services to return. |
+
+The body is optional. Not specifying a limit will return all services.
+
+```json
+{
+    "limit": 5
+}
+```
+
+#### Response
+
+=== "200 OK"
+
+    ##### Body
+
+    JSON array of [service objects](./Types/service.md). A list of all services which the actor has
+    made discoverable.
+
+    ```json
+    [
+        {
+            "service": "example-service",
+            "url": "https://example.com/",
+            "primary": true
+        }
+    ]
+    ```
+
+=== "204 No Content"
+
+    Returned, if the actor has not made any services discoverable.
+
+    ##### Body
+
+    This response has no body.
+
+=== "404 Not Found"
+
+    Returned, if the specified actor does not exist.
+
+    ##### Body
+
+    This response has no body.
 
 ---
 
-### <span clas="request-h"><span class="request request-post">GET</span> Discover single service of user</span>
+### <span clas="request-h"><span class="request request-post">GET</span> Discover single service of actor</span>
+
+`.p2/core/v1/services/discover/:fid/:service`
+
+Get all service providers an actor is registered with, limited to a specific service.
+
+#### Request
+
+##### Parameters
+
+| Name      | Type                  | Description                                                        |
+| --------- | --------------------- | ------------------------------------------------------------------ |
+| `fid`     | String, Federation ID | The ID of the actor whose discoverable entries should be returned. |
+| `service` | String                | The service name to filter the query by.                           |
+
+##### Body
+
+| Name           | Type    | Description                                                           | Default |
+| -------------- | ------- | --------------------------------------------------------------------- | ------- |
+| `only_primary` | Boolean | If set to `true`, only the primary service provider will be returned. | `true`  |
+
+If omitted, servers must only return the primary service provider.
+
+```json
+{
+    "only_primary": false
+}
+```
+
+#### Response
+
+=== "200 OK"
+
+    ##### Body
+
+    JSON array of [service objects](./Types/service.md), filtered by the specified service. Will
+    be an array, regardless of the `only_primary` parameter.
+
+    ```json
+    [
+        {
+            "service": "example-service",
+            "url": "https://example.com/",
+            "primary": true
+        },
+        {
+            "service": "example-service",
+            "url": "https://other.example.com/",
+            "primary": false
+        }
+    ]
+    ```
+
+=== "204 No Content"
+
+    Returned, if there are no discoverable entries for the specified service.
+
+    ##### Body
+
+    This response has no body.
+
+=== "404 Not Found"
+
+    Returned, if the specified actor does not exist.
+
+    ##### Body
+
+    This response has no body.
 
 ---
 
