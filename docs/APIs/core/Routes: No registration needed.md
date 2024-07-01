@@ -366,19 +366,20 @@ Get all service providers an actor is registered with, limited to a specific ser
 | Name      | Type                  | Description                                                        |
 | --------- | --------------------- | ------------------------------------------------------------------ |
 | `fid`     | String, Federation ID | The ID of the actor whose discoverable entries should be returned. |
-| `service` | String                | The service name to filter the query by.                           |
 
 ##### Body
 
-| Name           | Type    | Description                                                           | Default |
-| -------------- | ------- | --------------------------------------------------------------------- | ------- |
-| `only_primary` | Boolean | If set to `true`, only the primary service provider will be returned. | `true`  |
+| Name      | Type             | Description                               | Required? |
+| --------- | ---------------- | ----------------------------------------- | --------- |
+| `limit`   | Unsigned Integer | The maximum number of services to return. | No        |
+| `service` | String           | The service name to filter the query by.  | Yes       |
 
-If omitted, servers must only return the primary service provider.
+Not specifying a limit will return all services.
 
 ```json
 {
-    "only_primary": false
+    "limit": 5,
+    "service": "example-service"
 }
 ```
 
