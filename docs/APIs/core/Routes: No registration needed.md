@@ -292,7 +292,8 @@ Routes concerned with the "Services" and "Discoverability" sections of the core 
 
 `.p2/core/v1/services/discover/:fid`
 
-Fetch a list of all services that the actor has made discoverable.
+Fetch a list of all services that the actor has made discoverable. Clients should not expect
+this list to be ordered in any particular way.
 
 #### Request
 
@@ -358,6 +359,7 @@ The body is optional. Not specifying a limit will return all services.
 `.p2/core/v1/services/discover/:fid/:service`
 
 Get all service providers an actor is registered with, limited to a specific service.
+Clients should not expect this list to be ordered in any particular way.
 
 #### Request
 
@@ -374,7 +376,8 @@ Get all service providers an actor is registered with, limited to a specific ser
 | `limit`   | Unsigned Integer | The maximum number of services to return. | No        |
 | `service` | String           | The service name to filter the query by.  | Yes       |
 
-Not specifying a limit will return all services.
+Not specifying a limit will return all services. Specifying a limit value of `1` will return
+only the primary service provider.
 
 ```json
 {
