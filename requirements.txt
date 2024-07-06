@@ -1,5 +1,5 @@
 Babel==2.15.0
-certifi==2024.6.2
+certifi==2024.7.4
 charset-normalizer==3.3.2
 click==8.1.7
 colorama==0.4.6
@@ -31,5 +31,5 @@ regex==2024.5.15
 requests==2.32.3
 six==1.16.0
 smmap==5.0.1
-urllib3==2.2.1
+urllib3==2.2.2
 watchdog==4.0.1
