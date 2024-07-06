@@ -269,15 +269,13 @@ Add a service to the list of services discoverable by other actors.
 
 ##### Body
 
-| Name      | Type   | Description                                                                   |
-| --------- | ------ | ----------------------------------------------------------------------------- |
-| `service` | String | The namespace of the service that should be made discoverable for this actor. |
-| `url`     | String | The base URL of the service. `.p2/<namespace>/` is not to be included here.    |
+A singular [service](./Types/service.md) object, representing the service that was added.
 
 ```json
 {
     "service": "example-service",
-    "url": "https://example.com"
+    "url": "https://example.com",
+    "primary": false
 }
 ```
 
@@ -287,15 +285,27 @@ Add a service to the list of services discoverable by other actors.
 
     ##### Body
 
-    A singular [service](./Types/service.md) object, representing the service that was added.
+    ##### Body
+
+    An array of at minimum one, and at maximum 2 [service](./Types/service.md) objects.
 
     ```json
-    {
-        "service": "example-service",
-        "url": "https://example.com",
-        "primary": false
-    }
+    [
+        {
+            "service": "example-service",
+            "url": "https://example.com",
+            "primary": false
+        },
+        {
+            "service": "example-service",
+            "url": "https://other.example.com",
+            "primary": true
+        }
+    ]
     ```
+
+    The response will contain the updated previous primary service provider, if there was one, along
+    with the new primary service provider.
 
 === "409 Conflict"
 
@@ -329,13 +339,14 @@ Remove a service from the list of services discoverable by other actors.
 
 #### Response
 
-=== "204 No Content"
+=== "200 OK"
 
     ##### Body
 
-    | Name  | Type        | Description                                   |
-    | ----- | ----------- | --------------------------------------------- |
-    | `url` | String, URL | The base URL of the service that was removed. |
+    | Name          | Type                                  | Description                                                                                                                                 | Required? |
+    | ------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+    | `deleted`     | Object, [Service](./Types/service.md) | The service that was removed.                                                                                                               | Yes       |
+    | `new_primary` | Object, [Service](./Types/service.md) | The new primary service provider, if the removed service was the primary service provider, and there are other service providers available. | No        |
 
     ```json
     {
@@ -368,10 +379,12 @@ for a given service namespace.
 | Name  | Type        | Description                                                            |
 | ----- | ----------- | ---------------------------------------------------------------------- |
 | `url` | String, URL | The base URL of the service to be set as the primary service provider. |
+| `service` | String | The service namespace for which the primary service provider is being set. |
 
 ```json
 {
-    "url": "https://example.com"
+    "url": "https://example.com",
+    "service": "example-service"
 }
 ```
 
