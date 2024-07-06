@@ -253,6 +253,174 @@ Retrieve the maximum upload size for encrypted private key material, in bytes.
 
 ---
 
+## <span class="group-h">Services</span>
+
+Routes concerned with the "Services" and "Discoverability" sections of the core polyproto specification.
+
+---
+
+### <span clas="request-h"><span class="request request-post">POST</span> Add service to be discovered [:material-lock-outline:](#authorization "Authorization required")</span>
+
+`/.p2/core/v1/services`
+
+Add a service to the list of services discoverable by other actors.
+
+#### Request
+
+##### Body
+
+A singular [service](./Types/service.md) object, representing the service that was added.
+
+```json
+{
+    "service": "example-service",
+    "url": "https://example.com",
+    "primary": false
+}
+```
+
+#### Response
+
+=== "201 Created"
+
+    ##### Body
+
+    ##### Body
+
+    An array of at minimum one, and at maximum 2 [service](./Types/service.md) objects.
+
+    ```json
+    [
+        {
+            "service": "example-service",
+            "url": "https://example.com",
+            "primary": false
+        },
+        {
+            "service": "example-service",
+            "url": "https://other.example.com",
+            "primary": true
+        }
+    ]
+    ```
+
+    The response will contain the updated previous primary service provider, if there was one, along
+    with the new primary service provider.
+
+=== "409 Conflict"
+
+    Returned, if the service and URL combination already exists in the list of discoverable services.
+
+    ##### Body
+
+    This response has no body.
+
+---
+
+### <span clas="request-h"><span class="request request-delete">DELETE</span> Delete discoverable service [:material-lock-outline:](#authorization "Authorization required")</span>
+
+`/.p2/core/v1/services`
+
+Remove a service from the list of services discoverable by other actors.
+
+#### Request
+
+##### Body
+
+| Name      | Type        | Description                                                   |
+| --------- | ----------- | ------------------------------------------------------------- |
+| `url`     | String, URL | The base URL of the service to be removed.                    |
+| `name` | String      | The service namespace for which the service is being removed. |
+
+```json
+{
+    "url": "https://example.com",
+    "name": "example-service"
+}
+```
+
+#### Response
+
+=== "200 OK"
+
+    ##### Body
+
+    | Name          | Type                                  | Description                                                                                                                                 | Required? |
+    | ------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+    | `deleted`     | Object, [Service](./Types/service.md) | The service that was removed.                                                                                                               | Yes       |
+    | `new_primary` | Object, [Service](./Types/service.md) | The new primary service provider, if the removed service was the primary service provider, and there are other service providers available. | No        |
+
+    ```json
+    {
+        "url": "https://example.com"
+    }
+    ```
+
+    `new_primary` will be omitted, if the removed service was not the primary service provider or if
+    there are no other service providers available for this service namespace.
+
+=== "404 Not Found"
+
+    Returned, if the service URL does not exist in the list of discoverable services.
+
+    ##### Body
+
+    This response has no body.
+
+---
+
+### <span clas="request-h"><span class="request request-put">PUT</span> Set primary service provider [:material-lock-outline:](#authorization "Authorization required") :material-eye-lock-outline:{title="This route is considered a sensitive action."}</span>
+
+`/.p2/core/v1/services/primary`
+
+Set a primary service provider for a given service namespace. This is used to indicate, which service
+provider should be used by default by other actors, when multiple service providers are available
+for a given service namespace.
+
+#### Request
+
+##### Body
+
+| Name   | Type        | Description                                                                |
+| ------ | ----------- | -------------------------------------------------------------------------- |
+| `url`  | String, URL | The base URL of the service to be set as the primary service provider.     |
+| `name` | String      | The service namespace for which the primary service provider is being set. |
+
+```json
+{
+    "url": "https://example.com",
+    "name": "example-service"
+}
+```
+
+#### Response
+
+=== "200 OK"
+
+    ##### Body
+
+    An array of at minimum one, and at maximum 2 [service](./Types/service.md) objects.
+
+    ```json
+    [
+        {
+            "service": "example-service",
+            "url": "https://example.com",
+            "primary": false
+        },
+        {
+            "service": "example-service",
+            "url": "https://other.example.com",
+            "primary": true
+        }
+    ]
+    ```
+
+    The response will contain the updated previous primary service provider, if there was one, along
+    with the new primary service provider.
+
+---
+
 TODO: Add routes concerned with account and data migration.
 
 ---
