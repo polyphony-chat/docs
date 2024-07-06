@@ -371,10 +371,10 @@ Clients should not expect this list to be ordered in any particular way.
 
 ##### Body
 
-| Name      | Type             | Description                               | Required? |
-| --------- | ---------------- | ----------------------------------------- | --------- |
-| `limit`   | Unsigned Integer | The maximum number of services to return. | No        |
-| `service` | String           | The service name to filter the query by.  | Yes       |
+| Name    | Type             | Description                               | Required? |
+| ------- | ---------------- | ----------------------------------------- | --------- |
+| `limit` | Unsigned Integer | The maximum number of services to return. | No        |
+| `name`  | String           | The service name to filter the query by.  | Yes       |
 
 Not specifying a limit will return all services. Specifying a limit value of `1` will return
 only the primary service provider.
@@ -382,7 +382,7 @@ only the primary service provider.
 ```json
 {
     "limit": 5,
-    "service": "example-service"
+    "name": "example-service"
 }
 ```
 
