@@ -327,13 +327,15 @@ Remove a service from the list of services discoverable by other actors.
 
 ##### Body
 
-| Name  | Type        | Description                                |
-| ----- | ----------- | ------------------------------------------ |
-| `url` | String, URL | The base URL of the service to be removed. |
+| Name      | Type        | Description                                                   |
+| --------- | ----------- | ------------------------------------------------------------- |
+| `url`     | String, URL | The base URL of the service to be removed.                    |
+| `name` | String      | The service namespace for which the service is being removed. |
 
 ```json
 {
-    "url": "https://example.com"
+    "url": "https://example.com",
+    "name": "example-service"
 }
 ```
 
@@ -353,6 +355,9 @@ Remove a service from the list of services discoverable by other actors.
         "url": "https://example.com"
     }
     ```
+
+    `new_primary` will be omitted, if the removed service was not the primary service provider or if
+    there are no other service providers available for this service namespace.
 
 === "404 Not Found"
 
@@ -376,15 +381,15 @@ for a given service namespace.
 
 ##### Body
 
-| Name  | Type        | Description                                                            |
-| ----- | ----------- | ---------------------------------------------------------------------- |
-| `url` | String, URL | The base URL of the service to be set as the primary service provider. |
-| `service` | String | The service namespace for which the primary service provider is being set. |
+| Name   | Type        | Description                                                                |
+| ------ | ----------- | -------------------------------------------------------------------------- |
+| `url`  | String, URL | The base URL of the service to be set as the primary service provider.     |
+| `name` | String      | The service namespace for which the primary service provider is being set. |
 
 ```json
 {
     "url": "https://example.com",
-    "service": "example-service"
+    "name": "example-service"
 }
 ```
 
