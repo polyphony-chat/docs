@@ -466,6 +466,12 @@ This request has no body.
 
 ---
 
+## <span class="group-h">Migration</span>
+
+Routes concerned with identity migration and re-signing messages.
+
+---
+
 TODO: "All challenge strings and their responses created in the context of account migration must be made public to ensure that a chain of trust can be maintained"
 
 TODO: Add routes concerned with account and data migration.
@@ -475,4 +481,3 @@ TODO: Add routes concerned with account and data migration.
 ## Glossary
 
 --8<-- "snippets/glossary.md"
-
