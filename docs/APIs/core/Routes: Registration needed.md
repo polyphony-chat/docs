@@ -431,6 +431,20 @@ Routes concerned with identity migration and re-signing messages.
 
 `.p2/core/v1/migration/redirect`
 
+---
+
+### <span class="request-h"><span class="request request-post">POST</span> Request enabling message re-signing (Receive key trial) [:material-lock-outline:](#authorization "Authorization required")</span>
+
+`.p2/core/v1/migration/messages`
+
+---
+
+### <span class="request-h"><span class="request request-post">POST</span> Complete key trial [:material-lock-outline:](#authorization "Authorization required")</span>
+
+`.p2/core/v1/migration/messages/keys`
+
+---
+
 TODO: Add routes concerned with account and data migration.
 
 ---
