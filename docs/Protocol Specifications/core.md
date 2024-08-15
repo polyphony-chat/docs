@@ -212,18 +212,18 @@ are employed to sign messages that the actor sends to other servers.
 
 !!! note "Using one identity for several polyproto implementations"
 
-    An actor can choose to use the same identity for multiple polyproto implementations. If section
-    [4.1.3](#413-authenticating-on-a-foreign-server) is implemented correctly, this should not be a problem.
+    An actor can choose to use the same identity for multiple polyproto implementations. Read
+    [section #9](#9-services) for more information.
 
 !!! info
 
-    You can read more about the Identity Keys and Certificates in [7. Keys and signatures](#7-keys-and-signatures).
+    You can read more about Identity Certificates in [section #6.](#6-cryptography-and-id-certs)
 
 ### 4.1 Authentication
 
 The core polyproto specification does not contain a strict definition of authentication procedures
 and endpoints. This allows for a wide range of authentication methods to be used. However, if
-implementations want to closely interoperate with each other, they should **highly** consider
+implementations want to closely interoperate with each other, they should highly consider
 implementing the [polyproto-auth](./auth.md) standard for authenticating on home servers and
 foreign servers alike.
 
@@ -312,10 +312,10 @@ servers from generating federation tokens for users without their consent and kn
 
 !!! abstract
 
-    The above scenario is not unique to polyproto, and rather a problem other federated services/
-    protocols, like ActivityPub, have as well. There is no real solution to this problem, but it can
-    be mitigated a bit by making it more difficult for malicious home servers to do something like
-    this without the actor noticing.
+    The above scenario is not unique to polyproto, and rather a problem other federated
+    services/protocols, like ActivityPub, have as well. There is no real solution to this problem,
+    but it can be mitigated a bit by making it more difficult for malicious home servers to do
+    something like this without the actor noticing.
 
 Polyproto servers need to inform users of new sessions. This visibility hampers malicious home
 servers, but does not solve the issue of them being able to create federation tokens for servers the
@@ -337,7 +337,7 @@ excluding the new session. The `NEW_SESSION` event's stored data can be accessed
 ## 5. Federation IDs (FIDs)
 
 Every client requires an associated actor identity. Actors are distinguished by a unique federation
-ID (FID), consist of their identifier, which is unique per instance, and the instance's root domain.
+ID (FID). FIDs consist of their identifier, which is unique per instance, and the instance's root domain.
 This combination ensures global uniqueness.
 
 FIDs used in public contexts are formatted as `actor@optionalsubdomain.domain.tld`, and are case-insensitive.
@@ -394,7 +394,8 @@ When signing an ID-CSR, the home server must verify the correctness of all claim
     This includes checking whether the signature matches the certificates' contents and checking the
     certificate's validity period.
 
-Actors must use a separate ID-Cert for each client or session they use.
+Actors must use a separate ID-Cert for each client or session they use. Separating ID-Certs
+limits the potential damage a compromised ID-Cert can cause.
 
 For two implementations of polyproto to be interoperable, they must support an overlapping set of
 digital signature algorithms. See [Section 6.4](#64-cryptographic-recommendations) for more
@@ -528,6 +529,15 @@ perpetually, to potentially verify its identity in case of a migration.
 Users must hold on to all of their past key pairs, as they might need them to
 [migrate their account in the future](#7-migrations). How this is done is specified in
 [section 6.3: Private key loss prevention and private key recovery](#63-private-key-loss-prevention-and-private-key-recovery).
+
+The lifetime of an actor ID-Cert should be limited to a maximum of 60 days. This is to ensure that even
+in a worst-case scenario, a compromised ID-Cert can only be used for a limited amount of time. The
+renewal of an ID-Cert is considered a [sensitive action](#412-sensitive-actions) and should require
+a second factor of authentication. A client that has this second factor of authentication stored
+should renew the ID-Cert of the authenticated actor without further interaction.
+
+Server ID-Certs should be rotated way less often (every 1-3 years). Only rotate a server ID-Cert
+if it is suspected to be compromised, is lost, or has expired.
 
 ```mermaid
 sequenceDiagram
@@ -748,7 +758,7 @@ should be distinguishable from signed messages at first glance.
 As described in previous sections, actors must hold on to their past identity key pairs, should they
 want or need to migrate their account.
 
-Home servers must offer a way for actors to upload and recover their private identity keys while not 
+Home servers must offer a way for actors to upload and recover their private identity keys while not
 having access to the private keys themselves. Private identity keys must be encrypted with
 strong passphrases and encryption schemes such as AES, before being uploaded to the server.
 Authenticated actors can download their encrypted private identity keys from the server at any time.
@@ -756,6 +766,8 @@ All encryption and decryption operations must be done client-side.
 
 If any uncertainty about the availability of the home server exists, clients should regularly
 download their encrypted private identity keys from the server and store them in a secure location.
+Ideally, each client should immediately download their encrypted private identity keys from the
+server after connecting. Clients should never store key backups in an unencrypted manner.
 
 Whether an actor uploads their encrypted private identity keys to the server is their own choice.
 It is also recommended backing up the encrypted private identity keys in some other secure location.
@@ -783,9 +795,6 @@ implementing polyproto.
 
 #### 6.5.1 Signing keys and ID-Certs
 
-- Actor and client signing keys should be rotated regularly (every 20-60 days). This is to ensure
-  that a compromised key can only be used for a limited amount of time. Server identity keys should be
-  rotated way less often (every 1-5 years), and perhaps only when a leak is suspected.
 - When a server is asked to generate a new ID-Cert for an actor, it must make sure that the CSR is
   valid and, if set, has an expiry date less than or equal to the expiry date of the server's own ID-Cert.
 - Due to the fact that a `SERVER_KEY_CHANGE` gateway event is bound to generate a large amount of

@@ -466,6 +466,30 @@ This request has no body.
 
 ---
 
+## <span class="group-h">Migration</span>
+
+Routes concerned with identity migration and re-signing messages.
+
+---
+
+### <span class="request-h"><span class="request request-post">POST</span> Set up a redirect for migrating identities [:material-lock-outline:](#authorization "Authorization required")</span>
+
+`.p2/core/v1/migration/redirect/extern`
+
+---
+
+### <span class="request-h"><span class="request request-get">GET</span> Request message re-signing [:material-lock-outline:](#authorization "Authorization required")</span>
+
+`.p2/core/v1/migration/messages/extern`
+
+---
+
+### <span class="request-h"><span class="request request-post">POST</span> Commit re-signed messages [:material-lock-outline:](#authorization "Authorization required")</span>
+
+`.p2/core/v1/migration/messages/extern`
+
+---
+
 TODO: "All challenge strings and their responses created in the context of account migration must be made public to ensure that a chain of trust can be maintained"
 
 TODO: Add routes concerned with account and data migration.
@@ -475,4 +499,3 @@ TODO: Add routes concerned with account and data migration.
 ## Glossary
 
 --8<-- "snippets/glossary.md"
-
