@@ -1131,6 +1131,12 @@ identifier does not change when the content is moved to another server. If the b
 new server is known, the identifier can be used to retrieve the content from the new server.
 The "relative root" is the base domain of the server, which is used to retrieve the content.
 
+The uniqueness constraint of the identifier is important. If a collision occurs when trying to
+move the content to another server, the content cannot be migrated in a way that preserves the
+references to it. One way to ensure the uniqueness of the identifier is to use a hash function on the
+content itself. Combining this has with a cryptographically strong nonce, then hashing the result of
+concatenating the nonce and the hash of the content should yield a unique identifier.
+
 The API route for content addressing with relative roots is formatted as follows:
 
 `<server_url>/.p2/core/content/<content_id>`
