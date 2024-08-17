@@ -50,6 +50,7 @@ The version number specified here also applies to the API documentation.
         - [7.2.2.1 Body size](#7221-body-size)
         - [7.2.2.2 Interval between re-signing batches](#7222-interval-between-re-signing-batches)
     - [7.3 Moving data](#73-moving-data)
+      - [7.3.1 Content Addressing with relative roots](#731-content-addressing-with-relative-roots)
     - [7.4 Challenges and trust](#74-challenges-and-trust)
   - [8. Protocol extensions (P2 extensions)](#8-protocol-extensions-p2-extensions)
     - [8.1 Extension design](#81-extension-design)
@@ -1109,6 +1110,37 @@ aa-xsa: Deactivate account
 
 How this process is implemented is up to P2 extensions to define. The above steps are only a
 guideline. The API routes for data export and import are documented in the API documentation.
+
+#### 7.3.1 Content Addressing with relative roots
+
+Moving data from one server to another might break references to this data. To prevent this as much
+as possible, content addressing with relative roots is recommended for data behind an additional
+layer of indirection.
+
+!!! example
+
+    In a chat service, a user might have posted a message containing a picture. In this example, the
+    picture is stored on the user's home server, which is not necessarily the same server as the
+    chat service. If the user moves their account to another server, the picture might not be
+    accessible anymore.
+
+Content addressing with relative roots aids in preventing this issue. Instead of referring to
+the absolute URL of the content, the server processing the content generates a unique identifier.
+This identifier can be used to retrieve the content from the server. Most importantly, this
+identifier does not change when the content is moved to another server. If the base domain of the
+new server is known, the identifier can be used to retrieve the content from the new server.
+The "relative root" is the base domain of the server, which is used to retrieve the content.
+
+The API route for content addressing with relative roots is formatted as follows:
+
+`<server_url>/.p2/core/content/<content_id>`
+
+The API route for content addressing with relative roots is documented more thoroughly in the API
+documentation.
+
+Servers with no need for content addressing with relative roots can select to not implement this
+feature. Servers not implementing this feature should return a `404 Not Found` status code when
+the API route is accessed. Clients should expect finding servers not implementing this feature.
 
 ### 7.4 Challenges and trust
 
