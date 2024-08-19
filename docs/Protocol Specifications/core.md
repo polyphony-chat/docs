@@ -596,6 +596,10 @@ must revoke the session associated with the revoked ID-Cert. Revoking an ID-Cert
     The above paragraph is true for both foreign and home servers. The API routes associated with
     revoking an ID-Cert are the same regardless of the server type.
 
+TODO: Write about identifier changing and how to handle that across servers
+TODO: Perhaps recommend never using more than a specified number of certificates at once to make
+      re-signing easier
+
 ### 6.2 Actor identity keys and message signing
 
 As briefly mentioned section [#4](#4-federated-identity), users must hold on to an identity key pair
