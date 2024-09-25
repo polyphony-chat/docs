@@ -20,7 +20,7 @@ mkdocs-rss-plugin==1.15.0
 packaging==24.1
 paginate==0.5.7
 pathspec==0.12.1
-platformdirs==4.3.3
+platformdirs==4.3.6
 Pygments==2.18.0
 pymdown-extensions==10.10.1
 python-dateutil==2.9.0.post0
