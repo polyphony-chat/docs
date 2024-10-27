@@ -9,4 +9,10 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
-      
+  - package-ecosystem: "npm"
+    directories:
+      - "/api/core"
+      - "/api/auth"
+      - "/api/chat"
+    schedule:
+      interval: "weekly"

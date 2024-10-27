@@ -27,3 +27,7 @@ Discoverability
 snippets/glossary
 may
 boolean
+npm
+Dependabot
+typespec
+TypeSpec
