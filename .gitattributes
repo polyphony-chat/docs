@@ -1,4 +1,4 @@
 *.md linguist-detectable
 styles/* linguist-vendored
 styles/config linguist-detectable
-*.tsp linguist-detectable
+*.tsp linguist-language=TypeSpec
