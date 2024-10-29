@@ -1,3 +1,3 @@
 #!/bin/sh
 
-vale ./**/*.md ./*.md
+vale ./docs/*.md ./*.md
