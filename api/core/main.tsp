@@ -11,8 +11,21 @@ using TypeSpec.Http;
 namespace polyproto;
 
 model EncryptedPKM {
+    /**
+     * Custom variant of the X.509 `SubjectPublicKeyInfo`, where the `subject_public_key`
+     * field stores the encrypted private key, instead of a public key. Otherwise equal to
+     * `SubjectPublicKeyInfo`. Also referred to as `PrivateKeyInfo`.
+     */
     key_data: string,
-    serial_number: string
+    @doc("The serial number of the ID-Cert this key material is associated with.")
+    serial_number: uint64,
+    /**
+     * Information about the algorithms used to encrypt the data held by the `key_data` field.
+     * Order-sensitive; The encryption used for the first encryption operation must be the last
+     * item of this array and vice versa.
+     */
+    @minItems(1)
+    encryption_algorithms: Array<Array<uint16>>
 }
 
 /**
