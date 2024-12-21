@@ -34,10 +34,11 @@ namespace FederatedIdentity {
          * @returns Contains your new ID-Cert, along with a new session token. 
         */
         op rotateIdCert(@body csr: string;): {
-            @doc("Contains your new ID-Cert, along with a new session token.")
+            @doc("Contains your new ID-Cert in PEM encoding, along with a new session token.")
             @statusCode statusCode: 201;
             @body newIdCert: {
                 @doc("The generated [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) in PEM format.")
+                @example("------BEGIN CERTIFICATE------...")
                 id_cert: string,
                 @doc("An authorization secret, called a \"token\", valid for this `id_cert`.")
                 token: string
@@ -170,5 +171,46 @@ namespace FederatedIdentity {
         op serverIdCert(@body timestamp?: {
             timestamp: uint64
         }): string;
+
+        @route("/key/server")
+        @get
+        @added(Version.`v1.0`)
+        @summary("Get Server Public Key")
+        /**
+         * Request the server's public key.
+         * @returns The current public key of the server, or, if specified, the public key the server had
+         * at the specified time. The public key is being returned as a PEM encoded X.509
+         * `SubjectPublicKeyInfo`.
+         * @param timestamp An optional UNIX timestamp to retrieve the public key the server had at that
+         * point in time, instead of the current one.
+         */
+        op serverKey(@body timestamp?: {
+            timestamp: uint64
+        }): string;
+
+        @route("/idcert/actor")
+        @get
+        @added(Version.`v1.0`)
+        @summary("Get Actor ID-Cert(s)")
+        /**
+         * Request the ID-Certs of a specific actor. The specified actor must be registered on this server.
+         * @param fid The ID of the actor whose ID-Cert(s) should be returned.
+         * @param body timestamp: UNIX-Timestamp. If specified, the server will return the ID-Cert(s) which the actor had at the specified time. session_id: Request the ID-Cert for a specific session ID.
+         * @returns JSON-Array of Object(s), each object containing "id_cert" (PEM encoded ID-Cert) and "invalidated" (boolean). An ID-Cert is considered invalidated, if the server or actor choose to revoke the validity of the ID-Cert before the lifetime of the certificate was scheduled to end.
+        */
+        op actorCerts(@path fid: string, @body body?: {
+            timestamp?: uint64,
+            session_id?: string
+        }): {
+            @statusCode statusCode: 200;
+            @body response: {
+                @doc("PEM encoded ID-Cert")
+                @example("------BEGIN CERTIFICATE------...")
+                id_cert: string,
+                @example(false)
+                @doc("Whether this specific id_cert has been marked as invalidated by the server. An ID-Cert is considered invalidated, if the server or actor choose to revoke the validity of the ID-Cert before the lifetime of the certificate was scheduled to end.")
+                invalidated: boolean
+            }[]
+        };
     }
 }
