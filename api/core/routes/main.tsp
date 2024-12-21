@@ -126,6 +126,49 @@ namespace FederatedIdentity {
 
     @tag("Federated Identity - Registration not required")
     namespace Unregistered {
+        @route("/challenge")
+        @summary("Get challenge string")
+        @added(Version.`v1.0`)
+        @get
+        /**
+         * Request a challenge string. See the corresponding
+         * [protocol definition chapter](/docs/Protocol%20Specifications/core/#)
+         * for more information.
+         * @param session_id: Session ID of the certificate which you want to use the private key
+         * of to complete the challenge
+         */
+        op challengeString(session_id: string): {
+            @statusCode statusCode: 200;
+            @body challengeStringResponse: polyproto.core.models.ChallengeStringResponse
+        } | {
+            @doc("Received, if the provided `session_id` is invalid or unknown")
+            @statusCode statusCode: 404;
+        };
 
+        @route("/key/server")
+        @summary("Rotate Server Identity Key")
+        @added(Version.`v1.0`)
+        @post
+        @tag("Sensitive Action")
+        /**
+         * Rotate the server's identity key. Requires server administrator permissions.
+         * @returns The servers' new ID-Cert, encoded as PEM 
+         */
+        op name(@header({name: "X-P2-CHALLENGE-STRING-SOLUTION"}) challengeStringSolution: string): string;
+
+        @route("/idcert/server")
+        @get
+        @added(Version.`v1.0`)
+        @summary("Get Server ID-Cert")
+        /**
+         * Request the server's public identity certificate.
+         * @returns The current ID-Cert of the server, or, if specified, the ID-Cert the server had
+         * at the specified time.
+         * @param timestamp An optional UNIX timestamp to retrieve the ID-Cert the server had at that
+         * point in time, instead of the current one.
+         */
+        op serverIdCert(@body timestamp?: {
+            timestamp: uint64
+        }): string;
     }
 }
