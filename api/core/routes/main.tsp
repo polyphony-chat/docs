@@ -1,31 +1,38 @@
 import "@typespec/http";
+import "@typespec/versioning";
 import "../main.tsp";
 
 using TypeSpec.Http;
+using TypeSpec.Versioning;
 using polyproto;
-
 @service({
-    title: "polyproto core APIs"
+    title: "polyproto core APIs";
 })
 @server("https://example.com", "Example endpoint")
 
+
 @route("/.p2/core/v1/")
+@versioned(Version)
 namespace Routes;
 
-@tag("Federated Identity")
+enum Version {
+    "v1.0"
+}
+
 namespace FederatedIdentity {
-    @tag("Federated Identity")
-    @tag("Registration required")
+    @tag("Federated Identity - Registration required")
     @useAuth(BearerAuth)
     namespace Registered {
         @route("/session/idcert")
         @summary("Rotate session ID-Cert")
+        @added(Version.`v1.0`)
         @post
         /**
          * Rotate your keys for a given session. The `session_id` in the supplied `csr` must correspond to the
          * session token used in the `authorization`-Header.
          * @param csr A new [certificate signing request (CSR)](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) with the same session ID
-         */
+         * @returns Contains your new ID-Cert, along with a new session token. 
+        */
         op rotateIdCert(@body csr: string;): {
             @doc("Contains your new ID-Cert, along with a new session token.")
             @statusCode statusCode: 201;
@@ -39,6 +46,7 @@ namespace FederatedIdentity {
 
         @route("/session/keymaterial")
         @summary("Upload encrypted private key material")
+        @added(Version.`v1.0`)
         @post
         /**
          * Upload encrypted private key material to the server for later retrieval. The size of
@@ -60,10 +68,63 @@ namespace FederatedIdentity {
             @doc("Uploaded key material exceeds the server's maximum upload size.")
             @statusCode statusCode: 413;
         };
+
+        @route("/session/keymaterial")
+        @summary("Get encrypted private key material")
+        @added(Version.`v1.0`)
+        @get
+        /**
+         * Retrieve encrypted private key material from the server. The `serial_numbers`, if
+         * provided, must match the serial numbers of ID-Certs that the client has uploaded key
+         * material for. If no `serial_numbers` are provided, the server will return all key
+         * material that the client has uploaded.
+         */
+        op getEncryptedPKM(serials: uint64[]): {
+            @statusCode statusCode: 200;
+            @body encryptedPKMs: polyproto.core.models.EncryptedPKM[];
+        } | {
+            @doc("Returned, if no `serial_numbers` are provided and the client has not uploaded any key material.")
+            @statusCode statusCode: 204;
+        } | {
+            @doc("Returned, if none of the `serial_numbers` match any known ID-Certs from this actor.")
+            @statusCode statusCode: 404;
+        };
+
+        @route("/session/keymaterial")
+        @tag("Sensitive Action")
+        @summary("Delete encrypted private key material")
+        @added(Version.`v1.0`)
+        @delete
+        /**
+         * Delete encrypted private key material from the server. The `serial_number(s)`, must match
+         * the serial numbers of ID-Certs that the client has uploaded key material for.
+         */
+        op deleteEncryptedPKM(
+            @doc("Sensitive actions require a [challenge string solution](/docs/Protocol%20Specifications/core.md) to be executed.")
+            @header({name: "X-P2-CHALLENGE-STRING-SOLUTION"}) challengeStringSolution: string,
+            serials: uint64[]): {
+            @statusCode statusCode: 204;
+        } | {
+            @doc("Returned, if none of the `serial_numbers` match any known ID-Certs from this actor.")
+            @statusCode statusCode: 404;
+        };
+        
+        @route("/session/keymaterial/size")
+        @summary("Get encrypted private key material upload size limit")
+        @added(Version.`v1.0`)
+        @get
+        /**
+         * Retrieve the maximum upload size for encrypted private key material, in bytes.
+         * 
+         * @returns The upload size limit, in bytes.
+         */
+        op encryptedPKMsizeLimit(): {
+            @header({name: "X-MAX-PAYLOAD-SIZE"}) size: uint32;
+            @statusCode statusCode: 200;
+        };
     }
 
-    @tag("Federated Identity")
-    @tag("Registration not required")
+    @tag("Federated Identity - Registration not required")
     namespace Unregistered {
 
     }
