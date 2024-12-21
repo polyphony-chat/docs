@@ -114,6 +114,7 @@ namespace FederatedIdentity {
         @summary("Get encrypted private key material upload size limit")
         @added(Version.`v1.0`)
         @get
+        @useAuth(NoAuth)
         /**
          * Retrieve the maximum upload size for encrypted private key material, in bytes.
          * 
@@ -129,27 +130,24 @@ namespace FederatedIdentity {
     namespace Unregistered {
         @route("/challenge")
         @summary("Get challenge string")
+        @useAuth(BearerAuth)
         @added(Version.`v1.0`)
         @get
         /**
          * Request a challenge string. See the corresponding
          * [protocol definition chapter](/docs/Protocol%20Specifications/core/#)
          * for more information.
-         * @param session_id: Session ID of the certificate which you want to use the private key
-         * of to complete the challenge
          */
-        op challengeString(@body session_id: string): {
+        op challengeString(): {
             @statusCode statusCode: 200;
             @body challengeStringResponse: polyproto.core.models.ChallengeStringResponse
-        } | {
-            @doc("Received, if the provided `session_id` is invalid or unknown")
-            @statusCode statusCode: 404;
         };
 
         @route("/key/server")
         @summary("Rotate Server Identity Key")
         @added(Version.`v1.0`)
         @post
+        @useAuth(BearerAuth)
         @tag("Sensitive Action")
         /**
          * Rotate the server's identity key. Requires server administrator permissions.
@@ -216,6 +214,7 @@ namespace FederatedIdentity {
         @route("/session/idcert/extern")
         @put
         @added(Version.`v1.0`)
+        @useAuth(BearerAuth)
         @summary("Update session ID-Cert")
         /**
          * Lets a foreign server know that the ID-Cert of this session has changed.
@@ -228,6 +227,7 @@ namespace FederatedIdentity {
         @delete
         @added(Version.`v1.0`)
         @summary("Delete/Revoke Session")
+        @useAuth(BearerAuth)
         /**
          * Invalidate a session token by naming the session ID associated with it.
          */
@@ -237,4 +237,8 @@ namespace FederatedIdentity {
             @statusCode statusCode: 404;
         };
     }
+}
+
+namespace Services {
+
 }
