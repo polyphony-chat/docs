@@ -80,7 +80,7 @@ namespace FederatedIdentity {
          * material for. If no `serial_numbers` are provided, the server will return all key
          * material that the client has uploaded.
          */
-        op getEncryptedPKM(@body serials: uint64[]): {
+        op getEncryptedPKM(@query serials?: uint64[]): {
             @statusCode statusCode: 200;
             @body encryptedPKMs: polyproto.core.models.EncryptedPKM[];
         } | {
@@ -103,7 +103,7 @@ namespace FederatedIdentity {
         op deleteEncryptedPKM(
             @doc("Sensitive actions require a [challenge string solution](/docs/Protocol%20Specifications/core.md) to be executed.")
             @header({name: "X-P2-CHALLENGE-STRING-SOLUTION"}) challengeStringSolution: string,
-            @body serials: uint64[]): {
+            @query serials: uint64[]): {
             @statusCode statusCode: 204;
         } | {
             @doc("Returned, if none of the `serial_numbers` match any known ID-Certs from this actor.")
@@ -166,9 +166,7 @@ namespace FederatedIdentity {
          * @param timestamp An optional UNIX timestamp to retrieve the ID-Cert the server had at that
          * point in time, instead of the current one.
          */
-        op serverIdCert(@body timestamp?: {
-            timestamp: uint64
-        }): string;
+        op serverIdCert(@query timestamp?: uint64): string;
 
         @route("/key/server")
         @get
@@ -182,7 +180,7 @@ namespace FederatedIdentity {
          * @param timestamp An optional UNIX timestamp to retrieve the public key the server had at that
          * point in time, instead of the current one.
          */
-        op serverKey(@body timestamp?: {
+        op serverKey(@query timestamp?: {
             timestamp: uint64
         }): string;
 
@@ -193,13 +191,13 @@ namespace FederatedIdentity {
         /**
          * Request the ID-Certs of a specific actor. The specified actor must be registered on this server.
          * @param fid The ID of the actor whose ID-Cert(s) should be returned.
+         * @param timestamp An optional UNIX timestamp to retrieve the ID-Cert the actor had at that
+         * point in time, instead of the current one.
+         * @param session_id Optionally, return only the ID-Certs matching a specific `session_id`.
          * @param body timestamp: UNIX-Timestamp. If specified, the server will return the ID-Cert(s) which the actor had at the specified time. session_id: Request the ID-Cert for a specific session ID.
          * @returns JSON-Array of Object(s), each object containing "id_cert" (PEM encoded ID-Cert) and "invalidated" (boolean). An ID-Cert is considered invalidated, if the server or actor choose to revoke the validity of the ID-Cert before the lifetime of the certificate was scheduled to end.
         */
-        op actorCerts(@path fid: string, @body body?: {
-            timestamp?: uint64,
-            session_id?: string
-        }): {
+        op actorCerts(@path fid: string, @query timestamp?: uint64, @query session_id?: string): {
             @statusCode statusCode: 200;
             @body response: {
                 @doc("PEM encoded ID-Cert")
@@ -231,7 +229,7 @@ namespace FederatedIdentity {
         /**
          * Invalidate a session token by naming the session ID associated with it.
          */
-        op deleteSession(session_id: string): {
+        op deleteSession(@query session_id: string): {
             @statusCode statusCode: 204;
         } | {
             @statusCode statusCode: 404;
@@ -240,5 +238,49 @@ namespace FederatedIdentity {
 }
 
 namespace Services {
+    
+    @tag("Services - Registration required")
+    @useAuth(BearerAuth)
+    namespace Registered {
+        @route("/services")
+        @post
+        @summary("Add service to be discovered")
+        @added(Version.`v1.0`)
+        @returnsDoc("A singular service object, representing the service that was added.")
+        @errorsDoc("Returned, if the service and URL combination already exists in the list of discoverable services.")
+        /**
+         * Add a service to the list of services discoverable by other actors.
+         */
+        op registerService(service: polyproto.core.models.Service): {
+            @statusCode statusCode: 201;
+            @body body: polyproto.core.models.Service;
+        } | {
+            @statusCode statusCode: 409;
+        };
 
+        @route("/services")
+        @delete
+        @summary("Delete discoverable service")
+        @added(Version.`v1.0`)
+        /**
+         * Remove a service from the list of services discoverable by other actors.
+         * If a primary service is removed and there are still other providers available for the same service,
+         * the server will select a new primary service provider from the list of available providers.
+         * This new provider will be returned in the response body.
+         * @param url List of urls of the service providers to remove. The indices of the urls list must match the indices of the service name list.
+         * @param name List of urls of the service providers to remove. The indices of the service name list must match the indices of the urls list.
+         */
+        op unregisterService(@query url: url[], @query name: string[]): {
+            @statusCode statusCode: 200;
+            @body returnedBody?: {
+                service: string,
+                new_primary: url
+            }[]     
+        } | {
+            @statusCode statusCode: 400 | 404;
+        };
+    }
+
+    @tag("Services - Registration not required")
+    namespace Unregistered {}
 }
