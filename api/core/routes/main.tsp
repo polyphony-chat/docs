@@ -80,7 +80,7 @@ namespace FederatedIdentity {
          * material for. If no `serial_numbers` are provided, the server will return all key
          * material that the client has uploaded.
          */
-        op getEncryptedPKM(serials: uint64[]): {
+        op getEncryptedPKM(@body serials: uint64[]): {
             @statusCode statusCode: 200;
             @body encryptedPKMs: polyproto.core.models.EncryptedPKM[];
         } | {
@@ -103,7 +103,7 @@ namespace FederatedIdentity {
         op deleteEncryptedPKM(
             @doc("Sensitive actions require a [challenge string solution](/docs/Protocol%20Specifications/core.md) to be executed.")
             @header({name: "X-P2-CHALLENGE-STRING-SOLUTION"}) challengeStringSolution: string,
-            serials: uint64[]): {
+            @body serials: uint64[]): {
             @statusCode statusCode: 204;
         } | {
             @doc("Returned, if none of the `serial_numbers` match any known ID-Certs from this actor.")
@@ -138,7 +138,7 @@ namespace FederatedIdentity {
          * @param session_id: Session ID of the certificate which you want to use the private key
          * of to complete the challenge
          */
-        op challengeString(session_id: string): {
+        op challengeString(@body session_id: string): {
             @statusCode statusCode: 200;
             @body challengeStringResponse: polyproto.core.models.ChallengeStringResponse
         } | {
@@ -211,6 +211,30 @@ namespace FederatedIdentity {
                 @doc("Whether this specific id_cert has been marked as invalidated by the server. An ID-Cert is considered invalidated, if the server or actor choose to revoke the validity of the ID-Cert before the lifetime of the certificate was scheduled to end.")
                 invalidated: boolean
             }[]
+        };
+
+        @route("/session/idcert/extern")
+        @put
+        @added(Version.`v1.0`)
+        @summary("Update session ID-Cert")
+        /**
+         * Lets a foreign server know that the ID-Cert of this session has changed.
+         */
+        op updateSessionCert(@body id_cert: string): {
+            @statusCode statusCode: 201;
+        };
+
+        @route("/session")
+        @delete
+        @added(Version.`v1.0`)
+        @summary("Delete/Revoke Session")
+        /**
+         * Invalidate a session token by naming the session ID associated with it.
+         */
+        op deleteSession(session_id: string): {
+            @statusCode statusCode: 204;
+        } | {
+            @statusCode statusCode: 404;
         };
     }
 }
