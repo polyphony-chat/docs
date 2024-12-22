@@ -447,11 +447,21 @@ namespace Migration {
             @statusCode statusCode: 202 | 200
         };
 
-        @route("/messages/keys/extern")
-        @post
+        @route("/messages")
+        @put
         @added(Version.`v1.0`)
         @summary("Commit re-signed messages")
-        op completeKeyTrial(): void;
+        op commitMessages(): void;
+
+        @route("/messages")
+        @get
+        @added(Version.`v1.0`)
+        @summary("Fetch messages to-be-resigned")
+        op getMessages(@query limit?: uint32 = 100): {
+            @statusCode statusCode: 200;
+            // TODO
+            @body message: string;
+        };
 
         @route("/keytrial")
         @post
@@ -467,10 +477,10 @@ namespace Migration {
          * allow changes which concern information tied to these exact keys.
          * 
          * @param body Completed key trials.
-         * @returns Returns 200 if the key trials were processed and deemed to be valid. Returns 202, if the server needs additional time to process the key trials. 400 is received if one or more completed key trials were faulty. Contains faulty key trials in the response body.
+         * @returns Returns `200` if the key trials were processed and deemed to be valid. Returns `202`, if the server needs additional time to process the key trials. 400 is received if one or more completed key trials were faulty. Contains faulty key trials in the response body.
          */
         op keyTrialRedirectExtern(@body body: polyproto.core.models.KeyTrialCompleted[]): {
-            @doc("Returns 200 if the key trials were processed and deemed to be valid. Returns 202, if the server needs additional time to process the key trials.")
+            @doc("Returns `200` if the key trials were processed and deemed to be valid. Returns `202`, if the server needs additional time to process the key trials.")
             @statusCode statusCode: 202 | 200
         } | {
             @doc("Received if one or more completed key trials were faulty. Contains faulty key trials in the response body.")
