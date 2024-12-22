@@ -364,6 +364,9 @@ namespace Migration {
          * 
          * 1. A key trial must be passed
          * 2. The "new" actor named in this request must confirm setting up this redirect.
+         * 
+         * @returns A key trial
+         * @param newActorFid The FID of the actor, that this actor would like to be redirected to. 
          */
         op setupRedirectExtern(@body newActorFid: string): {
             @statusCode statusCode: 200;
@@ -379,6 +382,7 @@ namespace Migration {
          * This specific route is called by the "old" actor, notifying the server about their intent
          * to move to another home server.
          * 
+         * @param body Completed key trials.
          * @returns Returns 200 if the key trials were processed and deemed to be valid. Returns 202, if the server needs additional time to process the key trials. 400 is received if one or more completed key trials were faulty. Contains faulty key trials in the response body.
          */
         op keyTrialRedirectExtern(@body body: polyproto.core.models.KeyTrialCompleted[]): {
