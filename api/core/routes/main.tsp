@@ -283,8 +283,31 @@ namespace Services {
         } | {
             @statusCode statusCode: 400 | 404;
         };
+
+        @route("/services/primary")
+        @put
+        @summary("Set primary service provider")
+        @added(Version.`v1.0`)
+        /**
+         * Set a primary service provider for a given service namespace. This is used to indicate, which service 
+         * provider should be used by default by other actors, when multiple service providers are available 
+         * for a given service namespace. The service specified by the arguments in the body must be a
+         * valid, already existing service.
+         * @returns An array of at minimum one, and at maximum 2 [service](./Types/service.md) objects.
+         * The response will contain the updated previous primary service provider, if there was one, along
+         * with the new primary service provider.
+         * @param body URL of a service provider and name of a service.
+         */
+        op setPrimaryProvider(@body body: {url: url, @minLength(2) @maxLength(64) name: string}): {
+            @statusCode statusCode: 200;
+            @maxItems(2)
+            @minItems(1)
+            @body body: polyproto.core.models.Service[];
+        };
     }
 
     @tag("Services - Registration not required")
-    namespace Unregistered {}
+    namespace Unregistered {
+        
+    }
 }
