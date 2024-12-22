@@ -324,5 +324,22 @@ namespace Services {
         op getServicesOfActor(@path fid: string, @query limit?: uint64): polyproto.core.models.Service[] | {
             @statusCode statusCode: 204 | 404;
         };
+
+        @route("/services/discover/{fid}/{service}")
+        @get
+        @summary("Discover single service of actor")
+        @added(Version.`v1.0`)
+        /**
+         * Get all service providers an actor is registered with, limited to a specific service.
+         * Clients should not expect this list to be ordered in any particular way.
+         * @returns JSON array of [service objects](./Types/service.md), filtered by the specified service.
+         * @param fid The ID of the actor whose services should be returned.
+         * @param limit The maximum number of services to return. Not specifying a limit will return all
+         * services. Specifying a limit of `1` will return only the primary service provider for the specified service.
+         * @param service The name of the service to discover providers of.
+         */
+        op getSingleServiceOfActor(@path fid: string, @path service: string, @query limit?: uint64): polyproto.core.models.Service[] | {
+            @statusCode statusCode: 204 | 404;
+        };
     }
 }
