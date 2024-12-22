@@ -357,7 +357,7 @@ namespace Migration {
         @post
         @added(Version.`v1.0`)
         @summary("Set up a redirect for migrating identities")
-        op setupRedirect(): void;
+        op setupRedirectExtern(): void;
 
         @route("/messages/extern")
         @get
@@ -374,6 +374,22 @@ namespace Migration {
 
     @tag("Migration - Registration not required")
     namespace Unregistered {
+        @route("/redirect")
+        @post
+        @added(Version.`v1.0`)
+        @summary("Set up a redirect for migrating identities")
+        op setupRedirect(): void;
 
+        @route("/messages")
+        @post
+        @added(Version.`v1.0`)
+        @summary("Set up a redirect for migrating identities")
+        op receiveKeyTrial(): void;
+
+        @route("/messages/keys")
+        @post
+        @added(Version.`v1.0`)
+        @summary("Set up a redirect for migrating identities")
+        op completeKeyTrial(): void;
     }
 }
