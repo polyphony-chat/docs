@@ -395,13 +395,39 @@ namespace Migration {
         };
 
         @route("/messages/extern")
-        @get
+        @post
         @added(Version.`v1.0`)
         @summary("Request message re-signing")
-        op requestResigning(): void;
+        /**
+         * Request allowing message re-signing. To fulfill this action, a key trial must be passed.
+         */
+        op requestAllowResigning(@body newActorFid: string): {
+            @statusCode statusCode: 200;
+            @body body: polyproto.core.models.KeyTrial;
+        };
+
+        @route("/messages/extern/keys")
+        @post
+        @added(Version.`v1.0`)
+        @summary("Complete key trial for message re-signing")
+        /**
+         * Complete a key trial in the context of allowing the re-signing of messages for a "new" actor.
+         * If completed, messages may now be fetched and re-signed by the new actor.
+         * 
+         * @param body Completed key trials.
+         * @returns Returns 200 if the key trials were processed and deemed to be valid. Returns 202, if the server needs additional time to process the key trials. 400 is received if one or more completed key trials were faulty. Contains faulty key trials in the response body.
+         */
+        op keyTrialResigningExtern(@body newActorFid: string): {
+            @doc("Returns 200 if the key trials were processed and deemed to be valid. Returns 202, if the server needs additional time to process the key trials.")
+            @statusCode statusCode: 202 | 200
+        } | {
+            @doc("Received if one or more completed key trials were faulty. Contains faulty key trials in the response body.")
+            @statusCode statusCode: 400;
+            @body body: polyproto.core.models.KeyTrialCompleted[];
+        };
 
         @route("/messages/extern")
-        @post
+        @put
         @added(Version.`v1.0`)
         @summary("Commit re-signed messages")
         op commitResignedMessages(): void;
