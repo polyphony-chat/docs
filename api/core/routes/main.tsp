@@ -379,32 +379,14 @@ namespace Migration {
         @summary("Remove a redirect for migrating identities")
         /**
          * Stop an in-progress or existing redirection process.
-         * @returns Nothing
+         * @returns A key trial
          * @param removeActorFid The FID of the actor to which a redirect should no longer exist
          */
         op removeRedirectExtern(@query removeActorFid: string): {
-            @statusCode statusCode: 204 | 404
-        };
-
-        @route("/redirect/extern/keys")
-        @post
-        @added(Version.`v1.0`)
-        @summary("Complete key trial for enabling redirect")
-        /**
-         * Complete a key trial in the context of setting up a redirect.
-         * This specific route is called by the "old" actor, notifying the server about their intent
-         * to move to another home server.
-         * 
-         * @param body Completed key trials.
-         * @returns Returns 200 if the key trials were processed and deemed to be valid. Returns 202, if the server needs additional time to process the key trials. 400 is received if one or more completed key trials were faulty. Contains faulty key trials in the response body.
-         */
-        op keyTrialRedirectExtern(@body body: polyproto.core.models.KeyTrialCompleted[]): {
-            @doc("Returns 200 if the key trials were processed and deemed to be valid. Returns 202, if the server needs additional time to process the key trials.")
-            @statusCode statusCode: 202 | 200
+            @statusCode statusCode: 200;
+            @body body: polyproto.core.models.KeyTrial;
         } | {
-            @doc("Received if one or more completed key trials were faulty. Contains faulty key trials in the response body.")
             @statusCode statusCode: 400;
-            @body body: polyproto.core.models.KeyTrialCompleted[];
         };
 
         @route("/messages/extern")
@@ -425,31 +407,14 @@ namespace Migration {
         @summary("Abort message re-signing")
         /**
          * Stop an in-progress or existing re-signing process.
-         * @returns Nothing
+         * @returns A key trial.
          * @param removeActorFid The FID of the actor to whom messages should no longer be re-signable for
          */
         op removeResigningExtern(@query removeActorFid: string): {
-            @statusCode statusCode: 204 | 404
-        };
-
-        @route("/messages/extern/keys")
-        @post
-        @added(Version.`v1.0`)
-        @summary("Complete key trial for message re-signing")
-        /**
-         * Complete a key trial in the context of allowing the re-signing of messages for a "new" actor.
-         * If completed, messages may now be fetched and re-signed by the new actor.
-         * 
-         * @param body Completed key trials.
-         * @returns Returns 200 if the key trials were processed and deemed to be valid. Returns 202, if the server needs additional time to process the key trials. 400 is received if one or more completed key trials were faulty. Contains faulty key trials in the response body.
-         */
-        op keyTrialResigningExtern(@body newActorFid: string): {
-            @doc("Returns 200 if the key trials were processed and deemed to be valid. Returns 202, if the server needs additional time to process the key trials.")
-            @statusCode statusCode: 202 | 200
+            @statusCode statusCode: 200;
+            @body body: polyproto.core.models.KeyTrial;
         } | {
-            @doc("Received if one or more completed key trials were faulty. Contains faulty key trials in the response body.")
             @statusCode statusCode: 400;
-            @body body: polyproto.core.models.KeyTrialCompleted[];
         };
 
         @route("/messages/extern")
@@ -457,6 +422,31 @@ namespace Migration {
         @added(Version.`v1.0`)
         @summary("Commit re-signed messages")
         op commitResignedMessages(): void;
+
+        @route("/keytrial")
+        @post
+        @added(Version.`v1.0`)
+        @summary("Complete key trial")
+        /**
+         * Complete a key trial. After the successful completion of the key trial, the action that
+         * required this key trial to be performed may be executed until the `expires` UNIX timestamp
+         * of the key trial has been reached. After that point, another key trial must be performed
+         * before executing the action.
+         * 
+         * If only a subset of all trialed keys had a trial completed for them, the server must only
+         * allow changes which concern information tied to these exact keys.
+         * 
+         * @param body Completed key trials.
+         * @returns Returns 200 if the key trials were processed and deemed to be valid. Returns 202, if the server needs additional time to process the key trials. 400 is received if one or more completed key trials were faulty. Contains faulty key trials in the response body.
+         */
+        op keyTrialRedirectExtern(@body body: polyproto.core.models.KeyTrialCompleted[]): {
+            @doc("Returns 200 if the key trials were processed and deemed to be valid. Returns 202, if the server needs additional time to process the key trials.")
+            @statusCode statusCode: 202 | 200
+        } | {
+            @doc("Received if one or more completed key trials were faulty. Contains faulty key trials in the response body.")
+            @statusCode statusCode: 400;
+            @body body: polyproto.core.models.KeyTrialCompleted[];
+        };
     }
 
     @tag("Migration - Registration not required")

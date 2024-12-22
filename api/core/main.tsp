@@ -73,6 +73,10 @@ namespace models {
         @maxLength(256)
         @doc("The key trial, which the client should sign with all of their private identity keys.") 
         trial: string;
+        @minLength(1)
+        @maxLength(256)
+        @doc("A unique identifying string to differentiate this specific key trial from other key trials that may be open at the same time.")
+        id: string,
         @doc("The UNIX timestamp after which the key trial expires.")
         expires: uint64;
     }
@@ -83,6 +87,8 @@ namespace models {
     model KeyTrialCompleted {
         @doc("The signature produced by signing the key trial string using a private identity key.")
         signature: string;
+        @doc("The unique identifying string, differentiating this specific key trial from other key trials that may be open at the same time.")
+        id: string,
         @doc("The serial number of the ID-Cert corresponding to the private identity key used to sign the key trial string.")
         serial_number: uint64;
     }
