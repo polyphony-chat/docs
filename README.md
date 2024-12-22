@@ -5,9 +5,14 @@ Built with mkdocs-material and python3.12
 
 ## File structure
 
-The `/docs` folder has the specification documents for the polyproto protocol. The `docs/APIs` folder houses the API documentation for the polyproto-core and polyphony-chat reference implementation.
+The `/docs` folder has the specification documents for the polyproto protocol.
 
 The `/snippets` folder has snippets of text used in many places in the documentation. This is to ensure consistency across the documentation. Error messages appearing in many places are also stored in the `/snippets/errors` folder.
+
+API documentation in form of [TypeSpec](https://typespec.io) files can be found in the `/api` directory.
+TypeSpec can compile to OpenAPI3, JSON Schema and Protobuf. Our TypeSpec project is targeting OpenAPI3
+output. Read the TypeSpec documentation for information on how to compile TypeSpec or use a pre-compiled
+version of the OpenAPI schema if you'd like.
 
 ## Contributing
 
