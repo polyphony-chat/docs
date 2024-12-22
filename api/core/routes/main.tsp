@@ -1,13 +1,17 @@
 import "@typespec/http";
 import "@typespec/versioning";
+import "@typespec/openapi";
+import "@typespec/openapi3";
 import "../main.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Versioning;
+using TypeSpec.OpenAPI;
 using polyproto;
 @service({
     title: "polyproto core APIs";
 })
+@info({license: {name: "MIT License", url: "https://raw.githubusercontent.com/polyphony-chat/docs/refs/heads/main/LICENSE"}})
 @server("https://example.com", "Example endpoint")
 
 
