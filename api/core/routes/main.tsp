@@ -373,6 +373,19 @@ namespace Migration {
             @body body: polyproto.core.models.KeyTrial;
         };
 
+        @route("/redirect/extern")
+        @delete
+        @added(Version.`v1.0`)
+        @summary("Remove a redirect for migrating identities")
+        /**
+         * Stop an in-progress or existing redirection process.
+         * @returns Nothing
+         * @param removeActorFid The FID of the actor to which a redirect should no longer exist
+         */
+        op removeRedirectExtern(@query removeActorFid: string): {
+            @statusCode statusCode: 204 | 404
+        };
+
         @route("/redirect/extern/keys")
         @post
         @added(Version.`v1.0`)
@@ -404,6 +417,19 @@ namespace Migration {
         op requestAllowResigning(@body newActorFid: string): {
             @statusCode statusCode: 200;
             @body body: polyproto.core.models.KeyTrial;
+        };
+
+        @route("/messages/extern")
+        @delete
+        @added(Version.`v1.0`)
+        @summary("Abort message re-signing")
+        /**
+         * Stop an in-progress or existing re-signing process.
+         * @returns Nothing
+         * @param removeActorFid The FID of the actor to whom messages should no longer be re-signable for
+         */
+        op removeResigningExtern(@query removeActorFid: string): {
+            @statusCode statusCode: 204 | 404
         };
 
         @route("/messages/extern/keys")
