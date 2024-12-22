@@ -357,7 +357,27 @@ namespace Migration {
         @post
         @added(Version.`v1.0`)
         @summary("Set up a redirect for migrating identities")
-        op setupRedirectExtern(): void;
+        /**
+         * This route is used by actors who would like to move their identity to another home server.
+         * This specific route is called by the "old" actor, notifying the server about their intent
+         * to move to another home server. To fulfill this action,
+         * 
+         * 1. A key trial must be passed
+         * 2. The "new" actor named in this request must confirm setting up this redirect.
+         */
+        op setupRedirectExtern(@body newActorFid: string): {
+            @statusCode statusCode: 200;
+            @body body: polyproto.core.models.KeyTrial;
+        };
+
+        @route("/redirect/extern/keys")
+        @post
+        @added(Version.`v1.0`)
+        @summary("Complete key trial for enabling redirect")
+        op keyTrialRedirectExtern(@body body: polyproto.core.models.KeyTrialCompleted[]): {
+            // TODO: Perhaps with the 400 code, the server could reply which KeyTrials were faulty?
+            @statusCode statusCode: 202 | 400
+        };
 
         @route("/messages/extern")
         @get

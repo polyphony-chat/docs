@@ -64,4 +64,26 @@ namespace models {
         @doc("The UNIX timestamp after which the challenge expires.")
         expires: uint64
     }
+
+    /**
+     * A key trial as sent from the server to an actor.
+     */
+    model KeyTrial {
+        @minLength(32)
+        @maxLength(256)
+        @doc("The key trial, which the client should sign with all of their private identity keys.") 
+        trial: string;
+        @doc("The UNIX timestamp after which the key trial expires.")
+        expires: uint64;
+    }
+
+    /**
+     * A completed key trial, as an actor would send to the server.
+     */
+    model KeyTrialCompleted {
+        @doc("The signature produced by signing the key trial string using a private identity key.")
+        signature: string;
+        @doc("The serial number of the ID-Cert corresponding to the private identity key used to sign the key trial string.")
+        serial_number: uint64;
+    }
 }
