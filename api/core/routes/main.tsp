@@ -308,6 +308,21 @@ namespace Services {
 
     @tag("Services - Registration not required")
     namespace Unregistered {
-        
+        @route("/services/discover/")
+        @get
+        @summary("Discover services of actor")
+        @added(Version.`v1.0`)
+        /**
+         * Fetch a list of all services that the actor has made discoverable. Clients should not expect 
+         * this list to be ordered in any particular way.
+         * @returns JSON array of [service objects](./Types/service.md). A list of all services which the actor has
+         * made discoverable.
+         * @param fid The ID of the actor whose services should be returned.
+         * @param limit The maximum number of services to return. Not specifying a limit will return all
+         * services. Specifying a limit of `1` will return only the primary service provider for each service.
+         */
+        op getServicesOfActor(@path fid: string, @query limit?: uint64): polyproto.core.models.Service[] | {
+            @statusCode statusCode: 204 | 404;
+        };
     }
 }
