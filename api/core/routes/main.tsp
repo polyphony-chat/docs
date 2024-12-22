@@ -374,9 +374,20 @@ namespace Migration {
         @post
         @added(Version.`v1.0`)
         @summary("Complete key trial for enabling redirect")
+        /**
+         * Complete a key trial in the context of setting up a redirect.
+         * This specific route is called by the "old" actor, notifying the server about their intent
+         * to move to another home server.
+         * 
+         * @returns Returns 200 if the key trials were processed and deemed to be valid. Returns 202, if the server needs additional time to process the key trials. 400 is received if one or more completed key trials were faulty. Contains faulty key trials in the response body.
+         */
         op keyTrialRedirectExtern(@body body: polyproto.core.models.KeyTrialCompleted[]): {
-            // TODO: Perhaps with the 400 code, the server could reply which KeyTrials were faulty?
-            @statusCode statusCode: 202 | 400
+            @doc("Returns 200 if the key trials were processed and deemed to be valid. Returns 202, if the server needs additional time to process the key trials.")
+            @statusCode statusCode: 202 | 200
+        } | {
+            @doc("Received if one or more completed key trials were faulty. Contains faulty key trials in the response body.")
+            @statusCode statusCode: 400;
+            @body body: polyproto.core.models.KeyTrialCompleted[];
         };
 
         @route("/messages/extern")
