@@ -343,3 +343,37 @@ namespace Services {
         };
     }
 }
+
+@useAuth(BearerAuth)
+namespace Migration {
+
+    @tag("Migration - Registration required")
+    @route("/migration/")
+    namespace Registered {
+        //TODO: These are unfinished.
+        //TODO: "All challenge strings and their responses created in the context of account migration must be made public to ensure that a chain of trust can be maintained"
+        //TODO: Add routes concerned with account and data migration.
+        @route("/redirect/extern")
+        @post
+        @added(Version.`v1.0`)
+        @summary("Set up a redirect for migrating identities")
+        op setupRedirect(): void;
+
+        @route("/messages/extern")
+        @get
+        @added(Version.`v1.0`)
+        @summary("Request message re-signing")
+        op requestResigning(): void;
+
+        @route("/messages/extern")
+        @post
+        @added(Version.`v1.0`)
+        @summary("Commit re-signed messages")
+        op commitResignedMessages(): void;
+    }
+
+    @tag("Migration - Registration not required")
+    namespace Unregistered {
+
+    }
+}
