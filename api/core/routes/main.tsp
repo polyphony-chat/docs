@@ -353,7 +353,7 @@ namespace Migration {
         //TODO: These are unfinished.
         //TODO: "All challenge strings and their responses created in the context of account migration must be made public to ensure that a chain of trust can be maintained"
         //TODO: Add routes concerned with account and data migration.
-        @route("/redirect/extern")
+        @route("/redirect")
         @post
         @added(Version.`v1.0`)
         @summary("Set up a redirect for migrating identities")
@@ -365,35 +365,106 @@ namespace Migration {
          * 1. A key trial must be passed
          * 2. The "new" actor named in this request must confirm setting up this redirect.
          * 
-         * @returns A key trial
+         * @returns `200` if the link has been created, `202` if the other account still needs to accept to establish the link. Returns a key trial 
          * @param newActorFid The FID of the actor, that this actor would like to be redirected to. 
          */
         op setupRedirectExtern(@body newActorFid: string): {
-            @statusCode statusCode: 200;
+            @statusCode statusCode: 200 | 202;
             @body body: polyproto.core.models.KeyTrial;
         };
 
-        @route("/redirect/extern")
+        @route("/redirect")
         @delete
         @added(Version.`v1.0`)
         @summary("Remove a redirect for migrating identities")
         /**
          * Stop an in-progress or existing redirection process.
-         * @returns Nothing
+         * @returns A key trial
          * @param removeActorFid The FID of the actor to which a redirect should no longer exist
          */
         op removeRedirectExtern(@query removeActorFid: string): {
-            @statusCode statusCode: 204 | 404
+            @statusCode statusCode: 200;
+            @body body: polyproto.core.models.KeyTrial;
+        } | {
+            @statusCode statusCode: 400;
         };
 
-        @route("/redirect/extern/keys")
+        @route("/messages")
         @post
         @added(Version.`v1.0`)
-        @summary("Complete key trial for enabling redirect")
+        @summary("Request message re-signing")
         /**
-         * Complete a key trial in the context of setting up a redirect.
-         * This specific route is called by the "old" actor, notifying the server about their intent
-         * to move to another home server.
+         * Request allowing message re-signing. To fulfill this action, a key trial must be passed.
+         * @returns `200` if the link has been created, `202` if the other account still needs to accept to establish the link. Returns a key trial 
+         */
+        op requestAllowResigning(@body newActorFid: string): {
+            @statusCode statusCode: 200 | 202;
+            @body body: polyproto.core.models.KeyTrial;
+        };
+
+        @route("/messages")
+        @delete
+        @added(Version.`v1.0`)
+        @summary("Abort message re-signing")
+        /**
+         * Stop an in-progress or existing re-signing process.
+         * @returns A key trial.
+         * @param removeActorFid The FID of the actor to whom messages should no longer be re-signable for
+         */
+        op removeResigningExtern(@query removeActorFid: string): {
+            @statusCode statusCode: 200;
+            @body body: polyproto.core.models.KeyTrial;
+        } | {
+            @statusCode statusCode: 400;
+        };
+    }
+
+    @tag("Migration - Registration not required")
+    namespace Unregistered {
+        @route("/redirect/extern")
+        @post
+        @added(Version.`v1.0`)
+        @summary("Set up a redirect for migrating identities")
+        /**
+         * Tell the homeserver of the "old" actor account that you intend to set up a redirect to
+         * this actor
+         * @returns `200` if the link has been created, `202` if the other account still needs to accept to establish the link 
+         */
+        op setupRedirect(@body redirectionSourceFid: string): {
+            @statusCode statusCode: 202 | 200
+        };
+
+        @route("/messages/extern")
+        @post
+        @added(Version.`v1.0`)
+        @summary("Request message re-signing for source actor")
+        /**
+         * Tell the homeserver of the "old" actor account that you intend to re-sign messages to
+         * this actor
+         * @returns `200` if the link has been created, `202` if the other account still needs to accept to establish the link 
+         */
+        op requestAllowResigning(@body resigningSourceFid: string): {
+            @statusCode statusCode: 202 | 200
+        };
+
+        @route("/messages/keys/extern")
+        @post
+        @added(Version.`v1.0`)
+        @summary("Commit re-signed messages")
+        op completeKeyTrial(): void;
+
+        @route("/keytrial")
+        @post
+        @added(Version.`v1.0`)
+        @summary("Complete key trial")
+        /**
+         * Complete a key trial. After the successful completion of the key trial, the action that
+         * required this key trial to be performed may be executed until the `expires` UNIX timestamp
+         * of the key trial has been reached. After that point, another key trial must be performed
+         * before executing the action.
+         * 
+         * If only a subset of all trialed keys had a trial completed for them, the server must only
+         * allow changes which concern information tied to these exact keys.
          * 
          * @param body Completed key trials.
          * @returns Returns 200 if the key trials were processed and deemed to be valid. Returns 202, if the server needs additional time to process the key trials. 400 is received if one or more completed key trials were faulty. Contains faulty key trials in the response body.
@@ -406,77 +477,5 @@ namespace Migration {
             @statusCode statusCode: 400;
             @body body: polyproto.core.models.KeyTrialCompleted[];
         };
-
-        @route("/messages/extern")
-        @post
-        @added(Version.`v1.0`)
-        @summary("Request message re-signing")
-        /**
-         * Request allowing message re-signing. To fulfill this action, a key trial must be passed.
-         */
-        op requestAllowResigning(@body newActorFid: string): {
-            @statusCode statusCode: 200;
-            @body body: polyproto.core.models.KeyTrial;
-        };
-
-        @route("/messages/extern")
-        @delete
-        @added(Version.`v1.0`)
-        @summary("Abort message re-signing")
-        /**
-         * Stop an in-progress or existing re-signing process.
-         * @returns Nothing
-         * @param removeActorFid The FID of the actor to whom messages should no longer be re-signable for
-         */
-        op removeResigningExtern(@query removeActorFid: string): {
-            @statusCode statusCode: 204 | 404
-        };
-
-        @route("/messages/extern/keys")
-        @post
-        @added(Version.`v1.0`)
-        @summary("Complete key trial for message re-signing")
-        /**
-         * Complete a key trial in the context of allowing the re-signing of messages for a "new" actor.
-         * If completed, messages may now be fetched and re-signed by the new actor.
-         * 
-         * @param body Completed key trials.
-         * @returns Returns 200 if the key trials were processed and deemed to be valid. Returns 202, if the server needs additional time to process the key trials. 400 is received if one or more completed key trials were faulty. Contains faulty key trials in the response body.
-         */
-        op keyTrialResigningExtern(@body newActorFid: string): {
-            @doc("Returns 200 if the key trials were processed and deemed to be valid. Returns 202, if the server needs additional time to process the key trials.")
-            @statusCode statusCode: 202 | 200
-        } | {
-            @doc("Received if one or more completed key trials were faulty. Contains faulty key trials in the response body.")
-            @statusCode statusCode: 400;
-            @body body: polyproto.core.models.KeyTrialCompleted[];
-        };
-
-        @route("/messages/extern")
-        @put
-        @added(Version.`v1.0`)
-        @summary("Commit re-signed messages")
-        op commitResignedMessages(): void;
-    }
-
-    @tag("Migration - Registration not required")
-    namespace Unregistered {
-        @route("/redirect")
-        @post
-        @added(Version.`v1.0`)
-        @summary("Set up a redirect for migrating identities")
-        op setupRedirect(): void;
-
-        @route("/messages")
-        @post
-        @added(Version.`v1.0`)
-        @summary("Set up a redirect for migrating identities")
-        op receiveKeyTrial(): void;
-
-        @route("/messages/keys")
-        @post
-        @added(Version.`v1.0`)
-        @summary("Set up a redirect for migrating identities")
-        op completeKeyTrial(): void;
     }
 }
