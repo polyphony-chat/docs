@@ -21,7 +21,7 @@ jobs:
             with:
               node-version: "lts/*"
               cache: "npm"
-              cache-dependency-path: "./api/core/package-lock.json"
+              cache-dependency-path: "./api/src/core/package-lock.json"
           - name: Install TypeSpec and compile project
             run: |
               cd ./api/src/core/
