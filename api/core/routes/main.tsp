@@ -350,9 +350,8 @@ namespace Migration {
     @tag("Migration - Registration required")
     @route("/migration/")
     namespace Registered {
-        //TODO: These are unfinished.
         //TODO: "All challenge strings and their responses created in the context of account migration must be made public to ensure that a chain of trust can be maintained"
-        //TODO: Add routes concerned with account and data migration.
+        //TODO: Add routes concerned with data migration.
         @route("/redirect")
         @post
         @added(Version.`v1.0`)
