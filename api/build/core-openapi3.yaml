@@ -1,0 +1,1035 @@
+openapi: 3.0.0
+info:
+  title: polyproto core APIs
+  license:
+    name: MIT License
+    url: https://raw.githubusercontent.com/polyphony-chat/docs/refs/heads/main/LICENSE
+  version: v1.0
+tags:
+  - name: Federated Identity - Registration required
+  - name: Sensitive Action
+  - name: Federated Identity - Registration not required
+  - name: Services - Registration required
+  - name: Services - Registration not required
+  - name: Migration - Registration required
+  - name: Migration - Registration not required
+paths:
+  /.p2/core/v1/challenge:
+    get:
+      operationId: Unregistered_challengeString
+      summary: Get challenge string
+      description: |-
+        Request a challenge string. See the corresponding
+        [protocol definition chapter](/docs/Protocol%20Specifications/core/#)
+        for more information.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/polyproto.core.models.ChallengeStringResponse'
+      tags:
+        - Federated Identity - Registration not required
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/idcert/actor/{fid}:
+    get:
+      operationId: Unregistered_actorCerts
+      summary: Get Actor ID-Cert(s)
+      description: Request the ID-Certs of a specific actor. The specified actor must be registered on this server.
+      parameters:
+        - name: fid
+          in: path
+          required: true
+          description: The ID of the actor whose ID-Cert(s) should be returned.
+          schema:
+            type: string
+        - name: timestamp
+          in: query
+          required: false
+          description: |-
+            An optional UNIX timestamp to retrieve the ID-Cert the actor had at that
+            point in time, instead of the current one.
+          schema:
+            type: integer
+            format: uint64
+          explode: false
+        - name: session_id
+          in: query
+          required: false
+          description: Optionally, return only the ID-Certs matching a specific `session_id`.
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: JSON-Array of Object(s), each object containing "id_cert" (PEM encoded ID-Cert) and "invalidated" (boolean). An ID-Cert is considered invalidated, if the server or actor choose to revoke the validity of the ID-Cert before the lifetime of the certificate was scheduled to end.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id_cert:
+                      type: string
+                      example: ------BEGIN CERTIFICATE------...
+                      description: PEM encoded ID-Cert
+                    invalidated:
+                      type: boolean
+                      example: false
+                      description: Whether this specific id_cert has been marked as invalidated by the server. An ID-Cert is considered invalidated, if the server or actor choose to revoke the validity of the ID-Cert before the lifetime of the certificate was scheduled to end.
+                  required:
+                    - id_cert
+                    - invalidated
+      tags:
+        - Federated Identity - Registration not required
+  /.p2/core/v1/idcert/server:
+    get:
+      operationId: Unregistered_serverIdCert
+      summary: Get Server ID-Cert
+      description: Request the server's public identity certificate.
+      parameters:
+        - name: timestamp
+          in: query
+          required: false
+          description: |-
+            An optional UNIX timestamp to retrieve the ID-Cert the server had at that
+            point in time, instead of the current one.
+          schema:
+            type: integer
+            format: uint64
+          explode: false
+      responses:
+        '200':
+          description: |-
+            The current ID-Cert of the server, or, if specified, the ID-Cert the server had
+            at the specified time.
+          content:
+            application/json:
+              schema:
+                type: string
+      tags:
+        - Federated Identity - Registration not required
+  /.p2/core/v1/key/server:
+    post:
+      operationId: Unregistered_name
+      summary: Rotate Server Identity Key
+      description: Rotate the server's identity key. Requires server administrator permissions.
+      parameters:
+        - name: X-P2-CHALLENGE-STRING-SOLUTION
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The servers' new ID-Cert, encoded as PEM
+          content:
+            application/json:
+              schema:
+                type: string
+      tags:
+        - Federated Identity - Registration not required
+        - Sensitive Action
+      security:
+        - BearerAuth: []
+    get:
+      operationId: Unregistered_serverKey
+      summary: Get Server Public Key
+      description: Request the server's public key.
+      parameters:
+        - name: timestamp
+          in: query
+          required: false
+          description: |-
+            An optional UNIX timestamp to retrieve the public key the server had at that
+            point in time, instead of the current one.
+          schema:
+            type: object
+            properties:
+              timestamp:
+                type: integer
+                format: uint64
+            required:
+              - timestamp
+          explode: false
+      responses:
+        '200':
+          description: |-
+            The current public key of the server, or, if specified, the public key the server had
+            at the specified time. The public key is being returned as a PEM encoded X.509
+            `SubjectPublicKeyInfo`.
+          content:
+            application/json:
+              schema:
+                type: string
+      tags:
+        - Federated Identity - Registration not required
+  /.p2/core/v1/keytrial:
+    post:
+      operationId: Unregistered_keyTrialRedirectExtern
+      summary: Complete key trial
+      description: |-
+        Complete a key trial. After the successful completion of the key trial, the action that
+        required this key trial to be performed may be executed until the `expires` UNIX timestamp
+        of the key trial has been reached. After that point, another key trial must be performed
+        before executing the action.
+
+        If only a subset of all trialed keys had a trial completed for them, the server must only
+        allow changes which concern information tied to these exact keys.
+      parameters: []
+      responses:
+        '200':
+          description: Returns `200` if the key trials were processed and deemed to be valid. Returns `202`, if the server needs additional time to process the key trials. 400 is received if one or more completed key trials were faulty. Contains faulty key trials in the response body.
+        '202':
+          description: Returns `200` if the key trials were processed and deemed to be valid. Returns `202`, if the server needs additional time to process the key trials. 400 is received if one or more completed key trials were faulty. Contains faulty key trials in the response body.
+        '400':
+          description: Returns `200` if the key trials were processed and deemed to be valid. Returns `202`, if the server needs additional time to process the key trials. 400 is received if one or more completed key trials were faulty. Contains faulty key trials in the response body.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
+      tags:
+        - Migration - Registration not required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
+        description: Completed key trials.
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/keytrial/{fid}:
+    get:
+      operationId: Unregistered_getKeyTrials
+      summary: Fetch key trials and key trial responses from actor
+      description: |-
+        Fetch key trials and their responses from other actors.
+        This route exists for transparency reasons, and allows actors in contact with the actor
+        mentioned in `fid` to verify, that it was the actor who initiated setting up a redirect or
+        the re-signing of messages and not a malicious home server.
+
+        Only key trials which have at least one completion, and - more importantly - where the
+        `expiration` UNIX time stamp has passed, can be fetched.
+      parameters:
+        - name: fid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: uint16
+            default: 0
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    keyTrial:
+                      $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
+                    keyTrialCompletion:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
+                      minItems: 1
+                  required:
+                    - keyTrial
+                    - keyTrialCompletion
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
+          description: The server cannot find the requested resource.
+      tags:
+        - Migration - Registration not required
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/messages:
+    get:
+      operationId: Unregistered_getMessages
+      summary: Fetch messages to-be-resigned
+      description: Fetch messages to be re-signed.
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description: How many messages to request from the server. Defaults to 100.
+          schema:
+            type: integer
+            format: uint32
+            default: 100
+          explode: false
+      responses:
+        '200':
+          description: Messages. The distinct format of messages is up to the specific p2 extension to define.
+          content:
+            application/json:
+              schema:
+                type: string
+        '403':
+          description: Messages. The distinct format of messages is up to the specific p2 extension to define.
+      tags:
+        - Migration - Registration not required
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/messages/commit:
+    post:
+      operationId: Unregistered_commitMessages
+      summary: Commit re-signed messages
+      description: Commit messages that have been re-signed to the server.
+      parameters: []
+      responses:
+        '200':
+          description: '`200` On success; `400` if re-signed messages are improperly formatted; `403` if messages have been modified where the original keys have not passed the key trial, if a key trial has not been passed at all or if the messages have been signed with keys that were not on the `allowedResigningKeys` list.'
+        '400':
+          description: '`200` On success; `400` if re-signed messages are improperly formatted; `403` if messages have been modified where the original keys have not passed the key trial, if a key trial has not been passed at all or if the messages have been signed with keys that were not on the `allowedResigningKeys` list.'
+        '403':
+          description: '`200` On success; `400` if re-signed messages are improperly formatted; `403` if messages have been modified where the original keys have not passed the key trial, if a key trial has not been passed at all or if the messages have been signed with keys that were not on the `allowedResigningKeys` list.'
+      tags:
+        - Migration - Registration not required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        description: Messages. The distinct format of messages is up to the specific p2 extension to define.
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/messages/extern:
+    post:
+      operationId: Unregistered_requestAllowResigning
+      summary: Request message re-signing for source actor
+      description: |-
+        Tell the homeserver of the "old" actor account that you intend to re-sign messages from
+        this actor.
+      parameters: []
+      responses:
+        '200':
+          description: '`200` if the link has been created, `202` if the other account still needs to accept to establish the link. If `200` is received, messages can be queried for re-signing using the appropriate endpoint.'
+        '202':
+          description: '`200` if the link has been created, `202` if the other account still needs to accept to establish the link. If `200` is received, messages can be queried for re-signing using the appropriate endpoint.'
+      tags:
+        - Migration - Registration not required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+        description: The FID of the actor who this actor intends to re-sign messages of.
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/migration/messages:
+    post:
+      operationId: Registered_requestAllowResigning
+      summary: Request message re-signing
+      description: Request allowing message re-signing. To fulfill this action, a key trial must be passed.
+      parameters: []
+      responses:
+        '200':
+          description: '`200` if the link has been created, `202` if the other account still needs to accept to establish the link. Returns a key trial'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
+        '202':
+          description: '`200` if the link has been created, `202` if the other account still needs to accept to establish the link. Returns a key trial'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
+      tags:
+        - Migration - Registration required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newActorFid:
+                  type: string
+                allowedResigningKeys:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - newActorFid
+                - allowedResigningKeys
+      security:
+        - BearerAuth: []
+    delete:
+      operationId: Registered_removeResigningExtern
+      summary: Abort message re-signing
+      description: Stop an in-progress or existing re-signing process.
+      parameters:
+        - name: removeActorFid
+          in: query
+          required: true
+          description: The FID of the actor to whom messages should no longer be re-signable for
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: A key trial.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
+        '400':
+          description: A key trial.
+      tags:
+        - Migration - Registration required
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/migration/redirect:
+    post:
+      operationId: Registered_setupRedirectExtern
+      summary: Set up a redirect for migrating identities
+      description: |-
+        This route is used by actors who would like to move their identity to another home server.
+        This specific route is called by the "old" actor, notifying the server about their intent
+        to move to another home server. To fulfill this action,
+
+        1. A key trial must be passed
+        2. The "new" actor named in this request must confirm setting up this redirect.
+      parameters: []
+      responses:
+        '200':
+          description: '`200` if the link has been created, `202` if the other account still needs to accept to establish the link. Returns a key trial'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
+        '202':
+          description: '`200` if the link has been created, `202` if the other account still needs to accept to establish the link. Returns a key trial'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
+      tags:
+        - Migration - Registration required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+        description: The FID of the actor, that this actor would like to be redirected to.
+      security:
+        - BearerAuth: []
+    delete:
+      operationId: Registered_removeRedirectExtern
+      summary: Remove a redirect for migrating identities
+      description: Stop an in-progress or existing redirection process.
+      parameters:
+        - name: removeActorFid
+          in: query
+          required: true
+          description: The FID of the actor to which a redirect should no longer exist
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: A key trial
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
+        '400':
+          description: A key trial
+      tags:
+        - Migration - Registration required
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/redirect/extern:
+    post:
+      operationId: Unregistered_setupRedirect
+      summary: Set up a redirect for migrating identities
+      description: |-
+        Tell the homeserver of the "old" actor account that you intend to set up a redirect to
+        this actor
+      parameters: []
+      responses:
+        '200':
+          description: '`200` if the link has been created, `202` if the other account still needs to accept to establish the link.'
+        '202':
+          description: '`200` if the link has been created, `202` if the other account still needs to accept to establish the link.'
+      tags:
+        - Migration - Registration not required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/services:
+    post:
+      operationId: Registered_registerService
+      summary: Add service to be discovered
+      description: Add a service to the list of services discoverable by other actors.
+      parameters: []
+      responses:
+        '201':
+          description: A singular service object, representing the service that was added.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/polyproto.core.models.Service'
+        '409':
+          description: A singular service object, representing the service that was added.
+      tags:
+        - Services - Registration required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                service:
+                  $ref: '#/components/schemas/polyproto.core.models.Service'
+              required:
+                - service
+      security:
+        - BearerAuth: []
+    delete:
+      operationId: Registered_unregisterService
+      summary: Delete discoverable service
+      description: |-
+        Remove a service from the list of services discoverable by other actors.
+        If a primary service is removed and there are still other providers available for the same service,
+        the server will select a new primary service provider from the list of available providers.
+        This new provider will be returned in the response body.
+      parameters:
+        - name: url
+          in: query
+          required: true
+          description: List of urls of the service providers to remove. The indices of the urls list must match the indices of the service name list.
+          schema:
+            type: array
+            items:
+              type: string
+              format: uri
+          explode: false
+        - name: name
+          in: query
+          required: true
+          description: List of urls of the service providers to remove. The indices of the service name list must match the indices of the urls list.
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    service:
+                      type: string
+                    new_primary:
+                      type: string
+                      format: uri
+                  required:
+                    - service
+                    - new_primary
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+        '404':
+          description: The server cannot find the requested resource.
+      tags:
+        - Services - Registration required
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/services/discover/{fid}:
+    get:
+      operationId: Unregistered_getServicesOfActor
+      summary: Discover services of actor
+      description: |-
+        Fetch a list of all services that the actor has made discoverable. Clients should not expect 
+        this list to be ordered in any particular way.
+      parameters:
+        - name: fid
+          in: path
+          required: true
+          description: The ID of the actor whose services should be returned.
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          description: |-
+            The maximum number of services to return. Not specifying a limit will return all
+            services. Specifying a limit of `1` will return only the primary service provider for each service.
+          schema:
+            type: integer
+            format: uint64
+          explode: false
+      responses:
+        '200':
+          description: |-
+            JSON array of [service objects](./Types/service.md). A list of all services which the actor has
+            made discoverable.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/polyproto.core.models.Service'
+        '204':
+          description: |-
+            JSON array of [service objects](./Types/service.md). A list of all services which the actor has
+            made discoverable.
+        '404':
+          description: |-
+            JSON array of [service objects](./Types/service.md). A list of all services which the actor has
+            made discoverable.
+      tags:
+        - Services - Registration not required
+  /.p2/core/v1/services/discover/{fid}/{service}:
+    get:
+      operationId: Unregistered_getSingleServiceOfActor
+      summary: Discover single service of actor
+      description: |-
+        Get all service providers an actor is registered with, limited to a specific service.
+        Clients should not expect this list to be ordered in any particular way.
+      parameters:
+        - name: fid
+          in: path
+          required: true
+          description: The ID of the actor whose services should be returned.
+          schema:
+            type: string
+        - name: service
+          in: path
+          required: true
+          description: The name of the service to discover providers of.
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          description: |-
+            The maximum number of services to return. Not specifying a limit will return all
+            services. Specifying a limit of `1` will return only the primary service provider for the specified service.
+          schema:
+            type: integer
+            format: uint64
+          explode: false
+      responses:
+        '200':
+          description: JSON array of [service objects](./Types/service.md), filtered by the specified service.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/polyproto.core.models.Service'
+        '204':
+          description: JSON array of [service objects](./Types/service.md), filtered by the specified service.
+        '404':
+          description: JSON array of [service objects](./Types/service.md), filtered by the specified service.
+      tags:
+        - Services - Registration not required
+  /.p2/core/v1/services/primary:
+    put:
+      operationId: Registered_setPrimaryProvider
+      summary: Set primary service provider
+      description: |-
+        Set a primary service provider for a given service namespace. This is used to indicate, which service 
+        provider should be used by default by other actors, when multiple service providers are available 
+        for a given service namespace. The service specified by the arguments in the body must be a
+        valid, already existing service.
+      parameters: []
+      responses:
+        '200':
+          description: |-
+            An array of at minimum one, and at maximum 2 [service](./Types/service.md) objects.
+            The response will contain the updated previous primary service provider, if there was one, along
+            with the new primary service provider.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/polyproto.core.models.Service'
+      tags:
+        - Services - Registration required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  format: uri
+                name:
+                  type: string
+                  minLength: 2
+                  maxLength: 64
+              required:
+                - url
+                - name
+        description: URL of a service provider and name of a service.
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/session:
+    delete:
+      operationId: Unregistered_deleteSession
+      summary: Delete/Revoke Session
+      description: Invalidate a session token by naming the session ID associated with it.
+      parameters:
+        - name: session_id
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
+          description: The server cannot find the requested resource.
+      tags:
+        - Federated Identity - Registration not required
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/session/idcert:
+    post:
+      operationId: Registered_rotateIdCert
+      summary: Rotate session ID-Cert
+      description: |-
+        Rotate your keys for a given session. The `session_id` in the supplied `csr` must correspond to the
+        session token used in the `authorization`-Header.
+      parameters: []
+      responses:
+        '201':
+          description: Contains your new ID-Cert, along with a new session token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id_cert:
+                    type: string
+                    example: ------BEGIN CERTIFICATE------...
+                    description: The generated [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) in PEM format.
+                  token:
+                    type: string
+                    description: An authorization secret, called a "token", valid for this `id_cert`.
+                required:
+                  - id_cert
+                  - token
+      tags:
+        - Federated Identity - Registration required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+        description: A new [certificate signing request (CSR)](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) with the same session ID
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/session/idcert/extern:
+    put:
+      operationId: Unregistered_updateSessionCert
+      summary: Update session ID-Cert
+      description: Lets a foreign server know that the ID-Cert of this session has changed.
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+      tags:
+        - Federated Identity - Registration not required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/session/keymaterial:
+    post:
+      operationId: Registered_uploadEncryptedPKM
+      summary: Upload encrypted private key material
+      description: |-
+        Upload encrypted private key material to the server for later retrieval. The size of
+        the individual array elements must not exceed 
+        the server's maximum upload size for this route. This is usually not more than 10kb and can be as 
+        low as 800 bytes, depending on the server configuration.
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+        '404':
+          description: The server cannot find the requested resource.
+        '409':
+          description: The request conflicts with the current state of the server.
+        '413':
+          description: Client error
+      tags:
+        - Federated Identity - Registration required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/polyproto.core.models.EncryptedPKM'
+        description: Array of encrypted private key material objects.
+      security:
+        - BearerAuth: []
+    get:
+      operationId: Registered_getEncryptedPKM
+      summary: Get encrypted private key material
+      description: |-
+        Retrieve encrypted private key material from the server. The `serial_numbers`, if
+        provided, must match the serial numbers of ID-Certs that the client has uploaded key
+        material for. If no `serial_numbers` are provided, the server will return all key
+        material that the client has uploaded.
+      parameters:
+        - name: serials
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+              format: uint64
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/polyproto.core.models.EncryptedPKM'
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
+          description: The server cannot find the requested resource.
+      tags:
+        - Federated Identity - Registration required
+      security:
+        - BearerAuth: []
+    delete:
+      operationId: Registered_deleteEncryptedPKM
+      summary: Delete encrypted private key material
+      description: |-
+        Delete encrypted private key material from the server. The `serial_number(s)`, must match
+        the serial numbers of ID-Certs that the client has uploaded key material for.
+      parameters:
+        - name: X-P2-CHALLENGE-STRING-SOLUTION
+          in: header
+          required: true
+          description: Sensitive actions require a [challenge string solution](/docs/Protocol%20Specifications/core.md) to be executed.
+          schema:
+            type: string
+        - name: serials
+          in: query
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: uint64
+          explode: false
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
+          description: The server cannot find the requested resource.
+      tags:
+        - Federated Identity - Registration required
+        - Sensitive Action
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/session/keymaterial/size:
+    get:
+      operationId: Registered_encryptedPKMsizeLimit
+      summary: Get encrypted private key material upload size limit
+      description: Retrieve the maximum upload size for encrypted private key material, in bytes.
+      parameters: []
+      responses:
+        '200':
+          description: The upload size limit, in bytes.
+          headers:
+            X-MAX-PAYLOAD-SIZE:
+              required: true
+              schema:
+                type: integer
+                format: uint32
+      tags:
+        - Federated Identity - Registration required
+      security:
+        - {}
+components:
+  schemas:
+    Version:
+      type: string
+      enum:
+        - v1.0
+    polyproto.core.models.ChallengeStringResponse:
+      type: object
+      required:
+        - challenge
+        - expires
+      properties:
+        challenge:
+          type: string
+          minLength: 32
+          maxLength: 256
+          description: The challenge string, which the client should sign with its private identity key.
+        expires:
+          type: integer
+          format: uint64
+          description: The UNIX timestamp after which the challenge expires.
+      description: |-
+        A challenge string response, as received from a server when requesting a challenge string.
+
+        From the polyproto protocol definition: "verify an actor's private identity key possession,
+        without revealing the private key itself. These strings, ranging from 32 to 256 characters,
+        have a UNIX timestamp lifetime. If the current timestamp surpasses this lifetime, the
+        challenge fails. The actor signs the string, sending the signature and their ID-Cert to the
+        server, which then verifies the signature's authenticity."
+    polyproto.core.models.EncryptedPKM:
+      type: object
+      required:
+        - key_data
+        - serial_number
+        - encryption_algorithms
+      properties:
+        key_data:
+          type: string
+          description: |-
+            Custom variant of the X.509 `SubjectPublicKeyInfo`, where the `subject_public_key`
+            field stores the encrypted private key, instead of a public key. Otherwise equal to
+            `SubjectPublicKeyInfo`. Also referred to as `PrivateKeyInfo`.
+        serial_number:
+          type: integer
+          format: uint64
+          description: The serial number of the ID-Cert this key material is associated with.
+        encryption_algorithms:
+          type: array
+          items:
+            type: array
+            items:
+              type: integer
+              format: uint16
+          minItems: 1
+          description: |-
+            Information about the algorithms used to encrypt the data held by the `key_data` field.
+            Order-sensitive; The encryption used for the first encryption operation must be the last
+            item of this array and vice versa. Represents a list of OIDs.
+    polyproto.core.models.KeyTrial:
+      type: object
+      required:
+        - trial
+        - id
+        - expires
+      properties:
+        trial:
+          type: string
+          minLength: 32
+          maxLength: 256
+          description: The key trial, which the client should sign with all of their private identity keys.
+        id:
+          type: string
+          minLength: 1
+          maxLength: 256
+          description: A unique identifying string to differentiate this specific key trial from other key trials that may be open at the same time.
+        expires:
+          type: integer
+          format: uint64
+          description: The UNIX timestamp after which the key trial expires.
+      description: A key trial as sent from the server to an actor.
+    polyproto.core.models.KeyTrialCompleted:
+      type: object
+      required:
+        - signature
+        - id
+        - serial_number
+      properties:
+        signature:
+          type: string
+          description: The signature produced by signing the key trial string using a private identity key.
+        id:
+          type: string
+          description: The unique identifying string, differentiating this specific key trial from other key trials that may be open at the same time.
+        serial_number:
+          type: integer
+          format: uint64
+          description: The serial number of the ID-Cert corresponding to the private identity key used to sign the key trial string.
+      description: A completed key trial, as an actor would send to the server.
+    polyproto.core.models.Service:
+      type: object
+      required:
+        - service
+        - url
+        - primary
+      properties:
+        service:
+          type: string
+          minLength: 2
+          maxLength: 64
+          description: 'The name of the service that is being made discoverable. Must be formatted according to [section #8.2: Namespaces](/Protocol Specifications/core#82-namespaces) in the core protocol specification'
+        url:
+          type: string
+          format: uri
+          description: The base URL of the service provider, not including `/.p2/<service_name>`. Trailing slashes are allowed. If `(/).p2/<service_name>` is added to the URL specified here, a polyproto client should be able to access the HTTP API routes provided by the service.
+        primary:
+          type: boolean
+          description: Whether the service provider specified in the url field is the primary service provider for this service and actor.
+      description: |-
+        A resource representing information about a discoverable service for an actor. You can learn more about
+        services and discoverability by reading [section #9](/Protocol Specifications/core#9-services) of
+        the core protocol specification.
+
+        This resource contains information about the name of the service that is being made discoverable,
+        the URL of the service provider, and whether this service provider is the primary service provider
+        for the actor.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+servers:
+  - url: https://example.com
+    description: Example endpoint
+    variables: {}
