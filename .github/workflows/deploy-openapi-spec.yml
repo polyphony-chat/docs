@@ -32,6 +32,6 @@ jobs:
             run: |
               tree -L 2
               mv ./api/src/core/tsp-output/@typespec/openapi3/openapi.v1.0.yaml ./api/build/core-openapi3.yaml
-              git add ./build/*
+              git add ./api/build/*
               git commit -m "[bot]update openapi3 schema"
               git push
