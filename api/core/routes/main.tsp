@@ -447,20 +447,33 @@ namespace Migration {
             @statusCode statusCode: 202 | 200
         };
 
-        @route("/messages")
-        @put
+        @route("/messages/commit")
+        @post
         @added(Version.`v1.0`)
         @summary("Commit re-signed messages")
-        op commitMessages(): void;
+        /**
+         * Commit messages that have been re-signed to the server.
+         * @param messages Messages. The distinct format of messages is up to the specific p2 extension to define.
+         * @returns `200` On success; `400` if re-signed messages are improperly formatted; `403` if messages have been modified where the original keys have not passed the key trial, or if a key trial has not been passed at all.
+         */
+        op commitMessages(@body messages: string[]): {
+            @statusCode statusCode: 200 | 400 | 403;
+        };
 
         @route("/messages")
         @get
         @added(Version.`v1.0`)
         @summary("Fetch messages to-be-resigned")
+        /**
+         * Fetch messages to be re-signed.
+         * @param limit How many messages to request from the server. Defaults to 100.
+         * @returns Messages. The distinct format of messages is up to the specific p2 extension to define.
+         */
         op getMessages(@query limit?: uint32 = 100): {
             @statusCode statusCode: 200;
-            // TODO
             @body message: string;
+        } | {
+            @statusCode statusCode: 403;
         };
 
         @route("/keytrial")
