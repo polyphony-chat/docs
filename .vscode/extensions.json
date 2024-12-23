@@ -3,6 +3,7 @@
         "davidanson.vscode-markdownlint",
         "chrischinchilla.vale-vscode",
         "valentjn.vscode-ltex",
-        "gruntfuggly.todo-tree"
+        "gruntfuggly.todo-tree",
+        "typespec.typespec-vscode"
     ]
 }
