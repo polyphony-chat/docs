@@ -30,7 +30,7 @@ jobs:
               tsp compile .
           - name: Commit OpenAPI specification to repository
             run: |
-              cd ../../
+              cd ../
               tree -L 2
               mv ./api/src/core/tsp-output/@typespec/openapi3/openapi.v1.0.yaml ./build/core-openapi3.yaml
               git add ./build/*
