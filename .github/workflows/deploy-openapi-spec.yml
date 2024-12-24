@@ -1,4 +1,4 @@
-name: Build and Deploy OpenAPI configuration
+name: Build and Deploy OpenAPI specification
 on:
     push:
       branches:
