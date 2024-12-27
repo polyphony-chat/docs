@@ -4,5 +4,5 @@ weight: 10
 
 # APIs
 
-- [Core](./core/index.md)
+- [Core](https://apidocs.polyproto.org/)
 - [Auth](./auth/index.md)
