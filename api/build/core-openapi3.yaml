@@ -4,7 +4,7 @@ info:
   license:
     name: MIT License
     url: https://raw.githubusercontent.com/polyphony-chat/docs/refs/heads/main/LICENSE
-  version: v1.0
+  version: v1.0-alpha.1
 tags:
   - name: Federated Identity - Registration required
   - name: Sensitive Action
@@ -32,6 +32,99 @@ paths:
                 $ref: '#/components/schemas/polyproto.core.models.ChallengeStringResponse'
       tags:
         - Federated Identity - Registration not required
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/data:
+    delete:
+      operationId: Unregistered_deleteData
+      summary: Delete own actor data from the sever
+      description: Delete all data associated with you from the server.
+      parameters:
+        - name: breakRedirect
+          in: query
+          required: false
+          description: |-
+            If a redirect has been set up previously: Whether to break that redirect
+            with this action. Defaults to false.
+          schema:
+            type: boolean
+            default: false
+          explode: false
+      responses:
+        '202':
+          description: '`202` and a key trial, if one still needs to be passed; `204`: Action executed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
+        '204':
+          description: '`202` and a key trial, if one still needs to be passed; `204`: Action executed'
+          headers:
+            Content-Length:
+              required: true
+              schema:
+                type: number
+                enum:
+                  - 0
+      tags:
+        - Migration - Registration not required
+      security:
+        - BearerAuth: []
+    get:
+      operationId: Unregistered_exportData
+      summary: Export all data
+      description: Export all of your data for safekeeping or for importing it to another server
+      parameters: []
+      responses:
+        '200':
+          description: |-
+            `202` and a key trial, if one still needs to be passed; `200` and the
+            appropriate data if the key trial has been passed and is not yet expired.
+            Contains all data of the user.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - idCert
+                    - messages
+                  properties:
+                    idCert:
+                      type: string
+                      description: The ID-Cert that the following messages' signatures correspond to.
+                    messages:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          signature:
+                            type: string
+                            description: Signature of the whole message
+                          content:
+                            type: string
+                            description: Arbitrary content `T`. This depends on the specific implementation or extension of the protocol.
+                        required:
+                          - signature
+                          - content
+                      description: The actual message.
+                  description: |-
+                    A message batch, as received from and sent to the server in the context of re-signing messages.
+                    This type is generic over `T`, where `T` represents the content of the actual message. This
+                    means, that the specific message content depends on the concrete implementation or extension
+                    of the polyproto protocol.
+        '202':
+          description: |-
+            `202` and a key trial, if one still needs to be passed; `200` and the
+            appropriate data if the key trial has been passed and is not yet expired.
+            Contains all data of the user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
+      tags:
+        - Migration - Registration not required
       security:
         - BearerAuth: []
   /.p2/core/v1/idcert/actor/{fid}:
@@ -235,7 +328,7 @@ paths:
           explode: false
       responses:
         '200':
-          description: The request has succeeded.
+          description: '`204`: No keytrials found for specified actor; `404`: Specified actor not known; `200`: Completed key trials of requested actor'
           content:
             application/json:
               schema:
@@ -254,14 +347,81 @@ paths:
                     - keyTrial
                     - keyTrialCompletion
         '204':
-          description: 'There is no content to send for this request, but the headers may be useful. '
+          description: '`204`: No keytrials found for specified actor; `404`: Specified actor not known; `200`: Completed key trials of requested actor'
+          headers:
+            Content-Length:
+              required: true
+              schema:
+                type: number
+                enum:
+                  - 0
         '404':
-          description: The server cannot find the requested resource.
+          description: '`204`: No keytrials found for specified actor; `404`: Specified actor not known; `200`: Completed key trials of requested actor'
       tags:
         - Migration - Registration not required
       security:
         - BearerAuth: []
   /.p2/core/v1/messages:
+    delete:
+      operationId: Unregistered_removeResigningExtern
+      summary: Abort message re-signing
+      description: Stop an in-progress or existing re-signing process.
+      parameters:
+        - name: removeActorFid
+          in: query
+          required: true
+          description: The FID of the actor to whom messages should no longer be re-signable for
+          schema:
+            type: string
+          explode: false
+      responses:
+        '204':
+          description: '`204`: Action executed; `404`: No re-signing request found for mentioned actor'
+          headers:
+            Content-Length:
+              required: true
+              schema:
+                type: number
+                enum:
+                  - 0
+        '404':
+          description: '`204`: Action executed; `404`: No re-signing request found for mentioned actor'
+      tags:
+        - Migration - Registration not required
+      security:
+        - BearerAuth: []
+    post:
+      operationId: Unregistered_requestAllowResigning
+      summary: Request message re-signing
+      description: Request allowing message re-signing. To fulfill this action, a key trial must be passed.
+      parameters: []
+      responses:
+        '200':
+          description: Returns a key trial
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
+      tags:
+        - Migration - Registration not required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newActorFid:
+                  type: string
+                allowedResigningKeys:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - newActorFid
+                - allowedResigningKeys
+      security:
+        - BearerAuth: []
     get:
       operationId: Unregistered_getMessages
       summary: Fetch messages to-be-resigned
@@ -282,6 +442,64 @@ paths:
           content:
             application/json:
               schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - idCert
+                    - messages
+                  properties:
+                    idCert:
+                      type: string
+                      description: The ID-Cert that the following messages' signatures correspond to.
+                    messages:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          signature:
+                            type: string
+                            description: Signature of the whole message
+                          content:
+                            type: string
+                            description: Arbitrary content `T`. This depends on the specific implementation or extension of the protocol.
+                        required:
+                          - signature
+                          - content
+                      description: The actual message.
+                  description: |-
+                    A message batch, as received from and sent to the server in the context of re-signing messages.
+                    This type is generic over `T`, where `T` represents the content of the actual message. This
+                    means, that the specific message content depends on the concrete implementation or extension
+                    of the polyproto protocol.
+        '403':
+          description: Messages. The distinct format of messages is up to the specific p2 extension to define.
+      tags:
+        - Migration - Registration not required
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/messages/commit:
+    post:
+      operationId: Unregistered_commitMessages
+      summary: Commit re-signed messages
+      description: Commit messages that have been re-signed to the server.
+      parameters: []
+      responses:
+        '200':
+          description: '`200` On success; `400` if re-signed messages are improperly formatted; `403` if messages have been modified where the original keys have not passed the key trial, if a key trial has not been passed at all or if the messages have been signed with keys that were not on the `allowedResigningKeys` list.'
+        '400':
+          description: '`200` On success; `400` if re-signed messages are improperly formatted; `403` if messages have been modified where the original keys have not passed the key trial, if a key trial has not been passed at all or if the messages have been signed with keys that were not on the `allowedResigningKeys` list.'
+        '403':
+          description: '`200` On success; `400` if re-signed messages are improperly formatted; `403` if messages have been modified where the original keys have not passed the key trial, if a key trial has not been passed at all or if the messages have been signed with keys that were not on the `allowedResigningKeys` list.'
+      tags:
+        - Migration - Registration not required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
                 type: object
                 required:
                   - idCert
@@ -310,154 +528,73 @@ paths:
                   This type is generic over `T`, where `T` represents the content of the actual message. This
                   means, that the specific message content depends on the concrete implementation or extension
                   of the polyproto protocol.
-        '403':
-          description: Messages. The distinct format of messages is up to the specific p2 extension to define.
-      tags:
-        - Migration - Registration not required
-      security:
-        - BearerAuth: []
-  /.p2/core/v1/messages/commit:
-    post:
-      operationId: Unregistered_commitMessages
-      summary: Commit re-signed messages
-      description: Commit messages that have been re-signed to the server.
-      parameters: []
-      responses:
-        '200':
-          description: '`200` On success; `400` if re-signed messages are improperly formatted; `403` if messages have been modified where the original keys have not passed the key trial, if a key trial has not been passed at all or if the messages have been signed with keys that were not on the `allowedResigningKeys` list.'
-        '400':
-          description: '`200` On success; `400` if re-signed messages are improperly formatted; `403` if messages have been modified where the original keys have not passed the key trial, if a key trial has not been passed at all or if the messages have been signed with keys that were not on the `allowedResigningKeys` list.'
-        '403':
-          description: '`200` On success; `400` if re-signed messages are improperly formatted; `403` if messages have been modified where the original keys have not passed the key trial, if a key trial has not been passed at all or if the messages have been signed with keys that were not on the `allowedResigningKeys` list.'
-      tags:
-        - Migration - Registration not required
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - idCert
-                - messages
-              properties:
-                idCert:
-                  type: string
-                  description: The ID-Cert that the following messages' signatures correspond to.
-                messages:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      signature:
-                        type: string
-                        description: Signature of the whole message
-                      content:
-                        type: string
-                        description: Arbitrary content `T`. This depends on the specific implementation or extension of the protocol.
-                    required:
-                      - signature
-                      - content
-                  description: The actual message.
-              description: |-
-                A message batch, as received from and sent to the server in the context of re-signing messages.
-                This type is generic over `T`, where `T` represents the content of the actual message. This
-                means, that the specific message content depends on the concrete implementation or extension
-                of the polyproto protocol.
         description: Messages. The distinct format of messages is up to the specific p2 extension to define.
       security:
         - BearerAuth: []
-  /.p2/core/v1/messages/extern:
+  /.p2/core/v1/migration/data:
     post:
-      operationId: Unregistered_requestAllowResigning
-      summary: Request message re-signing for source actor
-      description: |-
-        Tell the homeserver of the "old" actor account that you intend to re-sign messages from
-        this actor.
+      operationId: Registered_importData
+      summary: Import data to server
+      description: //TODO
       parameters: []
       responses:
-        '200':
-          description: '`200` if the link has been created, `202` if the other account still needs to accept to establish the link. If `200` is received, messages can be queried for re-signing using the appropriate endpoint.'
         '202':
-          description: '`200` if the link has been created, `202` if the other account still needs to accept to establish the link. If `200` is received, messages can be queried for re-signing using the appropriate endpoint.'
-      tags:
-        - Migration - Registration not required
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: string
-        description: The FID of the actor who this actor intends to re-sign messages of.
-      security:
-        - BearerAuth: []
-  /.p2/core/v1/migration/messages:
-    post:
-      operationId: Registered_requestAllowResigning
-      summary: Request message re-signing
-      description: Request allowing message re-signing. To fulfill this action, a key trial must be passed.
-      parameters: []
-      responses:
-        '200':
-          description: '`200` if the link has been created, `202` if the other account still needs to accept to establish the link. Returns a key trial'
+          description: The request has been accepted for processing, but processing has not yet completed.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
-        '202':
-          description: '`200` if the link has been created, `202` if the other account still needs to accept to establish the link. Returns a key trial'
-          content:
-            application/json:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+          headers:
+            Content-Length:
+              required: true
               schema:
-                $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
+                type: number
+                enum:
+                  - 0
       tags:
         - Migration - Registration required
       requestBody:
-        required: true
+        required: false
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                newActorFid:
-                  type: string
-                allowedResigningKeys:
-                  type: array
-                  items:
+              type: array
+              items:
+                type: object
+                required:
+                  - idCert
+                  - messages
+                properties:
+                  idCert:
                     type: string
-              required:
-                - newActorFid
-                - allowedResigningKeys
-      security:
-        - BearerAuth: []
-    delete:
-      operationId: Registered_removeResigningExtern
-      summary: Abort message re-signing
-      description: Stop an in-progress or existing re-signing process.
-      parameters:
-        - name: removeActorFid
-          in: query
-          required: true
-          description: The FID of the actor to whom messages should no longer be re-signable for
-          schema:
-            type: string
-          explode: false
-      responses:
-        '200':
-          description: A key trial.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
-        '400':
-          description: A key trial.
-      tags:
-        - Migration - Registration required
+                    description: The ID-Cert that the following messages' signatures correspond to.
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        signature:
+                          type: string
+                          description: Signature of the whole message
+                        content:
+                          type: string
+                          description: Arbitrary content `T`. This depends on the specific implementation or extension of the protocol.
+                      required:
+                        - signature
+                        - content
+                    description: The actual message.
+                description: |-
+                  A message batch, as received from and sent to the server in the context of re-signing messages.
+                  This type is generic over `T`, where `T` represents the content of the actual message. This
+                  means, that the specific message content depends on the concrete implementation or extension
+                  of the polyproto protocol.
       security:
         - BearerAuth: []
   /.p2/core/v1/migration/redirect:
     post:
-      operationId: Registered_setupRedirectExtern
+      operationId: Registered_setupRedirect
       summary: Set up a redirect for migrating identities
       description: |-
         This route is used by actors who would like to move their identity to another home server.
@@ -492,7 +629,7 @@ paths:
       security:
         - BearerAuth: []
     delete:
-      operationId: Registered_removeRedirectExtern
+      operationId: Registered_removeRedirect
       summary: Remove a redirect for migrating identities
       description: Stop an in-progress or existing redirection process.
       parameters:
@@ -518,7 +655,7 @@ paths:
         - BearerAuth: []
   /.p2/core/v1/redirect/extern:
     post:
-      operationId: Unregistered_setupRedirect
+      operationId: Unregistered_setupRedirectExtern
       summary: Set up a redirect for migrating identities
       description: |-
         Tell the homeserver of the "old" actor account that you intend to set up a redirect to
@@ -646,6 +783,7 @@ paths:
           schema:
             type: integer
             format: uint64
+            minimum: 1
           explode: false
       responses:
         '200':
@@ -655,13 +793,24 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/polyproto.core.models.Service'
+                anyOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/polyproto.core.models.Service'
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/polyproto.core.models.Service'
         '204':
           description: |-
             JSON array of [service objects](./Types/service.md). A list of all services which the actor has
             made discoverable.
+          headers:
+            Content-Length:
+              required: true
+              schema:
+                type: number
+                enum:
+                  - 0
         '404':
           description: |-
             JSON array of [service objects](./Types/service.md). A list of all services which the actor has
@@ -697,6 +846,7 @@ paths:
           schema:
             type: integer
             format: uint64
+            minimum: 1
           explode: false
       responses:
         '200':
@@ -704,11 +854,22 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/polyproto.core.models.Service'
+                anyOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/polyproto.core.models.Service'
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/polyproto.core.models.Service'
         '204':
           description: JSON array of [service objects](./Types/service.md), filtered by the specified service.
+          headers:
+            Content-Length:
+              required: true
+              schema:
+                type: number
+                enum:
+                  - 0
         '404':
           description: JSON array of [service objects](./Types/service.md), filtered by the specified service.
       tags:
@@ -772,6 +933,13 @@ paths:
       responses:
         '204':
           description: 'There is no content to send for this request, but the headers may be useful. '
+          headers:
+            Content-Length:
+              required: true
+              schema:
+                type: number
+                enum:
+                  - 0
         '404':
           description: The server cannot find the requested resource.
       tags:
@@ -957,7 +1125,7 @@ components:
     Version:
       type: string
       enum:
-        - v1.0
+        - v1.0-alpha.1
     polyproto.core.models.ChallengeStringResponse:
       type: object
       required:
