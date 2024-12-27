@@ -282,7 +282,34 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                type: object
+                required:
+                  - idCert
+                  - messages
+                properties:
+                  idCert:
+                    type: string
+                    description: The ID-Cert that the following messages' signatures correspond to.
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        signature:
+                          type: string
+                          description: Signature of the whole message
+                        content:
+                          type: string
+                          description: Arbitrary content `T`. This depends on the specific implementation or extension of the protocol.
+                      required:
+                        - signature
+                        - content
+                    description: The actual message.
+                description: |-
+                  A message batch, as received from and sent to the server in the context of re-signing messages.
+                  This type is generic over `T`, where `T` represents the content of the actual message. This
+                  means, that the specific message content depends on the concrete implementation or extension
+                  of the polyproto protocol.
         '403':
           description: Messages. The distinct format of messages is up to the specific p2 extension to define.
       tags:
@@ -309,9 +336,34 @@ paths:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                type: string
+              type: object
+              required:
+                - idCert
+                - messages
+              properties:
+                idCert:
+                  type: string
+                  description: The ID-Cert that the following messages' signatures correspond to.
+                messages:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      signature:
+                        type: string
+                        description: Signature of the whole message
+                      content:
+                        type: string
+                        description: Arbitrary content `T`. This depends on the specific implementation or extension of the protocol.
+                    required:
+                      - signature
+                      - content
+                  description: The actual message.
+              description: |-
+                A message batch, as received from and sent to the server in the context of re-signing messages.
+                This type is generic over `T`, where `T` represents the content of the actual message. This
+                means, that the specific message content depends on the concrete implementation or extension
+                of the polyproto protocol.
         description: Messages. The distinct format of messages is up to the specific p2 extension to define.
       security:
         - BearerAuth: []
