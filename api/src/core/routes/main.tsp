@@ -456,7 +456,7 @@ namespace Migration {
          * @param messages Messages. The distinct format of messages is up to the specific p2 extension to define.
          * @returns `200` On success; `400` if re-signed messages are improperly formatted; `403` if messages have been modified where the original keys have not passed the key trial, if a key trial has not been passed at all or if the messages have been signed with keys that were not on the `allowedResigningKeys` list.
          */
-        op commitMessages(@body messages: string[]): {
+        op commitMessages(@body messages: polyproto.core.models.MessageBatch<string>): {
             @statusCode statusCode: 200 | 400 | 403;
         };
 
@@ -471,7 +471,7 @@ namespace Migration {
          */
         op getMessages(@query limit?: uint32 = 100): {
             @statusCode statusCode: 200;
-            @body message: string;
+            @body message: polyproto.core.models.MessageBatch<string>;
         } | {
             @statusCode statusCode: 403;
         };

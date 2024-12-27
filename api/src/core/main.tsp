@@ -92,4 +92,22 @@ namespace models {
         @doc("The serial number of the ID-Cert corresponding to the private identity key used to sign the key trial string.")
         serial_number: uint64;
     }
+
+    /**
+     * A message batch, as received from and sent to the server in the context of re-signing messages.
+     * This type is generic over `T`, where `T` represents the content of the actual message. This
+     * means, that the specific message content depends on the concrete implementation or extension
+     * of the polyproto protocol.
+     */
+    model MessageBatch<T> {
+        @doc("The ID-Cert that the following messages' signatures correspond to.")    
+        idCert: string,
+        @doc("The actual message.")
+        messages: {
+            @doc("Signature of the whole message")
+            signature: string,
+            @doc("Arbitrary content `T`. This depends on the specific implementation or extension of the protocol.")
+            content: T
+        }[];
+    }
 }
