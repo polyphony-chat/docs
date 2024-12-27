@@ -20,7 +20,7 @@ using polyproto;
 namespace Routes;
 
 enum Version {
-    "v1.0"
+    "v1.0-alpha.1"
 }
 
 namespace FederatedIdentity {
@@ -29,7 +29,7 @@ namespace FederatedIdentity {
     namespace Registered {
         @route("/session/idcert")
         @summary("Rotate session ID-Cert")
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         @post
         /**
          * Rotate your keys for a given session. The `session_id` in the supplied `csr` must correspond to the
@@ -51,7 +51,7 @@ namespace FederatedIdentity {
 
         @route("/session/keymaterial")
         @summary("Upload encrypted private key material")
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         @post
         /**
          * Upload encrypted private key material to the server for later retrieval. The size of
@@ -76,7 +76,7 @@ namespace FederatedIdentity {
 
         @route("/session/keymaterial")
         @summary("Get encrypted private key material")
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         @get
         /**
          * Retrieve encrypted private key material from the server. The `serial_numbers`, if
@@ -98,7 +98,7 @@ namespace FederatedIdentity {
         @route("/session/keymaterial")
         @tag("Sensitive Action")
         @summary("Delete encrypted private key material")
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         @delete
         /**
          * Delete encrypted private key material from the server. The `serial_number(s)`, must match
@@ -116,7 +116,7 @@ namespace FederatedIdentity {
         
         @route("/session/keymaterial/size")
         @summary("Get encrypted private key material upload size limit")
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         @get
         @useAuth(NoAuth)
         /**
@@ -135,7 +135,7 @@ namespace FederatedIdentity {
         @route("/challenge")
         @summary("Get challenge string")
         @useAuth(BearerAuth)
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         @get
         /**
          * Request a challenge string. See the corresponding
@@ -149,7 +149,7 @@ namespace FederatedIdentity {
 
         @route("/key/server")
         @summary("Rotate Server Identity Key")
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         @post
         @useAuth(BearerAuth)
         @tag("Sensitive Action")
@@ -161,7 +161,7 @@ namespace FederatedIdentity {
 
         @route("/idcert/server")
         @get
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         @summary("Get Server ID-Cert")
         /**
          * Request the server's public identity certificate.
@@ -174,7 +174,7 @@ namespace FederatedIdentity {
 
         @route("/key/server")
         @get
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         @summary("Get Server Public Key")
         /**
          * Request the server's public key.
@@ -190,7 +190,7 @@ namespace FederatedIdentity {
 
         @route("/idcert/actor")
         @get
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         @summary("Get Actor ID-Cert(s)")
         /**
          * Request the ID-Certs of a specific actor. The specified actor must be registered on this server.
@@ -215,7 +215,7 @@ namespace FederatedIdentity {
 
         @route("/session/idcert/extern")
         @put
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         @useAuth(BearerAuth)
         @summary("Update session ID-Cert")
         /**
@@ -227,7 +227,7 @@ namespace FederatedIdentity {
 
         @route("/session")
         @delete
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         @summary("Delete/Revoke Session")
         @useAuth(BearerAuth)
         /**
@@ -235,6 +235,7 @@ namespace FederatedIdentity {
          */
         op deleteSession(@query session_id: string): {
             @statusCode statusCode: 204;
+            @header({name: "Content-Length"}) contentLength: 0;
         } | {
             @statusCode statusCode: 404;
         };
@@ -249,7 +250,7 @@ namespace Services {
         @route("/services")
         @post
         @summary("Add service to be discovered")
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         @returnsDoc("A singular service object, representing the service that was added.")
         @errorsDoc("Returned, if the service and URL combination already exists in the list of discoverable services.")
         /**
@@ -265,7 +266,7 @@ namespace Services {
         @route("/services")
         @delete
         @summary("Delete discoverable service")
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         /**
          * Remove a service from the list of services discoverable by other actors.
          * If a primary service is removed and there are still other providers available for the same service,
@@ -287,7 +288,7 @@ namespace Services {
         @route("/services/primary")
         @put
         @summary("Set primary service provider")
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         /**
          * Set a primary service provider for a given service namespace. This is used to indicate, which service 
          * provider should be used by default by other actors, when multiple service providers are available 
@@ -311,7 +312,7 @@ namespace Services {
         @route("/services/discover/")
         @get
         @summary("Discover services of actor")
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         /**
          * Fetch a list of all services that the actor has made discoverable. Clients should not expect 
          * this list to be ordered in any particular way.
@@ -321,14 +322,20 @@ namespace Services {
          * @param limit The maximum number of services to return. Not specifying a limit will return all
          * services. Specifying a limit of `1` will return only the primary service provider for each service.
          */
-        op getServicesOfActor(@path fid: string, @query limit?: uint64): polyproto.core.models.Service[] | {
-            @statusCode statusCode: 204 | 404;
+        op getServicesOfActor(@path fid: string, @query @minValue(1) limit?: uint64): polyproto.core.models.Service[] | {
+            @statusCode statusCode: 204;
+            @header({name: "Content-Length"}) contentLength: 0;
+        } | {
+            @statusCode statusCode: 404;
+        } | {
+            @statusCode statusCode: 200;
+            @body body: polyproto.core.models.Service[];
         };
 
         @route("/services/discover/{fid}/{service}")
         @get
         @summary("Discover single service of actor")
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         /**
          * Get all service providers an actor is registered with, limited to a specific service.
          * Clients should not expect this list to be ordered in any particular way.
@@ -338,8 +345,14 @@ namespace Services {
          * services. Specifying a limit of `1` will return only the primary service provider for the specified service.
          * @param service The name of the service to discover providers of.
          */
-        op getSingleServiceOfActor(@path fid: string, @path service: string, @query limit?: uint64): polyproto.core.models.Service[] | {
-            @statusCode statusCode: 204 | 404;
+        op getSingleServiceOfActor(@path fid: string, @path service: string, @query @minValue(1) limit?: uint64): polyproto.core.models.Service[] | {
+            @statusCode statusCode: 204;
+            @header({name: "Content-Length"}) contentLength: 0;
+        } | {
+            @statusCode statusCode: 404;
+        } | {
+            @statusCode statusCode: 200;
+            @body body: polyproto.core.models.Service[];
         };
     }
 }
@@ -353,7 +366,7 @@ namespace Migration {
         //TODO: Add routes concerned with data migration.
         @route("/redirect")
         @post
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         @summary("Set up a redirect for migrating identities")
         /**
          * This route is used by actors who would like to move their identity to another home server.
@@ -366,55 +379,40 @@ namespace Migration {
          * @returns `200` if the link has been created, `202` if the other account still needs to accept to establish the link. Returns a key trial 
          * @param newActorFid The FID of the actor, that this actor would like to be redirected to.
          */
-        op setupRedirectExtern(@body newActorFid: string): {
+        op setupRedirect(@body newActorFid: string): {
             @statusCode statusCode: 200 | 202;
             @body body: polyproto.core.models.KeyTrial;
         };
 
         @route("/redirect")
         @delete
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         @summary("Remove a redirect for migrating identities")
         /**
          * Stop an in-progress or existing redirection process.
          * @returns A key trial
          * @param removeActorFid The FID of the actor to which a redirect should no longer exist
          */
-        op removeRedirectExtern(@query removeActorFid: string): {
+        op removeRedirect(@query removeActorFid: string): {
             @statusCode statusCode: 200;
             @body body: polyproto.core.models.KeyTrial;
         } | {
             @statusCode statusCode: 400;
         };
 
-        @route("/messages")
+        @route("/data")
         @post
-        @added(Version.`v1.0`)
-        @summary("Request message re-signing")
+        @added(Version.`v1.0-alpha.1`)
+        @summary("Import data to server")
         /**
-         * Request allowing message re-signing. To fulfill this action, a key trial must be passed.
-         * @returns `200` if the link has been created, `202` if the other account still needs to accept to establish the link. Returns a key trial 
-         * @param allowedResigningKeys List of PEM encoded `SubjectPublicKeyInfo`s. Only key pairs mentioned in this list are allowed to re-sign messages after the key trial has been passed.
+         * //TODO
          */
-        op requestAllowResigning(@body body: { newActorFid: string, allowedResigningKeys: string[] }): {
-            @statusCode statusCode: 200 | 202;
-            @body body: polyproto.core.models.KeyTrial;
-        };
-
-        @route("/messages")
-        @delete
-        @added(Version.`v1.0`)
-        @summary("Abort message re-signing")
-        /**
-         * Stop an in-progress or existing re-signing process.
-         * @returns A key trial.
-         * @param removeActorFid The FID of the actor to whom messages should no longer be re-signable for
-         */
-        op removeResigningExtern(@query removeActorFid: string): {
-            @statusCode statusCode: 200;
+        op importData(@body importData?: polyproto.core.models.MessageBatch<string>[]): {
+            @statusCode statusCode: 202;
             @body body: polyproto.core.models.KeyTrial;
         } | {
-            @statusCode statusCode: 400;
+            @statusCode statusCode: 204;
+            @header({name: "Content-Length"}) contentLength: 0;
         };
     }
 
@@ -422,47 +420,63 @@ namespace Migration {
     namespace Unregistered {
         @route("/redirect/extern")
         @post
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         @summary("Set up a redirect for migrating identities")
         /**
          * Tell the homeserver of the "old" actor account that you intend to set up a redirect to
          * this actor
          * @returns `200` if the link has been created, `202` if the other account still needs to accept to establish the link.
          */
-        op setupRedirect(@body redirectSourceFid: string): {
+        op setupRedirectExtern(@body redirectSourceFid: string): {
             @statusCode statusCode: 202 | 200
         };
 
-        @route("/messages/extern")
-        @post
-        @added(Version.`v1.0`)
-        @summary("Request message re-signing for source actor")
+        @route("/messages")
+        @delete
+        @added(Version.`v1.0-alpha.1`)
+        @summary("Abort message re-signing")
         /**
-         * Tell the homeserver of the "old" actor account that you intend to re-sign messages from
-         * this actor.
-         * @returns `200` if the link has been created, `202` if the other account still needs to accept to establish the link. If `200` is received, messages can be queried for re-signing using the appropriate endpoint.
-         * @param resigningSourceFid The FID of the actor who this actor intends to re-sign messages of.
+         * Stop an in-progress or existing re-signing process.
+         * @returns `204`: Action executed; `404`: No re-signing request found for mentioned actor
+         * @param removeActorFid The FID of the actor to whom messages should no longer be re-signable for
          */
-        op requestAllowResigning(@body resigningSourceFid: string): {
-            @statusCode statusCode: 202 | 200
+        op removeResigningExtern(@query removeActorFid: string): {
+            @statusCode statusCode: 404;
+        } | {
+            @statusCode statusCode: 204;
+            @header({name: "Content-Length"}) contentLength: 0;
+        };
+
+        @route("/messages")
+        @post
+        @added(Version.`v1.0-alpha.1`)
+        @summary("Request message re-signing")
+        /**
+         * Request allowing message re-signing. To fulfill this action, a key trial must be passed.
+         * @returns Returns a key trial 
+         * @param allowedResigningKeys List of PEM encoded `SubjectPublicKeyInfo`s. Only key pairs mentioned in this list are allowed to re-sign messages after the key trial has been passed.
+         */
+        op requestAllowResigning(@body body: { newActorFid: string, allowedResigningKeys: string[] }): {
+            @statusCode statusCode: 200;
+            @body body: polyproto.core.models.KeyTrial;
         };
 
         @route("/messages/commit")
         @post
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         @summary("Commit re-signed messages")
         /**
          * Commit messages that have been re-signed to the server.
          * @param messages Messages. The distinct format of messages is up to the specific p2 extension to define.
          * @returns `200` On success; `400` if re-signed messages are improperly formatted; `403` if messages have been modified where the original keys have not passed the key trial, if a key trial has not been passed at all or if the messages have been signed with keys that were not on the `allowedResigningKeys` list.
          */
-        op commitMessages(@body messages: polyproto.core.models.MessageBatch<string>): {
+        op commitMessages(@body messages: polyproto.core.models.MessageBatch<string>[]): {
             @statusCode statusCode: 200 | 400 | 403;
         };
 
         @route("/messages")
         @get
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         @summary("Fetch messages to-be-resigned")
         /**
          * Fetch messages to be re-signed.
@@ -471,14 +485,14 @@ namespace Migration {
          */
         op getMessages(@query limit?: uint32 = 100): {
             @statusCode statusCode: 200;
-            @body message: polyproto.core.models.MessageBatch<string>;
+            @body message: polyproto.core.models.MessageBatch<string>[];
         } | {
             @statusCode statusCode: 403;
         };
 
         @route("/keytrial")
         @post
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         @summary("Complete key trial")
         /**
          * Complete a key trial. After the successful completion of the key trial, the action that
@@ -501,9 +515,9 @@ namespace Migration {
             @body body: polyproto.core.models.KeyTrialCompleted[];
         };
 
-        @route("/keytrial/")
+        @route("/keytrial/{fid}")
         @get
-        @added(Version.`v1.0`)
+        @added(Version.`v1.0-alpha.1`)
         @summary("Fetch key trials and key trial responses from actor")
         /**
          * Fetch key trials and their responses from other actors.
@@ -513,9 +527,13 @@ namespace Migration {
          * 
          * Only key trials which have at least one completion, and - more importantly - where the
          * `expiration` UNIX time stamp has passed, can be fetched.
+         * @returns `204`: No keytrials found for specified actor; `404`: Specified actor not known; `200`: Completed key trials of requested actor
          */
         op getKeyTrials(@path fid: string, @query limit?: uint16 = 0): {
-            @statusCode statusCode: 204 | 404;
+            @statusCode statusCode: 204;
+            @header({name: "Content-Length"}) contentLength: 0;
+        } | {
+            @statusCode statusCode: 404;
         } | {
             @statusCode statusCode: 200;
             @body response?: {
@@ -523,6 +541,42 @@ namespace Migration {
                 @minItems(1)
                 keyTrialCompletion: polyproto.core.models.KeyTrialCompleted[]
             }[]
+        };
+
+        @route("/data")
+        @delete
+        @added(Version.`v1.0-alpha.1`)
+        @summary("Delete own actor data from the sever")
+        /**
+         * Delete all data associated with you from the server.
+         * @param breakRedirect If a redirect has been set up previously: Whether to break that redirect
+         * with this action. Defaults to false.
+         * @returns `202` and a key trial, if one still needs to be passed; `204`: Action executed
+         */
+        op deleteData(@query breakRedirect?: boolean = false): {
+            @statusCode statusCode: 202;
+            @body response: polyproto.core.models.KeyTrial;
+        } | {
+            @statusCode statusCode: 204;
+            @header({name: "Content-Length"}) contentLength: 0;
+        };
+
+        @route("/data")
+        @get
+        @added(Version.`v1.0-alpha.1`)
+        @summary("Export all data")
+        /**
+         * Export all of your data for safekeeping or for importing it to another server
+         * @returns `202` and a key trial, if one still needs to be passed; `200` and the
+         * appropriate data if the key trial has been passed and is not yet expired.
+         * Contains all data of the user.
+         */
+        op exportData(): {
+            @statusCode statusCode: 202;
+            @body body: polyproto.core.models.KeyTrial;
+        } | {
+            @statusCode statusCode: 200;
+            @body body: polyproto.core.models.MessageBatch<string>[]; 
         };
     }
 }
