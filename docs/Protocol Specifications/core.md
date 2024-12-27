@@ -952,10 +952,11 @@ Additionally, servers must verify the following things about re-signed messages:
 - The new signature matches the messages' contents, and is valid
 - The ID-Cert corresponding to the new signature is a valid ID-Cert, issued by the correct home
   server
+- The ID-Cert corresponding to the new signature has a public key that was specified in the
+  `allowedResigningKeys` property sent to the server when message re-signing was requested.
 - The contents of the message have not been changed during the re-signing process
-
-The amount of keys that can be used to re-sign messages must not exceed the amount of keys sent in
-the servers' key trial, but can be less.
+- The `expires` UNIX timestamp, specified when the server replied to the re-signing request,
+  has not been reached or passed when the re-signed message was received by the server.
 
 Below is a sequence diagram depicting a typical re-signing process, which transfers ownership of
 messages from Alice A to Alice B.
@@ -968,10 +969,10 @@ actor aa as Alice A
 actor ab as Alice B
 participant sc as Server "C" with stored<br/>messages from Alice A
 
-aa->>sc: Request allow message re-signing for Alice B
+aa->>sc: Request allow message re-signing for Alice B + list of "allowed" pubkeys
 sc->>aa: List of keys to verify + challenge string (Key trial)
 aa->>sc: Completed challenge for each key on the list
-sc->>sc: Verify challenge, unlock re-signing for Alice B
+sc->>sc: Verify challenge, unlock re-signing for Alice B (only "allowed" pubkeys)
 sc->>aa: Re-signing of messages for Alice B allowed
 loop Do, while there are messages left to be re-signed
   ab->>sc: Request message re-signing<br/>for Alice A's messages
@@ -981,6 +982,7 @@ loop Do, while there are messages left to be re-signed
   ab->>ab: Re-sign messages with own keys
   ab->>sc: Send new messages
   sc->>sc: Verify that only FID and signature related fields have changed
+  sc->>sc: Verify that key used to produce signature is on "allowed" list
   sc->>ab: Acknowledge successful re-signing of batch
   opt
     ab--)ab: Pause for arbitrary amount of time
