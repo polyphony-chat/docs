@@ -5,6 +5,9 @@ import "./routes";
 
 using TypeSpec.Http;
 using Routes;
+using FederatedIdentity;
+using Services;
+using Migration;
 
 namespace polyproto.core;
 
