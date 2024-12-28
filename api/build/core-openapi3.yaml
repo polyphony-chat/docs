@@ -9,10 +9,10 @@ tags:
   - name: Federated Identity - Registration required
   - name: Sensitive Action
   - name: Federated Identity - Registration not required
-  - name: Services - Registration required
-  - name: Services - Registration not required
   - name: Migration - Registration required
   - name: Migration - Registration not required
+  - name: Services - Registration required
+  - name: Services - Registration not required
 paths:
   /.p2/core/v1/challenge:
     get:
