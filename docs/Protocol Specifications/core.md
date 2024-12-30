@@ -8,7 +8,7 @@ weight: 0
 **v0.1.0-alpha.1** - Treat this as an unfinished draft.
 
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
-The version number specified here also applies to the API documentation.
+The version number specified here also applies to the [API documentation](https://apidocs.polyproto.org).
 
 - [polyproto Specification](#polyproto-specification)
   - [1. Terminology used in this document](#1-terminology-used-in-this-document)
@@ -283,11 +283,17 @@ factor of authentication.
 
 ### 4.2 Challenge strings
 
-Servers are alphanumeric challenge strings to verify an actor's private identity key
-possession, without revealing the private key itself. These strings, ranging from 32 to 256 characters,
-have a UNIX timestamp lifetime. If the current timestamp surpasses this lifetime, the challenge fails.
-The actor signs the string, sending the signature and their ID-Cert to the server, which then verifies
-the signature's authenticity.
+Servers use challenge strings to verify an actor's private identity key
+possession, without revealing the private key itself. These strings, ranging from 32 to 256
+UTF-8 characters, have a UNIX timestamp lifetime. If the current timestamp surpasses this
+lifetime, the challenge fails. The actor signs the string, sending the signature and their
+ID-Cert to the server, which then verifies the signature's authenticity.
+
+All challenge strings and their responses created must be made
+public to ensure that a chain of trust can be maintained. A third party should be able to verify that
+the challenge string, which authorized a specific change in data, was signed by the
+correct private key. The API routes needed to verify challenges as an outsider are documented in the
+[API documentation](https://apidocs.polyproto.org).
 
 !!! tip
 
@@ -777,7 +783,8 @@ server after connecting. Clients should never store key backups in an unencrypte
 Whether an actor uploads their encrypted private identity keys to the server is their own choice.
 It is also recommended backing up the encrypted private identity keys in some other secure location.
 
-The APIs for managing encrypted private identity keys are documented in the API documentation.
+The APIs for managing encrypted private identity keys are documented in the
+[API documentation](https://apidocs.polyproto.org).
 
 - [Upload encrypted private key material](/APIs/Core/Routes%3A Registration needed/#post-upload-encrypted-private-key-material)
 - [Get encrypted private key material](/APIs/Core/Routes%3A Registration needed/#get-get-encrypted-private-key-material)
@@ -857,20 +864,22 @@ distributed network to the new actor. Should the old actor want to additionally 
 the old home server to another home server, more steps are needed. Account migration is not considered
 a sensitive action.
 
+This chapter defines behaviors and security mechanisms associated with migrating an actor identity
+or messages.
+
 ### 7.1 Identity migration
 
 Transferring message ownership from an old to a new account, known as
 identity migration, necessitates coordination between the two involved accounts.
 
-Identity migration is a process, which can be broken down into the following steps:
+Identity migration is a process which can be broken down into the following steps:
 
 - [Setting up a redirect](#711-redirects)
 - [Re-signing data](#72-re-signing-messages)
 
-As shown by the API routes offered in the API documentation, both of these steps can be initiated
-through one API call.
-
 It is not required that the new account is located on another home server as the old account.
+Re-signing data and setting up a redirect are both not mandatory steps. It is up to actors to decide
+to which extent they wish to perform the migration.
 
 #### 7.1.1 Redirects
 
@@ -994,7 +1003,7 @@ To allow for a singular set of behaviors, which fit the three intended use cases
 not all messages stored by the server of an actor need to be re-signed.
 Besides querying for all non-re-signed messages, actors can also query or all non-resigned
 messages, whose signatures correspond to a specific ID-Cert or set of ID-Certs. The API routes
-for re-signing messages are documented in the API documentation.
+for re-signing messages are documented in the [API documentation](https://apidocs.polyproto.org).
 
 #### 7.2.1 Message batches
 
@@ -1115,7 +1124,8 @@ aa-xsa: Deactivate account
 *Fig. 8: Sequence diagram depicting the data moving process.*
 
 How this process is implemented is up to P2 extensions to define. The above steps are only a
-guideline. The API routes for data export and import are documented in the API documentation.
+guideline. The API routes for data export and import are documented in the
+[API documentation](https://apidocs.polyproto.org)
 
 #### 7.3.1 Content Addressing with relative roots
 
@@ -1159,16 +1169,10 @@ the API route is accessed. Clients should expect finding servers not implementin
 Changing the publicly visible ownership of actor data requires the chain of trust to be maintained.
 If an "old" account wants to change the publicly visible ownership of its data, the "old"
 account must prove that it possesses the private keys that were used to
-sign the messages. This is done by signing a challenge string with the private
+sign the messages. This is done by signing a [challenge string](#42-challenge-strings) with the private
 keys. If the server verifies the challenge, it authorizes the new account to re-sign the old
 account's messages signed with the verified key. Instead of overwriting the message, a new message variant
 with the new signature is created, preserving the old message.
-
-All challenge strings and their responses created in the context of account migration must be made
-public to ensure that a chain of trust can be maintained. A third party should be able to verify that
-the challenge string, which authorized the ownership change of an accounts' data was signed by the
-correct private key. The API routes needed to verify challenges as an outsider are documented in the
-API documentation.
 
 Implementations and protocol extensions should carefully consider the extent of messages that can be
 re-signed.
@@ -1377,7 +1381,8 @@ federation ID of the actor they want to communicate with. Consider the following
 To be discoverable, an actor must add a key-value pair to their home server's database. The
 key is the name of the service, and the value is the base URL of the server hosting the service.
 
-The API routes for managing discoverability are documented in the API documentation.
+The API routes for managing discoverability are documented in the
+[API documentation](https://apidocs.polyproto.org)
 
 ### 9.1.1 Changing a primary service provider
 
