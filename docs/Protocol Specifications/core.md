@@ -36,11 +36,13 @@ The version number specified here also applies to the [API documentation](https:
       - [6.2.1 Message verification](#621-message-verification)
       - [6.2.2 Handling of external messages](#622-handling-of-external-messages)
     - [6.3 Private key loss prevention and private key recovery](#63-private-key-loss-prevention-and-private-key-recovery)
-    - [6.4 Cryptographic recommendations](#64-cryptographic-recommendations)
-    - [6.5 Best practices](#65-best-practices)
-      - [6.5.1 Signing keys and ID-Certs](#651-signing-keys-and-id-certs)
-      - [6.5.2 Home server operation and design](#652-home-server-operation-and-design)
-      - [6.5.3 Private key loss prevention and private key recovery](#653-private-key-loss-prevention-and-private-key-recovery)
+    - [6.4 Caching of ID-Certs](#64-caching-of-id-certs)
+      - [6.4.1 Verifying that a newly retrieved ID-Cert is not out-of-date](#641-verifying-that-a-newly-retrieved-id-cert-is-not-out-of-date)
+    - [6.5 Cryptographic recommendations](#65-cryptographic-recommendations)
+    - [6.6 Best practices](#66-best-practices)
+      - [6.6.1 Signing keys and ID-Certs](#661-signing-keys-and-id-certs)
+      - [6.6.2 Home server operation and design](#662-home-server-operation-and-design)
+      - [6.6.3 Private key loss prevention and private key recovery](#663-private-key-loss-prevention-and-private-key-recovery)
   - [7. Migrations](#7-migrations)
     - [7.1 Identity migration](#71-identity-migration)
       - [7.1.1 Redirects](#711-redirects)
@@ -405,7 +407,7 @@ Actors must use a separate ID-Cert for each client or session they use. Separati
 limits the potential damage a compromised ID-Cert can cause.
 
 For two implementations of polyproto to be interoperable, they must support an overlapping set of
-digital signature algorithms. See [Section 6.4](#64-cryptographic-recommendations) for more
+digital signature algorithms. See [Section 6.5](#65-cryptographic-recommendations) for more
 information on cryptographic recommendations.
 
 #### 6.1.1 Structure of an ID-Cert
@@ -607,7 +609,8 @@ require a second factor of authentication.
 !!! info "Revocation detection"
 
     For information on how revocation detection is supposed to be handled, concern the excerpt
-    <a href="#idcert-cache-ttls">"Caching ID-Certs and cache TTLs"</a>
+    <a href="#idcert-cache-ttls">"Caching ID-Certs and cache TTLs"</a> 
+    TODO fix link
 
 TODO: Write about identifier changing and how to handle that across servers
 TODO: Perhaps recommend never using more than a specified number of certificates at once to make
@@ -626,6 +629,16 @@ to the client. This certificate is proof that the home server attests to the cli
 [section 6.1](#61-home-server-signed-certificates-for-public-client-identity-keys-id-cert) for more
 information about the certificate.
 
+The private key from the key pair that the server has generated an ID-Cert for will be used to create
+digital signatures for the contents of all messages sent by this session. This digital signature must
+be attached to the message itself, so that other actors can verify the integrity of the message
+contents.
+
+!!! info
+
+    polyproto does not define what messages themselves look like, apart from this hard requirement.
+    The format of a message is up to polyproto extensions and implementations to define.
+
 #### 6.2.1 Message verification
 
 To ensure message integrity through signing, clients and servers must verify
@@ -638,124 +651,49 @@ ID-Cert attached to the message and ensuring its public key matches the sender's
     Signature verification must always be "strict", meaning that signature schemes producing malleable
     signatures and [weak public keys](https://en.wikipedia.org/wiki/Weak_key) must be rejected.
 
-**Example:** Say we have two actors. Alice, who is registered on Server A, and Bob, who is registered
-on Server B. Alice and Bob **are having a conversation on Server B**. Given a signed message from Alice,
-such as Bob would receive from Server B, the process of verifying the signature would look like this:
+???+ example
 
-```mermaid
-sequenceDiagram
-autonumber
+    Say we have two actors. Alice, who is registered on Server A, and Bob, who is registered
+    on Server B. Alice and Bob **are having a conversation on Server B**. Given a signed message from Alice,
+    such as Bob would receive from Server B, the process of verifying the signature would look like this:
 
-actor b as Bob
-participant sb as Server B
-participant sa as Server A
+    ```mermaid
+    sequenceDiagram
+    autonumber
 
-sb->>b: Alice's signed message
-opt Server A's ID-Cert is not cached on Bob's client
-  b->>sa: Request Server A ID-Cert
-  sa->>b: Server A ID-Cert
-end
-opt Alice's ID-Cert is not cached on Bob's client
-  b->>sb: Request Alice's ID-Cert
-  opt Alice's ID-Cert is not cached on Server B
-  sb->>sa: Request Alice's ID-Cert
-  sa->>sb: Alice's ID-Cert
-  end
-  sb->>b: Alice's ID-Cert
-end
-b->>b: Verify signature of Alice's message (Fig. 4)
-```
+    actor b as Bob
+    participant sb as Server B
+    participant sa as Server A
 
-*Fig. 3: Sequence diagram of a successful message signature verification.*
-
-Bob's client and Server B should now cache Server A's and Alice's ID-Certs, to avoid having to
-request them again.
-
-<a name="idcert-cache-ttls" id="idcert-cache-ttls"></a>
-
-The TTL (time to live) of these cached items should be relatively short. Recommended values
-are between one (1) and twelve (12) hours. Cached ID-Certs must be evicted from
-the cache, after the TTL has expired. Expired cached ID-Certs must not be used for signature
-verification of new messages, even if the client cannot renew its cache.
-
-??? question "Why not select longer lived TTLs for cached ID-Certs?"
-
-    Suppose that an actors' private identity key is compromised. The actor notices this, and revokes
-    their ID-Cert. If the TTL of cached ID-Certs is too long, the compromised ID-Cert might still be
-    used for signature verification for a long amount of time, even after the ID-Cert has been revoked.
-    This is a problem in the following hypothetical scenario with malicious actor "Eve" and victim
-    "Alice":
-
-    1. Alice's private identity key is compromised.
-    2. Malicious actor Eve logs onto Server X, which Alice has never connected to before.
-    3. Alice notices the breach, requesting the revocation of her ID-Cert on all servers she is
-       connected to.
-    4. Server X does not get this revocation message, as Alice does not know about her connection to
-       Server X.
-    5. Eve can now impersonate Alice on Server X, for as long as the TTL of the cached ID-Cert on
-       Server X has not expired.
-
-If the verification fails, Bob's client should try to re-request the key from Server B first.
-Should the verification fail again, Bob's client can try to request Alice's public identity key
-and ID-Cert from Server A (Alice's home server). The signature verification process should then be
-re-tried. Should the verification still not succeed, the message should be treated with extreme
-caution.
-
-```mermaid
-sequenceDiagram
-autonumber
-
-actor b as Bob
-participant sb as Server B
-participant sa as Server A
-
-b->>b: Verify signature of Alice's message, attempt 1
-alt Verification fails
-  b->>sb: Request Alice's ID-Cert
-  sb->>b: Alice's ID-Cert
-  b->>b: Verify signature of Alice's message, attempt 2
-  opt Verification fails again
-    b->>sa: Request Alice's ID-Cert
-    sa->>b: Alice's ID-Cert
-    b->>b: Verify signature of Alice's message, final attempt
-    opt Verification is still unsuccessful
-      b-->b: Treat Alice's message with extreme caution.
+    sb->>b: Alice's signed message
+    opt Server A's ID-Cert is not cached on Bob's client
+      b->>sa: Request Server A ID-Cert
+      sa->>b: Server A ID-Cert
     end
-  end
-else Verification succeeds
-  b-->b: Treat Alice's message as verified.
-end
-```
+    opt Alice's ID-Cert is not cached on Bob's client
+      b->>sb: Request Alice's ID-Cert
+      opt Alice's ID-Cert is not cached on Server B
+      sb->>sa: Request Alice's ID-Cert
+      sa->>sb: Alice's ID-Cert
+      end
+      sb->>b: Alice's ID-Cert
+    end
+    b->>b: Verify signature of Alice's message (Fig. 4)
+    ```
 
-*Fig. 4: Sequence diagram showing how message verification should be handled if the first attempt
-to verify the signature fails.*
+    *Fig. 3: Sequence diagram of a successful message signature verification.*
+
+    !!! abstract
+
+        You should read about the details of ID-Cert lookup load distribution via caching and why
+        Bob should first try to request Alice's certificate from Server B instead of Alice's home
+        server (Server A) in the [corresponding section of this protocol specification](#64-caching-of-id-certs).
+        Understanding both sections is crucial for building secure, scalable and compliant
+        implementations of polyproto.
 
 TODO: IDEA: To keep other servers from not re-requesting the idcert after the ttls has passed, the
 idcert should have some sort of timestamp that is signed by the original server, so that clients can
 verify that a server has the most up-to-date idcert cached for a user -flori
-
-??? question "Why should Bob's client request Alice's public identity key from Server B first, if Alice's identity lives on Server A?"
-
-    In the case where `alice@server-a.example.com` and `bob@server-b.example.com` are having a
-    conversation where the communications server is any server other than `server-a.example.com`,
-    Bob should request Alice's ID-Cert from that server first, instead of from `server-a.example.com`.
-
-    For this example, where Alice "is on" Server A and Bob "is on" Server B:
-
-    Bob's client could request Alice's public identity key from Server A, instead of Server B.
-    However, this is discouraged, as it
-
-    - Generates unnecessary load on Server A; Doing it this way distributes the load of public
-      identity key requests more fairly, as the server that the message was sent on is the one that
-      has to process the bulk of public identity key requests.
-    - Would expose unnecessary metadata to Server A; Server A does not need to know who exactly
-      Alice is talking to, and when. Only Server B, Alice and Bob need to know this information.
-      Always requesting the public identity key from Server A might expose this information to
-      Server A.
-
-    Clients should only use Server A as a fallback for public identity key verification, if Server B
-    does not respond to the request for Alice's public identity key, or if the verification fails
-    with the public identity key from Server B.
 
 !!! info
 
@@ -810,7 +748,184 @@ The APIs for managing encrypted private identity keys are documented in the
 - [Delete encrypted private key material](/APIs/Core/Routes%3A Registration needed/#delete-delete-encrypted-private-key-material)
 - [Get encrypted private key material upload size limit](/APIs/Core/Routes%3A Registration needed/#options-get-encrypted-private-key-material-upload-size-limit)
 
-### 6.4 Cryptographic recommendations
+### 6.4 Caching of ID-Certs
+
+The caching of ID-Certs is an important mechanism in polyproto to aid in fairly distributing the load
+generated by ID-Cert lookups to the servers generating the traffic, not to the server the ID-Cert
+is actually from. This practice should help make the operation of low-resource home servers, used
+exclusively for hosting identities, more viable.
+
+This section of the protocol definition defines required behaviors related to the correct caching
+of ID-Certs for both home servers and clients.
+
+To make this section more understandable, we will bring back the example from section 6.2.1:
+
+???+ quote "Revisiting the example scenario from section 6.2.1"
+
+    !!! example
+
+        Say we have two actors. Alice, who is registered on Server A, and Bob, who is registered
+        on Server B. Alice and Bob **are having a conversation on Server B**. Given a signed message
+        from Alice, such as Bob would receive from Server B, the process of verifying the signature
+        would look like this:
+
+        ```mermaid
+        sequenceDiagram
+        autonumber
+
+        actor b as Bob
+        participant sb as Server B
+        participant sa as Server A
+
+        sb->>b: Alice's signed message
+        opt Server A's ID-Cert is not cached on Bob's client
+          b->>sa: Request Server A ID-Cert
+          sa->>b: Server A ID-Cert
+        end
+        opt Alice's ID-Cert is not cached on Bob's client
+          b->>sb: Request Alice's ID-Cert
+          opt Alice's ID-Cert is not cached on Server B
+          sb->>sa: Request Alice's ID-Cert
+          sa->>sb: Alice's ID-Cert
+          end
+          sb->>b: Alice's ID-Cert
+        end
+        b->>b: Verify signature of Alice's message (Fig. 4)
+        ```
+
+        *Fig. 3: Sequence diagram of a successful message signature verification.*
+
+In the case where `alice@server-a.example.com` and `bob@server-b.example.com` are having a
+conversation where the communications server is any server other than `server-a.example.com`,
+Bob should request Alice's ID-Cert from that server first, instead of from `server-a.example.com`.
+
+??? abstract "Further notes on why we consider this cached distribution process a good idea"
+
+    Bob's client could request Alice's public identity key from Server A, instead of Server B.
+    However, this is discouraged, as it
+
+    - Generates unnecessary load on Server A; Doing it this way distributes the load of public
+      identity key requests more fairly, as the server that the message was sent on is the one that
+      has to process the bulk of public identity certificate requests.
+    - Would expose unnecessary metadata to Server A; Server A does not need to know who exactly
+      Alice is talking to, and when. Only Server B, Alice and Bob need to know this information.
+      Always requesting the public identity key from Server A might expose this information to
+      Server A.
+
+    Clients should only use Server A as a fallback for public identity key verification, if Server B
+    does not respond to the request for Alice's public identity key, or if the verification fails
+    with the public identity key from Server B. Security considerations listed in this section of
+    the protocol definition ensure that this cached distribution process is safe and trustworthy
+
+Both Bob's client and Server B should now cache Server A's and Alice's ID-Certs, to avoid having to
+request them again.
+
+The TTL (time to live) of these cached items should be relatively short. Recommended values
+are between one (1) and twelve (12) hours. Cached ID-Certs must be evicted from
+the cache, after the TTL has expired. Expired cached ID-Certs must not be used for signature
+verification of new messages, even if the client cannot renew its cache. All of this applies to both
+servers and clients. The TTL for a certificates' cache duration is dictated by the home server, which
+that certificate has been issued by. You can read more on that in
+[subsection 1 of this section](#641-verifying-that-a-newly-retrieved-id-cert-is-not-out-of-date).
+
+???+ question "Why not select longer lived TTLs for cached ID-Certs?"
+
+    Suppose that an actors' private identity key is compromised. The actor notices this, and revokes
+    their ID-Cert. If the TTL of cached ID-Certs is too long, the compromised ID-Cert might still be
+    used for signature verification for a long amount of time, even after the ID-Cert has been revoked.
+    This is a problem in the following hypothetical scenario with malicious actor "Eve" and victim
+    "Alice":
+
+    ??? example "Downside of using higher values for a TTL"
+
+        1. One of Alice's private identity keys is compromised.
+        2. Malicious actor Eve logs onto Server X, which Alice has never connected to before, using
+           Alice's ID-Cert of which the corresponding private identity key has been compromised.
+        3. In the meantime, Alice notices the breach, requesting the revocation of her ID-Cert on
+           all servers she is connected to.
+        4. Server X does not get this revocation message, as Alice does not know about her connection
+           to Server X, where Eve is impersonating Alice.
+        5. Eve can now impersonate Alice on Server X for as long as the TTL of the cached ID-Cert on
+           Server X has not expired. With a high value, this could be a long time.
+
+If the verification fails, Bob's client should try to re-request the key from Server B first.
+Should the verification fail again, Bob's client can try to request Alice's public identity key
+and ID-Cert from Server A (Alice's home server). The signature verification process should then be
+re-tried. Should the verification still not succeed, the message should be treated with extreme
+caution.
+
+```mermaid
+sequenceDiagram
+autonumber
+
+actor b as Bob
+participant sb as Server B
+participant sa as Server A
+
+b->>b: Verify signature of Alice's message, attempt 1
+alt Verification fails
+  b->>sb: Request Alice's ID-Cert
+  sb->>b: Alice's ID-Cert
+  b->>b: Verify signature of Alice's message, attempt 2
+  opt Verification fails again
+    b->>sa: Request Alice's ID-Cert
+    sa->>b: Alice's ID-Cert
+    b->>b: Verify signature of Alice's message, final attempt
+    opt Verification is still unsuccessful
+      b-->b: Treat Alice's message with extreme caution.
+    end
+  end
+else Verification succeeds
+  b-->b: Treat Alice's message as verified.
+end
+```
+
+*Fig. 4: Sequence diagram showing how message verification should be handled if the first attempt
+to verify the signature fails.*
+
+After evicting a cached ID-Cert:
+
+- A client should request an up-to-date ID-Cert of the target actor from the server where the actor
+  was last seen by the client.
+- A server should request an up-to-date ID-Cert from the target actors' home server.
+
+!!! info
+
+    It is *not* of vital importance that a client requests an ID-Cert of an actor whose ID-Cert has
+    just been evicted from the cache from the server, where the actor was last seen by the client
+    *precisely*. This means, that a client application doesn't necessarily need to update an internal
+    state of where that actor has last been seen every single time that actor sends a message somewhere.
+    This internal state update could instead happen every 5, 30, or even 60 seconds. What *is*
+    important, however, is that this state update does eventually happen within a reasonable amount
+    of time, to help achieve the goal of dynamic server load distribution.
+
+#### 6.4.1 Verifying that a newly retrieved ID-Cert is not out-of-date
+
+While the goal of achieving dynamic server load distribution to increase the viability of small,
+low-resource home servers is a noble one, this goal must not undermine P2s trust model, which other
+aspects of the protocol work very hard to uphold. Retrieving ID-Certs from a middleman introduces
+a new attack surface which must be mitigated. Consider the following example:
+
+???+ example "Example attack abusing blind middleman trust"
+
+    1. One of Alice's private identity keys is compromised.
+    2. Malicious actor Eve logs onto a malicious Server X which is controlled by Eve, impersonating
+       Alice by using Alice's ID-Cert of which the corresponding private identity key has been compromised.
+    3. In the meantime, Alice notices the breach, requesting the revocation of her ID-Cert on
+       all servers she is connected to.
+    4. Server X does not care for this revocation message, as it is malicious (attacker controlled)
+    5. Eventually, the TTL for this compromised certificate expires. Users on Server X contact the
+       server for the latest certificate of Alice.
+    6. Server X responds with the compromised ID-Cert, claiming that this is the most up-to-date
+       ID-Cert, even though it has been revoked.
+    7. Through all users trusting Server X blindly, Eve and Server X can impersonate Alice for as
+       long as Alice's compromised ID-Cert would have been valid for (valid-not-after attribute in X.509
+       certificates). Until then, users do not notice that this certificate has been revoked and
+       should no longer be valid.
+
+This kind of attack has been considered and mitigated in polyproto. bla
+
+### 6.5 Cryptographic recommendations
 
 For two implementations of polyproto to be interoperable, they must support an overlapping set of
 digital signature algorithms.
@@ -819,12 +934,12 @@ If technically practical, all implementations of polyproto must support use of t
 signature algorithm for signing messages and generating ID-Certs. The use of the RSA algorithm for
 digital signatures [is heavily discouraged](https://blog.trailofbits.com/2019/07/08/fuck-rsa/).
 
-### 6.5 Best practices
+### 6.6 Best practices
 
 The following subsections are dedicated to documenting best practices to consider when
 implementing polyproto.
 
-#### 6.5.1 Signing keys and ID-Certs
+#### 6.6.1 Signing keys and ID-Certs
 
 - When a server is asked to generate a new ID-Cert for an actor, it must make sure that the CSR is
   valid and, if set, has an expiry date less than or equal to the expiry date of the server's own ID-Cert.
@@ -837,12 +952,12 @@ implementing polyproto.
   changed, the client/server in question should update their cached ID-Cert for the actor in
   question, taking into account the session ID of the new identity key pair.
 
-#### 6.5.2 Home server operation and design
+#### 6.6.2 Home server operation and design
 
 - Use a caching layer for your home server to handle the potentially large amount of requests for
   ID-Certs without putting unnecessary strain on the database.
 
-#### 6.5.3 Private key loss prevention and private key recovery
+#### 6.6.3 Private key loss prevention and private key recovery
 
 - It is a good idea for home servers to limit the upload size and available upload slots for encrypted
   private identity keys.
