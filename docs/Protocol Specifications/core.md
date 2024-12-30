@@ -858,15 +858,17 @@ participant sb as Server B
 participant sa as Server A
 
 b->>b: Verify signature of Alice's message, attempt 1
-alt Verification fails
+alt Verification fails or ID-Cert is out of date
   b->>sb: Request Alice's ID-Cert
   sb->>b: Alice's ID-Cert
+  b->>b: Check that the received ID-Cert is up-to-date, as defined in section 6.4.1
   b->>b: Verify signature of Alice's message, attempt 2
-  opt Verification fails again
+  opt Verification fails again or ID-Cert is out of date
     b->>sa: Request Alice's ID-Cert
     sa->>b: Alice's ID-Cert
+    b->>b: Check that the received ID-Cert is up-to-date, as defined in section 6.4.1
     b->>b: Verify signature of Alice's message, final attempt
-    opt Verification is still unsuccessful
+    opt Verification is still unsuccessful or ID-Cert is still out of date
       b-->b: Treat Alice's message with extreme caution.
     end
   end
@@ -876,7 +878,8 @@ end
 ```
 
 *Fig. 4: Sequence diagram showing how message verification should be handled if the first attempt
-to verify the signature fails.*
+to verify the signature fails, continuing the example of a conversation happening on a server
+"B" between Bob from a random server and Alice from server A*
 
 After evicting a cached ID-Cert:
 
