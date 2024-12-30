@@ -608,9 +608,7 @@ require a second factor of authentication.
 
 !!! info "Revocation detection"
 
-    For information on how revocation detection is supposed to be handled, concern the excerpt
-    <a href="#idcert-cache-ttls">"Caching ID-Certs and cache TTLs"</a> 
-    TODO fix link
+    For information on how revocation detection is supposed to be handled, concern [section 6.4](#64-caching-of-id-certs)
 
 TODO: Write about identifier changing and how to handle that across servers
 TODO: Perhaps recommend never using more than a specified number of certificates at once to make
@@ -654,8 +652,9 @@ ID-Cert attached to the message and ensuring its public key matches the sender's
 ???+ example
 
     Say we have two actors. Alice, who is registered on Server A, and Bob, who is registered
-    on Server B. Alice and Bob **are having a conversation on Server B**. Given a signed message from Alice,
-    such as Bob would receive from Server B, the process of verifying the signature would look like this:
+    on Server B. Alice and Bob **are having a conversation on Server B**. Given a signed message from
+    Alice, such as Bob would receive from Server B, the process of verifying the signature would look
+    like this:
 
     ```mermaid
     sequenceDiagram
@@ -690,10 +689,6 @@ ID-Cert attached to the message and ensuring its public key matches the sender's
         server (Server A) in the [corresponding section of this protocol specification](#64-caching-of-id-certs).
         Understanding both sections is crucial for building secure, scalable and compliant
         implementations of polyproto.
-
-TODO: IDEA: To keep other servers from not re-requesting the idcert after the ttls has passed, the
-idcert should have some sort of timestamp that is signed by the original server, so that clients can
-verify that a server has the most up-to-date idcert cached for a user -flori
 
 !!! info
 
