@@ -933,6 +933,12 @@ question with the `cacheValidNotBefore` timestamp and the `cacheValidNotAfter` t
 generating the signature of the resulting, concatenated string using the private identity key of
 the server.
 
+!!! note "Note/Fun fact"
+
+    Note how the cache validity period is determined by the "original" home server and automatically
+    propagated through - and respected by - every server and client caching the certificate. If another
+    server tried to manipulate the cache validity period, they would get found out almost immediately.
+
 !!! warning
 
     Concatenation operations are not commutative.
