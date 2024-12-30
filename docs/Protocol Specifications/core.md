@@ -593,14 +593,21 @@ of the key change, it must be informed of the change upon reconnection.
     polyproto does not require the use of CRLs or OCSP.
 
 An ID-Cert can be revoked by the home server or the actor at any time. This can be done for various
-reasons, such as a suspected leak of the private identity key. When an ID-Cert is revoked, the server
-must revoke the session associated with the revoked ID-Cert. Revoking an ID-Cert is considered a
-[sensitive action](#412-sensitive-actions) and therefore should require a second factor of authentication.
+reasons, such as a suspected leak of the private identity key.
+
+When an ID-Cert is revoked, the server must revoke the session associated with the revoked ID-Cert.
+Revoking an ID-Cert is considered a [sensitive action](#412-sensitive-actions) and therefore should
+require a second factor of authentication.
 
 !!! info
 
     The above paragraph is true for both foreign and home servers. The API routes associated with
     revoking an ID-Cert are the same regardless of the server type.
+
+!!! info "Revocation detection"
+
+    For information on how revocation detection is supposed to be handled, concern the excerpt
+    <a href="#idcert-cache-ttls">"Caching ID-Certs and cache TTLs"</a>
 
 TODO: Write about identifier changing and how to handle that across servers
 TODO: Perhaps recommend never using more than a specified number of certificates at once to make
@@ -632,7 +639,7 @@ ID-Cert attached to the message and ensuring its public key matches the sender's
     signatures and [weak public keys](https://en.wikipedia.org/wiki/Weak_key) must be rejected.
 
 **Example:** Say we have two actors. Alice, who is registered on Server A, and Bob, who is registered
-on Server B. Alice and Bob are having a conversation on Server B. Given a signed message from Alice,
+on Server B. Alice and Bob **are having a conversation on Server B**. Given a signed message from Alice,
 such as Bob would receive from Server B, the process of verifying the signature would look like this:
 
 ```mermaid
@@ -644,6 +651,10 @@ participant sb as Server B
 participant sa as Server A
 
 sb->>b: Alice's signed message
+opt Server A's ID-Cert is not cached on Bob's client
+  b->>sa: Request Server A ID-Cert
+  sa->>b: Server A ID-Cert
+end
 opt Alice's ID-Cert is not cached on Bob's client
   b->>sb: Request Alice's ID-Cert
   opt Alice's ID-Cert is not cached on Server B
@@ -652,10 +663,6 @@ opt Alice's ID-Cert is not cached on Bob's client
   end
   sb->>b: Alice's ID-Cert
 end
-opt Server A's ID-Cert is not cached on Bob's client
-  b->>sa: Request Server A ID-Cert
-  sa->>b: Server A ID-Cert
-end
 b->>b: Verify signature of Alice's message (Fig. 4)
 ```
 
@@ -663,6 +670,8 @@ b->>b: Verify signature of Alice's message (Fig. 4)
 
 Bob's client and Server B should now cache Server A's and Alice's ID-Certs, to avoid having to
 request them again.
+
+<a name="idcert-cache-ttls" id="idcert-cache-ttls"></a>
 
 The TTL (time to live) of these cached items should be relatively short. Recommended values
 are between one (1) and twelve (12) hours. Cached ID-Certs must be evicted from
@@ -721,7 +730,17 @@ end
 *Fig. 4: Sequence diagram showing how message verification should be handled if the first attempt
 to verify the signature fails.*
 
-??? question "Why should Bob's client request Alice's public identity key from his own server first?"
+TODO: IDEA: To keep other servers from not re-requesting the idcert after the ttls has passed, the
+idcert should have some sort of timestamp that is signed by the original server, so that clients can
+verify that a server has the most up-to-date idcert cached for a user -flori
+
+??? question "Why should Bob's client request Alice's public identity key from Server B first, if Alice's identity lives on Server A?"
+
+    In the case where `alice@server-a.example.com` and `bob@server-b.example.com` are having a
+    conversation where the communications server is any server other than `server-a.example.com`,
+    Bob should request Alice's ID-Cert from that server first, instead of from `server-a.example.com`.
+
+    For this example, where Alice "is on" Server A and Bob "is on" Server B:
 
     Bob's client could request Alice's public identity key from Server A, instead of Server B.
     However, this is discouraged, as it
