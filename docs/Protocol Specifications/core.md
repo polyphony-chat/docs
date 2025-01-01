@@ -595,7 +595,11 @@ of the key change, it must be informed of the change upon reconnection.
     polyproto does not require the use of CRLs or OCSP.
 
 An ID-Cert can be revoked by the home server or the actor at any time. This can be done for various
-reasons, such as a suspected leak of the private identity key.
+reasons, such as
+
+- a suspected leak of the private identity key
+- the changing of an actors' federation identifier.
+- keeping the number of ID-Certs associated with an actor within a desired boundary
 
 When an ID-Cert is revoked, the server must revoke the session associated with the revoked ID-Cert.
 Revoking an ID-Cert is considered a [sensitive action](#412-sensitive-actions) and therefore should
@@ -609,10 +613,6 @@ require a second factor of authentication.
 !!! info "Revocation detection"
 
     For information on how revocation detection is supposed to be handled, concern [section 6.4](#64-caching-of-id-certs)
-
-TODO: Write about identifier changing and how to handle that across servers
-TODO: Perhaps recommend never using more than a specified number of certificates at once to make
-      re-signing easier
 
 ### 6.2 Actor identity keys and message signing
 
@@ -706,15 +706,17 @@ clients. If a P2 extension does not explicitly allow for this, both servers and 
 reject such messages. Clients receiving unexpected external messages should inform the actor about
 the fact that a server has tried to send them an invalid, possibly malicious message.
 
+TODO Make APIs for this or remove this paragraph ^
+
 Before a polyproto server forwards such a message to clients, it must add an "external" property to
 the message object. If possible in the data format used, this property should be set to a boolean
-value of `true`. If the data format does not support boolean values, the property should be set to
-a string value of `true` in all lowercase characters. This property must be passed along to the
-client or clients receiving the message.
+value of `true`, or some other value that can be interpreted in an equivalent manner.
+This property must be passed along to the client or clients receiving the message.
 
-If the actor receiving this external message is human, the client must inform the actor that the
-message is external, and that the message has not been signed by the sender. External messages
-should be distinguishable from signed messages at first glance.
+If the actor receiving this external message is human or otherwise sentient, the client application
+should inform the actor that the message is external, and that the message has not been signed by
+the sender. External messages should be distinguishable from signed messages at first glance, especially
+when viewed through a client application.
 
 ### 6.3 Private key loss prevention and private key recovery
 
@@ -730,7 +732,7 @@ All encryption and decryption operations must be done client-side.
 If any uncertainty about the availability of the home server exists, clients should regularly
 download their encrypted private identity keys from the server and store them in a secure location.
 Ideally, each client should immediately download their encrypted private identity keys from the
-server after connecting. Clients should never store key backups in an unencrypted manner.
+server after connecting. Clients must never store key backups in an unencrypted manner.
 
 Whether an actor uploads their encrypted private identity keys to the server is their own choice.
 It is also recommended backing up the encrypted private identity keys in some other secure location.
@@ -738,10 +740,29 @@ It is also recommended backing up the encrypted private identity keys in some ot
 The APIs for managing encrypted private identity keys are documented in the
 [API documentation](https://apidocs.polyproto.org).
 
-- [Upload encrypted private key material](/APIs/Core/Routes%3A Registration needed/#post-upload-encrypted-private-key-material)
-- [Get encrypted private key material](/APIs/Core/Routes%3A Registration needed/#get-get-encrypted-private-key-material)
-- [Delete encrypted private key material](/APIs/Core/Routes%3A Registration needed/#delete-delete-encrypted-private-key-material)
-- [Get encrypted private key material upload size limit](/APIs/Core/Routes%3A Registration needed/#options-get-encrypted-private-key-material-upload-size-limit)
+!!! tip
+
+    Actors can make use of the [migration APIs](#7-migrations) to reduce the number of ID-Certs/keys
+    that they must hold on to, to migrate their account in the future.
+
+    For example: If an actor currently has messages signed with 20 different ID-Certs, but only uses
+    2 clients (meaning that the actor always needs two active ID-Certs - one for each client),
+    the 18 outdated/unused ID-Certs could be consolidated into one ID-Cert through [re-signing the messages](#72-re-signing-messages)
+    made with the outdated ID-Certs with any other ID-Cert.
+
+    !!! warning
+
+        This drastically reduces the number of ID-Certs the actor needs to keep track of and hold on
+        to, which may make re-signing messages in the future easier.
+        
+        However, doing this also introduces additional risks, as the overwhelming majority of the
+        actors' message history is now associated with one ID-Cert. **An accidental leak of the
+        private identity key of that ID-Cert could likely not be recovered from**, since all associated
+        messages are potentially under control by those who know the private identity key.
+
+        Actors and polyproto software developers must keep this information in mind, should
+        consider whether the risks and benefits of this strategy are worth it for their usecase and
+        can introduce additional strategies to manage the number of "relevant" private keys safely.
 
 ### 6.4 Caching of ID-Certs
 
