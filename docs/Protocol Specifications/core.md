@@ -5,10 +5,12 @@ weight: 0
 
 # polyproto Specification
 
-**v0.1.0-alpha.1** - Treat this as an unfinished draft.
+Version of this specification document: **v0.1.0-alpha.1** - Treat this as an unfinished draft.
 
-[Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
-The version number specified here also applies to the [API documentation](https://apidocs.polyproto.org).
+Version of the [API documentation](https://apidocs.polyproto.org) applicable for this version
+of the specification document: **v0.1.0-alpha.1**
+
+[Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification
 
 - [polyproto Specification](#polyproto-specification)
   - [1. Terminology used in this document](#1-terminology-used-in-this-document)
@@ -263,7 +265,7 @@ APIs for this purpose are defined in the [API documentation](/APIs).
 
 !!! warning
 
-    Sensitive actions should require a second factor of authentication, apart from the actors'
+    Sensitive actions require a second factor of authentication, apart from the actors'
     private key. This second factor can be anything from a password to TOTP or hardware keys, depending
     on the authentication method or standard used.
 
@@ -278,10 +280,16 @@ Sensitive actions include, but are not limited to:
 - Changing the actors' federation ID
 - Changing the actors' other factors of authentication
 - Server administration actions
+- Deleting encrypted private key material from a home server
 
-Clients should be prepared to gracefully handle the case where a sensitive action fails due to
-a lack of a second factor of authentication, and should prompt the user to provide the second
-factor of authentication.
+HTTP API routes marked as sensitive actions require a header `X-P2-Sensitive-Solution`, where the
+header value represents the second factor of authentication chosen.
+
+!!! example
+
+    If the chosen second factor of authentication is TOTP, the value of this header is the current
+    TOTP verification code. If the chosen second factor of authentication is a password, then the
+    value of this header is to be that password.
 
 ### 4.2 Challenge strings
 
@@ -290,6 +298,11 @@ possession, without revealing the private key itself. These strings, ranging fro
 UTF-8 characters, have a UNIX timestamp lifetime. If the current timestamp surpasses this
 lifetime, the challenge fails. The actor signs the string, sending the signature and their
 ID-Cert to the server, which then verifies the signature's authenticity.
+
+!!! warning
+
+    Challenge strings provide a different set of security guarantees than [sensitive actions](#412-sensitive-actions)
+    do. They are not to be used interchangably.
 
 All challenge strings and their responses created must be made
 public to ensure that a chain of trust can be maintained. A third party should be able to verify that
@@ -306,6 +319,31 @@ correct private key. The API routes needed to verify challenges as an outsider a
 
 Challenge strings can counteract replay attacks. Their uniqueness ensures that even identical requests
 have different signatures, preventing malicious servers from successfully replaying requests.
+
+Accessing a challenge string protected route is done as follows:
+
+```mermaid
+sequenceDiagram
+autonumber
+
+actor a as Client A
+participant s as Server
+
+note over a: Clients have to provide session<br/>token to request challenge string
+a->>s: Request challenge string
+s->>s: Note, that Client A requests challenge<br/>string for given session identified by token
+s->>a: Challenge string
+a->>a: Complete challenge by signing<br/>string with private key associated<br/>with pubkey of this session
+a->>s: Call challenge string protected route with<br/>`X-P2-Challenge-String-Solution` header,<br/>where the value is equal to the challenge string solution
+s->>s: Verify challenge
+alt
+  note over s: Challenge string solution is valid
+  s->>s: Let Client A perform the challenge string protected action
+else
+  note over s: Challenge string solution is invalid
+  s->>s: Return 403, indicating that<br/>the challenge string solution is invalid,<br/>with optional RetryAfter header to indicate how<br/>long the client should wait before making a<br/>follow-up request.
+end
+```
 
 ### 4.3 Protection against misuse by malicious home servers
 
@@ -513,36 +551,32 @@ malicious server cannot generate an identity key pair for Alice, which is signed
 
 #### 6.1.3 Key rotation
 
-A session can choose to rotate their ID-Cert at any time. This is done by generating a new identity
-key pair, using the new private key to generate a new CSR, and sending the new Certificate Signing
-Request to the home server, along with at least one new KeyPackage and a corresponding 'last resort'
-KeyPackage, if encryption is offered. The home server will then generate the new ID-Cert, given that
-the CSR is valid and that the server accepts the creation of new ID-Certs at this time.
-
-Rotating keys is done by using an API route, which requires authorization.
-
-!!! note
-
-    Sessions can request a new ID-Cert for any session of the same actor. Most other, currently existing
-    services also allow for this, as it is a common use case for user to want to, perhaps, log out of
-    devices they no longer use. Depending on your use case, this might be a security concern. Whether
-    and how this risk is mitigated is up to concrete implementations.
+A session can choose to re-generate their ID-Cert at any time. This is done by taking an identity
+key pair, using the private key to generate a new CSR, and sending the new Certificate Signing
+Request to the home server. The home server will then generate the new ID-Cert, given that
+the CSR is valid. Actors can only re-generate ID-Certs for their current session, identified by their
+session ID and session token. Other sessions can only be invalidated by [revoking them](#614-early-revocation-of-id-certs).
+Re-generating an ID-Cert is a [sensitive action](#412-sensitive-actions), performed by using the
+appropriate API route.
 
 Home servers must keep track of the ID-Certs of all users (and their clients) registered on them,
 and must offer a clients' ID-Cert for a given timestamp on request. This is to ensure messages
 sent by users, even ones sent a long time ago, can be verified by other servers and their users.
 This is because the public key of an actor likely changes over time and users must sign all messages
-they send to servers. Likewise, a client should also keep all of its own ID-Certs stored
-perpetually, to potentially verify its identity in case of a migration.
+they send to servers.
 
 Users must hold on to all of their past key pairs, as they might need them to
 [migrate their account in the future](#7-migrations). How this is done is specified in
 [section 6.3: Private key loss prevention and private key recovery](#63-private-key-loss-prevention-and-private-key-recovery).
 
 The lifetime of an actor ID-Cert should be limited to a maximum of 60 days. This is to ensure that even
-in a worst-case scenario, a compromised ID-Cert can only be used for a limited amount of time. The
-renewal of an ID-Cert is considered a [sensitive action](#412-sensitive-actions) and should require
-a second factor of authentication. A client that has this second factor of authentication stored
+in a worst-case scenario, a compromised ID-Cert can only be used for a limited amount of time. "Renewing"
+an ID-Cert consists of:
+
+1. Revoking the old ID-Cert
+2. Requesting a new ID-Cert with the same [session ID](#6113-session-ids) as the old ID-Cert.
+
+A client that has this second factor of authentication stored
 should renew the ID-Cert of the authenticated actor without further interaction.
 
 Server ID-Certs should be rotated way less often (every 1-3 years). Only rotate a server ID-Cert
@@ -588,7 +622,7 @@ of the key change, it must be informed of the change upon reconnection.
     keep up with demand, while introducing potential privacy concerns.
 
     polyproto inherently mitigates some of the possible misuse of a revoked certificate, as the validity
-    of a certificate is usually checked by many parties. Especially, if the revocation process is
+    of a certificate is usually checked by many parties. Especially, vocation process is
     initiated by the actor themselves, the actor already lets all servers they are connected to know
     that the certificate in question is no longer valid. 
 

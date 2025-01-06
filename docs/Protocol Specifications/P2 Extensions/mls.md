@@ -19,6 +19,7 @@ The version number specified here also applies to the API documentation.
       - [1.1.1 Last resort KeyPackages](#111-last-resort-keypackages)
     - [1.2 Initial authentication](#12-initial-authentication)
     - [1.3 Multi-device support](#13-multi-device-support)
+      - [6.1.3 Key rotation](#613-key-rotation)
 
 The following sections describe the additional behavior that polyproto implementations must implement
 to support encryption via the Messaging Layer Security (MLS) protocol.
@@ -148,3 +149,14 @@ upon reconnection.
     implementing MLS encryption can safely ignore this event.
 
 ```
+
+#### 6.1.3 Key rotation
+
+A session can choose to rotate their ID-Cert at any time. This is done by generating a new identity
+key pair, using the new private key to generate a new CSR, and sending the new Certificate Signing
+Request to the home server, along with at least one new KeyPackage and a corresponding 'last resort'
+KeyPackage, if encryption is offered. The home server will then generate the new ID-Cert, given that
+the CSR is valid and that the server accepts the creation of new ID-Certs at this time.
+
+TODO ^ I copied this paragraph over from core.md. The important part here is the fact that a keypackage
+and last resort keypackage should be sent when rotating keys. i posted the entire paragraph for context
