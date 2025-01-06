@@ -52,13 +52,17 @@ paths:
           explode: false
       responses:
         '202':
-          description: '`202` and a key trial, if one still needs to be passed; `204`: Action executed'
+          description: |-
+            - `202` and a key trial, if one still needs to be passed
+            - `204`: Action executed
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
         '204':
-          description: '`202` and a key trial, if one still needs to be passed; `204`: Action executed'
+          description: |-
+            - `202` and a key trial, if one still needs to be passed
+            - `204`: Action executed
           headers:
             Content-Length:
               required: true
@@ -78,8 +82,12 @@ paths:
       responses:
         '200':
           description: |-
-            `202` and a key trial, if one still needs to be passed; `200` and the
-            appropriate data if the key trial has been passed and is not yet expired.
+            - `202` and a key trial, if one still needs to be passed
+            - `200` and the appropriate data if the key trial has been passed and is not yet expired.
+            - `204` if the server needs time to gather the data. A `Retry-After` header is included in
+            the response, indicating to the actor the point in time at which they should query this
+            endpoint again. If this point in time is after the expiry timestamp of the completed key trial,
+            another key trial needs to be performed to access the data.
             Contains all data of the user.
           content:
             application/json:
@@ -116,13 +124,32 @@ paths:
                     of the polyproto protocol.
         '202':
           description: |-
-            `202` and a key trial, if one still needs to be passed; `200` and the
-            appropriate data if the key trial has been passed and is not yet expired.
+            - `202` and a key trial, if one still needs to be passed
+            - `200` and the appropriate data if the key trial has been passed and is not yet expired.
+            - `204` if the server needs time to gather the data. A `Retry-After` header is included in
+            the response, indicating to the actor the point in time at which they should query this
+            endpoint again. If this point in time is after the expiry timestamp of the completed key trial,
+            another key trial needs to be performed to access the data.
             Contains all data of the user.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
+        '204':
+          description: |-
+            - `202` and a key trial, if one still needs to be passed
+            - `200` and the appropriate data if the key trial has been passed and is not yet expired.
+            - `204` if the server needs time to gather the data. A `Retry-After` header is included in
+            the response, indicating to the actor the point in time at which they should query this
+            endpoint again. If this point in time is after the expiry timestamp of the completed key trial,
+            another key trial needs to be performed to access the data.
+            Contains all data of the user.
+          headers:
+            Retry-After:
+              required: true
+              schema:
+                type: integer
+                format: uint64
       tags:
         - Migration - Registration not required
       security:
@@ -320,11 +347,20 @@ paths:
       parameters: []
       responses:
         '200':
-          description: Returns `200` if the key trials were processed and deemed to be valid. Returns `202`, if the server needs additional time to process the key trials. 400 is received if one or more completed key trials were faulty. Contains faulty key trials in the response body.
+          description: |-
+            - `200` if the key trials were processed and deemed to be valid
+            - `202`, if the server needs additional time to process the key trials
+            - `400`, if one or more completed key trials were faulty. Contains faulty key trials in the response body.
         '202':
-          description: Returns `200` if the key trials were processed and deemed to be valid. Returns `202`, if the server needs additional time to process the key trials. 400 is received if one or more completed key trials were faulty. Contains faulty key trials in the response body.
+          description: |-
+            - `200` if the key trials were processed and deemed to be valid
+            - `202`, if the server needs additional time to process the key trials
+            - `400`, if one or more completed key trials were faulty. Contains faulty key trials in the response body.
         '400':
-          description: Returns `200` if the key trials were processed and deemed to be valid. Returns `202`, if the server needs additional time to process the key trials. 400 is received if one or more completed key trials were faulty. Contains faulty key trials in the response body.
+          description: |-
+            - `200` if the key trials were processed and deemed to be valid
+            - `202`, if the server needs additional time to process the key trials
+            - `400`, if one or more completed key trials were faulty. Contains faulty key trials in the response body.
           content:
             application/json:
               schema:
@@ -372,7 +408,10 @@ paths:
           explode: false
       responses:
         '200':
-          description: '`204`: No keytrials found for specified actor; `404`: Specified actor not known; `200`: Completed key trials of requested actor'
+          description: |-
+            - `204`: No keytrials found for specified actor
+            - `404`: Specified actor not known
+            - `200`: Completed key trials of requested actor
           content:
             application/json:
               schema:
@@ -391,7 +430,10 @@ paths:
                     - keyTrial
                     - keyTrialCompletion
         '204':
-          description: '`204`: No keytrials found for specified actor; `404`: Specified actor not known; `200`: Completed key trials of requested actor'
+          description: |-
+            - `204`: No keytrials found for specified actor
+            - `404`: Specified actor not known
+            - `200`: Completed key trials of requested actor
           headers:
             Content-Length:
               required: true
@@ -400,7 +442,10 @@ paths:
                 enum:
                   - 0
         '404':
-          description: '`204`: No keytrials found for specified actor; `404`: Specified actor not known; `200`: Completed key trials of requested actor'
+          description: |-
+            - `204`: No keytrials found for specified actor
+            - `404`: Specified actor not known
+            - `200`: Completed key trials of requested actor
       tags:
         - Migration - Registration not required
       security:
@@ -420,7 +465,9 @@ paths:
           explode: false
       responses:
         '204':
-          description: '`204`: Action executed; `404`: No re-signing request found for mentioned actor'
+          description: |-
+            - `204` Action executed
+            - `404` No re-signing request found for mentioned actor
           headers:
             Content-Length:
               required: true
@@ -429,7 +476,9 @@ paths:
                 enum:
                   - 0
         '404':
-          description: '`204`: Action executed; `404`: No re-signing request found for mentioned actor'
+          description: |-
+            - `204` Action executed
+            - `404` No re-signing request found for mentioned actor
       tags:
         - Migration - Registration not required
       security:
@@ -441,7 +490,7 @@ paths:
       parameters: []
       responses:
         '200':
-          description: Returns a key trial
+          description: a key trial
           content:
             application/json:
               schema:
@@ -530,11 +579,26 @@ paths:
       parameters: []
       responses:
         '200':
-          description: '`200` On success; `400` if re-signed messages are improperly formatted; `403` if messages have been modified where the original keys have not passed the key trial, if a key trial has not been passed at all or if the messages have been signed with keys that were not on the `allowedResigningKeys` list.'
+          description: |-
+            - `200` On success
+            - `400` if re-signed messages are improperly formatted
+            - `403` if messages have been modified where the original keys have not passed the key
+            trial, if a key trial has not been passed at all or if the messages have been signed
+            with keys that were not on the `allowedResigningKeys` list.
         '400':
-          description: '`200` On success; `400` if re-signed messages are improperly formatted; `403` if messages have been modified where the original keys have not passed the key trial, if a key trial has not been passed at all or if the messages have been signed with keys that were not on the `allowedResigningKeys` list.'
+          description: |-
+            - `200` On success
+            - `400` if re-signed messages are improperly formatted
+            - `403` if messages have been modified where the original keys have not passed the key
+            trial, if a key trial has not been passed at all or if the messages have been signed
+            with keys that were not on the `allowedResigningKeys` list.
         '403':
-          description: '`200` On success; `400` if re-signed messages are improperly formatted; `403` if messages have been modified where the original keys have not passed the key trial, if a key trial has not been passed at all or if the messages have been signed with keys that were not on the `allowedResigningKeys` list.'
+          description: |-
+            - `200` On success
+            - `400` if re-signed messages are improperly formatted
+            - `403` if messages have been modified where the original keys have not passed the key
+            trial, if a key trial has not been passed at all or if the messages have been signed
+            with keys that were not on the `allowedResigningKeys` list.
       tags:
         - Migration - Registration not required
       requestBody:
@@ -650,13 +714,17 @@ paths:
       parameters: []
       responses:
         '200':
-          description: '`200` if the link has been created, `202` if the other account still needs to accept to establish the link. Returns a key trial'
+          description: |-
+            - `200` if the link has been created
+            - `202` if the other account still needs to accept to establish the link. Contains a key trial
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
         '202':
-          description: '`200` if the link has been created, `202` if the other account still needs to accept to establish the link. Returns a key trial'
+          description: |-
+            - `200` if the link has been created
+            - `202` if the other account still needs to accept to establish the link. Contains a key trial
           content:
             application/json:
               schema:
@@ -707,9 +775,13 @@ paths:
       parameters: []
       responses:
         '200':
-          description: '`200` if the link has been created, `202` if the other account still needs to accept to establish the link.'
+          description: |-
+            - `200` if the link has been created
+            - `202` if the other account still needs to accept to establish the link.
         '202':
-          description: '`200` if the link has been created, `202` if the other account still needs to accept to establish the link.'
+          description: |-
+            - `200` if the link has been created
+            - `202` if the other account still needs to accept to establish the link.
       tags:
         - Migration - Registration not required
       requestBody:
@@ -1264,6 +1336,37 @@ components:
           format: uint64
           description: The serial number of the ID-Cert corresponding to the private identity key used to sign the key trial string.
       description: A completed key trial, as an actor would send to the server.
+    polyproto.core.models.MessageBatchExample:
+      type: object
+      allOf:
+        - type: object
+          required:
+            - idCert
+            - messages
+          properties:
+            idCert:
+              type: string
+              description: The ID-Cert that the following messages' signatures correspond to.
+            messages:
+              type: array
+              items:
+                type: object
+                properties:
+                  signature:
+                    type: string
+                    description: Signature of the whole message
+                  content:
+                    type: string
+                    description: Arbitrary content `T`. This depends on the specific implementation or extension of the protocol.
+                required:
+                  - signature
+                  - content
+              description: The actual message.
+          description: |-
+            A message batch, as received from and sent to the server in the context of re-signing messages.
+            This type is generic over `T`, where `T` represents the content of the actual message. This
+            means, that the specific message content depends on the concrete implementation or extension
+            of the polyproto protocol.
     polyproto.core.models.Service:
       type: object
       required:
