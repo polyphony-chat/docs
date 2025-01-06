@@ -7,7 +7,7 @@ info:
   version: v1.0-alpha.1
 tags:
   - name: Federated Identity - Registration required
-  - name: Sensitive Action
+  - name: Sensitive Actions
   - name: Federated Identity - Registration not required
   - name: Migration - Registration required
   - name: Migration - Registration not required
@@ -17,10 +17,10 @@ paths:
   /.p2/core/v1/challenge:
     get:
       operationId: Unregistered_challengeString
-      summary: Get challenge string
+      summary: Receive a challenge string
       description: |-
         Request a challenge string. See the corresponding
-        [protocol definition chapter](/docs/Protocol%20Specifications/core/#)
+        [protocol definition chapter](https://docs.polyphony.chat/Protocol%20Specifications/core/#42-challenge-strings)
         for more information.
       parameters: []
       responses:
@@ -127,6 +127,49 @@ paths:
         - Migration - Registration not required
       security:
         - BearerAuth: []
+  /.p2/core/v1/idcert:
+    post:
+      operationId: Registered_newIdCert
+      summary: Get a new ID-Cert
+      description: |-
+        Request a new ID-Cert, usually done when wanting to authenticate a new session, or after
+        an ID-Cert has been revoked, to re-authenticate a session.
+      parameters:
+        - name: X-P2-Sensitive-Solution
+          in: header
+          required: true
+          description: Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.
+          schema:
+            type: string
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id_cert:
+                    type: string
+                    example: ------BEGIN CERTIFICATE------...
+                    description: The generated [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) in PEM format.
+                  token:
+                    type: string
+                    description: An authorization secret, called a "session token", valid for this `id_cert`/session.
+                required:
+                  - id_cert
+                  - token
+      tags:
+        - Federated Identity - Registration required
+        - Sensitive Actions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+      security:
+        - BearerAuth: []
   /.p2/core/v1/idcert/actor/{fid}:
     get:
       operationId: Unregistered_actorCerts
@@ -212,9 +255,10 @@ paths:
       summary: Rotate Server Identity Key
       description: Rotate the server's identity key. Requires server administrator permissions.
       parameters:
-        - name: X-P2-CHALLENGE-STRING-SOLUTION
+        - name: X-P2-Sensitive-Solution
           in: header
           required: true
+          description: Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.
           schema:
             type: string
       responses:
@@ -226,7 +270,7 @@ paths:
                 type: string
       tags:
         - Federated Identity - Registration not required
-        - Sensitive Action
+        - Sensitive Actions
       security:
         - BearerAuth: []
     get:
@@ -715,6 +759,12 @@ paths:
         the server will select a new primary service provider from the list of available providers.
         This new provider will be returned in the response body.
       parameters:
+        - name: X-P2-Sensitive-Solution
+          in: header
+          required: false
+          description: Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.
+          schema:
+            type: string
         - name: url
           in: query
           required: true
@@ -754,10 +804,13 @@ paths:
                     - new_primary
         '400':
           description: The server could not understand the request due to invalid syntax.
+        '403':
+          description: Access is forbidden.
         '404':
           description: The server cannot find the requested resource.
       tags:
         - Services - Registration required
+        - Sensitive Actions
       security:
         - BearerAuth: []
   /.p2/core/v1/services/discover/{fid}:
@@ -883,7 +936,13 @@ paths:
         provider should be used by default by other actors, when multiple service providers are available 
         for a given service namespace. The service specified by the arguments in the body must be a
         valid, already existing service.
-      parameters: []
+      parameters:
+        - name: X-P2-Sensitive-Solution
+          in: header
+          required: true
+          description: Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.
+          schema:
+            type: string
       responses:
         '200':
           description: |-
@@ -896,8 +955,19 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/polyproto.core.models.Service'
+        '400':
+          description: |-
+            An array of at minimum one, and at maximum 2 [service](./Types/service.md) objects.
+            The response will contain the updated previous primary service provider, if there was one, along
+            with the new primary service provider.
+        '403':
+          description: |-
+            An array of at minimum one, and at maximum 2 [service](./Types/service.md) objects.
+            The response will contain the updated previous primary service provider, if there was one, along
+            with the new primary service provider.
       tags:
         - Services - Registration required
+        - Sensitive Actions
       requestBody:
         required: true
         content:
@@ -920,10 +990,18 @@ paths:
         - BearerAuth: []
   /.p2/core/v1/session:
     delete:
-      operationId: Unregistered_deleteSession
+      operationId: Registered_deleteSession
       summary: Delete/Revoke Session
-      description: Invalidate a session token by naming the session ID associated with it.
+      description: |-
+        Invalidate a session and its' associated ID-Cert by providing the session ID associated
+        with it.
       parameters:
+        - name: X-P2-Sensitive-Solution
+          in: header
+          required: true
+          description: Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.
+          schema:
+            type: string
         - name: session_id
           in: query
           required: true
@@ -943,55 +1021,23 @@ paths:
         '404':
           description: The server cannot find the requested resource.
       tags:
-        - Federated Identity - Registration not required
-      security:
-        - BearerAuth: []
-  /.p2/core/v1/session/idcert:
-    post:
-      operationId: Registered_rotateIdCert
-      summary: Rotate session ID-Cert
-      description: |-
-        Rotate your keys for a given session. The `session_id` in the supplied `csr` must correspond to the
-        session token used in the `authorization`-Header.
-      parameters: []
-      responses:
-        '201':
-          description: Contains your new ID-Cert, along with a new session token.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id_cert:
-                    type: string
-                    example: ------BEGIN CERTIFICATE------...
-                    description: The generated [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) in PEM format.
-                  token:
-                    type: string
-                    description: An authorization secret, called a "token", valid for this `id_cert`.
-                required:
-                  - id_cert
-                  - token
-      tags:
         - Federated Identity - Registration required
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: string
-        description: A new [certificate signing request (CSR)](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) with the same session ID
       security:
         - BearerAuth: []
   /.p2/core/v1/session/idcert/extern:
     put:
       operationId: Unregistered_updateSessionCert
       summary: Update session ID-Cert
-      description: Lets a foreign server know that the ID-Cert of this session has changed.
+      description: |-
+        Lets a foreign server know that the ID-Cert of a session has changed. This route is also
+        used to inform foreign servers about the revocation of an ID-Cert. The ID-Cert passed as
+        body in this route must belong to the actor making the request.
       parameters: []
       responses:
         '201':
-          description: The request has succeeded and a new resource has been created as a result.
+          description: 201 on success, 400 if the body is somehow invalid.
+        '400':
+          description: 201 on success, 400 if the body is somehow invalid.
       tags:
         - Federated Identity - Registration not required
       requestBody:
@@ -1076,10 +1122,10 @@ paths:
         Delete encrypted private key material from the server. The `serial_number(s)`, must match
         the serial numbers of ID-Certs that the client has uploaded key material for.
       parameters:
-        - name: X-P2-CHALLENGE-STRING-SOLUTION
+        - name: X-P2-Sensitive-Solution
           in: header
           required: true
-          description: Sensitive actions require a [challenge string solution](/docs/Protocol%20Specifications/core.md) to be executed.
+          description: Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.
           schema:
             type: string
         - name: serials
@@ -1098,7 +1144,7 @@ paths:
           description: The server cannot find the requested resource.
       tags:
         - Federated Identity - Registration required
-        - Sensitive Action
+        - Sensitive Actions
       security:
         - BearerAuth: []
   /.p2/core/v1/session/keymaterial/size:
