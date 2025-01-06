@@ -113,4 +113,6 @@ namespace models {
             content: T
         }[];
     }
+
+    model MessageBatchExample extends MessageBatch<string> {}
 }
