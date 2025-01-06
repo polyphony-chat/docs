@@ -243,6 +243,18 @@ namespace Migration {
          * Export all of your data for safekeeping or for importing it to another server
          * @returns - `202` and a key trial, if one still needs to be passed
          * - `200` and the appropriate data if the key trial has been passed and is not yet expired.
+         *   The data is a gzipped tarball (.tar.gz) named `export1234567890-user@subdomain.example.com`, where
+         *   - `export[numbers]` is the word `export` with 20 random digits appended to it
+         *   - `user` is the actors' name
+         *   - `subdomain.example.com` is the FQDN of the server the actor is 
+         *   This file archive contains a file `messages.json` which is a JSON `MessageBatch` of all
+         *   messages sent by the user. Note the [definition of the word "message" in polyproto](https://docs.polyphony.chat/Protocol%20Specifications/core/#:~:text=software%20for%20clients.-,message%2C%20messages,-%3A%20In%20the%20context).
+         *   If the server where the data export was requested from has [RawR](https://docs.polyphony.chat/Protocol%20Specifications/core/#731-resource-addressing-with-relative-roots)
+         *   enabled, the file archive will contain a folder named `rawr`. This folder contains all
+         *   RawR-content uploaded by the actor to that server. The files in this folder are named after
+         *   the resource ID. File extensions are only added if they were known to the server. An
+         *   example file name might be `2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl`,
+         *   referencing the file which was hosted at `<server_url>/.p2/core/resource/2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl`.
          * - `204` if the server needs time to gather the data. A `Retry-After` header is included in
          *   the response, indicating to the actor the point in time at which they should query this
          *   endpoint again. If this point in time is after the expiry timestamp of the completed key trial,
@@ -254,7 +266,7 @@ namespace Migration {
             @body body: polyproto.core.models.KeyTrial;
         } | {
             @statusCode statusCode: 200;
-            @body body: polyproto.core.models.MessageBatch<string>[]; 
+            @body body: File;
         } | {
             @statusCode statusCode: 204;
             @header({name: "Retry-After"}) retryAfter: uint64;
@@ -263,5 +275,6 @@ namespace Migration {
 }
 
 /* TODO things that are missing:
- *  - CawR routes
+ *  - RawR routes
+    - The description of the RawR .tar.gz file format could be added into the p2 spec 
  */
