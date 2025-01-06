@@ -703,10 +703,7 @@ In the context of federation with other federation protocols, such as ActivityPu
 for actors to receive messages, which do not have a signature attached to them. If a P2 extension
 explicitly allows for this, it is possible for a polyproto server to forward such messages to
 clients. If a P2 extension does not explicitly allow for this, both servers and clients must
-reject such messages. Clients receiving unexpected external messages should inform the actor about
-the fact that a server has tried to send them an invalid, possibly malicious message.
-
-TODO Make APIs for this or remove this paragraph ^
+reject such messages.
 
 Before a polyproto server forwards such a message to clients, it must add an "external" property to
 the message object. If possible in the data format used, this property should be set to a boolean
