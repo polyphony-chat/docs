@@ -2576,9 +2576,10 @@
 
 
 <h1 id="polyproto-specification">polyproto Specification<a class="headerlink" href="#polyproto-specification" title="Permanent link">&para;</a></h1>
-<p><strong>v0.1.0-alpha.1</strong> - Treat this as an unfinished draft.</p>
-<p><a href="https://semver.org/spec/v2.0.0.html">Semantic versioning v2.0.0</a> is used to version this specification.
-The version number specified here also applies to the <a href="https://apidocs.polyproto.org">API documentation</a>.</p>
+<p>Version of this specification document: <strong>v0.1.0-alpha.1</strong> - Treat this as an unfinished draft.</p>
+<p>Version of the <a href="https://apidocs.polyproto.org">API documentation</a> applicable for this version
+of the specification document: <strong>v0.1.0-alpha.1</strong></p>
+<p><a href="https://semver.org/spec/v2.0.0.html">Semantic versioning v2.0.0</a> is used to version this specification</p>
 <ul>
 <li><a href="#polyproto-specification">polyproto Specification</a></li>
 <li><a href="#1-terminology-used-in-this-document">1. Terminology used in this document</a></li>
@@ -2872,7 +2873,7 @@ APIs for this purpose are defined in the <a href="/APIs">API documentation</a>.<
 <h4 id="412-sensitive-actions">4.1.2 Sensitive actions<a class="headerlink" href="#412-sensitive-actions" title="Permanent link">&para;</a></h4>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Sensitive actions should require a second factor of authentication, apart from the actors'
+<p>Sensitive actions require a second factor of authentication, apart from the actors'
 private key. This second factor can be anything from a password to TOTP or hardware keys, depending
 on the authentication method or standard used.</p>
 <p>If this is not done, a malicious user who gained access to an actors' private key can lock that
@@ -2886,16 +2887,27 @@ and thus prevent the actor from logging in again.</p>
 <li>Changing the actors' federation ID</li>
 <li>Changing the actors' other factors of authentication</li>
 <li>Server administration actions</li>
+<li>Deleting encrypted private key material from a home server</li>
 </ul>
-<p>Clients should be prepared to gracefully handle the case where a sensitive action fails due to
-a lack of a second factor of authentication, and should prompt the user to provide the second
-factor of authentication.</p>
+<p>HTTP API routes marked as sensitive actions require a header <code>X-P2-Sensitive-Solution</code>, where the
+header value represents the second factor of authentication chosen.</p>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p>If the chosen second factor of authentication is TOTP, the value of this header is the current
+TOTP verification code. If the chosen second factor of authentication is a password, then the
+value of this header is to be that password.</p>
+</div>
 <h3 id="42-challenge-strings">4.2 Challenge strings<a class="headerlink" href="#42-challenge-strings" title="Permanent link">&para;</a></h3>
 <p>Servers use challenge strings to verify an actor's private identity key
 possession, without revealing the private key itself. These strings, ranging from 32 to 256
 UTF-8 characters, have a UNIX timestamp lifetime. If the current timestamp surpasses this
 lifetime, the challenge fails. The actor signs the string, sending the signature and their
 ID-Cert to the server, which then verifies the signature's authenticity.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Challenge strings provide a different set of security guarantees than <a href="#412-sensitive-actions">sensitive actions</a>
+do. They are not to be used interchangably.</p>
+</div>
 <p>All challenge strings and their responses created must be made
 public to ensure that a chain of trust can be maintained. A third party should be able to verify that
 the challenge string, which authorized a specific change in data, was signed by the
@@ -2910,6 +2922,27 @@ are unique per actor. If this is not the case, actors could potentially be the t
 </div>
 <p>Challenge strings can counteract replay attacks. Their uniqueness ensures that even identical requests
 have different signatures, preventing malicious servers from successfully replaying requests.</p>
+<p>Accessing a challenge string protected route is done as follows:</p>
+<pre class="mermaid"><code>sequenceDiagram
+autonumber
+
+actor a as Client A
+participant s as Server
+
+note over a: Clients have to provide session&lt;br/&gt;token to request challenge string
+a-&gt;&gt;s: Request challenge string
+s-&gt;&gt;s: Note, that Client A requests challenge&lt;br/&gt;string for given session identified by token
+s-&gt;&gt;a: Challenge string
+a-&gt;&gt;a: Complete challenge by signing&lt;br/&gt;string with private key associated&lt;br/&gt;with pubkey of this session
+a-&gt;&gt;s: Call challenge string protected route with&lt;br/&gt;`X-P2-Challenge-String-Solution` header,&lt;br/&gt;where the value is equal to the challenge string solution
+s-&gt;&gt;s: Verify challenge
+alt
+  note over s: Challenge string solution is valid
+  s-&gt;&gt;s: Let Client A perform the challenge string protected action
+else
+  note over s: Challenge string solution is invalid
+  s-&gt;&gt;s: Return 403, indicating that&lt;br/&gt;the challenge string solution is invalid,&lt;br/&gt;with optional RetryAfter header to indicate how&lt;br/&gt;long the client should wait before making a&lt;br/&gt;follow-up request.
+end</code></pre>
 <h3 id="43-protection-against-misuse-by-malicious-home-servers">4.3 Protection against misuse by malicious home servers<a class="headerlink" href="#43-protection-against-misuse-by-malicious-home-servers" title="Permanent link">&para;</a></h3>
 <p>To protect users from misuse by malicious home servers, a mechanism is needed to prevent home
 servers from generating federation tokens for users without their consent and knowledge.</p>
@@ -3141,32 +3174,29 @@ not notice that the message has been crafted by a malicious server.</p>
 <p>The above scenario is not possible with home server issued identity key certificates, as the
 malicious server cannot generate an identity key pair for Alice, which is signed by Server A.</p>
 <h4 id="613-key-rotation">6.1.3 Key rotation<a class="headerlink" href="#613-key-rotation" title="Permanent link">&para;</a></h4>
-<p>A session can choose to rotate their ID-Cert at any time. This is done by generating a new identity
-key pair, using the new private key to generate a new CSR, and sending the new Certificate Signing
-Request to the home server, along with at least one new KeyPackage and a corresponding 'last resort'
-KeyPackage, if encryption is offered. The home server will then generate the new ID-Cert, given that
-the CSR is valid and that the server accepts the creation of new ID-Certs at this time.</p>
-<p>Rotating keys is done by using an API route, which requires authorization.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Sessions can request a new ID-Cert for any session of the same actor. Most other, currently existing
-services also allow for this, as it is a common use case for user to want to, perhaps, log out of
-devices they no longer use. Depending on your use case, this might be a security concern. Whether
-and how this risk is mitigated is up to concrete implementations.</p>
-</div>
+<p>A session can choose to re-generate their ID-Cert at any time. This is done by taking an identity
+key pair, using the private key to generate a new CSR, and sending the new Certificate Signing
+Request to the home server. The home server will then generate the new ID-Cert, given that
+the CSR is valid. Actors can only re-generate ID-Certs for their current session, identified by their
+session ID and session token. Other sessions can only be invalidated by <a href="#614-early-revocation-of-id-certs">revoking them</a>.
+Re-generating an ID-Cert is a <a href="#412-sensitive-actions">sensitive action</a>, performed by using the
+appropriate API route.</p>
 <p>Home servers must keep track of the ID-Certs of all users (and their clients) registered on them,
 and must offer a clients' ID-Cert for a given timestamp on request. This is to ensure messages
 sent by users, even ones sent a long time ago, can be verified by other servers and their users.
 This is because the public key of an actor likely changes over time and users must sign all messages
-they send to servers. Likewise, a client should also keep all of its own ID-Certs stored
-perpetually, to potentially verify its identity in case of a migration.</p>
+they send to servers.</p>
 <p>Users must hold on to all of their past key pairs, as they might need them to
 <a href="#7-migrations">migrate their account in the future</a>. How this is done is specified in
 <a href="#63-private-key-loss-prevention-and-private-key-recovery">section 6.3: Private key loss prevention and private key recovery</a>.</p>
 <p>The lifetime of an actor ID-Cert should be limited to a maximum of 60 days. This is to ensure that even
-in a worst-case scenario, a compromised ID-Cert can only be used for a limited amount of time. The
-renewal of an ID-Cert is considered a <a href="#412-sensitive-actions">sensitive action</a> and should require
-a second factor of authentication. A client that has this second factor of authentication stored
+in a worst-case scenario, a compromised ID-Cert can only be used for a limited amount of time. "Renewing"
+an ID-Cert consists of:</p>
+<ol>
+<li>Revoking the old ID-Cert</li>
+<li>Requesting a new ID-Cert with the same <a href="#6113-session-ids">session ID</a> as the old ID-Cert.</li>
+</ol>
+<p>A client that has this second factor of authentication stored
 should renew the ID-Cert of the authenticated actor without further interaction.</p>
 <p>Server ID-Certs should be rotated way less often (every 1-3 years). Only rotate a server ID-Cert
 if it is suspected to be compromised, is lost, or has expired.</p>
@@ -3202,7 +3232,7 @@ are also not always reliable. OCSP (Online Certificate Status Protocol) is a mor
 and easier to implement alternative. Still, it potentially requires many resources to
 keep up with demand, while introducing potential privacy concerns.</p>
 <p>polyproto inherently mitigates some of the possible misuse of a revoked certificate, as the validity
-of a certificate is usually checked by many parties. Especially, if the revocation process is
+of a certificate is usually checked by many parties. Especially, vocation process is
 initiated by the actor themselves, the actor already lets all servers they are connected to know
 that the certificate in question is no longer valid. </p>
 <p>polyproto does not require the use of CRLs or OCSP.</p>
@@ -3305,9 +3335,7 @@ this information must be communicated to the actor performing the verification.<
 for actors to receive messages, which do not have a signature attached to them. If a P2 extension
 explicitly allows for this, it is possible for a polyproto server to forward such messages to
 clients. If a P2 extension does not explicitly allow for this, both servers and clients must
-reject such messages. Clients receiving unexpected external messages should inform the actor about
-the fact that a server has tried to send them an invalid, possibly malicious message.</p>
-<p>TODO Make APIs for this or remove this paragraph ^</p>
+reject such messages.</p>
 <p>Before a polyproto server forwards such a message to clients, it must add an "external" property to
 the message object. If possible in the data format used, this property should be set to a boolean
 value of <code>true</code>, or some other value that can be interpreted in an equivalent manner.
@@ -4123,7 +4151,7 @@ service provider, they must request a <a href="#7-migrations">migration</a>.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-01T11:44:10+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-01</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-06T14:01:18+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-06</span>
   </span>
 
     
