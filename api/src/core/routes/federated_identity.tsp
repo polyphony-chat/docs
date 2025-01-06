@@ -17,26 +17,30 @@ namespace FederatedIdentity {
     @tag("Federated Identity - Registration required")
     @useAuth(BearerAuth)
     namespace Registered {
-        @route("/session/idcert")
-        @summary("Rotate session ID-Cert")
+
+        @route("/idcert")
+        @summary("Get a new ID-Cert")
         @added(Version.`v1.0-alpha.1`)
         @post
+        @tag("Sensitive Actions")
         /**
-         * Rotate your keys for a given session. The `session_id` in the supplied `csr` must correspond to the
-         * session token used in the `authorization`-Header.
-         * @param csr A new [certificate signing request (CSR)](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) with the same session ID
-         * @returns Contains your new ID-Cert, along with a new session token. 
-        */
-        op rotateIdCert(@body csr: string;): {
-            @doc("Contains your new ID-Cert in PEM encoding, along with a new session token.")
-            @statusCode statusCode: 201;
-            @body newIdCert: {
-                @doc("The generated [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) in PEM format.")
-                @example("------BEGIN CERTIFICATE------...")
-                id_cert: string,
-                @doc("An authorization secret, called a \"token\", valid for this `id_cert`.")
-                token: string
-            }
+         * Request a new ID-Cert, usually done when wanting to authenticate a new session, or after
+         * an ID-Cert has been revoked, to re-authenticate a session.
+         */
+        op newIdCert(
+            @doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
+            @header({name: "X-P2-Sensitive-Solution"}) sensitiveSolution: string,
+            @body csr: string;
+            ): {
+                @doc("Contains your new ID-Cert in PEM encoding, along with a new session token.")
+                @statusCode statusCode: 201;
+                @body newIdCert: {
+                    @doc("The generated [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) in PEM format.")
+                    @example("------BEGIN CERTIFICATE------...")
+                    id_cert: string,
+                    @doc("An authorization secret, called a \"session token\", valid for this `id_cert`/session.")
+                    token: string
+                }
         };
 
         @route("/session/keymaterial")
@@ -86,7 +90,7 @@ namespace FederatedIdentity {
         };
 
         @route("/session/keymaterial")
-        @tag("Sensitive Action")
+        @tag("Sensitive Actions")
         @summary("Delete encrypted private key material")
         @added(Version.`v1.0-alpha.1`)
         @delete
@@ -95,8 +99,8 @@ namespace FederatedIdentity {
          * the serial numbers of ID-Certs that the client has uploaded key material for.
          */
         op deleteEncryptedPKM(
-            @doc("Sensitive actions require a [challenge string solution](/docs/Protocol%20Specifications/core.md) to be executed.")
-            @header({name: "X-P2-CHALLENGE-STRING-SOLUTION"}) challengeStringSolution: string,
+            @doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
+            @header({name: "X-P2-Sensitive-Solution"}) sensitiveSolution: string,
             @query serials: uint64[]): {
             @statusCode statusCode: 204;
         } | {
@@ -118,18 +122,38 @@ namespace FederatedIdentity {
             @header({name: "X-MAX-PAYLOAD-SIZE"}) size: uint32;
             @statusCode statusCode: 200;
         };
+
+        @route("/session")
+        @delete
+        @added(Version.`v1.0-alpha.1`)
+        @summary("Delete/Revoke Session")
+        @useAuth(BearerAuth)
+        /**
+         * Invalidate a session and its' associated ID-Cert by providing the session ID associated
+         * with it.
+         */
+        op deleteSession(
+            @doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
+            @header({name: "X-P2-Sensitive-Solution"}) sensitiveSolution: string,
+            @query session_id: string
+            ): {
+            @statusCode statusCode: 204;
+            @header({name: "Content-Length"}) contentLength: 0;
+        } | {
+            @statusCode statusCode: 404;
+        };
     }
 
     @tag("Federated Identity - Registration not required")
     namespace Unregistered {
         @route("/challenge")
-        @summary("Get challenge string")
+        @summary("Receive a challenge string")
         @useAuth(BearerAuth)
         @added(Version.`v1.0-alpha.1`)
         @get
         /**
          * Request a challenge string. See the corresponding
-         * [protocol definition chapter](/docs/Protocol%20Specifications/core/#)
+         * [protocol definition chapter](https://docs.polyphony.chat/Protocol%20Specifications/core/#42-challenge-strings)
          * for more information.
          */
         op challengeString(): {
@@ -142,12 +166,13 @@ namespace FederatedIdentity {
         @added(Version.`v1.0-alpha.1`)
         @post
         @useAuth(BearerAuth)
-        @tag("Sensitive Action")
+        @tag("Sensitive Actions")
         /**
          * Rotate the server's identity key. Requires server administrator permissions.
          * @returns The servers' new ID-Cert, encoded as PEM 
          */
-        op name(@header({name: "X-P2-CHALLENGE-STRING-SOLUTION"}) challengeStringSolution: string): string;
+        op name(@doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
+        @header({name: "X-P2-Sensitive-Solution"}) sensitiveSolution: string,): string;
 
         @route("/idcert/server")
         @get
@@ -209,25 +234,20 @@ namespace FederatedIdentity {
         @useAuth(BearerAuth)
         @summary("Update session ID-Cert")
         /**
-         * Lets a foreign server know that the ID-Cert of this session has changed.
+         * Lets a foreign server know that the ID-Cert of a session has changed. This route is also
+         * used to inform foreign servers about the revocation of an ID-Cert. The ID-Cert passed as
+         * body in this route must belong to the actor making the request.
+         * @returns 201 on success, 400 if the body is somehow invalid.
          */
         op updateSessionCert(@body id_cert: string): {
             @statusCode statusCode: 201;
-        };
-
-        @route("/session")
-        @delete
-        @added(Version.`v1.0-alpha.1`)
-        @summary("Delete/Revoke Session")
-        @useAuth(BearerAuth)
-        /**
-         * Invalidate a session token by naming the session ID associated with it.
-         */
-        op deleteSession(@query session_id: string): {
-            @statusCode statusCode: 204;
-            @header({name: "Content-Length"}) contentLength: 0;
         } | {
-            @statusCode statusCode: 404;
+            @statusCode statusCode: 400;
         };
     }
 }
+
+/*
+TODO: Missing routes:
+- Changing actor federation ID
+*/
