@@ -54,7 +54,7 @@ of the specification document: **v0.1.0-alpha.1**
         - [7.2.2.1 Body size](#7221-body-size)
         - [7.2.2.2 Interval between re-signing batches](#7222-interval-between-re-signing-batches)
     - [7.3 Moving data](#73-moving-data)
-      - [7.3.1 Content Addressing with relative roots](#731-content-addressing-with-relative-roots)
+      - [7.3.1 Resource Addressing with relative roots](#731-resource-addressing-with-relative-roots)
     - [7.4 Challenges and trust](#74-challenges-and-trust)
   - [8. Protocol extensions (P2 extensions)](#8-protocol-extensions-p2-extensions)
     - [8.1 Extension design](#81-extension-design)
@@ -1348,10 +1348,10 @@ How this process is implemented is up to P2 extensions to define. The above step
 guideline. The API routes for data export and import are documented in the
 [API documentation](https://apidocs.polyproto.org)
 
-#### 7.3.1 Content Addressing with relative roots
+#### 7.3.1 Resource Addressing with relative roots
 
 Moving data from one server to another might break references to this data. To prevent this as much
-as possible, content addressing with relative roots is recommended for data behind an additional
+as possible, resource addressing with relative roots is recommended for data behind an additional
 layer of indirection.
 
 !!! example
@@ -1361,27 +1361,27 @@ layer of indirection.
     chat service. If the user moves their account to another server, the picture might not be
     accessible anymore.
 
-Content addressing with relative roots aids in preventing this issue. Instead of referring to
-the absolute URL of the content, the server processing the content generates a unique identifier.
-This identifier can be used to retrieve the content from the server. Most importantly, this
-identifier does not change when the content is moved to another server. If the base domain of the
-new server is known, the identifier can be used to retrieve the content from the new server.
-The "relative root" is the base domain of the server, which is used to retrieve the content.
+Resource addressing with relative roots aids in preventing this issue. Instead of referring to
+the absolute URL of the resource, the server processing the resource generates a unique identifier.
+This identifier can be used to retrieve the resource from the server. Most importantly, this
+identifier does not change when the resource is moved to another server. If the base domain of the
+new server is known, the identifier can be used to retrieve the resource from the new server.
+The "relative root" is the base domain of the server, which is used to retrieve the resource.
 
 The uniqueness constraint of the identifier is important. If a collision occurs when trying to
-move the content to another server, the content cannot be migrated in a way that preserves the
+move the resource to another server, the resource cannot be migrated in a way that preserves the
 references to it. One way to ensure the uniqueness of the identifier is to use a hash function on the
-content itself. Combining this has with a cryptographically strong nonce, then hashing the result of
-concatenating the nonce and the hash of the content should yield a unique identifier.
+resource itself. Combining this has with a cryptographically strong nonce, then hashing the result of
+concatenating the nonce and the hash of the resource should yield a unique identifier.
 
-The API route for content addressing with relative roots is formatted as follows:
+The API route for resource addressing with relative roots is formatted as follows:
 
-`<server_url>/.p2/core/content/<content_id>`
+`<server_url>/.p2/core/resource/<resource_id>`
 
-The API route for content addressing with relative roots is documented more thoroughly in the API
+The API route for resource addressing with relative roots is documented more thoroughly in the API
 documentation.
 
-Servers with no need for content addressing with relative roots can select to not implement this
+Servers with no need for resource addressing with relative roots can select to not implement this
 feature. Servers not implementing this feature should return a `404 Not Found` status code when
 the API route is accessed. Clients should expect finding servers not implementing this feature.
 
