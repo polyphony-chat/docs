@@ -55,6 +55,7 @@ of the specification document: **v0.1.0-alpha.1**
         - [7.2.2.2 Interval between re-signing batches](#7222-interval-between-re-signing-batches)
     - [7.3 Moving data](#73-moving-data)
       - [7.3.1 Resource Addressing with relative roots](#731-resource-addressing-with-relative-roots)
+      - [7.3.2 polyproto export/import format](#732-polyproto-exportimport-format)
     - [7.4 Challenges and trust](#74-challenges-and-trust)
   - [8. Protocol extensions (P2 extensions)](#8-protocol-extensions-p2-extensions)
     - [8.1 Extension design](#81-extension-design)
@@ -1071,7 +1072,7 @@ specific context, which is unavailable on the new server.
     of the chat application. Typically, the messages in a group chat are stored on the server
     hosting the group. Moving the messages of one individual from one server to another is not
     possible in these cases.
-
+<a name="example-static-information" id="example-static-information"></a>
 !!! example "Example: Information not necessarily tied to a specific context"
 
     Continuing the chat application example, it might very well be possible to move messages
@@ -1310,10 +1311,15 @@ between re-signing batches.
 ### 7.3 Moving data
 
 In cases of an imminent server shutdown or distrust in the old server, moving data from the old server
-is necessary to prevent data loss. This process extends upon the reassigning ownership process, and
+is necessary to prevent data loss.
+
+Note, that only ["static" resources](#example-static-information) can be moved. "Dynamic" resources,
+which are resources tied to a specific context, can be migrated through [re-signing messages](#72-re-signing-messages).
+
+This process extends upon the reassigning ownership process, and
 usually involves the following steps:
 
-1. Using the old account, the client requests a data export from your old home server.
+1. Using the old account, the client requests a data export from their old home server.
 2. The old home server sends a data export to the client. The client will check the signatures on
    the exported data, to ensure it was not tampered with.
 3. The new account re-signs the data with its own keys and imports it into the new home server.
@@ -1344,8 +1350,7 @@ aa-xsa: Deactivate account
 
 *Fig. 8: Sequence diagram depicting the data moving process.*
 
-How this process is implemented is up to P2 extensions to define. The above steps are only a
-guideline. The API routes for data export and import are documented in the
+The API routes for data export and import are documented in the
 [API documentation](https://apidocs.polyproto.org)
 
 #### 7.3.1 Resource Addressing with relative roots
@@ -1384,6 +1389,39 @@ documentation.
 Servers with no need for resource addressing with relative roots can select to not implement this
 feature. Servers not implementing this feature should return a `404 Not Found` status code when
 the API route is accessed. Clients should expect finding servers not implementing this feature.
+
+#### 7.3.2 polyproto export/import format
+
+Data exports and -imports must use the polyproto export/import format. Home servers are required to
+support this format when actors perform data exports and imports.
+
+The data is a [gzipped](https://en.wikipedia.org/wiki/Gzip) [tarball](https://en.wikipedia.org/wiki/Tar_(computing))
+archive (.tar.gz) named `export1234567890-user@subdomain.example.com`, where
+
+- `export[numbers]` is the word `export` with 20 random digits appended to it
+- `user` is the actors' name
+- `subdomain.example.com` is the FQDN of the server the actor is registered on.
+
+This file archive contains a file `messages.p2mb` which is a JSON file containing [message batches](#721-message-batches)
+of all messages sent by the user. If the server where the data export was requested from has
+[RawR](#731-resource-addressing-with-relative-roots) enabled, the file archive will contain a
+folder named `rawr`. This folder contains all RawR content uploaded by the actor to that server.
+The files in this folder are named after the resource ID given to the resource.
+File extensions are only added if they were known to the server.
+
+!!! example
+
+    An example file name might be
+    `2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl`, referencing the file
+    which was hosted at `<server_url>/.p2/core/resource/2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl`.
+
+If the server where the data export was requested from is the actors' home server, the
+archive will contain a folder `certs` and a file `crypt_certs.p2epk`. `certs` will contain all ID-Certs
+the server has stored of the actor. The ID-Certs will be stored in
+[ASCII PEM format](https://web.archive.org/web/20250107131731/https://learn.microsoft.com/en-us/azure/iot-hub/reference-x509-certificates#:~:text=ASN.1%20encoding.-,ascii%20pem%20format,-A%20PEM%20certificate)
+The file `crypt_certs.p2epk` contains all [encrypted private key material](#63-private-key-loss-prevention-and-private-key-recovery)
+that the actor has uploaded to the server. Just like `messages.p2mb`, `crypt_certs.p2epk` is a standard
+JSON file.
 
 ### 7.4 Challenges and trust
 
