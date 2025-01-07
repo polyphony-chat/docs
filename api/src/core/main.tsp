@@ -8,7 +8,7 @@ using Routes;
 using FederatedIdentity;
 using Services;
 using Migration;
-using ResourceAdressingWithRelativeRoots;
+using ResourceAddressingWithRelativeRoots;
 
 namespace polyproto.core;
 
