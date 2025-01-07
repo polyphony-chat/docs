@@ -129,6 +129,31 @@ namespace models {
      *   added if they were known to the server. An example file name might be
      *   `2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl`, referencing the file
      *   which was hosted at `<server_url>/.p2/core/resource/2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl`.
+     *   In addition, the folder `rawr` contains a file named `access_properties.p2al`. This JSON
+     *   file contains a data structure mapping each resource ID to an access properties object.
+     *   In particular, the file is structured as an array containing objects. Each object has a key which is equal
+     *   to the resource ID of a resource in the `rawr` directory and a value which is an object
+     *   representing the access properties. An example of the contents of this file is given below:
+     * 
+```json
+[
+    {
+        "2062a23e2a25b226ca4c546fec5ec06e0df9648281f45da8b5aaabebdf66cf4c.jxl": {
+        "private": false,
+        "allowlist": ["user1@example.com", "instance.example.com"],
+        "denylist": ["user2@example.com", "otherinstance@example.com"]
+        }
+    },
+    {
+        "a9144379a161e1fcf6b07801b70db6d6c481933bd634fe2409eb713723ab1a0a": {
+        "private": true,
+        "allowlist": ["user1@example.com"],
+        "denylist": []
+        }
+    }
+]
+```
+     * 
      *   If the server where the data export was requested from is the actors' home server, the
      *   archive will contain a folder `certs` and a file `crypt_certs.p2epk`. `certs` will contain all ID-Certs
      *   the server has stored of the actor. The ID-Certs will be stored in
@@ -138,4 +163,30 @@ namespace models {
      *   JSON file.
      */
     model P2Export {}
+
+    /**
+     * `ResourceAccessProperties` define which actors may access an uploaded resource. Actors and
+     * entire instances can have access granted or revoked.
+     */
+    model ResourceAccessProperties {
+        @doc("Whether the resource should be private by default. Private resources can only be accessed by the uploader and by instances and actors declared in the `allowlist`.")
+        private: boolean = false;
+        @doc("A list of actors and/or instances allowed to access this resource.")
+        @example(#["user_i_like@example.com", "instance.example.com"])
+        allowlist?: string[];
+        @doc("A list of actors and/or instances who cannot have access to this resource.")
+        @example(#["user_i_dislike@example.com", "other_instance.example.com"])
+        denylist?: string[];
+    }
+
+    /**
+     * When querying the server for a list of resources uploaded by you, you can optionally request
+     * the resulting list to be sorted in a specific way. These are the four options you have.
+     */
+    enum ResourceListSorting {
+        SizeAsc,
+        SizeDesc,
+        NewestFirst,
+        OldestFirst
+    }
 }
