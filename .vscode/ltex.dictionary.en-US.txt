@@ -22,3 +22,5 @@ NLnet
 OpenAPI
 TypeSpec
 Protobuf
+gzipped
+RawR

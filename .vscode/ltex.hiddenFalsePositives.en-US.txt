@@ -56,3 +56,4 @@
 {"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QSee \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q\nFederation ID - A unique identifier; In public contexts, usually **actor@**subdomain.example.com, where bolded parts are required and non-bolded parts are optional.\\E$"}
 {"rule":"ADMIT_ENJOY_VB","sentence":"^\\QThe following sections are dedicated to documenting best practices to consider when implementing polyproto.\\E$"}
 {"rule":"ADMIT_ENJOY_VB","sentence":"^\\QThe following subsections are dedicated to documenting best practices to consider when implementing polyproto.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QThe data is a gzipped tarball archive (.tar.gz) named \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q, where\\E$"}
