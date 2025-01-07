@@ -270,7 +270,3 @@ namespace Migration {
         };
     }
 }
-
-/* TODO things that are missing:
-    - The description of the RawR .tar.gz file format could be added into the p2 spec 
- */
