@@ -13,6 +13,8 @@ tags:
   - name: Migration - Registration not required
   - name: Services - Registration required
   - name: Services - Registration not required
+  - name: Resource addressing with relative roots - Registration not required
+  - name: Resource addressing with relative roots - Registration required
 paths:
   /.p2/core/v1/challenge:
     get:
@@ -743,6 +745,73 @@ paths:
               type: string
       security:
         - BearerAuth: []
+  /.p2/core/v1/resource/{rid}:
+    get:
+      operationId: Unregistered_getResource
+      summary: Get resource by resource ID
+      description: |-
+        Retrieve a [RawR](https://docs.polyphony.chat/Protocol%20Specifications/core/#731-resource-addressing-with-relative-roots)
+        resource by specifying the ID of the resource.
+      parameters:
+        - name: rid
+          in: path
+          required: true
+          description: ': Resource Identifier - unique identifier for a resource.'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: |-
+            - `200`: File found and retrieved.
+            - `401`: Server or resource requires authentication to access this endpoint.
+            - `403`: Server or resource not accessible for the actor making this request.
+            - `404`: Resource not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TypeSpec.Http.File'
+        '401':
+          description: |-
+            - `200`: File found and retrieved.
+            - `401`: Server or resource requires authentication to access this endpoint.
+            - `403`: Server or resource not accessible for the actor making this request.
+            - `404`: Resource not found.
+        '403':
+          description: |-
+            - `200`: File found and retrieved.
+            - `401`: Server or resource requires authentication to access this endpoint.
+            - `403`: Server or resource not accessible for the actor making this request.
+            - `404`: Resource not found.
+        '404':
+          description: |-
+            - `200`: File found and retrieved.
+            - `401`: Server or resource requires authentication to access this endpoint.
+            - `403`: Server or resource not accessible for the actor making this request.
+            - `404`: Resource not found.
+      tags:
+        - Resource addressing with relative roots - Registration not required
+    post:
+      operationId: Registered_postResource
+      summary: Upload RawR resource
+      parameters:
+        - name: rid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: Content-Length
+          in: header
+          required: true
+          schema:
+            type: integer
+            format: uint64
+      responses:
+        '200':
+          description: The request has succeeded.
+      tags:
+        - Resource addressing with relative roots - Registration required
+      security:
+        - BearerAuth: []
   /.p2/core/v1/services:
     post:
       operationId: Registered_registerService
@@ -1191,6 +1260,18 @@ paths:
         - {}
 components:
   schemas:
+    TypeSpec.Http.File:
+      type: object
+      required:
+        - contents
+      properties:
+        contentType:
+          type: string
+        filename:
+          type: string
+        contents:
+          type: string
+          format: byte
     Version:
       type: string
       enum:
