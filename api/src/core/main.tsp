@@ -115,4 +115,23 @@ namespace models {
     }
 
     model MessageBatchExample extends MessageBatch<string> {}
+
+    /** The data is a gzipped tarball (.tar.gz) named `export1234567890-user@subdomain.example.com`, where
+     *   - `export[numbers]` is the word `export` with 20 random digits appended to it
+     *   - `user` is the actors' name
+     *   - `subdomain.example.com` is the FQDN of the server the actor is registered on.
+     *   This file archive contains a file `messages.json` which is a JSON `MessageBatch` of all
+     *   messages sent by the user. Note the [definition of the word "message" in polyproto](https://docs.polyphony.chat/Protocol%20Specifications/core/#:~:text=software%20for%20clients.-,message%2C%20messages,-%3A%20In%20the%20context).
+     *   If the server where the data export was requested from has [RawR](https://docs.polyphony.chat/Protocol%20Specifications/core/#731-resource-addressing-with-relative-roots)
+     *   enabled, the file archive will contain a folder named `rawr`. This folder contains all
+     *   RawR-content uploaded by the actor to that server. The files in this folder are named after
+     *   the resource ID. File extensions are only added if they were known to the server. An
+     *   example file name might be `2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl`,
+     *   referencing the file which was hosted at `<server_url>/.p2/core/resource/2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl`.
+     *   If the server where the data export was requested from is the actors' home server, the
+     *   archive will contain two folders `certs` and `crypt_certs`. `certs` will contain all ID-Certs
+     *   the server has stored of the actor. `crypt_certs` will contain all encrypted private key
+     *   material that the actor has uploaded to the server.
+     */
+    model P2Export {}
 }
