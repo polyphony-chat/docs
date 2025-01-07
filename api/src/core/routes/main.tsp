@@ -6,6 +6,7 @@ import "../main.tsp";
 import "./federated_identity.tsp";
 import "./migration.tsp";
 import "./services.tsp";
+import "./rawr.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Versioning;
