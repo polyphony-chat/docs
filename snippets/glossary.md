@@ -39,6 +39,7 @@
   defining the routes and capabilities of the chat-API used by Polyphony.
 - **polyproto** - The core federation protocol and APIs of polyproto, enabling identification and
   authorization on foreign servers. It is independent of the chat-API used.
+- **RawR** - [Resource addressing with relative roots](/Protocol%20Specifications/core#731-resource-addressing-with-relative-roots).
 - **Root Certificate** - A certificate used to sign other certificates, establishing a chain of
   trust. In polyproto, only home servers have root certificates.
 - **Service**: Any application-specific implementation of polyproto, defined by a P2 extension.
