@@ -1379,12 +1379,12 @@ references to it. One way to ensure the uniqueness of the identifier is to use a
 resource itself. Combining this has with a cryptographically strong nonce, then hashing the result of
 concatenating the nonce and the hash of the resource should yield a unique identifier.
 
-The API route for resource addressing with relative roots is formatted as follows:
+The URI for resource addressing with relative roots is formatted as follows:
 
 `<server_url>/.p2/core/resource/<resource_id>`
 
-The API route for resource addressing with relative roots is documented more thoroughly in the API
-documentation.
+The API routes for resource addressing with relative roots are documented more thoroughly in the [API
+documentation](https://apidocs.polyproto.org).
 
 Servers with no need for resource addressing with relative roots can select to not implement this
 feature. Servers not implementing this feature should return a `404 Not Found` status code when
