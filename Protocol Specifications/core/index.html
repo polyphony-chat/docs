@@ -1327,6 +1327,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#732-polyproto-exportimport-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.3.2 polyproto export/import format
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2421,6 +2430,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#732-polyproto-exportimport-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.3.2 polyproto export/import format
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2634,6 +2652,7 @@ of the specification document: <strong>v0.1.0-alpha.1</strong></p>
 </li>
 <li><a href="#73-moving-data">7.3 Moving data</a></li>
 <li><a href="#731-resource-addressing-with-relative-roots">7.3.1 Resource Addressing with relative roots</a></li>
+<li><a href="#732-polyproto-exportimport-format">7.3.2 polyproto export/import format</a></li>
 <li><a href="#74-challenges-and-trust">7.4 Challenges and trust</a></li>
 </ul>
 </li>
@@ -2711,6 +2730,7 @@ which can operate with other polyproto implementations.</p>
   defining the routes and capabilities of the chat-API used by Polyphony.</li>
 <li><strong>polyproto</strong> - The core federation protocol and APIs of polyproto, enabling identification and
   authorization on foreign servers. It is independent of the chat-API used.</li>
+<li><strong>RawR</strong> - <a href="/Protocol%20Specifications/core#731-resource-addressing-with-relative-roots">Resource addressing with relative roots</a>.</li>
 <li><strong>Root Certificate</strong> - A certificate used to sign other certificates, establishing a chain of
   trust. In polyproto, only home servers have root certificates.</li>
 <li><strong>Service</strong>: Any application-specific implementation of polyproto, defined by a P2 extension.
@@ -3657,6 +3677,7 @@ of the chat application. Typically, the messages in a group chat are stored on t
 hosting the group. Moving the messages of one individual from one server to another is not
 possible in these cases.</p>
 </div>
+<p><a name="example-static-information" id="example-static-information"></a></p>
 <div class="admonition example">
 <p class="admonition-title">Example: Information not necessarily tied to a specific context</p>
 <p>Continuing the chat application example, it might very well be possible to move messages
@@ -3862,10 +3883,13 @@ between re-signing batches.</p>
 <p><em>Fig. 7: Sequence diagram depicting the re-signing procedure.</em></p>
 <h3 id="73-moving-data">7.3 Moving data<a class="headerlink" href="#73-moving-data" title="Permanent link">&para;</a></h3>
 <p>In cases of an imminent server shutdown or distrust in the old server, moving data from the old server
-is necessary to prevent data loss. This process extends upon the reassigning ownership process, and
+is necessary to prevent data loss.</p>
+<p>Note, that only <a href="#example-static-information">"static" resources</a> can be moved. "Dynamic" resources,
+which are resources tied to a specific context, can be migrated through <a href="#72-re-signing-messages">re-signing messages</a>.</p>
+<p>This process extends upon the reassigning ownership process, and
 usually involves the following steps:</p>
 <ol>
-<li>Using the old account, the client requests a data export from your old home server.</li>
+<li>Using the old account, the client requests a data export from their old home server.</li>
 <li>The old home server sends a data export to the client. The client will check the signatures on
    the exported data, to ensure it was not tampered with.</li>
 <li>The new account re-signs the data with its own keys and imports it into the new home server.</li>
@@ -3892,8 +3916,7 @@ sb-&gt;&gt;sb: Verify data integrity
 sb-&gt;&gt;ab: Data import successful
 aa-xsa: Deactivate account</code></pre>
 <p><em>Fig. 8: Sequence diagram depicting the data moving process.</em></p>
-<p>How this process is implemented is up to P2 extensions to define. The above steps are only a
-guideline. The API routes for data export and import are documented in the
+<p>The API routes for data export and import are documented in the
 <a href="https://apidocs.polyproto.org">API documentation</a></p>
 <h4 id="731-resource-addressing-with-relative-roots">7.3.1 Resource Addressing with relative roots<a class="headerlink" href="#731-resource-addressing-with-relative-roots" title="Permanent link">&para;</a></h4>
 <p>Moving data from one server to another might break references to this data. To prevent this as much
@@ -3924,6 +3947,35 @@ documentation.</p>
 <p>Servers with no need for resource addressing with relative roots can select to not implement this
 feature. Servers not implementing this feature should return a <code>404 Not Found</code> status code when
 the API route is accessed. Clients should expect finding servers not implementing this feature.</p>
+<h4 id="732-polyproto-exportimport-format">7.3.2 polyproto export/import format<a class="headerlink" href="#732-polyproto-exportimport-format" title="Permanent link">&para;</a></h4>
+<p>Data exports and -imports must use the polyproto export/import format. Home servers are required to
+support this format when actors perform data exports and imports.</p>
+<p>The data is a <a href="https://en.wikipedia.org/wiki/Gzip">gzipped</a> <a href="https://en.wikipedia.org/wiki/Tar_(computing)">tarball</a>
+archive (.tar.gz) named <code>export1234567890-user@subdomain.example.com</code>, where</p>
+<ul>
+<li><code>export[numbers]</code> is the word <code>export</code> with 20 random digits appended to it</li>
+<li><code>user</code> is the actors' name</li>
+<li><code>subdomain.example.com</code> is the FQDN of the server the actor is registered on.</li>
+</ul>
+<p>This file archive contains a file <code>messages.p2mb</code> which is a JSON file containing <a href="#721-message-batches">message batches</a>
+of all messages sent by the user. If the server where the data export was requested from has
+<a href="#731-resource-addressing-with-relative-roots">RawR</a> enabled, the file archive will contain a
+folder named <code>rawr</code>. This folder contains all RawR content uploaded by the actor to that server.
+The files in this folder are named after the resource ID given to the resource.
+File extensions are only added if they were known to the server.</p>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p>An example file name might be
+<code>2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl</code>, referencing the file
+which was hosted at <code>&lt;server_url&gt;/.p2/core/resource/2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl</code>.</p>
+</div>
+<p>If the server where the data export was requested from is the actors' home server, the
+archive will contain a folder <code>certs</code> and a file <code>crypt_certs.p2epk</code>. <code>certs</code> will contain all ID-Certs
+the server has stored of the actor. The ID-Certs will be stored in
+<a href="https://web.archive.org/web/20250107131731/https://learn.microsoft.com/en-us/azure/iot-hub/reference-x509-certificates#:~:text=ASN.1%20encoding.-,ascii%20pem%20format,-A%20PEM%20certificate">ASCII PEM format</a>
+The file <code>crypt_certs.p2epk</code> contains all <a href="#63-private-key-loss-prevention-and-private-key-recovery">encrypted private key material</a>
+that the actor has uploaded to the server. Just like <code>messages.p2mb</code>, <code>crypt_certs.p2epk</code> is a standard
+JSON file.</p>
 <h3 id="74-challenges-and-trust">7.4 Challenges and trust<a class="headerlink" href="#74-challenges-and-trust" title="Permanent link">&para;</a></h3>
 <p>Changing the publicly visible ownership of actor data requires the chain of trust to be maintained.
 If an "old" account wants to change the publicly visible ownership of its data, the "old"
@@ -4151,7 +4203,7 @@ service provider, they must request a <a href="#7-migrations">migration</a>.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-06T20:36:41+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-06</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-07T13:45:23+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-07</span>
   </span>
 
     
