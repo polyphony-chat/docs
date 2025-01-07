@@ -1383,6 +1383,12 @@ The URI for resource addressing with relative roots is formatted as follows:
 
 `<server_url>/.p2/core/resource/<resource_id>`
 
+Uploaded resources can be made private and access to them can be controlled via allow- and deny lists,
+specifying access properties for each individual resource. Individual actors and entire instances can
+be part of these allow- and deny lists. Marking a resource as private restricts access to only the
+uploader and the actors and instances part of the allow list. APIs and JSON schemas associated with
+access control are part of the [API documentation](https://apidocs.polyproto.org).
+
 The API routes for resource addressing with relative roots are documented more thoroughly in the [API
 documentation](https://apidocs.polyproto.org).
 
@@ -1415,10 +1421,39 @@ File extensions are only added if they were known to the server.
     `2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl`, referencing the file
     which was hosted at `<server_url>/.p2/core/resource/2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl`.
 
+In addition, the folder `rawr` contains a file named `access_properties.p2al`. This JSON
+file contains a data structure mapping each resource ID to an access properties object. In particular,
+the file is structured as an array containing objects. Each object has a key which is equal
+to the resource ID of a resource in the `rawr` directory and a value which is an object
+representing the access properties. An example of the contents of this file is given below:
+
+???+ example "Example of a `access_properties.p2al` file"
+
+    ```json
+    [
+      {
+        "2062a23e2a25b226ca4c546fec5ec06e0df9648281f45da8b5aaabebdf66cf4c.jxl": {
+          "private": false,
+          "allowlist": ["user1@example.com", "instance.example.com"],
+          "denylist": ["user2@example.com", "otherinstance@example.com"]
+        }
+      },
+      {
+        "a9144379a161e1fcf6b07801b70db6d6c481933bd634fe2409eb713723ab1a0a": {
+          "private": true,
+          "allowlist": ["user1@example.com"],
+          "denylist": []
+        }
+      }
+    ]
+    ```
+
 If the server where the data export was requested from is the actors' home server, the
-archive will contain a folder `certs` and a file `crypt_certs.p2epk`. `certs` will contain all ID-Certs
-the server has stored of the actor. The ID-Certs will be stored in
-[ASCII PEM format](https://web.archive.org/web/20250107131731/https://learn.microsoft.com/en-us/azure/iot-hub/reference-x509-certificates#:~:text=ASN.1%20encoding.-,ascii%20pem%20format,-A%20PEM%20certificate)
+archive will contain a folder `certs` and a file `crypt_certs.p2epk`.
+
+The folder `certs` contains all ID-Certs the server has stored of the actor. The ID-Certs are stored
+in [ASCII PEM format](https://web.archive.org/web/20250107131731/https://learn.microsoft.com/en-us/azure/iot-hub/reference-x509-certificates#:~:text=ASN.1%20encoding.-,ascii%20pem%20format,-A%20PEM%20certificate).
+
 The file `crypt_certs.p2epk` contains all [encrypted private key material](#63-private-key-loss-prevention-and-private-key-recovery)
 that the actor has uploaded to the server. Just like `messages.p2mb`, `crypt_certs.p2epk` is a standard
 JSON file.
