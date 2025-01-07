@@ -84,19 +84,7 @@ paths:
           description: |-
             - `202` and a key trial, if one still needs to be passed
             - `200` and the appropriate data if the key trial has been passed and is not yet expired.
-            The data is a gzipped tarball (.tar.gz) named `export1234567890-user@subdomain.example.com`, where
-            - `export[numbers]` is the word `export` with 20 random digits appended to it
-            - `user` is the actors' name
-            - `subdomain.example.com` is the FQDN of the server the actor is registered on.
-
-            This file archive contains a file `messages.json` which is a JSON `MessageBatch` of all
-            messages sent by the user. Note the [definition of the word "message" in polyproto](https://docs.polyphony.chat/Protocol%20Specifications/core/#:~:text=software%20for%20clients.-,message%2C%20messages,-%3A%20In%20the%20context).
-            If the server where the data export was requested from has [RawR](https://docs.polyphony.chat/Protocol%20Specifications/core/#731-resource-addressing-with-relative-roots)
-            enabled, the file archive will contain a folder named `rawr`. This folder contains all
-            RawR-content uploaded by the actor to that server. The files in this folder are named after
-            the resource ID. File extensions are only added if they were known to the server. An
-            example file name might be `2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl`,
-            referencing the file which was hosted at `<server_url>/.p2/core/resource/2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl`.
+            See the `P2Export` schema for more information.
             - `204` if the server needs time to gather the data. A `Retry-After` header is included in
             the response, indicating to the actor the point in time at which they should query this
             endpoint again. If this point in time is after the expiry timestamp of the completed key trial,
@@ -105,24 +93,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TypeSpec.Http.File'
+                $ref: '#/components/schemas/polyproto.core.models.P2Export'
         '202':
           description: |-
             - `202` and a key trial, if one still needs to be passed
             - `200` and the appropriate data if the key trial has been passed and is not yet expired.
-            The data is a gzipped tarball (.tar.gz) named `export1234567890-user@subdomain.example.com`, where
-            - `export[numbers]` is the word `export` with 20 random digits appended to it
-            - `user` is the actors' name
-            - `subdomain.example.com` is the FQDN of the server the actor is registered on.
-
-            This file archive contains a file `messages.json` which is a JSON `MessageBatch` of all
-            messages sent by the user. Note the [definition of the word "message" in polyproto](https://docs.polyphony.chat/Protocol%20Specifications/core/#:~:text=software%20for%20clients.-,message%2C%20messages,-%3A%20In%20the%20context).
-            If the server where the data export was requested from has [RawR](https://docs.polyphony.chat/Protocol%20Specifications/core/#731-resource-addressing-with-relative-roots)
-            enabled, the file archive will contain a folder named `rawr`. This folder contains all
-            RawR-content uploaded by the actor to that server. The files in this folder are named after
-            the resource ID. File extensions are only added if they were known to the server. An
-            example file name might be `2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl`,
-            referencing the file which was hosted at `<server_url>/.p2/core/resource/2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl`.
+            See the `P2Export` schema for more information.
             - `204` if the server needs time to gather the data. A `Retry-After` header is included in
             the response, indicating to the actor the point in time at which they should query this
             endpoint again. If this point in time is after the expiry timestamp of the completed key trial,
@@ -136,19 +112,7 @@ paths:
           description: |-
             - `202` and a key trial, if one still needs to be passed
             - `200` and the appropriate data if the key trial has been passed and is not yet expired.
-            The data is a gzipped tarball (.tar.gz) named `export1234567890-user@subdomain.example.com`, where
-            - `export[numbers]` is the word `export` with 20 random digits appended to it
-            - `user` is the actors' name
-            - `subdomain.example.com` is the FQDN of the server the actor is registered on.
-
-            This file archive contains a file `messages.json` which is a JSON `MessageBatch` of all
-            messages sent by the user. Note the [definition of the word "message" in polyproto](https://docs.polyphony.chat/Protocol%20Specifications/core/#:~:text=software%20for%20clients.-,message%2C%20messages,-%3A%20In%20the%20context).
-            If the server where the data export was requested from has [RawR](https://docs.polyphony.chat/Protocol%20Specifications/core/#731-resource-addressing-with-relative-roots)
-            enabled, the file archive will contain a folder named `rawr`. This folder contains all
-            RawR-content uploaded by the actor to that server. The files in this folder are named after
-            the resource ID. File extensions are only added if they were known to the server. An
-            example file name might be `2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl`,
-            referencing the file which was hosted at `<server_url>/.p2/core/resource/2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl`.
+            See the `P2Export` schema for more information.
             - `204` if the server needs time to gather the data. A `Retry-After` header is included in
             the response, indicating to the actor the point in time at which they should query this
             endpoint again. If this point in time is after the expiry timestamp of the completed key trial,
@@ -653,17 +617,22 @@ paths:
     post:
       operationId: Registered_importData
       summary: Import data to server
-      description: //TODO
-      parameters: []
+      description: |-
+        Import a `P2Export` file. `messages` in this file must have been re-signed to the current
+        actor. Only messages classified as ["Information not tied to a specific context"](https://docs.polyphony.chat/Protocol%20Specifications/core/#:~:text=Example%3A%20Information%20not,without%0Aany%20issues.)
+        can be imported.
+      parameters:
+        - name: X-P2-Sensitive-Solution
+          in: header
+          required: true
+          description: Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.
+          schema:
+            type: string
       responses:
         '202':
-          description: The request has been accepted for processing, but processing has not yet completed.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
-        '204':
-          description: 'There is no content to send for this request, but the headers may be useful. '
+          description: |-
+            - `202`: The content has been accepted for processing, but processing has not been
+            completed or may not have started.
           headers:
             Content-Length:
               required: true
@@ -673,41 +642,13 @@ paths:
                   - 0
       tags:
         - Migration - Registration required
+        - Sensitive Actions
       requestBody:
         required: false
         content:
           application/json:
             schema:
-              type: array
-              items:
-                type: object
-                required:
-                  - idCert
-                  - messages
-                properties:
-                  idCert:
-                    type: string
-                    description: The ID-Cert that the following messages' signatures correspond to.
-                  messages:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        signature:
-                          type: string
-                          description: Signature of the whole message
-                        content:
-                          type: string
-                          description: Arbitrary content `T`. This depends on the specific implementation or extension of the protocol.
-                      required:
-                        - signature
-                        - content
-                    description: The actual message.
-                description: |-
-                  A message batch, as received from and sent to the server in the context of re-signing messages.
-                  This type is generic over `T`, where `T` represents the content of the actual message. This
-                  means, that the specific message content depends on the concrete implementation or extension
-                  of the polyproto protocol.
+              $ref: '#/components/schemas/polyproto.core.models.P2Export'
       security:
         - BearerAuth: []
   /.p2/core/v1/migration/redirect:
@@ -1250,18 +1191,6 @@ paths:
         - {}
 components:
   schemas:
-    TypeSpec.Http.File:
-      type: object
-      required:
-        - contents
-      properties:
-        contentType:
-          type: string
-        filename:
-          type: string
-        contents:
-          type: string
-          format: byte
     Version:
       type: string
       enum:
@@ -1389,6 +1318,25 @@ components:
             This type is generic over `T`, where `T` represents the content of the actual message. This
             means, that the specific message content depends on the concrete implementation or extension
             of the polyproto protocol.
+    polyproto.core.models.P2Export:
+      type: object
+      description: |-
+        The data is a gzipped tarball (.tar.gz) named `export1234567890-user@subdomain.example.com`, where
+        - `export[numbers]` is the word `export` with 20 random digits appended to it
+        - `user` is the actors' name
+        - `subdomain.example.com` is the FQDN of the server the actor is registered on.
+        This file archive contains a file `messages.json` which is a JSON `MessageBatch` of all
+        messages sent by the user. Note the [definition of the word "message" in polyproto](https://docs.polyphony.chat/Protocol%20Specifications/core/#:~:text=software%20for%20clients.-,message%2C%20messages,-%3A%20In%20the%20context).
+        If the server where the data export was requested from has [RawR](https://docs.polyphony.chat/Protocol%20Specifications/core/#731-resource-addressing-with-relative-roots)
+        enabled, the file archive will contain a folder named `rawr`. This folder contains all
+        RawR-content uploaded by the actor to that server. The files in this folder are named after
+        the resource ID. File extensions are only added if they were known to the server. An
+        example file name might be `2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl`,
+        referencing the file which was hosted at `<server_url>/.p2/core/resource/2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl`.
+        If the server where the data export was requested from is the actors' home server, the
+        archive will contain two folders `certs` and `crypt_certs`. `certs` will contain all ID-Certs
+        the server has stored of the actor. `crypt_certs` will contain all encrypted private key
+        material that the actor has uploaded to the server.
     polyproto.core.models.Service:
       type: object
       required:
