@@ -207,8 +207,13 @@ namespace Migration {
          * - `204`: No keytrials found for specified actor
          * - `404`: Specified actor not known
          * - `200`: Completed key trials of requested actor
+         * @param fid: The FID of the actor to query key trials for.
+         * @param limit: How many response objects to query for at maximum. A value of `0` or not specifying this value at all means no maximum is defined.
+         * @param id: Query for a specific key trial performed by an actor by the ID of the key trial.
+         * @param notBefore: Return only key trials and their results performed at or after a specific point in time. UNIX 64 bit timestamp.
+         * @param notAfter: Return only key trials and their results performed at or before a specific point in time. UNIX 64 bit timestamp.
          */
-        op getKeyTrials(@path fid: string, @query limit?: uint16 = 0): {
+        op getKeyTrials(@path fid: string, @query limit?: uint16 = 0, @query id?: string, @query notBefore?: uint64, @query notAfter?: uint64): {
             @statusCode statusCode: 204;
             @header({name: "Content-Length"}) contentLength: 0;
         } | {
