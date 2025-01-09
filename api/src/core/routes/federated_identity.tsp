@@ -84,6 +84,7 @@ namespace FederatedIdentity {
         } | {
             @doc("Returned, if no `serial_numbers` are provided and the client has not uploaded any key material.")
             @statusCode statusCode: 204;
+            @header({name: "Content-Length"}) contentLength: 0;
         } | {
             @doc("Returned, if none of the `serial_numbers` match any known ID-Certs from this actor.")
             @statusCode statusCode: 404;
@@ -103,6 +104,7 @@ namespace FederatedIdentity {
             @header({name: "X-P2-Sensitive-Solution"}) sensitiveSolution: string,
             @query serials: uint64[]): {
             @statusCode statusCode: 204;
+            @header({name: "Content-Length"}) contentLength: 0;
         } | {
             @doc("Returned, if none of the `serial_numbers` match any known ID-Certs from this actor.")
             @statusCode statusCode: 404;
@@ -142,6 +144,19 @@ namespace FederatedIdentity {
         } | {
             @statusCode statusCode: 404;
         };
+
+        @route("/key/server")
+        @summary("Rotate Server Identity Key")
+        @added(Version.`v1.0-alpha.1`)
+        @post
+        @useAuth(BearerAuth)
+        @tag("Sensitive Actions")
+        /**
+         * Rotate the server's identity key. Requires server administrator permissions.
+         * @returns The servers' new ID-Cert, encoded as PEM 
+         */
+        op name(@doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
+        @header({name: "X-P2-Sensitive-Solution"}) sensitiveSolution: string,): string;
     }
 
     @tag("Federated Identity - Registration not required")
@@ -160,19 +175,6 @@ namespace FederatedIdentity {
             @statusCode statusCode: 200;
             @body challengeStringResponse: polyproto.core.models.ChallengeStringResponse
         };
-
-        @route("/key/server")
-        @summary("Rotate Server Identity Key")
-        @added(Version.`v1.0-alpha.1`)
-        @post
-        @useAuth(BearerAuth)
-        @tag("Sensitive Actions")
-        /**
-         * Rotate the server's identity key. Requires server administrator permissions.
-         * @returns The servers' new ID-Cert, encoded as PEM 
-         */
-        op name(@doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
-        @header({name: "X-P2-Sensitive-Solution"}) sensitiveSolution: string,): string;
 
         @route("/idcert/server")
         @get
@@ -210,13 +212,12 @@ namespace FederatedIdentity {
         /**
          * Request the ID-Certs of a specific actor. The specified actor must be registered on this server.
          * @param fid The ID of the actor whose ID-Cert(s) should be returned.
-         * @param timestamp An optional UNIX timestamp to retrieve the ID-Cert the actor had at that
-         * point in time, instead of the current one.
+         * @param notBefore: Return only ID-Certs from at or after a specific point in time. UNIX 64 bit timestamp.
+         * @param notAfter: Return only ID-Certs from at or before a specific point in time. UNIX 64 bit timestamp.
          * @param session_id Optionally, return only the ID-Certs matching a specific `session_id`.
-         * @param body timestamp: UNIX-Timestamp. If specified, the server will return the ID-Cert(s) which the actor had at the specified time. session_id: Request the ID-Cert for a specific session ID.
          * @returns JSON-Array of Object(s), each object containing "id_cert" (PEM encoded ID-Cert) and "invalidated" (boolean). An ID-Cert is considered invalidated, if the server or actor choose to revoke the validity of the ID-Cert before the lifetime of the certificate was scheduled to end.
         */
-        op actorCerts(@path fid: string, @query timestamp?: uint64, @query session_id?: string): {
+        op actorCerts(@path fid: string, @query notBefore?: uint64, @query notAfter?: uint64, @query session_id?: string): {
             @statusCode statusCode: 200;
             @body response: {
                 @doc("PEM encoded ID-Cert")
@@ -247,7 +248,6 @@ namespace FederatedIdentity {
     }
 }
 
-/*
-TODO: Missing routes:
-- Changing actor federation ID
-*/
+/**
+ * TODO: ID-Cert caching cache number
+ */
