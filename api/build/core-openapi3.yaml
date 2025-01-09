@@ -539,6 +539,13 @@ paths:
       responses:
         '200':
           description: Messages. The distinct format of messages is up to the specific p2 extension to define.
+          headers:
+            'X-P2-Return-Body-Size-Limit ':
+              required: false
+              description: This header tells the client whether the route to commit re-signed messages has an upload size limit, and what the size of that limit is. A value of `0` means that there is no limit. This header not being present can also be interpreted as no limit existing.
+              schema:
+                type: integer
+                format: uint64
           content:
             application/json:
               schema:
@@ -576,6 +583,17 @@ paths:
           description: Messages. The distinct format of messages is up to the specific p2 extension to define.
       tags:
         - Migration - Registration not required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                serialNumber:
+                  type: integer
+                  format: uint64
+                  description: If specified, query for non-re-signed messages corresponding to a specific ID-Cert.
       security:
         - BearerAuth: []
   /.p2/core/v1/messages/commit:
@@ -592,6 +610,13 @@ paths:
             - `403` if messages have been modified where the original keys have not passed the key
             trial, if a key trial has not been passed at all or if the messages have been signed
             with keys that were not on the `allowedResigningKeys` list.
+          headers:
+            Retry-After:
+              required: true
+              description: This header dictates the time a client should wait for before sending another batch of re-signed messages.
+              schema:
+                type: integer
+                format: uint16
         '400':
           description: |-
             - `200` On success
