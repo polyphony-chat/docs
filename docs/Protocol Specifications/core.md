@@ -5,6 +5,11 @@ weight: 0
 
 # polyproto Specification
 
+!!! warning
+
+    The polyproto specification document is in an **alpha** phase. Please report any inconsistencies,
+    missing or duplicate information and other mistakes at [github.com/polyphony-chat/docs/issues](https://github.com/polyphony-chat/docs/issues).
+
 Version of this specification document: **v0.1.0-alpha.1** - Treat this as an unfinished draft.
 
 Version of the [API documentation](https://apidocs.polyproto.org) applicable for this version
