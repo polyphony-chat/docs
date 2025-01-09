@@ -24,3 +24,4 @@ TypeSpec
 Protobuf
 gzipped
 RawR
+OID
