@@ -144,7 +144,11 @@ namespace Migration {
          *   with keys that were not on the `allowedResigningKeys` list.
          */
         op commitMessages(@body messages: polyproto.core.models.MessageBatch<string>[]): {
-            @statusCode statusCode: 200 | 400 | 403;
+            @statusCode statusCode: 200;
+            @doc("This header dictates the time a client should wait for before sending another batch of re-signed messages.")
+            @header({name: "Retry-After"}) retryAfter: uint16;
+        } | {
+            @statusCode _: 400 | 403;
         };
 
         @route("/messages")
@@ -154,10 +158,13 @@ namespace Migration {
         /**
          * Fetch messages to be re-signed.
          * @param limit How many messages to request from the server. Defaults to 100.
+         * @param serialNumber If specified, query for non-re-signed messages corresponding to a specific ID-Cert.
          * @returns Messages. The distinct format of messages is up to the specific p2 extension to define.
          */
-        op getMessages(@query limit?: uint32 = 100): {
+        op getMessages(@query limit?: uint32 = 100, serialNumber?: uint64): {
             @statusCode statusCode: 200;
+            @doc("This header tells the client whether the route to commit re-signed messages has an upload size limit, and what the size of that limit is. A value of `0` means that there is no limit. This header not being present can also be interpreted as no limit existing.")
+            @header({name: "X-P2-Return-Body-Size-Limit "}) sizeLimit?: uint64;
             @body message: polyproto.core.models.MessageBatch<string>[];
         } | {
             @statusCode statusCode: 403;
