@@ -57,3 +57,6 @@
 {"rule":"ADMIT_ENJOY_VB","sentence":"^\\QThe following sections are dedicated to documenting best practices to consider when implementing polyproto.\\E$"}
 {"rule":"ADMIT_ENJOY_VB","sentence":"^\\QThe following subsections are dedicated to documenting best practices to consider when implementing polyproto.\\E$"}
 {"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QThe data is a gzipped tarball archive (.tar.gz) named \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q, where\\E$"}
+{"rule":"ADMIT_ENJOY_VB","sentence":"^\\QIt is also recommended to back up the encrypted private identity keys in some other secure location.\\E$"}
+{"rule":"EN_A_VS_AN","sentence":"^\\QCommunicating the body size limit is done by adding an \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q header to the response.\\E$"}
+{"rule":"ANY_BODY","sentence":"^\\QIf this header is not present or has a value of \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q, clients should assume that there is no body size limit.\\E$"}
