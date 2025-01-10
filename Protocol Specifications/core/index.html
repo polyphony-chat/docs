@@ -955,19 +955,28 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#31-websockets" class="md-nav__link">
+  <a href="#31-well-known" class="md-nav__link">
     <span class="md-ellipsis">
-      3.1 WebSockets
+      3.1 .well-known
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="3.1 WebSockets">
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-websockets" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 WebSockets
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.2 WebSockets">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#311-events-over-rest" class="md-nav__link">
+  <a href="#321-events-over-rest" class="md-nav__link">
     <span class="md-ellipsis">
-      3.1.1 Events over REST
+      3.2.1 Events over REST
     </span>
   </a>
   
@@ -2058,19 +2067,28 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#31-websockets" class="md-nav__link">
+  <a href="#31-well-known" class="md-nav__link">
     <span class="md-ellipsis">
-      3.1 WebSockets
+      3.1 .well-known
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="3.1 WebSockets">
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-websockets" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 WebSockets
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.2 WebSockets">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#311-events-over-rest" class="md-nav__link">
+  <a href="#321-events-over-rest" class="md-nav__link">
     <span class="md-ellipsis">
-      3.1.1 Events over REST
+      3.2.1 Events over REST
     </span>
   </a>
   
@@ -2608,8 +2626,9 @@ of the specification document: <strong>v0.1.0-alpha.1</strong></p>
 <li><a href="#1-terminology-used-in-this-document">1. Terminology used in this document</a></li>
 <li><a href="#2-trust-model">2. Trust model</a></li>
 <li><a href="#3-apis-and-communication-protocols">3. APIs and communication protocols</a><ul>
-<li><a href="#31-websockets">3.1 WebSockets</a></li>
-<li><a href="#311-events-over-rest">3.1.1 Events over REST</a></li>
+<li><a href="#31-well-known">3.1 <code>.well-known</code></a></li>
+<li><a href="#32-websockets">3.2 WebSockets</a></li>
+<li><a href="#321-events-over-rest">3.2.1 Events over REST</a></li>
 </ul>
 </li>
 <li><a href="#4-federated-identity">4. Federated identity</a><ul>
@@ -2767,7 +2786,7 @@ that can operate with other polyproto implementations.</p>
    possessing the identity.</li>
 </ol>
 <h2 id="3-apis-and-communication-protocols">3. APIs and communication protocols<a class="headerlink" href="#3-apis-and-communication-protocols" title="Permanent link">&para;</a></h2>
-<p>The polyproto specification defines a set of <a href="/APIs">APIs</a>.
+<p>The polyproto specification defines a set of <a href="https://apidocs.polyproto.org">APIs</a>.
 In addition to these REST APIs, polyproto employs WebSockets for real-time communication between
 clients and servers.</p>
 <p>The APIs are divided into two categories:</p>
@@ -2778,9 +2797,45 @@ clients and servers.</p>
   the client's home server.</li>
 </ul>
 <p>All software aiming to federate with other polyproto implementations must implement the APIs defined
-in this specification. Implementations can choose to extend the APIs with additional routes but must
-not remove or change the behavior of the routes defined in this specification.</p>
-<h3 id="31-websockets">3.1 WebSockets<a class="headerlink" href="#31-websockets" title="Permanent link">&para;</a></h3>
+in the <a href="https://apidocs.polyproto.org">API specification</a>. Implementations can choose to extend the
+APIs with additional routes but must not remove or change the behavior of the routes defined in
+this specification.</p>
+<h3 id="31-well-known">3.1 <code>.well-known</code><a class="headerlink" href="#31-well-known" title="Permanent link">&para;</a></h3>
+<p><code>/.well-known/</code> locations facilitate the discovery of resources and services available on a given
+host.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Consult the excerpt of this specification explaining what a "domain name" is, to avoid
+misunderstandings. You can find this excerpt <a href="#def-domain-name">here</a>.</p>
+</div>
+<p>polyproto servers can be hosted under a domain name different from the domain name
+appearing on ID-Certs managed by that server <strong>if all the following conditions are met:</strong></p>
+<ol>
+<li>Define the "<em>visible domain name</em>" as the domain name visible on an ID-Cert.</li>
+<li>Define the "<em>actual domain name</em>" as the domain name where the polyproto server is actually hosted
+   under.</li>
+<li>The <em>visible domain name</em> <strong>must</strong> have a URI <code>[visible domain name]/.well-known/polyproto-core</code>,
+   accessible via an HTTP GET request.</li>
+<li>The resource accessible at this URI must be a JSON object formatted as such:</li>
+</ol>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w"> </span><span class="nt">&quot;api&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;[actual domain name]/.p2/core/&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">}</span>
+</code></pre></div>
+<ol>
+<li>The ID-Cert received when querying <code>[actual domain name]/.p2/core/idcert/server</code> with an HTTP GET
+   request must have a field "issuer" containing domain components (<code>dc</code>) that, when parsed, <strong>equal</strong>
+   the domain name of the <em>visible domain name</em>. If the domain components in this field do not match
+   the domain components of the <em>visible domain name</em>, the server hosted under the <em>actual domain name</em>
+   must not be treated as a polyproto server for the <em>visible domain name</em>.</li>
+</ol>
+<p>Should a client not be able to access the polyproto API endpoints located at <code>[visible domain name]/.p2/core/</code>,
+the client must query <code>[visible domain name]/.well-known/polyproto-core</code> with an HTTP GET request and
+try to verify the above-mentioned conditions. If all the above-mentioned conditions can be fulfilled,
+the client can treat the server located at the <em>actual domain name</em> as a polyproto server serving the
+<em>visible domain name</em>. Clients must not treat the server located at the <em>actual domain name</em> as a
+polyproto server serving the <em>actual domain name</em>.</p>
+<h3 id="32-websockets">3.2 WebSockets<a class="headerlink" href="#32-websockets" title="Permanent link">&para;</a></h3>
 <p>WebSockets enable real-time communication between actor clients and servers.</p>
 <p>WebSocket connections to polyproto servers consist of the following cycle:</p>
 <pre class="mermaid"><code>sequenceDiagram
@@ -2818,10 +2873,10 @@ end
 <p class="admonition-title">Info</p>
 <p>To learn more about polyproto WebSockets and WebSocket Events, consult the <a href="/docs/APIs/Core/WebSockets/index.md">WebSockets documentation</a>.</p>
 </div>
-<h4 id="311-events-over-rest">3.1.1 Events over REST<a class="headerlink" href="#311-events-over-rest" title="Permanent link">&para;</a></h4>
+<h4 id="321-events-over-rest">3.2.1 Events over REST<a class="headerlink" href="#321-events-over-rest" title="Permanent link">&para;</a></h4>
 <p>For some implementation contexts, a constant WebSocket connection might not be wanted. A client can
 instead opt to query an API endpoint to receive events, which would normally be sent through the WebSocket
-connection. Concrete polyproto-implementations and extensions can decide whether this alternative
+connection. Concrete polyproto implementations and extensions can decide whether this alternative
 behavior is supported.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
@@ -2835,9 +2890,8 @@ connected to the WebSocket.</p>
 <p>Depending on how many events the session has
 missed, the earliest events might be excluded from the response to limit the response body's size. This
 behavior should be explicitly documented in implementations or extensions of polyproto.</p>
-<p>Due to the
-intended use cases for retrieving events through REST rather than WebSockets, this endpoint is not
-a long-polling endpoint.</p>
+<p>Due to the intended use cases for retrieving events through REST rather than WebSockets,
+this endpoint is not a long-polling endpoint.</p>
 <p>There are three intended, main modes for retrieving events in polyproto</p>
 <ol>
 <li>Keep a constant WebSocket connection whenever possible.</li>
@@ -3018,17 +3072,17 @@ This combination ensures global uniqueness.</p>
 <tbody>
 <tr>
 <td><code>actor</code></td>
-<td>"Local Name" or "Common Name"</td>
+<td><a name="def-local-name" id="def-local-name"></a>"Local Name" or "Common Name"</td>
 <td>Must be unique on each instance.</td>
 </tr>
 <tr>
 <td><code>@</code></td>
-<td>"Separator"</td>
+<td><a name="def-separator" id="separator"></a>"Separator"</td>
 <td>Separates local name from domain name</td>
 </tr>
 <tr>
 <td><code>optionalsubdomain.domain.tld</code></td>
-<td>"Domain Name"</td>
+<td><a name="def-domain-name" id="def-domain-name"></a>"Domain Name"</td>
 <td>Includes top-level domain, second-level domain and other subdomains. Address which the actors' home server can be reached at.</td>
 </tr>
 </tbody>
@@ -3086,6 +3140,7 @@ information on cryptographic recommendations.</p>
 an X.509 certificate is defined in <a href="https://tools.ietf.org/html/rfc5280">RFC5280</a>.
 ID-Certs encompass a subset of the structure of an X.509 certificate.</p>
 <p>ID-Certs have the following structure:</p>
+<p>// TODO: WTF? pDN of actor must be in subject field, not issuer field!</p>
 <table>
 <thead>
 <tr>
@@ -3852,33 +3907,33 @@ for re-signing messages are documented in the <a href="https://apidocs.polyproto
 <p>Messages that have not yet been re-signed are being delivered to an actor in batches. A batch is
 a JSON object, representing messages sent using the same ID-Cert. An
 exemplary array of message batches, as returned by the server, might look as follows:</p>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">[</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="p">{</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="err">id_cer</span><span class="kc">t</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;QLASDiohs79034sjkldfny8eppqxncp7n4g9vozeyuiwofxb...&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="err">messages</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="p">{</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">        </span><span class="err">sig</span><span class="kc">nature</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ASDiohs79034sjkldfny8eppqxncp7n4g9vozeyuiwofxb...&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">        </span><span class="err">co</span><span class="kc">ntent</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">          </span><span class="err">message</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Hello!&quot;</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">      </span><span class="p">},</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">      </span><span class="p">{</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">        </span><span class="err">sig</span><span class="kc">nature</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ASDiohs7902347sjkldfny8eafhjhjafdlk4g121ghjkz...&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">        </span><span class="err">co</span><span class="kc">ntent</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">          </span><span class="err">message</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Hello again!&quot;</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">      </span><span class="p">}</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="p">]</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span><span class="p">},</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span><span class="p">{</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">    </span><span class="err">id_cer</span><span class="kc">t</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;QLAxiohs79034sjkldfny8eppqxncp7n4g9vozeyuiwofxn...&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">    </span><span class="err">messages</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">      </span><span class="p">{</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">        </span><span class="err">...</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">      </span><span class="p">}</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">    </span><span class="p">]</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="p">]</span>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">[</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="p">{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="err">id_cer</span><span class="kc">t</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;QLASDiohs79034sjkldfny8eppqxncp7n4g9vozeyuiwofxb...&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="err">messages</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="p">{</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">        </span><span class="err">sig</span><span class="kc">nature</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ASDiohs79034sjkldfny8eppqxncp7n4g9vozeyuiwofxb...&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">        </span><span class="err">co</span><span class="kc">ntent</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">          </span><span class="err">message</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Hello!&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">      </span><span class="p">},</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">      </span><span class="p">{</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">        </span><span class="err">sig</span><span class="kc">nature</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ASDiohs7902347sjkldfny8eafhjhjafdlk4g121ghjkz...&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">        </span><span class="err">co</span><span class="kc">ntent</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">          </span><span class="err">message</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Hello again!&quot;</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span><span class="p">{</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">    </span><span class="err">id_cer</span><span class="kc">t</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;QLAxiohs79034sjkldfny8eppqxncp7n4g9vozeyuiwofxn...&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">    </span><span class="err">messages</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">      </span><span class="p">{</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">        </span><span class="err">...</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="p">]</span>
 </code></pre></div>
 <p>The concrete values held by a message batch are up to the concrete implementation. The prior JSON
 array depicting an array of message batches is only an example. However, it is mandatory that a
@@ -4017,22 +4072,22 @@ to the resource ID of a resource in the <code>rawr</code> directory and a value 
 representing the access properties. An example of the contents of this file is given below:</p>
 <details class="example" open="open">
 <summary>Example of an <code>access_properties.p2al</code> file</summary>
-<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">[</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="p">{</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">&quot;2062a23e2a25b226ca4c546fec5ec06e0df9648281f45da8b5aaabebdf66cf4c.jxl&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nt">&quot;private&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nt">&quot;allowlist&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;user1@example.com&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;instance.example.com&quot;</span><span class="p">],</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">      </span><span class="nt">&quot;denylist&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;user2@example.com&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;otherinstance@example.com&quot;</span><span class="p">]</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="p">},</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="p">{</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nt">&quot;a9144379a161e1fcf6b07801b70db6d6c481933bd634fe2409eb713723ab1a0a&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">      </span><span class="nt">&quot;private&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">      </span><span class="nt">&quot;allowlist&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;user1@example.com&quot;</span><span class="p">],</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">      </span><span class="nt">&quot;denylist&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="p">]</span>
+<div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">[</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="p">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">&quot;2062a23e2a25b226ca4c546fec5ec06e0df9648281f45da8b5aaabebdf66cf4c.jxl&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">      </span><span class="nt">&quot;private&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">      </span><span class="nt">&quot;allowlist&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;user1@example.com&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;instance.example.com&quot;</span><span class="p">],</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">      </span><span class="nt">&quot;denylist&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;user2@example.com&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;otherinstance@example.com&quot;</span><span class="p">]</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="p">{</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="nt">&quot;a9144379a161e1fcf6b07801b70db6d6c481933bd634fe2409eb713723ab1a0a&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">      </span><span class="nt">&quot;private&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">      </span><span class="nt">&quot;allowlist&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;user1@example.com&quot;</span><span class="p">],</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">      </span><span class="nt">&quot;denylist&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="p">]</span>
 </code></pre></div>
 </details>
 <p>If the server where the data export was requested from is the actor's home server, the
@@ -4269,7 +4324,7 @@ service provider, they must request a <a href="#7-migrations">migration</a>.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-09T22:14:35+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-09</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-10T19:48:26+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-10</span>
   </span>
 
     
