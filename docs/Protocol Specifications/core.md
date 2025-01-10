@@ -21,8 +21,9 @@ of the specification document: **v0.1.0-alpha.1**
   - [1. Terminology used in this document](#1-terminology-used-in-this-document)
   - [2. Trust model](#2-trust-model)
   - [3. APIs and communication protocols](#3-apis-and-communication-protocols)
-    - [3.1 WebSockets](#31-websockets)
-      - [3.1.1 Events over REST](#311-events-over-rest)
+    - [3.1 `.well-known`](#31-well-known)
+    - [3.2 WebSockets](#32-websockets)
+      - [3.2.1 Events over REST](#321-events-over-rest)
   - [4. Federated identity](#4-federated-identity)
     - [4.1 Authentication](#41-authentication)
       - [4.1.1 Authenticating on a foreign server](#411-authenticating-on-a-foreign-server)
@@ -115,7 +116,7 @@ polyproto operates under the following trust assumptions:
 
 ## 3. APIs and communication protocols
 
-The polyproto specification defines a set of [APIs](/APIs).
+The polyproto specification defines a set of [APIs](https://apidocs.polyproto.org).
 In addition to these REST APIs, polyproto employs WebSockets for real-time communication between
 clients and servers.
 
@@ -127,10 +128,50 @@ The APIs are divided into two categories:
   the client's home server.
 
 All software aiming to federate with other polyproto implementations must implement the APIs defined
-in this specification. Implementations can choose to extend the APIs with additional routes but must
-not remove or change the behavior of the routes defined in this specification.
+in the [API specification](https://apidocs.polyproto.org). Implementations can choose to extend the
+APIs with additional routes but must not remove or change the behavior of the routes defined in
+this specification.
 
-### 3.1 WebSockets
+### 3.1 `.well-known`
+
+`/.well-known/` locations facilitate the discovery of resources and services available on a given
+host.
+
+!!! note
+
+    Consult the excerpt of this specification explaining what a "domain name" is, to avoid
+    misunderstandings. You can find this excerpt [here](#def-domain-name).
+
+polyproto servers can be hosted under a domain name different from the domain name
+appearing on ID-Certs managed by that server **if all the following conditions are met:**
+
+1. Define the "*visible domain name*" as the domain name visible on an ID-Cert.
+2. Define the "*actual domain name*" as the domain name where the polyproto server is actually hosted
+   under.
+3. The *visible domain name* **must** have a URI `[visible domain name]/.well-known/polyproto-core`,
+   accessible via an HTTP GET request.
+4. The resource accessible at this URI must be a JSON object formatted as such:
+
+   ```json
+   {
+    "api": "[actual domain name]/.p2/core/"
+   }
+   ```
+
+5. The ID-Cert received when querying `[actual domain name]/.p2/core/idcert/server` with an HTTP GET
+   request must have a field "issuer" containing domain components (`dc`) that, when parsed, **equal**
+   the domain name of the *visible domain name*. If the domain components in this field do not match
+   the domain components of the *visible domain name*, the server hosted under the *actual domain name*
+   must not be treated as a polyproto server for the *visible domain name*.
+
+Should a client not be able to access the polyproto API endpoints located at `[visible domain name]/.p2/core/`,
+the client must query `[visible domain name]/.well-known/polyproto-core` with an HTTP GET request and
+try to verify the above-mentioned conditions. If all the above-mentioned conditions can be fulfilled,
+the client can treat the server located at the *actual domain name* as a polyproto server serving the
+*visible domain name*. Clients must not treat the server located at the *actual domain name* as a
+polyproto server serving the *actual domain name*.
+
+### 3.2 WebSockets
 
 WebSockets enable real-time communication between actor clients and servers.
 
@@ -175,11 +216,11 @@ end
 
     To learn more about polyproto WebSockets and WebSocket Events, consult the [WebSockets documentation](/docs/APIs/Core/WebSockets/index.md).
 
-#### 3.1.1 Events over REST
+#### 3.2.1 Events over REST
 
 For some implementation contexts, a constant WebSocket connection might not be wanted. A client can
 instead opt to query an API endpoint to receive events, which would normally be sent through the WebSocket
-connection. Concrete polyproto-implementations and extensions can decide whether this alternative
+connection. Concrete polyproto implementations and extensions can decide whether this alternative
 behavior is supported.
 
 !!! example
@@ -196,9 +237,8 @@ Depending on how many events the session has
 missed, the earliest events might be excluded from the response to limit the response body's size. This
 behavior should be explicitly documented in implementations or extensions of polyproto.
 
-Due to the
-intended use cases for retrieving events through REST rather than WebSockets, this endpoint is not
-a long-polling endpoint.
+Due to the intended use cases for retrieving events through REST rather than WebSockets,
+this endpoint is not a long-polling endpoint.
 
 There are three intended, main modes for retrieving events in polyproto
 
@@ -397,11 +437,11 @@ FIDs used in public contexts are formatted as `actor@optionalsubdomain.domain.tl
 
 FIDs consist of the following parts:
 
-| Part                           | Name                          | Description                                                                                                                   |
-| ------------------------------ | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `actor`                        | "Local Name" or "Common Name" | Must be unique on each instance.                                                                                              |
-| `@`                            | "Separator"                   | Separates local name from domain name                                                                                         |
-| `optionalsubdomain.domain.tld` | "Domain Name"                 | Includes top-level domain, second-level domain and other subdomains. Address which the actors' home server can be reached at. |
+| Part                           | Name                                                                           | Description                                                                                                                   |
+| ------------------------------ | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| `actor`                        | <a name="def-local-name" id="def-local-name"></a>"Local Name" or "Common Name" | Must be unique on each instance.                                                                                              |
+| `@`                            | <a name="def-separator" id="separator"></a>"Separator"                         | Separates local name from domain name                                                                                         |
+| `optionalsubdomain.domain.tld` | <a name="def-domain-name" id="def-domain-name"></a>"Domain Name"               | Includes top-level domain, second-level domain and other subdomains. Address which the actors' home server can be reached at. |
 
 The following regular expression can be used to validate actor IDs: `\b([a-z0-9._%+-]+)@([a-z0-9-]+(\.[a-z0-9-]+)*)`.
 
@@ -469,6 +509,8 @@ an X.509 certificate is defined in [RFC5280](https://tools.ietf.org/html/rfc5280
 ID-Certs encompass a subset of the structure of an X.509 certificate.
 
 ID-Certs have the following structure:
+
+// TODO: WTF? pDN of actor must be in subject field, not issuer field!
 
 | Field Description                                                                                   | Special requirements, if any                                                                    | X.509 equivalent                                         |
 | --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
