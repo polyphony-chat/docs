@@ -156,7 +156,8 @@ namespace Migration {
         @added(Version.`v1.0-alpha.1`)
         @summary("Fetch messages to-be-resigned")
         /**
-         * Fetch messages to be re-signed.
+         * Fetch messages to be re-signed. Must only return messages where the signatures correlate to
+         * ID-Certs for which a key trial has been passed.
          * @param limit How many messages to request from the server. Defaults to 100.
          * @param serialNumber If specified, query for non-re-signed messages corresponding to a specific ID-Cert.
          * @returns Messages. The distinct format of messages is up to the specific p2 extension to define.
@@ -189,7 +190,7 @@ namespace Migration {
          * - `202`, if the server needs additional time to process the key trials
          * - `400`, if one or more completed key trials were faulty. Contains faulty key trials in the response body.
          */
-        op keyTrialRedirectExtern(@body body: polyproto.core.models.KeyTrialCompleted[]): {
+        op completeKeyTrial(@body body: polyproto.core.models.KeyTrialCompleted[]): {
             @doc("Returns `200` if the key trials were processed and deemed to be valid. Returns `202`, if the server needs additional time to process the key trials.")
             @statusCode statusCode: 202 | 200
         } | {
