@@ -1195,9 +1195,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#65-cryptographic-recommendations" class="md-nav__link">
+  <a href="#65-cryptographic-specifications" class="md-nav__link">
     <span class="md-ellipsis">
-      6.5 Cryptographic recommendations
+      6.5 Cryptographic specifications
     </span>
   </a>
   
@@ -2307,9 +2307,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#65-cryptographic-recommendations" class="md-nav__link">
+  <a href="#65-cryptographic-specifications" class="md-nav__link">
     <span class="md-ellipsis">
-      6.5 Cryptographic recommendations
+      6.5 Cryptographic specifications
     </span>
   </a>
   
@@ -2657,7 +2657,7 @@ of the specification document: <strong>v0.1.0-alpha.1</strong></p>
 <li><a href="#63-private-key-loss-prevention-and-private-key-recovery">6.3 Private key loss prevention and private key recovery</a></li>
 <li><a href="#64-caching-of-id-certs">6.4 Caching of ID-Certs</a></li>
 <li><a href="#641-verifying-that-a-newly-retrieved-id-cert-is-not-out-of-date">6.4.1 Verifying that a newly retrieved ID-Cert is not out of date</a></li>
-<li><a href="#65-cryptographic-recommendations">6.5 Cryptographic recommendations</a></li>
+<li><a href="#65-cryptographic-specifications">6.5 Cryptographic specifications</a></li>
 <li><a href="#66-best-practices">6.6 Best practices</a></li>
 <li><a href="#661-signing-keys-and-id-certs">6.6.1 Signing keys and ID-Certs</a></li>
 <li><a href="#662-home-server-operation-and-design">6.6.2 Home server operation and design</a></li>
@@ -2944,11 +2944,11 @@ protected route.</p>
 <h4 id="411-authenticating-on-a-foreign-server">4.1.1 Authenticating on a foreign server<a class="headerlink" href="#411-authenticating-on-a-foreign-server" title="Permanent link">&para;</a></h4>
 <p>Regardless of the authentication method used, the foreign server must verify the actor's identity
 before allowing them to perform any actions. This verification must be done by proving the cryptographic
-connection between an actors' home server's public identity key and the actor's ID-Cert. Challenge
-strings, as described in <a href="#42-challenge-strings">Section 4.2</a> and in <a href="./auth.md">polyproto-auth</a>
-are used for this purpose within this specification.</p>
-<p>Servers must also check with the actor's home server to ensure that the ID-Cert has not been revoked.
-APIs for this purpose are defined in the <a href="/APIs">API documentation</a>.</p>
+connection between an actors' home server's public identity key and the actor's ID-Cert through
+ID-Cert signature verification.</p>
+<p>Before a foreign actor is allowed to send messages on the server, the server must also check with
+the actor's home server to ensure that the ID-Cert has not been revoked. See <a href="#641-verifying-that-a-newly-retrieved-id-cert-is-not-out-of-date">section 6.4.1</a>
+for information on how this is done.</p>
 <h4 id="412-sensitive-actions">4.1.2 Sensitive actions<a class="headerlink" href="#412-sensitive-actions" title="Permanent link">&para;</a></h4>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -3725,12 +3725,45 @@ joining character strings end-to-end. For example, the concatenation of "snow" a
 identity key allows an actor to validate that a cached ID-Cert is both genuine and up-to-date.</p>
 <p>This technique remedies the possibility of caching introducing an additional attack vector, allowing
 caching to be used without conflicting with the <a href="#2-trust-model">trust model</a> of polyproto.</p>
-<h3 id="65-cryptographic-recommendations">6.5 Cryptographic recommendations<a class="headerlink" href="#65-cryptographic-recommendations" title="Permanent link">&para;</a></h3>
-<p>For two implementations of polyproto to be interoperable, they must support an overlapping set of
-digital signature algorithms.</p>
-<p>If technically practical, all implementations of polyproto must support the use of the Ed25519 digital
-signature algorithm for signing messages and generating ID-Certs. The use of the RSA algorithm for
-digital signatures <a href="https://blog.trailofbits.com/2019/07/08/fuck-rsa/">is heavily discouraged</a>.</p>
+<div class="admonition info">
+<p class="admonition-title">Scenarios requiring cache and validity verification</p>
+<p><strong>Only</strong> the following scenarios <strong>must require</strong> a server to retrieve, validate and supply invalidation
+and cache information about a foreign actor's ID-Cert:</p>
+<ul>
+<li><strong>Sending messages:</strong> Before a foreign actor is allowed to send any messages on the server. This
+  automatically applies again if the ID-Cert is changed through any means.</li>
+<li><strong>ID-Cert request:</strong> When the server receives a request for a foreign actor's ID-Cert, the server
+  must fetch and validate invalidation and cache information about the foreign actor's ID-Cert before
+  completing the request.</li>
+</ul>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Scenarios <strong>not</strong> requiring cache and validity verification</p>
+<p>The following scenarios <strong>must explicitly not require</strong> a server to retrieve, verify or supply invalidation
+and cache information about a foreign actor's ID-Cert:</p>
+<ul>
+<li><strong>Requesting a challenge string:</strong> When a foreign actor requests a challenge string from the server.</li>
+<li><strong>Requesting a key trial:</strong> When a foreign actor requests a key trial from the server.</li>
+<li><strong>Completing a key trial:</strong> When a foreign actor completes a key trial from the server.</li>
+<li><strong>Re-signing messages request:</strong> When a foreign actor requests to re-sign messages on the server.</li>
+<li><strong>Re-signing messages abortion request:</strong> When a foreign actor requests to abort the re-signing
+  of messages on the server.</li>
+<li><strong>Re-signing messages commitment:</strong> When a foreign actor commits re-signed messages to the server.</li>
+<li><strong>Re-signing messages commitment:</strong> When a foreign actor fetches messages to-be re-signed from
+  the server.</li>
+<li><strong>Requesting a redirect:</strong> When a foreign ("new") actor asks the server of the "old" server to
+  set up a redirect to the "new" actor.</li>
+<li><strong>Key trial information request:</strong> When an actor requests information about completed key trials
+  from the foreign actor.</li>
+</ul>
+</div>
+<p>polyproto implementation must not require cache and validity verification on any route not specified
+in the above information block, except if a <a href="#8-protocol-extensions-p2-extensions">p2-extension</a> states
+otherwise.</p>
+<h3 id="65-cryptographic-specifications">6.5 Cryptographic specifications<a class="headerlink" href="#65-cryptographic-specifications" title="Permanent link">&para;</a></h3>
+<p>All implementations of polyproto <strong>must</strong> use the Ed25519 digital signature algorithm for signing
+messages and generating ID-Certs. The usage of alternative cryptographic algorithms is allowed.
+However, certificates and messages must be made available with Ed25519 signatures per default.</p>
 <h3 id="66-best-practices">6.6 Best practices<a class="headerlink" href="#66-best-practices" title="Permanent link">&para;</a></h3>
 <p>The following subsections are dedicated to documenting best practices to consider when
 implementing polyproto.</p>
@@ -4332,7 +4365,7 @@ service provider, they must request a <a href="#7-migrations">migration</a>.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-10T21:15:45+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-10</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-11T16:48:52+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-11</span>
   </span>
 
     
