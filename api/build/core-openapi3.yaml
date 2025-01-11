@@ -210,25 +210,13 @@ paths:
           explode: false
       responses:
         '200':
-          description: JSON-Array of Object(s), each object containing "id_cert" (PEM encoded ID-Cert) and "invalidated" (boolean). An ID-Cert is considered invalidated, if the server or actor choose to revoke the validity of the ID-Cert before the lifetime of the certificate was scheduled to end.
+          description: JSON-Array of Object(s).
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    id_cert:
-                      type: string
-                      example: ------BEGIN CERTIFICATE------...
-                      description: PEM encoded ID-Cert
-                    invalidated:
-                      type: boolean
-                      example: false
-                      description: Whether this specific id_cert has been marked as invalidated by the server. An ID-Cert is considered invalidated, if the server or actor choose to revoke the validity of the ID-Cert before the lifetime of the certificate was scheduled to end.
-                  required:
-                    - id_cert
-                    - invalidated
+                  $ref: '#/components/schemas/polyproto.core.models.CacheableIDCert'
       tags:
         - Federated Identity - Registration not required
   /.p2/core/v1/idcert/server:
@@ -255,7 +243,7 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/polyproto.core.models.CacheableIDCert'
       tags:
         - Federated Identity - Registration not required
   /.p2/core/v1/key/server:
@@ -282,41 +270,9 @@ paths:
         - Sensitive Actions
       security:
         - BearerAuth: []
-    get:
-      operationId: Unregistered_serverKey
-      summary: Get Server Public Key
-      description: Request the server's public key.
-      parameters:
-        - name: timestamp
-          in: query
-          required: false
-          description: |-
-            An optional UNIX timestamp to retrieve the public key the server had at that
-            point in time, instead of the current one.
-          schema:
-            type: object
-            properties:
-              timestamp:
-                type: integer
-                format: uint64
-            required:
-              - timestamp
-          explode: false
-      responses:
-        '200':
-          description: |-
-            The current public key of the server, or, if specified, the public key the server had
-            at the specified time. The public key is being returned as a PEM encoded X.509
-            `SubjectPublicKeyInfo`.
-          content:
-            application/json:
-              schema:
-                type: string
-      tags:
-        - Federated Identity - Registration not required
   /.p2/core/v1/keytrial:
     post:
-      operationId: Unregistered_keyTrialRedirectExtern
+      operationId: Unregistered_completeKeyTrial
       summary: Complete key trial
       description: |-
         Complete a key trial. After the successful completion of the key trial, the action that
@@ -525,7 +481,9 @@ paths:
     get:
       operationId: Unregistered_getMessages
       summary: Fetch messages to-be-resigned
-      description: Fetch messages to be re-signed.
+      description: |-
+        Fetch messages to be re-signed. Must only return messages where the signatures correlate to
+        ID-Certs for which a key trial has been passed.
       parameters:
         - name: limit
           in: query
@@ -1658,6 +1616,40 @@ components:
       type: string
       enum:
         - v1.0-alpha.1
+    polyproto.core.models.CacheableIDCert:
+      type: object
+      required:
+        - idCertPem
+        - cacheNotValidBefore
+        - cacheNotValidAfter
+        - cacheSignature
+      properties:
+        idCertPem:
+          type: string
+          example: ------BEGIN CERTIFICATE------...
+          description: The requested ID-Cert in ASCII PEM format.
+        invalidatedAt:
+          type: integer
+          format: uint64
+          example: 1736610000
+          description: UNIX timestamp that specifies when this specific id_cert has been marked as invalidated by the server. An ID-Cert is considered invalidated, if the server or actor choose to revoke the validity of the ID-Cert before the lifetime of the certificate was scheduled to end. If this property does not exist, the ID-Cert has not been invalidated.
+        cacheNotValidBefore:
+          type: integer
+          format: uint64
+          example: 1736606402
+          description: UNIX timestamp that specifies the time from which this cache entry may be treated as valid.
+        cacheNotValidAfter:
+          type: integer
+          format: uint64
+          example: 1736613602
+          description: UNIX timestamp that specifies a time until which this cache entry may be treated as valid.
+        cacheSignature:
+          type: string
+          example: 7ab2bbde7fe43c7481a3a61031546bab16bc1a8735b2f0cdd519958c7f2f99f8
+          minLength: 32
+          maxLength: 32
+          description: Signature generated by the home server. This signature can be verified using the home servers' public identity key. A server generates the `cacheSignature` by concatenating the serial number of the ID-Cert in question with the `cacheValidNotBefore` timestamp and the `cacheValidNotAfter` timestamp, then generating the signature of the resulting concatenated string using the private identity key of the server. Clients must reject certificates of which the `cacheSignature` can not be verified to be correct.
+      description: A cacheable response to an ID-Cert request.
     polyproto.core.models.ChallengeStringResponse:
       type: object
       required:
