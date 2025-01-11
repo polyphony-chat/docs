@@ -1104,6 +1104,10 @@ caching to be used without conflicting with the [trust model](#2-trust-model) of
     - **Key trial information request:** When an actor requests information about completed key trials
       from the foreign actor.
 
+polyproto implementation must not require cache and validity verification on any route not specified
+in the above information block, except if a [p2-extension](#8-protocol-extensions-p2-extensions) states
+otherwise.
+
 ### 6.5 Cryptographic specifications
 
 All implementations of polyproto **must** use the Ed25519 digital signature algorithm for signing
