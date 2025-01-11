@@ -187,23 +187,7 @@ namespace FederatedIdentity {
          * @param timestamp An optional UNIX timestamp to retrieve the ID-Cert the server had at that
          * point in time, instead of the current one.
          */
-        op serverIdCert(@query timestamp?: uint64): string;
-
-        @route("/key/server")
-        @get
-        @added(Version.`v1.0-alpha.1`)
-        @summary("Get Server Public Key")
-        /**
-         * Request the server's public key.
-         * @returns The current public key of the server, or, if specified, the public key the server had
-         * at the specified time. The public key is being returned as a PEM encoded X.509
-         * `SubjectPublicKeyInfo`.
-         * @param timestamp An optional UNIX timestamp to retrieve the public key the server had at that
-         * point in time, instead of the current one.
-         */
-        op serverKey(@query timestamp?: {
-            timestamp: uint64
-        }): string;
+        op serverIdCert(@query timestamp?: uint64): polyproto.core.models.CacheableIDCert;
 
         @route("/idcert/actor")
         @get
@@ -215,18 +199,11 @@ namespace FederatedIdentity {
          * @param notBefore: Return only ID-Certs from at or after a specific point in time. UNIX 64 bit timestamp.
          * @param notAfter: Return only ID-Certs from at or before a specific point in time. UNIX 64 bit timestamp.
          * @param session_id Optionally, return only the ID-Certs matching a specific `session_id`.
-         * @returns JSON-Array of Object(s), each object containing "id_cert" (PEM encoded ID-Cert) and "invalidated" (boolean). An ID-Cert is considered invalidated, if the server or actor choose to revoke the validity of the ID-Cert before the lifetime of the certificate was scheduled to end.
+         * @returns JSON-Array of Object(s).
         */
         op actorCerts(@path fid: string, @query notBefore?: uint64, @query notAfter?: uint64, @query session_id?: string): {
             @statusCode statusCode: 200;
-            @body response: {
-                @doc("PEM encoded ID-Cert")
-                @example("------BEGIN CERTIFICATE------...")
-                id_cert: string,
-                @example(false)
-                @doc("Whether this specific id_cert has been marked as invalidated by the server. An ID-Cert is considered invalidated, if the server or actor choose to revoke the validity of the ID-Cert before the lifetime of the certificate was scheduled to end.")
-                invalidated: boolean
-            }[]
+            @body response: polyproto.core.models.CacheableIDCert[]
         };
 
         @route("/session/idcert/extern")
@@ -247,7 +224,3 @@ namespace FederatedIdentity {
         };
     }
 }
-
-/**
- * TODO: ID-Cert caching cache number
- */
