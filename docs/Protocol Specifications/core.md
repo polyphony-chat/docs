@@ -20,10 +20,12 @@ of the specification document: **v0.1.0-alpha.1**
 - [polyproto Specification](#polyproto-specification)
   - [1. Terminology used in this document](#1-terminology-used-in-this-document)
   - [2. Trust model](#2-trust-model)
-  - [3. APIs and communication protocols](#3-apis-and-communication-protocols)
+  - [3. APIs and underlying communication protocols](#3-apis-and-underlying-communication-protocols)
     - [3.1 `.well-known`](#31-well-known)
     - [3.2 WebSockets](#32-websockets)
       - [3.2.1 Events over REST](#321-events-over-rest)
+    - [3.3 HTTP](#33-http)
+    - [3.4 Internet Protocol (IP)](#34-internet-protocol-ip)
   - [4. Federated identity](#4-federated-identity)
     - [4.1 Authentication](#41-authentication)
       - [4.1.1 Authenticating on a foreign server](#411-authenticating-on-a-foreign-server)
@@ -114,7 +116,7 @@ polyproto operates under the following trust assumptions:
 6. Users rely on their home server for identity key certification, without the home server
    possessing the identity.
 
-## 3. APIs and communication protocols
+## 3. APIs and underlying communication protocols
 
 The polyproto specification defines a set of [APIs](https://apidocs.polyproto.org).
 In addition to these REST APIs, polyproto employs WebSockets for real-time communication between
@@ -250,6 +252,28 @@ There are three intended, main modes for retrieving events in polyproto
 Polling a REST endpoint is inherently inefficient and therefore should only be done with a high interval,
 ranging from a few minutes to a few days. If a client requires information more often than that,
 then a WebSocket connection should be considered.
+
+### 3.3 HTTP
+
+HTTP/1.1 is the minimum required version that polyproto servers and clients must implement.
+Implementing HTTP/2 and HTTP/3 is strongly recommended for all use cases, as both versions of the
+protocol introduce significant performance improvements over HTTP/1.1 with HTTP/3 reducing latency
+and improving performance the most, especially over lossy networks.
+
+Future versions of the polyproto specification may mandate the implementation of HTTP/2.
+
+### 3.4 Internet Protocol (IP)
+
+Support for both versions 4 and 6 of the Internet Protocol (IPv4 and IPv6) is mandatory for
+polyproto client and server software. Real-world availability of both versions of the Internet
+Protocol in polyproto should happen on a best-effort basis.
+
+!!! example "Explanation"
+
+    We do not mandate that access to a polyproto server must be possible over both IPv4 and IPv6
+    as most of the world is not sufficiently IPv6 capable. We do, however, mandate that software
+    written to support polyproto must be capable of handling traffic over both IPv4 and IPv6, should
+    both versions of the Internet Protocol be available to the software at runtime.
 
 ## 4. Federated identity
 
@@ -503,8 +527,8 @@ Actors must use a separate ID-Cert for each client or session they use. Separati
 limits the potential damage a compromised ID-Cert can cause.
 
 For two implementations of polyproto to be interoperable, they must support an overlapping set of
-digital signature algorithms. See [Section 6.5](#65-cryptographic-recommendations) for more
-information on cryptographic recommendations.
+digital signature algorithms. See [Section 6.5](#65-cryptographic-specifications) for more
+information on cryptographic specifications.
 
 #### 6.1.1 Structure of an ID-Cert
 
