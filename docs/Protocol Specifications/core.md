@@ -5,15 +5,15 @@ weight: 0
 
 # polyproto Specification
 
+- Namespace: `core`
+- Version: `v0.1.0-alpha.1`
+- API version: `v0.1.0-alpha.1`
+- API documentation: [apidocs.polyproto.org](https://apidocs.polyproto.org)
+
 !!! warning
 
     The polyproto specification document is in an **alpha** phase. Please report any inconsistencies,
     missing or duplicate information and other mistakes at [github.com/polyphony-chat/docs/issues](https://github.com/polyphony-chat/docs/issues).
-
-Version of this specification document: **v0.1.0-alpha.1** - Treat this as an unfinished draft.
-
-Version of the [API documentation](https://apidocs.polyproto.org) applicable for this version
-of the specification document: **v0.1.0-alpha.1**
 
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 
@@ -27,7 +27,11 @@ of the specification document: **v0.1.0-alpha.1**
         - [3.2.1.1 Namespaces `n`](#3211-namespaces-n)
         - [3.2.1.2 Opcodes `op`](#3212-opcodes-op)
         - [3.2.1.3 Event names `t`](#3213-event-names-t)
-      - [3.2.2 Events over REST](#322-events-over-rest)
+      - [3.2.2 Heartbeats](#322-heartbeats)
+      - [3.2.3 "Hello" event](#323-hello-event)
+      - [3.2.4 Service channels](#324-service-channels)
+      - [3.2.5 Identify](#325-identify)
+      - [3.2.3 Events over REST](#323-events-over-rest)
     - [3.3 HTTP](#33-http)
     - [3.4 Internet Protocol (IP)](#34-internet-protocol-ip)
   - [4. Federated identity](#4-federated-identity)
@@ -236,7 +240,7 @@ on the specific event.
 | `t`¹  | ?string    | Event name for this payload (only applicable for and present in DISPATCH opcode payloads). |
 
 ¹ These fields are only included for payloads received from a server and are `null` when `op`
-is not equal to DISPATCH.
+is not equal to `DISPATCH`.
 
 ##### 3.2.1.1 Namespaces `n`
 
@@ -250,22 +254,118 @@ correctly interpreting the payload.
 
 ##### 3.2.1.2 Opcodes `op`
 
-The following opcodes are defined by the `core` namespace, which is the namespace managed by this
-specification:
+The following opcodes are defined by the `core` namespace:
 
-| Opcode | Name                           | Action             | Description                                                                                                                            |
-| ------ | ------------------------------ | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `0`    | Dispatch                       | Actor Receive      | Delivery of a message payload to a client.                                                                                             |
-| `1`    | Heartbeat                      | Actor Send/Receive | Keep alive for the WebSocket session.                                                                                                  |
-| `2`    | Hello                          | Actor Receive      | Received upon establishing a connection.                                                                                               |
-| `3`    | Identify                       | Actor Send         | Identify to the server.                                                                                                                |
-| `4`    | Server Certificate Change      | Actor Receive      | Received when the server's certificate changed.                                                                                        |
-| `5`    | New Session                    | Actor Receive      | Received by all sessions except the new one.                                                                                           |
-| `6`    | Actor Certificate Invalidation | Actor Send/Receive | Received by server when an actor certificate has been invalidated. Sent to server when an actor invalidates one of their certificates. |
+| Opcode | Name                           | Action             | Description                                                                                                      |
+| ------ | ------------------------------ | ------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| `0`    | Heartbeat                      | Actor Send/Receive | Keep alive for the WebSocket session.                                                                            |
+| `1`    | Hello                          | Actor Receive      | Received upon establishing a connection.                                                                         |
+| `2`    | Identify                       | Actor Send         | Identify to the server.                                                                                          |
+| `3`    | New Session                    | Actor Receive      | Received by all sessions except the new one.                                                                     |
+| `4`    | Actor Certificate Invalidation | Actor Send/Receive | An actor certificate has been invalidated. Sent *to* server when an actor invalidates one of their certificates. |
+| `5`    | Resume                         | Actor Send         | Resume a connection.                                                                                             |
+| `6`    | Server Certificate Change      | Actor Receive      | Received when the server's certificate changed.                                                                  |
+| `7`    | Heartbeat ACK                  | Actor Receive      | Acknowledgement of a heartbeat                                                                                   |
+| `8`    | Service Channel                | Actor Send/Receive | Open or close a service channel.                                                                                 |
+| `9`    | Service Channel ACK            | Actor Receive      | Acknowledgement of a service channel event.                                                                      |
 
 ##### 3.2.1.3 Event names `t`
 
-#### 3.2.2 Events over REST
+The `t` field in a gateway event payload indicates the event name for this payload. Event names
+are only applicable for and present in `DISPATCH` opcode payloads.
+
+Event names are strings defined by the namespace context and are used to differentiate between different
+types of events within the `DISPATCH` opcode.
+
+String values for event names are to be formatted in `SCREAMING_SNAKE_CASE`.
+
+#### 3.2.2 Heartbeats
+
+Heartbeats are used to keep the WebSocket connection alive. The client sends a heartbeat event to the
+server with a specified interval, which then responds with an acknowledgement for the heartbeat.
+Servers must account for the time it takes for the client to send the heartbeat event. Before closing
+a connection due to a missed heartbeat, the server should request a heartbeat event from the client
+by sending a heartbeat event to the client.
+
+The `d` payload for a heartbeat event is an empty object `{}`.
+
+#### 3.2.3 "Hello" event
+
+The "Hello" event is sent by the server to the client upon establishing a connection. The `d` payload
+for a "Hello" event is an object containing a `heartbeat_interval` field, which specifies the interval
+in milliseconds at which the client should send heartbeat events to the server.
+
+!!! example "Example hello event payload"
+
+    ```json
+    {
+      "heartbeat_interval": 45000
+    }
+    ```
+
+| Field                | Type   | Description                                                                              |
+| -------------------- | ------ | ---------------------------------------------------------------------------------------- |
+| `heartbeat_interval` | uint32 | Interval in milliseconds at which the client should send heartbeat events to the server. |
+
+#### 3.2.4 Service channels
+
+Service channels act like topics in a pub/sub system. They allow clients to subscribe to a specific
+topic and receive messages sent to that topic.
+
+Converting that analogy to polyproto, service channels allow clients to subscribe to gateway events
+of additional namespaces. Service channels allow a unified way of giving extensions access to WebSockets
+without having to initialize a separate WebSocket connection.
+
+A service channel event payload has the following structure:
+
+```json
+{
+  "n": "core",
+  "op": 8,
+  "d": {
+    "action": "subscribe",
+    "service": "service_name"
+  }
+}
+```
+
+| Field     | Type   | Description                                                                                |
+| --------- | ------ | ------------------------------------------------------------------------------------------ |
+| `action`  | string | The action to perform on the service channel. Must be either `subscribe` or `unsubscribe`. |
+| `service` | string | The name of a polyproto service.                                                           |
+
+The server must respond with a `Service Channel ACK` event payload, indicating whether the action
+was successful or not.
+
+```json
+{
+  "n": "core",
+  "op": 9,
+  "d": {
+    "action": "subscribe",
+    "service": "service_name",
+    "success": true,
+    "message": "Successfully subscribed to service_name"
+  }
+}
+```
+
+| Field     | Type    | Description                                                                                |
+| --------- | ------- | ------------------------------------------------------------------------------------------ |
+| `action`  | string  | The action to perform on the service channel. Must be either `subscribe` or `unsubscribe`. |
+| `service` | string  | The polyproto service that was specified in the opcode 8 request                           |
+| `success` | boolean | Whether the action was successful or not.                                                  |
+| `message` | string? | Only present if `success` is `false`. A message indicating why the action failed.          |
+
+If a successful subscription to a service channel is acknowledged, all further events and logic
+is defined by the service's specification.
+
+#### 3.2.5 Identify
+
+The "identify" event is sent by the client to the server to let the server know which actor the
+client is.
+
+#### 3.2.3 Events over REST
 
 For some implementation contexts, a constant WebSocket connection might not be wanted. A client can
 instead opt to query an API endpoint to receive events, which would normally be sent through the WebSocket

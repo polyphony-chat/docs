@@ -65,3 +65,4 @@
 {"rule":"REPEATED_VERBS","sentence":"^\\Q\\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q Hello Actor Receive Received upon establishing a connection.\\E$"}
 {"rule":"REPEATED_VERBS","sentence":"^\\Q\\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q New Session Actor Receive Received by all sessions except the new one.\\E$"}
 {"rule":"REPEATED_VERBS","sentence":"^\\Q\\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q Actor Certificate Invalidation Actor Send/Receive Received by server when an actor certificate has been invalidated.\\E$"}
+{"rule":"REPEATED_VERBS","sentence":"^\\Q\\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q Message Actor Receive Received when a message is sent to the actor.\\E$"}
