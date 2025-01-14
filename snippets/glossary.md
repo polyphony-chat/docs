@@ -10,6 +10,7 @@
 - **Federation ID** - A unique identifier; In public contexts, usually **actor@**subdomain.**example**.com,
   where bold parts are required and non-bold parts are optional.
 - **Foreign server** - An instance that an actor is not registered on; essentially a third party.
+- **Gateway, Gateway Server** - A polyproto compliant WebSocket server.
 - **Home server** - The instance that an actor is registered on. Any polyproto-core compliant server
   hosted on the same domain is also considered a home server. A home server is the instance that
   publicly attests to the validity of all legitimate ID-Certs issued under its [FQDN](https://en.wikipedia.org/wiki/Fully_qualified_domain_name).

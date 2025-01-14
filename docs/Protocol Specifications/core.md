@@ -22,8 +22,12 @@ of the specification document: **v0.1.0-alpha.1**
   - [2. Trust model](#2-trust-model)
   - [3. APIs and underlying communication protocols](#3-apis-and-underlying-communication-protocols)
     - [3.1 `.well-known`](#31-well-known)
-    - [3.2 WebSockets](#32-websockets)
-      - [3.2.1 Events over REST](#321-events-over-rest)
+    - [3.2 WebSocket Protocol](#32-websocket-protocol)
+      - [3.2.1 Gateway Event Payloads](#321-gateway-event-payloads)
+        - [3.2.1.1 Namespaces `n`](#3211-namespaces-n)
+        - [3.2.1.2 Opcodes `op`](#3212-opcodes-op)
+        - [3.2.1.3 Event names `t`](#3213-event-names-t)
+      - [3.2.2 Events over REST](#322-events-over-rest)
     - [3.3 HTTP](#33-http)
     - [3.4 Internet Protocol (IP)](#34-internet-protocol-ip)
   - [4. Federated identity](#4-federated-identity)
@@ -173,11 +177,15 @@ the client can treat the server located at the *actual domain name* as a polypro
 *visible domain name*. Clients must not treat the server located at the *actual domain name* as a
 polyproto server serving the *actual domain name*.
 
-### 3.2 WebSockets
+### 3.2 WebSocket Protocol
 
-WebSockets enable real-time communication between actor clients and servers.
+WebSockets enable real-time, bidirectional communication between actor clients and home servers.
 
-WebSocket connections to polyproto servers consist of the following cycle:
+!!! info
+
+    A polyproto WebSocket server is also called "Gateway" or "Gateway Server" for short.
+
+WebSocket connections to polyproto servers consist of the following, general cycle:
 
 ```mermaid
 sequenceDiagram
@@ -214,11 +222,50 @@ end
 
 *Fig. 1: Sequence diagram of a WebSocket connection to a polyproto server.*
 
-!!! info
+#### 3.2.1 Gateway Event Payloads
 
-    To learn more about polyproto WebSockets and WebSocket Events, consult the [WebSockets documentation](/docs/APIs/Core/WebSockets/index.md).
+Gateway event payloads share a general structure, though the content of the `d` field varies depending
+on the specific event.
 
-#### 3.2.1 Events over REST
+| Field | Type       | Description                                                                                |
+| ----- | ---------- | ------------------------------------------------------------------------------------------ |
+| `n`   | string     | [Namespace](#82-namespaces) context for this payload.                                      |
+| `op`  | integer    | Gateway Opcode indicating the type of payload.                                             |
+| `d`   | JSON value | The event data associated with this payload.                                               |
+| `s`¹  | ?integer   | Sequence number for the event, used for session resumption and heartbeats.                 |
+| `t`¹  | ?string    | Event name for this payload (only applicable for and present in DISPATCH opcode payloads). |
+
+¹ These fields are only included for payloads received from a server and are `null` when `op`
+is not equal to DISPATCH.
+
+##### 3.2.1.1 Namespaces `n`
+
+The `n` field in a gateway event payload indicates the namespace context for the payload. You can
+read more about namespaces in [section 8.2](#82-namespaces).
+
+Every namespace may define its own set of opcodes and event names.
+
+The namespace context must be known to the entity receiving the payload, as it is crucial for
+correctly interpreting the payload.
+
+##### 3.2.1.2 Opcodes `op`
+
+The following opcodes are defined by the `core` namespace, which is the namespace managed by this
+specification:
+
+| Opcode | Name                           | Action             | Description                                                                                                                            |
+| ------ | ------------------------------ | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `0`    | Dispatch                       | Actor Receive      | Delivery of a message payload to a client.                                                                                             |
+| `1`    | Heartbeat                      | Actor Send/Receive | Keep alive for the WebSocket session.                                                                                                  |
+| `2`    | Hello                          | Actor Receive      | Received upon establishing a connection.                                                                                               |
+| `3`    | Identify                       | Actor Send         | Identify to the server.                                                                                                                |
+| `4`    | Server Certificate Change      | Actor Receive      | Received when the server's certificate changed.                                                                                        |
+| `5`    | New Session                    | Actor Receive      | Received by all sessions except the new one.                                                                                           |
+| `6`    | Actor Certificate Invalidation | Actor Send/Receive | Received by server when an actor certificate has been invalidated. Sent to server when an actor invalidates one of their certificates. |
+
+##### 3.2.1.3 Event names `t`
+
+#### 3.2.2 Events over REST
 
 For some implementation contexts, a constant WebSocket connection might not be wanted. A client can
 instead opt to query an API endpoint to receive events, which would normally be sent through the WebSocket
@@ -487,7 +534,7 @@ and [Section #6.2.2](#621-message-verification) for more information.
 
 ### 6.1 Home server signed certificates for public client identity keys (ID-Cert)
 
-The ID-Cert, a [X.509](https://en.wikipedia.org/wiki/X.509) certificate, validates a public actor
+The ID-Cert, an [X.509](https://en.wikipedia.org/wiki/X.509) certificate, validates a public actor
 identity key. It is an actor-generated CSR ([Certificate Signing Request](https://en.wikipedia.org/wiki/Certificate_signing_request)),
 signed by a home server, encompassing actor identity information and the client's public identity key.
 Clients can get an ID-Cert in return for a valid and well-formed CSR. Generating a new ID-Cert is
@@ -723,6 +770,10 @@ reasons, such as
 When an ID-Cert is revoked, the server must revoke the session associated with the revoked ID-Cert.
 Revoking an ID-Cert is considered a [sensitive action](#412-sensitive-actions) and therefore should
 require a second factor of authentication.
+
+<!-->
+TODO: Note that servers can send revocation notices to connected clients
+<!-->
 
 !!! info
 
