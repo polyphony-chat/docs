@@ -945,13 +945,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-apis-and-communication-protocols" class="md-nav__link">
+  <a href="#3-apis-and-underlying-communication-protocols" class="md-nav__link">
     <span class="md-ellipsis">
-      3. APIs and communication protocols
+      3. APIs and underlying communication protocols
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="3. APIs and communication protocols">
+    <nav class="md-nav" aria-label="3. APIs and underlying communication protocols">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -964,19 +964,28 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#32-websockets" class="md-nav__link">
+  <a href="#32-websocket-protocol" class="md-nav__link">
     <span class="md-ellipsis">
-      3.2 WebSockets
+      3.2 WebSocket Protocol
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="3.2 WebSockets">
+    <nav class="md-nav" aria-label="3.2 WebSocket Protocol">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#321-events-over-rest" class="md-nav__link">
+  <a href="#321-gateway-event-payloads" class="md-nav__link">
     <span class="md-ellipsis">
-      3.2.1 Events over REST
+      3.2.1 Gateway Event Payloads
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#322-events-over-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2.2 Events over REST
     </span>
   </a>
   
@@ -984,6 +993,24 @@
         
       </ul>
     </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3 HTTP
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-internet-protocol-ip" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.4 Internet Protocol (IP)
+    </span>
+  </a>
   
 </li>
         
@@ -2057,13 +2084,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-apis-and-communication-protocols" class="md-nav__link">
+  <a href="#3-apis-and-underlying-communication-protocols" class="md-nav__link">
     <span class="md-ellipsis">
-      3. APIs and communication protocols
+      3. APIs and underlying communication protocols
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="3. APIs and communication protocols">
+    <nav class="md-nav" aria-label="3. APIs and underlying communication protocols">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2076,19 +2103,28 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#32-websockets" class="md-nav__link">
+  <a href="#32-websocket-protocol" class="md-nav__link">
     <span class="md-ellipsis">
-      3.2 WebSockets
+      3.2 WebSocket Protocol
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="3.2 WebSockets">
+    <nav class="md-nav" aria-label="3.2 WebSocket Protocol">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#321-events-over-rest" class="md-nav__link">
+  <a href="#321-gateway-event-payloads" class="md-nav__link">
     <span class="md-ellipsis">
-      3.2.1 Events over REST
+      3.2.1 Gateway Event Payloads
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#322-events-over-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2.2 Events over REST
     </span>
   </a>
   
@@ -2096,6 +2132,24 @@
         
       </ul>
     </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3 HTTP
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-internet-protocol-ip" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.4 Internet Protocol (IP)
+    </span>
+  </a>
   
 </li>
         
@@ -2625,10 +2679,18 @@ of the specification document: <strong>v0.1.0-alpha.1</strong></p>
 <li><a href="#polyproto-specification">polyproto Specification</a></li>
 <li><a href="#1-terminology-used-in-this-document">1. Terminology used in this document</a></li>
 <li><a href="#2-trust-model">2. Trust model</a></li>
-<li><a href="#3-apis-and-communication-protocols">3. APIs and communication protocols</a><ul>
+<li><a href="#3-apis-and-underlying-communication-protocols">3. APIs and underlying communication protocols</a><ul>
 <li><a href="#31-well-known">3.1 <code>.well-known</code></a></li>
-<li><a href="#32-websockets">3.2 WebSockets</a></li>
-<li><a href="#321-events-over-rest">3.2.1 Events over REST</a></li>
+<li><a href="#32-websocket-protocol">3.2 WebSocket Protocol</a></li>
+<li><a href="#321-gateway-event-payloads">3.2.1 Gateway Event Payloads</a><ul>
+<li><a href="#3211-namespaces-n">3.2.1.1 Namespaces <code>n</code></a></li>
+<li><a href="#3212-opcodes-op">3.2.1.2 Opcodes <code>op</code></a></li>
+<li><a href="#3213-event-names-t">3.2.1.3 Event names <code>t</code></a></li>
+</ul>
+</li>
+<li><a href="#322-events-over-rest">3.2.2 Events over REST</a></li>
+<li><a href="#33-http">3.3 HTTP</a></li>
+<li><a href="#34-internet-protocol-ip">3.4 Internet Protocol (IP)</a></li>
 </ul>
 </li>
 <li><a href="#4-federated-identity">4. Federated identity</a><ul>
@@ -2721,6 +2783,7 @@ that can operate with other polyproto implementations.</p>
 <li><strong>Federation ID</strong> - A unique identifier; In public contexts, usually <strong>actor@</strong>subdomain.<strong>example</strong>.com,
   where bold parts are required and non-bold parts are optional.</li>
 <li><strong>Foreign server</strong> - An instance that an actor is not registered on; essentially a third party.</li>
+<li><strong>Gateway, Gateway Server</strong> - A polyproto compliant WebSocket server.</li>
 <li><strong>Home server</strong> - The instance that an actor is registered on. Any polyproto-core compliant server
   hosted on the same domain is also considered a home server. A home server is the instance that
   publicly attests to the validity of all legitimate ID-Certs issued under its <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name">FQDN</a>.
@@ -2785,7 +2848,7 @@ that can operate with other polyproto implementations.</p>
 <li>Users rely on their home server for identity key certification, without the home server
    possessing the identity.</li>
 </ol>
-<h2 id="3-apis-and-communication-protocols">3. APIs and communication protocols<a class="headerlink" href="#3-apis-and-communication-protocols" title="Permanent link">&para;</a></h2>
+<h2 id="3-apis-and-underlying-communication-protocols">3. APIs and underlying communication protocols<a class="headerlink" href="#3-apis-and-underlying-communication-protocols" title="Permanent link">&para;</a></h2>
 <p>The polyproto specification defines a set of <a href="https://apidocs.polyproto.org">APIs</a>.
 In addition to these REST APIs, polyproto employs WebSockets for real-time communication between
 clients and servers.</p>
@@ -2835,9 +2898,13 @@ try to verify the above-mentioned conditions. If all the above-mentioned conditi
 the client can treat the server located at the <em>actual domain name</em> as a polyproto server serving the
 <em>visible domain name</em>. Clients must not treat the server located at the <em>actual domain name</em> as a
 polyproto server serving the <em>actual domain name</em>.</p>
-<h3 id="32-websockets">3.2 WebSockets<a class="headerlink" href="#32-websockets" title="Permanent link">&para;</a></h3>
-<p>WebSockets enable real-time communication between actor clients and servers.</p>
-<p>WebSocket connections to polyproto servers consist of the following cycle:</p>
+<h3 id="32-websocket-protocol">3.2 WebSocket Protocol<a class="headerlink" href="#32-websocket-protocol" title="Permanent link">&para;</a></h3>
+<p>WebSockets enable real-time, bidirectional communication between actor clients and home servers.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>A polyproto WebSocket server is also called "Gateway" or "Gateway Server" for short.</p>
+</div>
+<p>WebSocket connections to polyproto servers consist of the following, general cycle:</p>
 <pre class="mermaid"><code>sequenceDiagram
 autonumber
 
@@ -2869,11 +2936,112 @@ opt Resume connection#59;&lt;br /&gt;otherwise, repeat from step 1
 end
 </code></pre>
 <p><em>Fig. 1: Sequence diagram of a WebSocket connection to a polyproto server.</em></p>
-<div class="admonition info">
-<p class="admonition-title">Info</p>
-<p>To learn more about polyproto WebSockets and WebSocket Events, consult the <a href="/docs/APIs/Core/WebSockets/index.md">WebSockets documentation</a>.</p>
-</div>
-<h4 id="321-events-over-rest">3.2.1 Events over REST<a class="headerlink" href="#321-events-over-rest" title="Permanent link">&para;</a></h4>
+<h4 id="321-gateway-event-payloads">3.2.1 Gateway Event Payloads<a class="headerlink" href="#321-gateway-event-payloads" title="Permanent link">&para;</a></h4>
+<p>Gateway event payloads share a general structure, though the content of the <code>d</code> field varies depending
+on the specific event.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>n</code></td>
+<td>string</td>
+<td><a href="#82-namespaces">Namespace</a> context for this payload.</td>
+</tr>
+<tr>
+<td><code>op</code></td>
+<td>integer</td>
+<td>Gateway Opcode indicating the type of payload.</td>
+</tr>
+<tr>
+<td><code>d</code></td>
+<td>JSON value</td>
+<td>The event data associated with this payload.</td>
+</tr>
+<tr>
+<td><code>s</code>¹</td>
+<td>?integer</td>
+<td>Sequence number for the event, used for session resumption and heartbeats.</td>
+</tr>
+<tr>
+<td><code>t</code>¹</td>
+<td>?string</td>
+<td>Event name for this payload (only applicable for and present in DISPATCH opcode payloads).</td>
+</tr>
+</tbody>
+</table>
+<p>¹ These fields are only included for payloads received from a server and are <code>null</code> when <code>op</code>
+is not equal to DISPATCH.</p>
+<h5 id="3211-namespaces-n">3.2.1.1 Namespaces <code>n</code><a class="headerlink" href="#3211-namespaces-n" title="Permanent link">&para;</a></h5>
+<p>The <code>n</code> field in a gateway event payload indicates the namespace context for the payload. You can
+read more about namespaces in <a href="#82-namespaces">section 8.2</a>.</p>
+<p>Every namespace may define its own set of opcodes and event names.</p>
+<p>The namespace context must be known to the entity receiving the payload, as it is crucial for
+correctly interpreting the payload.</p>
+<h5 id="3212-opcodes-op">3.2.1.2 Opcodes <code>op</code><a class="headerlink" href="#3212-opcodes-op" title="Permanent link">&para;</a></h5>
+<p>The following opcodes are defined by the <code>core</code> namespace, which is the namespace managed by this
+specification:</p>
+<table>
+<thead>
+<tr>
+<th>Opcode</th>
+<th>Name</th>
+<th>Action</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0</code></td>
+<td>Dispatch</td>
+<td>Actor Receive</td>
+<td>Delivery of a message payload to a client.</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td>Heartbeat</td>
+<td>Actor Send/Receive</td>
+<td>Keep alive for the WebSocket session.</td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td>Hello</td>
+<td>Actor Receive</td>
+<td>Received upon establishing a connection.</td>
+</tr>
+<tr>
+<td><code>3</code></td>
+<td>Identify</td>
+<td>Actor Send</td>
+<td>Identify to the server.</td>
+</tr>
+<tr>
+<td><code>4</code></td>
+<td>Server Certificate Change</td>
+<td>Actor Receive</td>
+<td>Received when the server's certificate changed.</td>
+</tr>
+<tr>
+<td><code>5</code></td>
+<td>New Session</td>
+<td>Actor Receive</td>
+<td>Received by all sessions except the new one.</td>
+</tr>
+<tr>
+<td><code>6</code></td>
+<td>Actor Certificate Invalidation</td>
+<td>Actor Send/Receive</td>
+<td>Received by server when an actor certificate has been invalidated. Sent to server when an actor invalidates one of their certificates.</td>
+</tr>
+</tbody>
+</table>
+<h5 id="3213-event-names-t">3.2.1.3 Event names <code>t</code><a class="headerlink" href="#3213-event-names-t" title="Permanent link">&para;</a></h5>
+<h4 id="322-events-over-rest">3.2.2 Events over REST<a class="headerlink" href="#322-events-over-rest" title="Permanent link">&para;</a></h4>
 <p>For some implementation contexts, a constant WebSocket connection might not be wanted. A client can
 instead opt to query an API endpoint to receive events, which would normally be sent through the WebSocket
 connection. Concrete polyproto implementations and extensions can decide whether this alternative
@@ -2902,6 +3070,23 @@ this endpoint is not a long-polling endpoint.</p>
 <p>Polling a REST endpoint is inherently inefficient and therefore should only be done with a high interval,
 ranging from a few minutes to a few days. If a client requires information more often than that,
 then a WebSocket connection should be considered.</p>
+<h3 id="33-http">3.3 HTTP<a class="headerlink" href="#33-http" title="Permanent link">&para;</a></h3>
+<p>HTTP/1.1 is the minimum required version that polyproto servers and clients must implement.
+Implementing HTTP/2 and HTTP/3 is strongly recommended for all use cases, as both versions of the
+protocol introduce significant performance improvements over HTTP/1.1 with HTTP/3 reducing latency
+and improving performance the most, especially over lossy networks.</p>
+<p>Future versions of the polyproto specification may mandate the implementation of HTTP/2.</p>
+<h3 id="34-internet-protocol-ip">3.4 Internet Protocol (IP)<a class="headerlink" href="#34-internet-protocol-ip" title="Permanent link">&para;</a></h3>
+<p>Support for both versions 4 and 6 of the Internet Protocol (IPv4 and IPv6) is mandatory for
+polyproto client and server software. Real-world availability of both versions of the Internet
+Protocol in polyproto should happen on a best-effort basis.</p>
+<div class="admonition example">
+<p class="admonition-title">Explanation</p>
+<p>We do not mandate that access to a polyproto server must be possible over both IPv4 and IPv6
+as most of the world is not sufficiently IPv6 capable. We do, however, mandate that software
+written to support polyproto must be capable of handling traffic over both IPv4 and IPv6, should
+both versions of the Internet Protocol be available to the software at runtime.</p>
+</div>
 <h2 id="4-federated-identity">4. Federated identity<a class="headerlink" href="#4-federated-identity" title="Permanent link">&para;</a></h2>
 <p>The federation of actor identities allows users to engage with foreign servers as if they were their
 home servers. For example, in polyproto-chat, an actor can send direct messages to users from a
@@ -3103,7 +3288,7 @@ claims is crucial. See <a href="#61-home-server-signed-certificates-for-public-c
 and <a href="#621-message-verification">Section #6.2.2</a> for more information.</p>
 <h2 id="6-cryptography-and-id-certs">6. Cryptography and ID-Certs<a class="headerlink" href="#6-cryptography-and-id-certs" title="Permanent link">&para;</a></h2>
 <h3 id="61-home-server-signed-certificates-for-public-client-identity-keys-id-cert">6.1 Home server signed certificates for public client identity keys (ID-Cert)<a class="headerlink" href="#61-home-server-signed-certificates-for-public-client-identity-keys-id-cert" title="Permanent link">&para;</a></h3>
-<p>The ID-Cert, a <a href="https://en.wikipedia.org/wiki/X.509">X.509</a> certificate, validates a public actor
+<p>The ID-Cert, an <a href="https://en.wikipedia.org/wiki/X.509">X.509</a> certificate, validates a public actor
 identity key. It is an actor-generated CSR (<a href="https://en.wikipedia.org/wiki/Certificate_signing_request">Certificate Signing Request</a>),
 signed by a home server, encompassing actor identity information and the client's public identity key.
 Clients can get an ID-Cert in return for a valid and well-formed CSR. Generating a new ID-Cert is
@@ -3137,8 +3322,8 @@ certificate's validity period.</p>
 <p>Actors must use a separate ID-Cert for each client or session they use. Separating ID-Certs
 limits the potential damage a compromised ID-Cert can cause.</p>
 <p>For two implementations of polyproto to be interoperable, they must support an overlapping set of
-digital signature algorithms. See <a href="#65-cryptographic-recommendations">Section 6.5</a> for more
-information on cryptographic recommendations.</p>
+digital signature algorithms. See <a href="#65-cryptographic-specifications">Section 6.5</a> for more
+information on cryptographic specifications.</p>
 <h4 id="611-structure-of-an-id-cert">6.1.1 Structure of an ID-Cert<a class="headerlink" href="#611-structure-of-an-id-cert" title="Permanent link">&para;</a></h4>
 <p>The ID-Cert is a valid X.509 certificate, and as such, it has a specific structure. The structure of
 an X.509 certificate is defined in <a href="https://tools.ietf.org/html/rfc5280">RFC5280</a>.
@@ -3365,6 +3550,10 @@ reasons, such as</p>
 <p>When an ID-Cert is revoked, the server must revoke the session associated with the revoked ID-Cert.
 Revoking an ID-Cert is considered a <a href="#412-sensitive-actions">sensitive action</a> and therefore should
 require a second factor of authentication.</p>
+<!-->
+TODO: Note that servers can send revocation notices to connected clients
+<!-->
+
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>The above paragraph is true for both foreign and home servers. The API routes associated with
@@ -4365,7 +4554,7 @@ service provider, they must request a <a href="#7-migrations">migration</a>.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-11T16:48:52+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-11</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-14T13:00:28+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-14</span>
   </span>
 
     
