@@ -38,26 +38,34 @@ namespace Services {
         @delete
         @summary("Delete discoverable service")
         @added(Version.`v1.0-alpha.1`)
+        @tag("Sensitive Actions")
         /**
          * Remove a service from the list of services discoverable by other actors.
          * If a primary service is removed and there are still other providers available for the same service,
          * the server will select a new primary service provider from the list of available providers.
          * This new provider will be returned in the response body.
          * @param url List of urls of the service providers to remove. The indices of the urls list must match the indices of the service name list.
+         * @param sensitiveSolution: Required only when deleting a primary service provider.
          * @param name List of urls of the service providers to remove. The indices of the service name list must match the indices of the urls list.
          */
-        op unregisterService(@query url: url[], @query name: string[]): {
+        op unregisterService(
+            @doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
+            @header({name: "X-P2-Sensitive-Solution"}) sensitiveSolution?: string,
+            @query url: url[],
+            @query name: string[]
+            ): {
             @statusCode statusCode: 200;
             @body returnedBody?: {
                 service: string,
                 new_primary: url
             }[]     
         } | {
-            @statusCode statusCode: 400 | 404;
+            @statusCode statusCode: 400 | 403 | 404;
         };
 
         @route("/services/primary")
         @put
+        @tag("Sensitive Actions")
         @summary("Set primary service provider")
         @added(Version.`v1.0-alpha.1`)
         /**
@@ -70,11 +78,17 @@ namespace Services {
          * with the new primary service provider.
          * @param body URL of a service provider and name of a service.
          */
-        op setPrimaryProvider(@body body: {url: url, @minLength(2) @maxLength(64) name: string}): {
+        op setPrimaryProvider(
+            @doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
+            @header({name: "X-P2-Sensitive-Solution"}) sensitiveSolution: string,
+            @body body: {url: url, @minLength(2) @maxLength(64) name: string}
+            ): {
             @statusCode statusCode: 200;
             @maxItems(2)
             @minItems(1)
             @body body: polyproto.core.models.Service[];
+        } | {
+            @statusCode statusCode: 400 | 403;
         };
     }
 

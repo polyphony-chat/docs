@@ -10,6 +10,7 @@
 - **Federation ID** - A unique identifier; In public contexts, usually **actor@**subdomain.**example**.com,
   where bold parts are required and non-bold parts are optional.
 - **Foreign server** - An instance that an actor is not registered on; essentially a third party.
+- **Gateway, Gateway Server** - A polyproto compliant WebSocket server.
 - **Home server** - The instance that an actor is registered on. Any polyproto-core compliant server
   hosted on the same domain is also considered a home server. A home server is the instance that
   publicly attests to the validity of all legitimate ID-Certs issued under its [FQDN](https://en.wikipedia.org/wiki/Fully_qualified_domain_name).
@@ -39,6 +40,7 @@
   defining the routes and capabilities of the chat-API used by Polyphony.
 - **polyproto** - The core federation protocol and APIs of polyproto, enabling identification and
   authorization on foreign servers. It is independent of the chat-API used.
+- **RawR** - [Resource addressing with relative roots](/Protocol%20Specifications/core#731-resource-addressing-with-relative-roots).
 - **Root Certificate** - A certificate used to sign other certificates, establishing a chain of
   trust. In polyproto, only home servers have root certificates.
 - **Service**: Any application-specific implementation of polyproto, defined by a P2 extension.

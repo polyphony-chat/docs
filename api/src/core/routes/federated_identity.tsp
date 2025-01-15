@@ -17,26 +17,30 @@ namespace FederatedIdentity {
     @tag("Federated Identity - Registration required")
     @useAuth(BearerAuth)
     namespace Registered {
-        @route("/session/idcert")
-        @summary("Rotate session ID-Cert")
+
+        @route("/idcert")
+        @summary("Get a new ID-Cert")
         @added(Version.`v1.0-alpha.1`)
         @post
+        @tag("Sensitive Actions")
         /**
-         * Rotate your keys for a given session. The `session_id` in the supplied `csr` must correspond to the
-         * session token used in the `authorization`-Header.
-         * @param csr A new [certificate signing request (CSR)](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) with the same session ID
-         * @returns Contains your new ID-Cert, along with a new session token. 
-        */
-        op rotateIdCert(@body csr: string;): {
-            @doc("Contains your new ID-Cert in PEM encoding, along with a new session token.")
-            @statusCode statusCode: 201;
-            @body newIdCert: {
-                @doc("The generated [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) in PEM format.")
-                @example("------BEGIN CERTIFICATE------...")
-                id_cert: string,
-                @doc("An authorization secret, called a \"token\", valid for this `id_cert`.")
-                token: string
-            }
+         * Request a new ID-Cert, usually done when wanting to authenticate a new session, or after
+         * an ID-Cert has been revoked, to re-authenticate a session.
+         */
+        op newIdCert(
+            @doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
+            @header({name: "X-P2-Sensitive-Solution"}) sensitiveSolution: string,
+            @body csr: string;
+            ): {
+                @doc("Contains your new ID-Cert in PEM encoding, along with a new session token.")
+                @statusCode statusCode: 201;
+                @body newIdCert: {
+                    @doc("The generated [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) in PEM format.")
+                    @example("------BEGIN CERTIFICATE------...")
+                    id_cert: string,
+                    @doc("An authorization secret, called a \"session token\", valid for this `id_cert`/session.")
+                    token: string
+                }
         };
 
         @route("/session/keymaterial")
@@ -80,13 +84,14 @@ namespace FederatedIdentity {
         } | {
             @doc("Returned, if no `serial_numbers` are provided and the client has not uploaded any key material.")
             @statusCode statusCode: 204;
+            @header({name: "Content-Length"}) contentLength: 0;
         } | {
             @doc("Returned, if none of the `serial_numbers` match any known ID-Certs from this actor.")
             @statusCode statusCode: 404;
         };
 
         @route("/session/keymaterial")
-        @tag("Sensitive Action")
+        @tag("Sensitive Actions")
         @summary("Delete encrypted private key material")
         @added(Version.`v1.0-alpha.1`)
         @delete
@@ -95,10 +100,11 @@ namespace FederatedIdentity {
          * the serial numbers of ID-Certs that the client has uploaded key material for.
          */
         op deleteEncryptedPKM(
-            @doc("Sensitive actions require a [challenge string solution](/docs/Protocol%20Specifications/core.md) to be executed.")
-            @header({name: "X-P2-CHALLENGE-STRING-SOLUTION"}) challengeStringSolution: string,
+            @doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
+            @header({name: "X-P2-Sensitive-Solution"}) sensitiveSolution: string,
             @query serials: uint64[]): {
             @statusCode statusCode: 204;
+            @header({name: "Content-Length"}) contentLength: 0;
         } | {
             @doc("Returned, if none of the `serial_numbers` match any known ID-Certs from this actor.")
             @statusCode statusCode: 404;
@@ -118,23 +124,25 @@ namespace FederatedIdentity {
             @header({name: "X-MAX-PAYLOAD-SIZE"}) size: uint32;
             @statusCode statusCode: 200;
         };
-    }
 
-    @tag("Federated Identity - Registration not required")
-    namespace Unregistered {
-        @route("/challenge")
-        @summary("Get challenge string")
-        @useAuth(BearerAuth)
+        @route("/session")
+        @delete
         @added(Version.`v1.0-alpha.1`)
-        @get
+        @summary("Delete/Revoke Session")
+        @useAuth(BearerAuth)
         /**
-         * Request a challenge string. See the corresponding
-         * [protocol definition chapter](/docs/Protocol%20Specifications/core/#)
-         * for more information.
+         * Invalidate a session and its' associated ID-Cert by providing the session ID associated
+         * with it.
          */
-        op challengeString(): {
-            @statusCode statusCode: 200;
-            @body challengeStringResponse: polyproto.core.models.ChallengeStringResponse
+        op deleteSession(
+            @doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
+            @header({name: "X-P2-Sensitive-Solution"}) sensitiveSolution: string,
+            @query session_id: string
+            ): {
+            @statusCode statusCode: 204;
+            @header({name: "Content-Length"}) contentLength: 0;
+        } | {
+            @statusCode statusCode: 404;
         };
 
         @route("/key/server")
@@ -142,12 +150,31 @@ namespace FederatedIdentity {
         @added(Version.`v1.0-alpha.1`)
         @post
         @useAuth(BearerAuth)
-        @tag("Sensitive Action")
+        @tag("Sensitive Actions")
         /**
          * Rotate the server's identity key. Requires server administrator permissions.
          * @returns The servers' new ID-Cert, encoded as PEM 
          */
-        op name(@header({name: "X-P2-CHALLENGE-STRING-SOLUTION"}) challengeStringSolution: string): string;
+        op name(@doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
+        @header({name: "X-P2-Sensitive-Solution"}) sensitiveSolution: string,): string;
+    }
+
+    @tag("Federated Identity - Registration not required")
+    namespace Unregistered {
+        @route("/challenge")
+        @summary("Receive a challenge string")
+        @useAuth(BearerAuth)
+        @added(Version.`v1.0-alpha.1`)
+        @get
+        /**
+         * Request a challenge string. See the corresponding
+         * [protocol definition chapter](https://docs.polyphony.chat/Protocol%20Specifications/core/#42-challenge-strings)
+         * for more information.
+         */
+        op challengeString(): {
+            @statusCode statusCode: 200;
+            @body challengeStringResponse: polyproto.core.models.ChallengeStringResponse
+        };
 
         @route("/idcert/server")
         @get
@@ -160,23 +187,7 @@ namespace FederatedIdentity {
          * @param timestamp An optional UNIX timestamp to retrieve the ID-Cert the server had at that
          * point in time, instead of the current one.
          */
-        op serverIdCert(@query timestamp?: uint64): string;
-
-        @route("/key/server")
-        @get
-        @added(Version.`v1.0-alpha.1`)
-        @summary("Get Server Public Key")
-        /**
-         * Request the server's public key.
-         * @returns The current public key of the server, or, if specified, the public key the server had
-         * at the specified time. The public key is being returned as a PEM encoded X.509
-         * `SubjectPublicKeyInfo`.
-         * @param timestamp An optional UNIX timestamp to retrieve the public key the server had at that
-         * point in time, instead of the current one.
-         */
-        op serverKey(@query timestamp?: {
-            timestamp: uint64
-        }): string;
+        op serverIdCert(@query timestamp?: uint64): polyproto.core.models.CacheableIDCert;
 
         @route("/idcert/actor")
         @get
@@ -185,22 +196,14 @@ namespace FederatedIdentity {
         /**
          * Request the ID-Certs of a specific actor. The specified actor must be registered on this server.
          * @param fid The ID of the actor whose ID-Cert(s) should be returned.
-         * @param timestamp An optional UNIX timestamp to retrieve the ID-Cert the actor had at that
-         * point in time, instead of the current one.
+         * @param notBefore: Return only ID-Certs from at or after a specific point in time. UNIX 64 bit timestamp.
+         * @param notAfter: Return only ID-Certs from at or before a specific point in time. UNIX 64 bit timestamp.
          * @param session_id Optionally, return only the ID-Certs matching a specific `session_id`.
-         * @param body timestamp: UNIX-Timestamp. If specified, the server will return the ID-Cert(s) which the actor had at the specified time. session_id: Request the ID-Cert for a specific session ID.
-         * @returns JSON-Array of Object(s), each object containing "id_cert" (PEM encoded ID-Cert) and "invalidated" (boolean). An ID-Cert is considered invalidated, if the server or actor choose to revoke the validity of the ID-Cert before the lifetime of the certificate was scheduled to end.
+         * @returns JSON-Array of Object(s).
         */
-        op actorCerts(@path fid: string, @query timestamp?: uint64, @query session_id?: string): {
+        op actorCerts(@path fid: string, @query notBefore?: uint64, @query notAfter?: uint64, @query session_id?: string): {
             @statusCode statusCode: 200;
-            @body response: {
-                @doc("PEM encoded ID-Cert")
-                @example("------BEGIN CERTIFICATE------...")
-                id_cert: string,
-                @example(false)
-                @doc("Whether this specific id_cert has been marked as invalidated by the server. An ID-Cert is considered invalidated, if the server or actor choose to revoke the validity of the ID-Cert before the lifetime of the certificate was scheduled to end.")
-                invalidated: boolean
-            }[]
+            @body response: polyproto.core.models.CacheableIDCert[]
         };
 
         @route("/session/idcert/extern")
@@ -209,25 +212,15 @@ namespace FederatedIdentity {
         @useAuth(BearerAuth)
         @summary("Update session ID-Cert")
         /**
-         * Lets a foreign server know that the ID-Cert of this session has changed.
+         * Lets a foreign server know that the ID-Cert of a session has changed. This route is also
+         * used to inform foreign servers about the revocation of an ID-Cert. The ID-Cert passed as
+         * body in this route must belong to the actor making the request.
+         * @returns 201 on success, 400 if the body is somehow invalid.
          */
         op updateSessionCert(@body id_cert: string): {
             @statusCode statusCode: 201;
-        };
-
-        @route("/session")
-        @delete
-        @added(Version.`v1.0-alpha.1`)
-        @summary("Delete/Revoke Session")
-        @useAuth(BearerAuth)
-        /**
-         * Invalidate a session token by naming the session ID associated with it.
-         */
-        op deleteSession(@query session_id: string): {
-            @statusCode statusCode: 204;
-            @header({name: "Content-Length"}) contentLength: 0;
         } | {
-            @statusCode statusCode: 404;
+            @statusCode statusCode: 400;
         };
     }
 }

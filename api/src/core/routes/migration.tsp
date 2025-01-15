@@ -19,7 +19,6 @@ namespace Migration {
     @tag("Migration - Registration required")
     @route("/migration/")
     namespace Registered {
-        //TODO: Add routes concerned with data migration.
         @route("/redirect")
         @post
         @added(Version.`v1.0-alpha.1`)
@@ -32,7 +31,9 @@ namespace Migration {
          * 1. A key trial must be passed
          * 2. The "new" actor named in this request must confirm setting up this redirect.
          * 
-         * @returns `200` if the link has been created, `202` if the other account still needs to accept to establish the link. Returns a key trial 
+         * @returns
+         * - `200` if the link has been created
+         * - `202` if the other account still needs to accept to establish the link. Contains a key trial 
          * @param newActorFid The FID of the actor, that this actor would like to be redirected to.
          */
         op setupRedirect(@body newActorFid: string): {
@@ -60,14 +61,21 @@ namespace Migration {
         @post
         @added(Version.`v1.0-alpha.1`)
         @summary("Import data to server")
+        @tag("Sensitive Actions")
         /**
-         * //TODO
+         * Import a `P2Export` file. `messages` in this file must have been re-signed to the current
+         * actor. Only messages classified as ["Information not tied to a specific context"](https://docs.polyphony.chat/Protocol%20Specifications/core/#:~:text=Example%3A%20Information%20not,without%0Aany%20issues.)
+         * can be imported.
+         * @returns
+         * - `202`: The content has been accepted for processing, but processing has not been
+         *   completed or may not have started.
          */
-        op importData(@body importData?: polyproto.core.models.MessageBatch<string>[]): {
+        op importData(
+            @doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
+            @header({name: "X-P2-Sensitive-Solution"}) sensitiveSolution: string,
+            @body importData?: polyproto.core.models.P2Export
+            ): {
             @statusCode statusCode: 202;
-            @body body: polyproto.core.models.KeyTrial;
-        } | {
-            @statusCode statusCode: 204;
             @header({name: "Content-Length"}) contentLength: 0;
         };
     }
@@ -81,7 +89,9 @@ namespace Migration {
         /**
          * Tell the homeserver of the "old" actor account that you intend to set up a redirect to
          * this actor
-         * @returns `200` if the link has been created, `202` if the other account still needs to accept to establish the link.
+         * @returns 
+         * - `200` if the link has been created
+         * - `202` if the other account still needs to accept to establish the link.
          */
         op setupRedirectExtern(@body redirectSourceFid: string): {
             @statusCode statusCode: 202 | 200
@@ -93,7 +103,9 @@ namespace Migration {
         @summary("Abort message re-signing")
         /**
          * Stop an in-progress or existing re-signing process.
-         * @returns `204`: Action executed; `404`: No re-signing request found for mentioned actor
+         * @returns
+         * - `204` Action executed
+         * - `404` No re-signing request found for mentioned actor
          * @param removeActorFid The FID of the actor to whom messages should no longer be re-signable for
          */
         op removeResigningExtern(@query removeActorFid: string): {
@@ -109,7 +121,7 @@ namespace Migration {
         @summary("Request message re-signing")
         /**
          * Request allowing message re-signing. To fulfill this action, a key trial must be passed.
-         * @returns Returns a key trial 
+         * @returns a key trial 
          * @param allowedResigningKeys List of PEM encoded `SubjectPublicKeyInfo`s. Only key pairs mentioned in this list are allowed to re-sign messages after the key trial has been passed.
          */
         op requestAllowResigning(@body body: { newActorFid: string, allowedResigningKeys: string[] }): {
@@ -124,10 +136,19 @@ namespace Migration {
         /**
          * Commit messages that have been re-signed to the server.
          * @param messages Messages. The distinct format of messages is up to the specific p2 extension to define.
-         * @returns `200` On success; `400` if re-signed messages are improperly formatted; `403` if messages have been modified where the original keys have not passed the key trial, if a key trial has not been passed at all or if the messages have been signed with keys that were not on the `allowedResigningKeys` list.
+         * @returns 
+         * - `200` On success
+         * - `400` if re-signed messages are improperly formatted
+         * - `403` if messages have been modified where the original keys have not passed the key
+         *   trial, if a key trial has not been passed at all or if the messages have been signed
+         *   with keys that were not on the `allowedResigningKeys` list.
          */
         op commitMessages(@body messages: polyproto.core.models.MessageBatch<string>[]): {
-            @statusCode statusCode: 200 | 400 | 403;
+            @statusCode statusCode: 200;
+            @doc("This header dictates the time a client should wait for before sending another batch of re-signed messages.")
+            @header({name: "Retry-After"}) retryAfter: uint16;
+        } | {
+            @statusCode _: 400 | 403;
         };
 
         @route("/messages")
@@ -135,12 +156,16 @@ namespace Migration {
         @added(Version.`v1.0-alpha.1`)
         @summary("Fetch messages to-be-resigned")
         /**
-         * Fetch messages to be re-signed.
+         * Fetch messages to be re-signed. Must only return messages where the signatures correlate to
+         * ID-Certs for which a key trial has been passed.
          * @param limit How many messages to request from the server. Defaults to 100.
+         * @param serialNumber If specified, query for non-re-signed messages corresponding to a specific ID-Cert.
          * @returns Messages. The distinct format of messages is up to the specific p2 extension to define.
          */
-        op getMessages(@query limit?: uint32 = 100): {
+        op getMessages(@query limit?: uint32 = 100, serialNumber?: uint64): {
             @statusCode statusCode: 200;
+            @doc("This header tells the client whether the route to commit re-signed messages has an upload size limit, and what the size of that limit is. A value of `0` means that there is no limit. This header not being present can also be interpreted as no limit existing.")
+            @header({name: "X-P2-Return-Body-Size-Limit "}) sizeLimit?: uint64;
             @body message: polyproto.core.models.MessageBatch<string>[];
         } | {
             @statusCode statusCode: 403;
@@ -160,9 +185,12 @@ namespace Migration {
          * allow changes which concern information tied to these exact keys.
          * 
          * @param body Completed key trials.
-         * @returns Returns `200` if the key trials were processed and deemed to be valid. Returns `202`, if the server needs additional time to process the key trials. 400 is received if one or more completed key trials were faulty. Contains faulty key trials in the response body.
+         * @returns 
+         * - `200` if the key trials were processed and deemed to be valid
+         * - `202`, if the server needs additional time to process the key trials
+         * - `400`, if one or more completed key trials were faulty. Contains faulty key trials in the response body.
          */
-        op keyTrialRedirectExtern(@body body: polyproto.core.models.KeyTrialCompleted[]): {
+        op completeKeyTrial(@body body: polyproto.core.models.KeyTrialCompleted[]): {
             @doc("Returns `200` if the key trials were processed and deemed to be valid. Returns `202`, if the server needs additional time to process the key trials.")
             @statusCode statusCode: 202 | 200
         } | {
@@ -183,9 +211,17 @@ namespace Migration {
          * 
          * Only key trials which have at least one completion, and - more importantly - where the
          * `expiration` UNIX time stamp has passed, can be fetched.
-         * @returns `204`: No keytrials found for specified actor; `404`: Specified actor not known; `200`: Completed key trials of requested actor
+         * @returns
+         * - `204`: No keytrials found for specified actor
+         * - `404`: Specified actor not known
+         * - `200`: Completed key trials of requested actor
+         * @param fid: The FID of the actor to query key trials for.
+         * @param limit: How many response objects to query for at maximum. A value of `0` or not specifying this value at all means no maximum is defined.
+         * @param id: Query for a specific key trial performed by an actor by the ID of the key trial.
+         * @param notBefore: Return only key trials and their results performed at or after a specific point in time. UNIX 64 bit timestamp.
+         * @param notAfter: Return only key trials and their results performed at or before a specific point in time. UNIX 64 bit timestamp.
          */
-        op getKeyTrials(@path fid: string, @query limit?: uint16 = 0): {
+        op getKeyTrials(@path fid: string, @query limit?: uint16 = 0, @query id?: string, @query notBefore?: uint64, @query notAfter?: uint64): {
             @statusCode statusCode: 204;
             @header({name: "Content-Length"}) contentLength: 0;
         } | {
@@ -207,7 +243,9 @@ namespace Migration {
          * Delete all data associated with you from the server.
          * @param breakRedirect If a redirect has been set up previously: Whether to break that redirect
          * with this action. Defaults to false.
-         * @returns `202` and a key trial, if one still needs to be passed; `204`: Action executed
+         * @returns
+         * - `202` and a key trial, if one still needs to be passed
+         * - `204`: Action executed
          */
         op deleteData(@query breakRedirect?: boolean = false): {
             @statusCode statusCode: 202;
@@ -223,8 +261,14 @@ namespace Migration {
         @summary("Export all data")
         /**
          * Export all of your data for safekeeping or for importing it to another server
-         * @returns `202` and a key trial, if one still needs to be passed; `200` and the
-         * appropriate data if the key trial has been passed and is not yet expired.
+         * @returns
+         * - `202` and a key trial, if one still needs to be passed
+         * - `200` and the appropriate data if the key trial has been passed and is not yet expired.
+         *   See the `P2Export` schema for more information.
+         * - `204` if the server needs time to gather the data. A `Retry-After` header is included in
+         *   the response, indicating to the actor the point in time at which they should query this
+         *   endpoint again. If this point in time is after the expiry timestamp of the completed key trial,
+         *   another key trial needs to be performed to access the data.
          * Contains all data of the user.
          */
         op exportData(): {
@@ -232,7 +276,10 @@ namespace Migration {
             @body body: polyproto.core.models.KeyTrial;
         } | {
             @statusCode statusCode: 200;
-            @body body: polyproto.core.models.MessageBatch<string>[]; 
+            @body body: polyproto.core.models.P2Export;
+        } | {
+            @statusCode statusCode: 204;
+            @header({name: "Retry-After"}) retryAfter: uint64;
         };
     }
 }
