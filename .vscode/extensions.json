@@ -4,6 +4,7 @@
         "chrischinchilla.vale-vscode",
         "valentjn.vscode-ltex",
         "gruntfuggly.todo-tree",
-        "typespec.typespec-vscode"
+        "typespec.typespec-vscode",
+        "bierner.markdown-mermaid"
     ]
 }
