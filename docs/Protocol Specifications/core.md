@@ -28,10 +28,12 @@ weight: 0
         - [3.2.1.2 Opcodes `op`](#3212-opcodes-op)
         - [3.2.1.3 Event names `t`](#3213-event-names-t)
       - [3.2.2 Heartbeats](#322-heartbeats)
-      - [3.2.3 "Hello" event](#323-hello-event)
-      - [3.2.4 Service channels](#324-service-channels)
-      - [3.2.5 Identify](#325-identify)
-      - [3.2.3 Events over REST](#323-events-over-rest)
+      - [3.2.3 Event payload definitions](#323-event-payload-definitions)
+        - [3.2.3.1 "Hello" event](#3231-hello-event)
+        - [3.2.3.2 Identify](#3232-identify)
+        - [3.2.3.3 Service channels](#3233-service-channels)
+      - [3.2.3 Establishing a connection](#323-establishing-a-connection)
+      - [3.2.4 Events over REST](#324-events-over-rest)
     - [3.3 HTTP](#33-http)
     - [3.4 Internet Protocol (IP)](#34-internet-protocol-ip)
   - [4. Federated identity](#4-federated-identity)
@@ -289,7 +291,9 @@ by sending a heartbeat event to the client.
 
 The `d` payload for a heartbeat event is an empty object `{}`.
 
-#### 3.2.3 "Hello" event
+#### 3.2.3 Event payload definitions
+
+##### 3.2.3.1 "Hello" event
 
 The "Hello" event is sent by the server to the client upon establishing a connection. The `d` payload
 for a "Hello" event is an object containing a `heartbeat_interval` field, which specifies the interval
@@ -307,7 +311,12 @@ in milliseconds at which the client should send heartbeat events to the server.
 | -------------------- | ------ | ---------------------------------------------------------------------------------------- |
 | `heartbeat_interval` | uint32 | Interval in milliseconds at which the client should send heartbeat events to the server. |
 
-#### 3.2.4 Service channels
+##### 3.2.3.2 Identify
+
+The "identify" event is sent by the client to the server to let the server know which actor the
+client is.
+
+##### 3.2.3.3 Service channels
 
 Service channels act like topics in a pub/sub system. They allow clients to subscribe to a specific
 topic and receive messages sent to that topic.
@@ -360,12 +369,11 @@ was successful or not.
 If a successful subscription to a service channel is acknowledged, all further events and logic
 is defined by the service's specification.
 
-#### 3.2.5 Identify
+#### 3.2.3 Establishing a connection
 
-The "identify" event is sent by the client to the server to let the server know which actor the
-client is.
+TODO
 
-#### 3.2.3 Events over REST
+#### 3.2.4 Events over REST
 
 For some implementation contexts, a constant WebSocket connection might not be wanted. A client can
 instead opt to query an API endpoint to receive events, which would normally be sent through the WebSocket
