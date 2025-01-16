@@ -26,16 +26,20 @@ weight: 0
       - [3.2.1 Gateway Event Payloads](#321-gateway-event-payloads)
         - [3.2.1.1 Namespaces `n`](#3211-namespaces-n)
         - [3.2.1.2 Opcodes `op`](#3212-opcodes-op)
-        - [3.2.1.3 Event names `t`](#3213-event-names-t)
       - [3.2.2 Heartbeats](#322-heartbeats)
-      - [3.2.3 Event payload definitions](#323-event-payload-definitions)
+      - [3.2.3 Gateway event payload definitions](#323-gateway-event-payload-definitions)
         - [3.2.3.1 "Hello" event](#3231-hello-event)
-        - [3.2.3.2 Identify](#3232-identify)
+        - [3.2.3.2 Identify event](#3232-identify-event)
         - [3.2.3.3 Service channels](#3233-service-channels)
-      - [3.2.3 Establishing a connection](#323-establishing-a-connection)
-      - [3.2.4 Events over REST](#324-events-over-rest)
-    - [3.3 HTTP](#33-http)
-    - [3.4 Internet Protocol (IP)](#34-internet-protocol-ip)
+        - [3.2.3.4 New session event](#3234-new-session-event)
+        - [3.2.3.5 Actor certificate invalidation event](#3235-actor-certificate-invalidation-event)
+        - [3.2.3.6 Resume event](#3236-resume-event)
+        - [3.2.3.7 Server certificate change event](#3237-server-certificate-change-event)
+        - [3.2.3.8 Heartbeat and heartbeat ACK events](#3238-heartbeat-and-heartbeat-ack-events)
+      - [3.2.4 Establishing a connection](#324-establishing-a-connection)
+      - [3.3 Events over REST](#33-events-over-rest)
+    - [3.4 HTTP](#34-http)
+    - [3.5 Internet Protocol (IP)](#35-internet-protocol-ip)
   - [4. Federated identity](#4-federated-identity)
     - [4.1 Authentication](#41-authentication)
       - [4.1.1 Authenticating on a foreign server](#411-authenticating-on-a-foreign-server)
@@ -238,11 +242,6 @@ on the specific event.
 | `n`   | string     | [Namespace](#82-namespaces) context for this payload.                                      |
 | `op`  | integer    | Gateway Opcode indicating the type of payload.                                             |
 | `d`   | JSON value | The event data associated with this payload.                                               |
-| `s`¹  | ?integer   | Sequence number for the event, used for session resumption and heartbeats.                 |
-| `t`¹  | ?string    | Event name for this payload (only applicable for and present in DISPATCH opcode payloads). |
-
-¹ These fields are only included for payloads received from a server and are `null` when `op`
-is not equal to `DISPATCH`.
 
 ##### 3.2.1.1 Namespaces `n`
 
@@ -271,27 +270,19 @@ The following opcodes are defined by the `core` namespace:
 | `8`    | Service Channel                | Actor Send/Receive | Open or close a service channel.                                                                                 |
 | `9`    | Service Channel ACK            | Actor Receive      | Acknowledgement of a service channel event.                                                                      |
 
-##### 3.2.1.3 Event names `t`
-
-The `t` field in a gateway event payload indicates the event name for this payload. Event names
-are only applicable for and present in `DISPATCH` opcode payloads.
-
-Event names are strings defined by the namespace context and are used to differentiate between different
-types of events within the `DISPATCH` opcode.
-
-String values for event names are to be formatted in `SCREAMING_SNAKE_CASE`.
-
 #### 3.2.2 Heartbeats
 
-Heartbeats are used to keep the WebSocket connection alive. The client sends a heartbeat event to the
-server with a specified interval, which then responds with an acknowledgement for the heartbeat.
+Heartbeats are used to keep the WebSocket connection alive. The client continouusly sends a heartbeat
+event to the server with the interval specified in the "Hello" event payload.
+The server must acknowledge the heartbeat event by sending a heartbeat ACK event back to the client.
+
 Servers must account for the time it takes for the client to send the heartbeat event. Before closing
 a connection due to a missed heartbeat, the server should request a heartbeat event from the client
 by sending a heartbeat event to the client.
 
-The `d` payload for a heartbeat event is an empty object `{}`.
+The structure of the heartbeat and heartbeat ACK events are described in [section 3.2.3.8](#3238-heartbeat-and-heartbeat-ack-events).
 
-#### 3.2.3 Event payload definitions
+#### 3.2.3 Gateway event payload definitions
 
 ##### 3.2.3.1 "Hello" event
 
@@ -311,7 +302,7 @@ in milliseconds at which the client should send heartbeat events to the server.
 | -------------------- | ------ | ---------------------------------------------------------------------------------------- |
 | `heartbeat_interval` | uint32 | Interval in milliseconds at which the client should send heartbeat events to the server. |
 
-##### 3.2.3.2 Identify
+##### 3.2.3.2 Identify event
 
 The "identify" event is sent by the client to the server to let the server know which actor the
 client is.
@@ -369,11 +360,71 @@ was successful or not.
 If a successful subscription to a service channel is acknowledged, all further events and logic
 is defined by the service's specification.
 
-#### 3.2.3 Establishing a connection
+##### 3.2.3.4 New session event
+
+The "New Session" event is sent by the server to all sessions except the new one. The `d` payload
+of this event contains the ASCII-PEM encoded ID-Cert of the new session. You can find more information
+about the new session mechanism in [section 4.3](#43-protection-against-misuse-by-malicious-home-servers).
+
+```json
+{
+  "n": "core",
+  "op": 3,
+  "d": {
+    "cert": "-----BEGIN CERTIFICATE-----\nMIIBIjANB..."
+  }
+}
+```
+
+##### 3.2.3.5 Actor certificate invalidation event
 
 TODO
 
-#### 3.2.4 Events over REST
+##### 3.2.3.6 Resume event
+
+TODO
+
+##### 3.2.3.7 Server certificate change event
+
+The server certificate change event notifies clients about a new server ID-Cert. The `d` payload
+of this event contains the ASCII-PEM encoded ID-Cert of the server.
+
+```json
+{
+  "n": "core",
+  "op": 6,
+  "d": {
+    "cert": "-----BEGIN CERTIFICATE-----\nMIIBIjANB..."
+  }
+}
+```
+
+##### 3.2.3.8 Heartbeat and heartbeat ACK events
+
+The heartbeat event is sent by the client to the server to keep the WebSocket connection alive.
+The payload for both the heartbeat and heartbeat ACK events is an empty object `{}`.
+
+```json
+{
+  "n": "core",
+  "op": 0,
+  "d": {}
+}
+```
+
+```json
+{
+  "n": "core",
+  "op": 7,
+  "d": {}
+}
+```
+
+#### 3.2.4 Establishing a connection
+
+TODO
+
+#### 3.3 Events over REST
 
 For some implementation contexts, a constant WebSocket connection might not be wanted. A client can
 instead opt to query an API endpoint to receive events, which would normally be sent through the WebSocket
@@ -408,7 +459,7 @@ Polling a REST endpoint is inherently inefficient and therefore should only be d
 ranging from a few minutes to a few days. If a client requires information more often than that,
 then a WebSocket connection should be considered.
 
-### 3.3 HTTP
+### 3.4 HTTP
 
 HTTP/1.1 is the minimum required version that polyproto servers and clients must implement.
 Implementing HTTP/2 and HTTP/3 is strongly recommended for all use cases, as both versions of the
@@ -417,7 +468,7 @@ and improving performance the most, especially over lossy networks.
 
 Future versions of the polyproto specification may mandate the implementation of HTTP/2.
 
-### 3.4 Internet Protocol (IP)
+### 3.5 Internet Protocol (IP)
 
 Support for both versions 4 and 6 of the Internet Protocol (IPv4 and IPv6) is mandatory for
 polyproto client and server software. Real-world availability of both versions of the Internet
