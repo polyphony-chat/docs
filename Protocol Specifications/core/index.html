@@ -992,36 +992,27 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#323-hello-event" class="md-nav__link">
+  <a href="#323-event-payload-definitions" class="md-nav__link">
     <span class="md-ellipsis">
-      3.2.3 "Hello" event
+      3.2.3 Event payload definitions
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#324-service-channels" class="md-nav__link">
+  <a href="#323-establishing-a-connection" class="md-nav__link">
     <span class="md-ellipsis">
-      3.2.4 Service channels
+      3.2.3 Establishing a connection
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#325-identify" class="md-nav__link">
+  <a href="#324-events-over-rest" class="md-nav__link">
     <span class="md-ellipsis">
-      3.2.5 Identify
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#323-events-over-rest" class="md-nav__link">
-    <span class="md-ellipsis">
-      3.2.3 Events over REST
+      3.2.4 Events over REST
     </span>
   </a>
   
@@ -2167,36 +2158,27 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#323-hello-event" class="md-nav__link">
+  <a href="#323-event-payload-definitions" class="md-nav__link">
     <span class="md-ellipsis">
-      3.2.3 "Hello" event
+      3.2.3 Event payload definitions
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#324-service-channels" class="md-nav__link">
+  <a href="#323-establishing-a-connection" class="md-nav__link">
     <span class="md-ellipsis">
-      3.2.4 Service channels
+      3.2.3 Establishing a connection
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#325-identify" class="md-nav__link">
+  <a href="#324-events-over-rest" class="md-nav__link">
     <span class="md-ellipsis">
-      3.2.5 Identify
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#323-events-over-rest" class="md-nav__link">
-    <span class="md-ellipsis">
-      3.2.3 Events over REST
+      3.2.4 Events over REST
     </span>
   </a>
   
@@ -2764,10 +2746,14 @@ missing or duplicate information and other mistakes at <a href="https://github.c
 </ul>
 </li>
 <li><a href="#322-heartbeats">3.2.2 Heartbeats</a></li>
-<li><a href="#323-hello-event">3.2.3 "Hello" event</a></li>
-<li><a href="#324-service-channels">3.2.4 Service channels</a></li>
-<li><a href="#325-identify">3.2.5 Identify</a></li>
-<li><a href="#323-events-over-rest">3.2.3 Events over REST</a></li>
+<li><a href="#323-event-payload-definitions">3.2.3 Event payload definitions</a><ul>
+<li><a href="#3231-hello-event">3.2.3.1 "Hello" event</a></li>
+<li><a href="#3232-identify">3.2.3.2 Identify</a></li>
+<li><a href="#3233-service-channels">3.2.3.3 Service channels</a></li>
+</ul>
+</li>
+<li><a href="#323-establishing-a-connection">3.2.3 Establishing a connection</a></li>
+<li><a href="#324-events-over-rest">3.2.4 Events over REST</a></li>
 <li><a href="#33-http">3.3 HTTP</a></li>
 <li><a href="#34-internet-protocol-ip">3.4 Internet Protocol (IP)</a></li>
 </ul>
@@ -3149,7 +3135,8 @@ Servers must account for the time it takes for the client to send the heartbeat 
 a connection due to a missed heartbeat, the server should request a heartbeat event from the client
 by sending a heartbeat event to the client.</p>
 <p>The <code>d</code> payload for a heartbeat event is an empty object <code>{}</code>.</p>
-<h4 id="323-hello-event">3.2.3 "Hello" event<a class="headerlink" href="#323-hello-event" title="Permanent link">&para;</a></h4>
+<h4 id="323-event-payload-definitions">3.2.3 Event payload definitions<a class="headerlink" href="#323-event-payload-definitions" title="Permanent link">&para;</a></h4>
+<h5 id="3231-hello-event">3.2.3.1 "Hello" event<a class="headerlink" href="#3231-hello-event" title="Permanent link">&para;</a></h5>
 <p>The "Hello" event is sent by the server to the client upon establishing a connection. The <code>d</code> payload
 for a "Hello" event is an object containing a <code>heartbeat_interval</code> field, which specifies the interval
 in milliseconds at which the client should send heartbeat events to the server.</p>
@@ -3176,7 +3163,10 @@ in milliseconds at which the client should send heartbeat events to the server.<
 </tr>
 </tbody>
 </table>
-<h4 id="324-service-channels">3.2.4 Service channels<a class="headerlink" href="#324-service-channels" title="Permanent link">&para;</a></h4>
+<h5 id="3232-identify">3.2.3.2 Identify<a class="headerlink" href="#3232-identify" title="Permanent link">&para;</a></h5>
+<p>The "identify" event is sent by the client to the server to let the server know which actor the
+client is.</p>
+<h5 id="3233-service-channels">3.2.3.3 Service channels<a class="headerlink" href="#3233-service-channels" title="Permanent link">&para;</a></h5>
 <p>Service channels act like topics in a pub/sub system. They allow clients to subscribe to a specific
 topic and receive messages sent to that topic.</p>
 <p>Converting that analogy to polyproto, service channels allow clients to subscribe to gateway events
@@ -3259,10 +3249,9 @@ was successful or not.</p>
 </table>
 <p>If a successful subscription to a service channel is acknowledged, all further events and logic
 is defined by the service's specification.</p>
-<h4 id="325-identify">3.2.5 Identify<a class="headerlink" href="#325-identify" title="Permanent link">&para;</a></h4>
-<p>The "identify" event is sent by the client to the server to let the server know which actor the
-client is.</p>
-<h4 id="323-events-over-rest">3.2.3 Events over REST<a class="headerlink" href="#323-events-over-rest" title="Permanent link">&para;</a></h4>
+<h4 id="323-establishing-a-connection">3.2.3 Establishing a connection<a class="headerlink" href="#323-establishing-a-connection" title="Permanent link">&para;</a></h4>
+<p>TODO</p>
+<h4 id="324-events-over-rest">3.2.4 Events over REST<a class="headerlink" href="#324-events-over-rest" title="Permanent link">&para;</a></h4>
 <p>For some implementation contexts, a constant WebSocket connection might not be wanted. A client can
 instead opt to query an API endpoint to receive events, which would normally be sent through the WebSocket
 connection. Concrete polyproto implementations and extensions can decide whether this alternative
@@ -4775,7 +4764,7 @@ service provider, they must request a <a href="#7-migrations">migration</a>.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-14T15:21:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-14</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-16T15:31:24+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-16</span>
   </span>
 
     
