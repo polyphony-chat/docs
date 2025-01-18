@@ -272,7 +272,7 @@ The following opcodes are defined by the `core` namespace:
 
 #### 3.2.2 Heartbeats
 
-Heartbeats are used to keep the WebSocket connection alive. The client continouusly sends a heartbeat
+Heartbeats are used to keep the WebSocket connection alive. The client continuously sends a heartbeat
 event to the server with the interval specified in the "Hello" event payload.
 The server must acknowledge the heartbeat event by sending a heartbeat ACK event back to the client.
 

@@ -5,6 +5,7 @@
         "valentjn.vscode-ltex",
         "gruntfuggly.todo-tree",
         "typespec.typespec-vscode",
-        "bierner.markdown-mermaid"
+        "bierner.markdown-mermaid",
+        "streetsidesoftware.code-spell-checker"
     ]
 }
