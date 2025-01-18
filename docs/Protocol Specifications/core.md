@@ -318,16 +318,18 @@ without having to initialize a separate WebSocket connection.
 
 A service channel event payload has the following structure:
 
-```json
-{
-  "n": "core",
-  "op": 8,
-  "d": {
-    "action": "subscribe",
-    "service": "service_name"
-  }
-}
-```
+!!! example "Example service channel event payload"
+
+    ```json
+    {
+      "n": "core",
+      "op": 8,
+      "d": {
+        "action": "subscribe",
+        "service": "service_name"
+      }
+    }
+    ```
 
 | Field     | Type   | Description                                                                                |
 | --------- | ------ | ------------------------------------------------------------------------------------------ |
@@ -337,18 +339,34 @@ A service channel event payload has the following structure:
 The server must respond with a `Service Channel ACK` event payload, indicating whether the action
 was successful or not.
 
-```json
-{
-  "n": "core",
-  "op": 9,
-  "d": {
-    "action": "subscribe",
-    "service": "service_name",
-    "success": true,
-    "message": "Successfully subscribed to service_name"
-  }
-}
-```
+!!! example "Example service channel ACK event payload - failure"
+
+    ```json
+    {
+      "n": "core",
+      "op": 9,
+      "d": {
+        "action": "subscribe",
+        "service": "service_name",
+        "success": false,
+        "errorMessage": "Service not found"
+      }
+    }
+    ```
+
+!!! example "Example service channel ACK event payload - success"
+
+    ```json
+    {
+      "n": "core",
+      "op": 9,
+      "d": {
+        "action": "subscribe",
+        "service": "service_name",
+        "success": true,
+      }
+    }
+    ```
 
 | Field     | Type    | Description                                                                                |
 | --------- | ------- | ------------------------------------------------------------------------------------------ |
@@ -366,15 +384,17 @@ The "New Session" event is sent by the server to all sessions except the new one
 of this event contains the ASCII-PEM encoded ID-Cert of the new session. You can find more information
 about the new session mechanism in [section 4.3](#43-protection-against-misuse-by-malicious-home-servers).
 
-```json
-{
-  "n": "core",
-  "op": 3,
-  "d": {
-    "cert": "-----BEGIN CERTIFICATE-----\nMIIBIjANB..."
-  }
-}
-```
+!!! example "Example new session event payload"
+
+    ```json
+    {
+      "n": "core",
+      "op": 3,
+      "d": {
+        "cert": "-----BEGIN CERTIFICATE-----\nMIIBIjANB..."
+      }
+    }
+    ```
 
 ##### 3.2.3.5 Actor certificate invalidation event
 
@@ -389,36 +409,49 @@ TODO
 The server certificate change event notifies clients about a new server ID-Cert. The `d` payload
 of this event contains the ASCII-PEM encoded ID-Cert of the server.
 
-```json
-{
-  "n": "core",
-  "op": 6,
-  "d": {
-    "cert": "-----BEGIN CERTIFICATE-----\nMIIBIjANB..."
-  }
-}
-```
+!!! example "Example server certificate change event payload"
+
+    ```json
+    {
+      "n": "core",
+      "op": 6,
+      "d": {
+        "cert": "-----BEGIN CERTIFICATE-----\nMIIBIjANB...",
+        "oldInvalidSince": 1630012713
+      }
+    }
+    ```
+
+| Field             | Type   | Description                                                             |
+| ----------------- | ------ | ----------------------------------------------------------------------- |
+| `cert`            | string | ASCII-PEM encoded server ID-Cert. The server ID-Cert is self-signed.    |
+| `oldInvalidSince` | uint64 | A UNIX timestamp indicating when the old server ID-Cert became invalid. |
 
 ##### 3.2.3.8 Heartbeat and heartbeat ACK events
 
 The heartbeat event is sent by the client to the server to keep the WebSocket connection alive.
 The payload for both the heartbeat and heartbeat ACK events is an empty object `{}`.
 
-```json
-{
-  "n": "core",
-  "op": 0,
-  "d": {}
-}
-```
+!!! example "Example heartbeat event payload"
+  
 
-```json
-{
-  "n": "core",
-  "op": 7,
-  "d": {}
-}
-```
+    ```json
+    {
+      "n": "core",
+      "op": 0,
+      "d": {}
+    }
+    ```
+
+!!! example "Example heartbeat ACK event payload"
+
+    ```json
+    {
+      "n": "core",
+      "op": 7,
+      "d": {}
+    }
+    ```
 
 #### 3.2.4 Establishing a connection
 
