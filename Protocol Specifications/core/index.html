@@ -1010,6 +1010,24 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#325-closing-a-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2.5 Closing a connection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#326-guaranteed-delivery-of-gateway-messages-through-package-acknowledgement" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2.6 Guaranteed delivery of gateway messages through package acknowledgement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#33-events-over-rest" class="md-nav__link">
     <span class="md-ellipsis">
       3.3 Events over REST
@@ -1036,6 +1054,15 @@
   <a href="#35-internet-protocol-ip" class="md-nav__link">
     <span class="md-ellipsis">
       3.5 Internet Protocol (IP)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-compression" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.6 Compression
     </span>
   </a>
   
@@ -2176,6 +2203,24 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#325-closing-a-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2.5 Closing a connection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#326-guaranteed-delivery-of-gateway-messages-through-package-acknowledgement" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2.6 Guaranteed delivery of gateway messages through package acknowledgement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#33-events-over-rest" class="md-nav__link">
     <span class="md-ellipsis">
       3.3 Events over REST
@@ -2202,6 +2247,15 @@
   <a href="#35-internet-protocol-ip" class="md-nav__link">
     <span class="md-ellipsis">
       3.5 Internet Protocol (IP)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-compression" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.6 Compression
     </span>
   </a>
   
@@ -2758,9 +2812,12 @@ missing or duplicate information and other mistakes at <a href="https://github.c
 </ul>
 </li>
 <li><a href="#324-establishing-a-connection">3.2.4 Establishing a connection</a></li>
+<li><a href="#325-closing-a-connection">3.2.5 Closing a connection</a></li>
+<li><a href="#326-guaranteed-delivery-of-gateway-messages-through-package-acknowledgement">3.2.6 Guaranteed delivery of gateway messages through package acknowledgement</a></li>
 <li><a href="#33-events-over-rest">3.3 Events over REST</a></li>
 <li><a href="#34-http">3.4 HTTP</a></li>
 <li><a href="#35-internet-protocol-ip">3.5 Internet Protocol (IP)</a></li>
+<li><a href="#36-compression">3.6 Compression</a></li>
 </ul>
 </li>
 <li><a href="#4-federated-identity">4. Federated identity</a><ul>
@@ -3035,7 +3092,7 @@ on the specific event.</p>
 </tr>
 <tr>
 <td><code>s</code></td>
-<td>uint32</td>
+<td>uint64</td>
 <td>Sequence number of the event, used for guaranteed, ordered delivery</td>
 </tr>
 </tbody>
@@ -3121,27 +3178,34 @@ correctly interpreting the payload.</p>
 </tbody>
 </table>
 <h5 id="3213-sequence-numbers-s">3.2.1.3 Sequence numbers <code>s</code><a class="headerlink" href="#3213-sequence-numbers-s" title="Permanent link">&para;</a></h5>
-<!-->
-TODO
-<-->
-
-<div class="admonition bug todo">
-<p class="admonition-title">Bug</p>
-<p>How are we going to do sequence numbers? Requirements are:</p>
-<ul>
-<li>Guaranteed, ordered delivery of payloads</li>
-<li>Notice delivery gaps, especially when connection stability is flawed</li>
-</ul>
-<p>See: https://chatgpt.com/share/678e89ba-aa20-8004-bde7-4a33bab804b9</p>
-</div>
+<p>Sequence numbers are used as an application-layer packet acknowledgement mechanism in conjunction with
+<a href="#322-heartbeats">heartbeats</a>. This <em>guarantees</em> the delivery of all gateway messages sent from a
+home server to a client, especially in suboptimal network conditions.</p>
+<details class="question">
+<summary>Doesn't TCP already cover this?</summary>
+<p>While TCP ensures reliable delivery of data during an active connection, it does not retain
+knowledge of application-layer messages if a disconnect occurs. In such cases, the application
+must implement its own mechanisms to track which messages were successfully received.</p>
+<p>Application-layer acknowledgements allow the protocol to recover from interruptions by
+identifying any messages that were lost during the disconnect and ensuring they are
+retransmitted, preserving the integrity and completeness of communication between the client
+and server.</p>
+</details>
+<p>Sequence numbers are unsigned integers with a 64 bit length. In the rare event that this integer should
+overflow, the server must close the connection to the client and prompt the client to initiate a new,
+non-resumed gateway connection.</p>
 <h4 id="322-heartbeats">3.2.2 Heartbeats<a class="headerlink" href="#322-heartbeats" title="Permanent link">&para;</a></h4>
-<p>Heartbeats are used to keep the WebSocket connection alive. The client continuously sends a heartbeat
-event to the server with the interval specified in the "Hello" event payload.
+<p>Heartbeats are used to keep the WebSocket connection alive and, combined with <a href="#3213-sequence-numbers-s">sequence numbers</a>,
+form an application-layer packet acknowledgement mechanism. The client continuously sends a heartbeat
+event to the server with the interval specified in the <a href="#3231-hello-event">"Hello" event payload</a>.
 The server must acknowledge the heartbeat event by sending a heartbeat ACK event back to the client.</p>
 <p>Servers must account for the time it takes for the client to send the heartbeat event. Before closing
 a connection due to a missed heartbeat, the server should request a heartbeat event from the client
-by sending a heartbeat event to the client.</p>
+by sending a heartbeat event to the client. If the client is not responding within a reasonable
+time frame, the server should close the gateway connection with an appropriate <a href="#325-closing-a-connection">close code</a>.</p>
 <p>The structure of the heartbeat and heartbeat ACK events are described in <a href="#3238-heartbeat-and-heartbeat-ack-events">section 3.2.3.8</a>.</p>
+<p>Recommended values for heartbeat intervals are 30 to 60 seconds. The heartbeat interval is chosen by
+the server.</p>
 <h4 id="323-gateway-event-payload-definitions">3.2.3 Gateway event payload definitions<a class="headerlink" href="#323-gateway-event-payload-definitions" title="Permanent link">&para;</a></h4>
 <h5 id="3231-hello-event">3.2.3.1 "Hello" event<a class="headerlink" href="#3231-hello-event" title="Permanent link">&para;</a></h5>
 <p>The "Hello" event is sent by the server to the client upon establishing a connection. The <code>d</code> payload
@@ -3273,8 +3337,8 @@ was successful or not.</p>
 </tr>
 </tbody>
 </table>
-<p>If a successful subscription to a service channel is acknowledged, all further events and logic
-is defined by the service's specification.</p>
+<p>If a successful subscription to a service channel is acknowledged, all logic and further event on
+this channel are defined by the service's specification.</p>
 <h5 id="3234-new-session-event">3.2.3.4 New session event<a class="headerlink" href="#3234-new-session-event" title="Permanent link">&para;</a></h5>
 <p>The "New Session" event is sent by the server to all sessions except the new one. The <code>d</code> payload
 of this event contains the ASCII-PEM encoded ID-Cert of the new session. You can find more information
@@ -3413,6 +3477,16 @@ The payload for both the heartbeat and heartbeat ACK events is an empty object <
 </div>
 <h4 id="324-establishing-a-connection">3.2.4 Establishing a connection<a class="headerlink" href="#324-establishing-a-connection" title="Permanent link">&para;</a></h4>
 <p>TODO</p>
+<h4 id="325-closing-a-connection">3.2.5 Closing a connection<a class="headerlink" href="#325-closing-a-connection" title="Permanent link">&para;</a></h4>
+<p>TODO</p>
+<h4 id="326-guaranteed-delivery-of-gateway-messages-through-package-acknowledgement">3.2.6 Guaranteed delivery of gateway messages through package acknowledgement<a class="headerlink" href="#326-guaranteed-delivery-of-gateway-messages-through-package-acknowledgement" title="Permanent link">&para;</a></h4>
+<p>TODO</p>
+<div class="admonition bug">
+<p class="admonition-title">TODO</p>
+<p>This section will explain how <a href="#322-heartbeats">heartbeats</a> and <a href="#3213-sequence-numbers-s">sequence numbers</a>
+come together to form an application-layer package acknowledgement mechanism, and how that
+mechanism works.</p>
+</div>
 <h4 id="33-events-over-rest">3.3 Events over REST<a class="headerlink" href="#33-events-over-rest" title="Permanent link">&para;</a></h4>
 <p>For some implementation contexts, a constant WebSocket connection might not be wanted. A client can
 instead opt to query an API endpoint to receive events, which would normally be sent through the WebSocket
@@ -3458,6 +3532,17 @@ Protocol in polyproto should happen on a best-effort basis.</p>
 as most of the world is not sufficiently IPv6 capable. We do, however, mandate that software
 written to support polyproto must be capable of handling traffic over both IPv4 and IPv6, should
 both versions of the Internet Protocol be available to the software at runtime.</p>
+</div>
+<h3 id="36-compression">3.6 Compression<a class="headerlink" href="#36-compression" title="Permanent link">&para;</a></h3>
+<p>TODO</p>
+<div class="admonition bug">
+<p class="admonition-title">TODO; Here's a TL;DR:</p>
+<ul>
+<li>zstd level 5-13 recommended</li>
+<li>zstd must be offered on gateway server</li>
+<li>zstd must be offered on http api</li>
+<li>uncompressed available (but why would you do that)</li>
+</ul>
 </div>
 <h2 id="4-federated-identity">4. Federated identity<a class="headerlink" href="#4-federated-identity" title="Permanent link">&para;</a></h2>
 <p>The federation of actor identities allows users to engage with foreign servers as if they were their
@@ -4941,7 +5026,7 @@ service provider, they must request a <a href="#7-migrations">migration</a>.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-20T17:40:15+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-20T21:36:07+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-20</span>
   </span>
 
     
