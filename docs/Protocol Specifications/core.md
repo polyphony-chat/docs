@@ -38,9 +38,12 @@ weight: 0
         - [3.2.3.7 Server certificate change event](#3237-server-certificate-change-event)
         - [3.2.3.8 Heartbeat and heartbeat ACK events](#3238-heartbeat-and-heartbeat-ack-events)
       - [3.2.4 Establishing a connection](#324-establishing-a-connection)
+      - [3.2.5 Closing a connection](#325-closing-a-connection)
+      - [3.2.6 Guaranteed delivery of gateway messages through package acknowledgement](#326-guaranteed-delivery-of-gateway-messages-through-package-acknowledgement)
       - [3.3 Events over REST](#33-events-over-rest)
     - [3.4 HTTP](#34-http)
     - [3.5 Internet Protocol (IP)](#35-internet-protocol-ip)
+    - [3.6 Compression](#36-compression)
   - [4. Federated identity](#4-federated-identity)
     - [4.1 Authentication](#41-authentication)
       - [4.1.1 Authenticating on a foreign server](#411-authenticating-on-a-foreign-server)
@@ -243,7 +246,7 @@ on the specific event.
 | `n`   | string     | [Namespace](#82-namespaces) context for this payload.               |
 | `op`  | uint16     | Gateway Opcode indicating the type of payload.                      |
 | `d`   | JSON value | The event data associated with this payload.                        |
-| `s`   | uint32     | Sequence number of the event, used for guaranteed, ordered delivery |
+| `s`   | uint64     | Sequence number of the event, used for guaranteed, ordered delivery |
 
 ##### 3.2.1.1 Namespaces `n`
 
@@ -274,30 +277,41 @@ The following opcodes are defined by the `core` namespace:
 
 ##### 3.2.1.3 Sequence numbers `s`
 
-<!-->
-TODO
-<-->
+Sequence numbers are used as an application-layer packet acknowledgement mechanism in conjunction with
+[heartbeats](#322-heartbeats). This *guarantees* the delivery of all gateway messages sent from a
+home server to a client, especially in suboptimal network conditions.
 
-!!! bug TODO
+??? question "Doesn't TCP already cover this?"
 
-    How are we going to do sequence numbers? Requirements are:
+    While TCP ensures reliable delivery of data during an active connection, it does not retain
+    knowledge of application-layer messages if a disconnect occurs. In such cases, the application
+    must implement its own mechanisms to track which messages were successfully received.
+    
+    Application-layer acknowledgements allow the protocol to recover from interruptions by
+    identifying any messages that were lost during the disconnect and ensuring they are
+    retransmitted, preserving the integrity and completeness of communication between the client
+    and server.
 
-    - Guaranteed, ordered delivery of payloads
-    - Notice delivery gaps, especially when connection stability is flawed
-
-    See: https://chatgpt.com/share/678e89ba-aa20-8004-bde7-4a33bab804b9
+Sequence numbers are unsigned integers with a 64 bit length. In the rare event that this integer should
+overflow, the server must close the connection to the client and prompt the client to initiate a new,
+non-resumed gateway connection.
 
 #### 3.2.2 Heartbeats
 
-Heartbeats are used to keep the WebSocket connection alive. The client continuously sends a heartbeat
-event to the server with the interval specified in the "Hello" event payload.
+Heartbeats are used to keep the WebSocket connection alive and, combined with [sequence numbers](#3213-sequence-numbers-s),
+form an application-layer packet acknowledgement mechanism. The client continuously sends a heartbeat
+event to the server with the interval specified in the ["Hello" event payload](#3231-hello-event).
 The server must acknowledge the heartbeat event by sending a heartbeat ACK event back to the client.
 
 Servers must account for the time it takes for the client to send the heartbeat event. Before closing
 a connection due to a missed heartbeat, the server should request a heartbeat event from the client
-by sending a heartbeat event to the client.
+by sending a heartbeat event to the client. If the client is not responding within a reasonable
+time frame, the server should close the gateway connection with an appropriate [close code](#325-closing-a-connection).
 
 The structure of the heartbeat and heartbeat ACK events are described in [section 3.2.3.8](#3238-heartbeat-and-heartbeat-ack-events).
+
+Recommended values for heartbeat intervals are 30 to 60 seconds. The heartbeat interval is chosen by
+the server.
 
 #### 3.2.3 Gateway event payload definitions
 
@@ -392,8 +406,8 @@ was successful or not.
 | `success` | boolean | Whether the action was successful or not.                                                  |
 | `message` | string? | Only present if `success` is `false`. A message indicating why the action failed.          |
 
-If a successful subscription to a service channel is acknowledged, all further events and logic
-is defined by the service's specification.
+If a successful subscription to a service channel is acknowledged, all logic and further event on
+this channel are defined by the service's specification.
 
 ##### 3.2.3.4 New session event
 
@@ -503,6 +517,20 @@ The payload for both the heartbeat and heartbeat ACK events is an empty object `
 
 TODO
 
+#### 3.2.5 Closing a connection
+
+TODO
+
+#### 3.2.6 Guaranteed delivery of gateway messages through package acknowledgement
+
+TODO
+
+!!! bug "TODO"
+
+    This section will explain how [heartbeats](#322-heartbeats) and [sequence numbers](#3213-sequence-numbers-s)
+    come together to form an application-layer package acknowledgement mechanism, and how that
+    mechanism works.
+
 #### 3.3 Events over REST
 
 For some implementation contexts, a constant WebSocket connection might not be wanted. A client can
@@ -559,6 +587,17 @@ Protocol in polyproto should happen on a best-effort basis.
     as most of the world is not sufficiently IPv6 capable. We do, however, mandate that software
     written to support polyproto must be capable of handling traffic over both IPv4 and IPv6, should
     both versions of the Internet Protocol be available to the software at runtime.
+
+### 3.6 Compression
+
+TODO
+
+!!! bug "TODO; Here's a TL;DR:"
+
+    - zstd level 5-13 recommended
+    - zstd must be offered on gateway server
+    - zstd must be offered on http api
+    - uncompressed available (but why would you do that)
 
 ## 4. Federated identity
 
