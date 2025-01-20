@@ -2742,6 +2742,7 @@ missing or duplicate information and other mistakes at <a href="https://github.c
 <li><a href="#321-gateway-event-payloads">3.2.1 Gateway Event Payloads</a><ul>
 <li><a href="#3211-namespaces-n">3.2.1.1 Namespaces <code>n</code></a></li>
 <li><a href="#3212-opcodes-op">3.2.1.2 Opcodes <code>op</code></a></li>
+<li><a href="#3213-sequence-numbers-s">3.2.1.3 Sequence numbers <code>s</code></a></li>
 </ul>
 </li>
 <li><a href="#322-heartbeats">3.2.2 Heartbeats</a></li>
@@ -3024,13 +3025,18 @@ on the specific event.</p>
 </tr>
 <tr>
 <td><code>op</code></td>
-<td>integer</td>
+<td>uint16</td>
 <td>Gateway Opcode indicating the type of payload.</td>
 </tr>
 <tr>
 <td><code>d</code></td>
 <td>JSON value</td>
 <td>The event data associated with this payload.</td>
+</tr>
+<tr>
+<td><code>s</code></td>
+<td>uint32</td>
+<td>Sequence number of the event, used for guaranteed, ordered delivery</td>
 </tr>
 </tbody>
 </table>
@@ -3085,8 +3091,8 @@ correctly interpreting the payload.</p>
 <tr>
 <td><code>5</code></td>
 <td>Resume</td>
-<td>Actor Send</td>
-<td>Resume a connection.</td>
+<td>Actor Send/Receive</td>
+<td>Replay events after re-connecting.</td>
 </tr>
 <tr>
 <td><code>6</code></td>
@@ -3114,6 +3120,20 @@ correctly interpreting the payload.</p>
 </tr>
 </tbody>
 </table>
+<h5 id="3213-sequence-numbers-s">3.2.1.3 Sequence numbers <code>s</code><a class="headerlink" href="#3213-sequence-numbers-s" title="Permanent link">&para;</a></h5>
+<!-->
+TODO
+<-->
+
+<div class="admonition bug todo">
+<p class="admonition-title">Bug</p>
+<p>How are we going to do sequence numbers? Requirements are:</p>
+<ul>
+<li>Guaranteed, ordered delivery of payloads</li>
+<li>Notice delivery gaps, especially when connection stability is flawed</li>
+</ul>
+<p>See: https://chatgpt.com/share/678e89ba-aa20-8004-bde7-4a33bab804b9</p>
+</div>
 <h4 id="322-heartbeats">3.2.2 Heartbeats<a class="headerlink" href="#322-heartbeats" title="Permanent link">&para;</a></h4>
 <p>Heartbeats are used to keep the WebSocket connection alive. The client continuously sends a heartbeat
 event to the server with the interval specified in the "Hello" event payload.
@@ -3331,6 +3351,8 @@ occurs.</p>
 </tbody>
 </table>
 <h5 id="3236-resume-event">3.2.3.6 Resume event<a class="headerlink" href="#3236-resume-event" title="Permanent link">&para;</a></h5>
+<p>When a client re-connects to a polyproto WebSocket gateway server, the client may send a resume event
+to the server instead of identifying.</p>
 <p>TODO</p>
 <h5 id="3237-server-certificate-change-event">3.2.3.7 Server certificate change event<a class="headerlink" href="#3237-server-certificate-change-event" title="Permanent link">&para;</a></h5>
 <p>The server certificate change event notifies clients about a new server ID-Cert. The <code>d</code> payload
@@ -4919,7 +4941,7 @@ service provider, they must request a <a href="#7-migrations">migration</a>.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-20T13:27:01+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-20T17:40:15+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-20</span>
   </span>
 
     
