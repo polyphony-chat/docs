@@ -499,6 +499,11 @@ object with the fields `from`, `to`, and `except`. The `from` and `to` fields ar
 a range of numbers. The `except` field is an array of strings representing numbers that are not
 included in the range.
 
+!!! info
+
+    Numbers are formatted as strings due to JSON conventions. Every number in the `from`, `to` and
+    `except` fields is a valid, unsigned integer of up to 64 bits.
+
 The range described by the `from` and `to` fields is a mathematical, closed interval, where
 `from` is equal to $a$ and `to` is equal to $b$ :
 
@@ -516,10 +521,11 @@ $$
     }
     ```
 
-| Field  | Type   | Description |
-| ------ | ------ | ----------- |
-| `from` | string |             |
-
+| Field    | Type          | Description                                                                                                                |
+| -------- | ------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `from`   | string        | The lowest sequence number received this heartbeat interval                                                                |
+| `to`     | string        | The highest sequence number received this heartbeat interval                                                               |
+| `except` | array[string] | Sequence numbers `x`, where \{$x \in \mathbb{N} \mid from\leq x\leq to\}$, that were not received this heartbeat interval. |
 
 !!! example "Example heartbeat event payload"
   
