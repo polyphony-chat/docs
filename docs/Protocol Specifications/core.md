@@ -277,24 +277,14 @@ The following opcodes are defined by the `core` namespace:
 
 ##### 3.2.1.3 Sequence numbers `s`
 
-Sequence numbers are used as an application-layer packet acknowledgement mechanism in conjunction with
-[heartbeats](#322-heartbeats). This *guarantees* the delivery of all gateway messages sent from a
-home server to a client, especially in suboptimal network conditions.
-
-??? question "Doesn't TCP already cover this?"
-
-    While TCP ensures reliable delivery of data during an active connection, it does not retain
-    knowledge of application-layer messages if a disconnect occurs. In such cases, the application
-    must implement its own mechanisms to track which messages were successfully received.
-    
-    Application-layer acknowledgements allow the protocol to recover from interruptions by
-    identifying any messages that were lost during the disconnect and ensuring they are
-    retransmitted, preserving the integrity and completeness of communication between the client
-    and server.
-
 Sequence numbers are unsigned integers with a 64 bit length. In the rare event that this integer should
 overflow, the server must close the connection to the client and prompt the client to initiate a new,
 non-resumed gateway connection.
+
+The sequence number increases by one for every gateway message sent by the server. The client must
+keep track of received sequence numbers as part as the [guaranteed delivery mechanism](#326-guaranteed-delivery-of-gateway-messages-through-package-acknowledgement).
+Every gateway connection has its own sequence number counter, starting at 0 for the first event sent
+by the server.
 
 #### 3.2.2 Heartbeats
 
@@ -325,7 +315,12 @@ in milliseconds at which the client should send heartbeat events to the server.
 
     ```json
     {
-      "heartbeat_interval": 45000
+      "n": "core",
+      "op": 1,
+      "d": {
+        "heartbeat_interval": 45000
+      },
+      "s": 0
     }
     ```
 
@@ -337,6 +332,8 @@ in milliseconds at which the client should send heartbeat events to the server.
 
 The "identify" event is sent by the client to the server to let the server know which actor the
 client is.
+
+TODO
 
 ##### 3.2.3.3 Service channels
 
@@ -358,7 +355,8 @@ A service channel event payload has the following structure:
       "d": {
         "action": "subscribe",
         "service": "service_name"
-      }
+      },
+      "s": 1
     }
     ```
 
@@ -381,7 +379,8 @@ was successful or not.
         "service": "service_name",
         "success": false,
         "errorMessage": "Service not found"
-      }
+      },
+      "s": 1
     }
     ```
 
@@ -395,7 +394,8 @@ was successful or not.
         "action": "subscribe",
         "service": "service_name",
         "success": true,
-      }
+      },
+      "s": 1
     }
     ```
 
@@ -423,7 +423,8 @@ about the new session mechanism in [section 4.3](#43-protection-against-misuse-b
       "op": 3,
       "d": {
         "cert": "-----BEGIN CERTIFICATE-----\nMIIBIjANB..."
-      }
+      },
+      "s": 1
     }
     ```
   
@@ -448,14 +449,15 @@ occurs.
         "serial": "11704583652649",
         "invalidSince": "1737379403",
         "signature": "8eacd92192bacc57bb5df3c7922e93bbc8b3f683f5dec9224353b102fa2f2a75"
-      }
+      },
+      "s": 1
     }
     ```
 
-| Field          | Type   | Description                                                                                                                                                                                                                |
-| -------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `serial`       | uint64 | The serial number of the invalidated ID-Cert                                                                                                                                                                               |
-| `invalidSince` | uint64 | UNIX timestamp of the point in time where this ID-Cert became invalid on                                                                                                                                                   |
+| Field          | Type   | Description                                                                                                                                                                                                                               |
+| -------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `serial`       | uint64 | The serial number of the invalidated ID-Cert                                                                                                                                                                                              |
+| `invalidSince` | uint64 | UNIX timestamp of the point in time where this ID-Cert became invalid on                                                                                                                                                                  |
 | `signature`    | string | Signature of a string concatenation of the `invalidSince` timestamp and the `serial` number, in that order. Clients must verify this signature, verifying that the signature was generated by the private key of the revoked certificate. |
 
 ##### 3.2.3.6 Resume event
@@ -479,7 +481,8 @@ of this event contains the ASCII-PEM encoded ID-Cert of the server.
       "d": {
         "cert": "-----BEGIN CERTIFICATE-----\nMIIBIjANB...",
         "oldInvalidSince": 1630012713
-      }
+      },
+      "s": 1
     }
     ```
 
@@ -491,7 +494,32 @@ of this event contains the ASCII-PEM encoded ID-Cert of the server.
 ##### 3.2.3.8 Heartbeat and heartbeat ACK events
 
 The heartbeat event is sent by the client to the server to keep the WebSocket connection alive.
-The payload for both the heartbeat and heartbeat ACK events is an empty object `{}`.
+The payload for the heartbeat event is a "minified number list". Minified number lists are a JSON
+object with the fields `from`, `to`, and `except`. The `from` and `to` fields are strings representing
+a range of numbers. The `except` field is an array of strings representing numbers that are not
+included in the range.
+
+The range described by the `from` and `to` fields is a mathematical, closed interval, where
+`from` is equal to $a$ and `to` is equal to $b$ :
+
+$$
+[a,b]=\{x\in \mathbb {N} \mid a\leq x\leq b\}
+$$
+
+!!! example "Minified number list"
+
+    ```json
+    {
+      from: "1",
+      to: "20",
+      except: ["9", "12", "13"]
+    }
+    ```
+
+| Field  | Type   | Description |
+| ------ | ------ | ----------- |
+| `from` | string |             |
+
 
 !!! example "Example heartbeat event payload"
   
@@ -499,7 +527,8 @@ The payload for both the heartbeat and heartbeat ACK events is an empty object `
     {
       "n": "core",
       "op": 0,
-      "d": {}
+      "d": {},
+      "s": 1
     }
     ```
 
@@ -509,7 +538,8 @@ The payload for both the heartbeat and heartbeat ACK events is an empty object `
     {
       "n": "core",
       "op": 7,
-      "d": {}
+      "d": {},
+      "s": 1
     }
     ```
 
@@ -530,6 +560,24 @@ TODO
     This section will explain how [heartbeats](#322-heartbeats) and [sequence numbers](#3213-sequence-numbers-s)
     come together to form an application-layer package acknowledgement mechanism, and how that
     mechanism works.
+
+polyproto implements an application-level guaranteed delivery mechanism. This ensures that all gateway
+messages sent from a home server to a client are received by the client in the order they were sent
+in – especially when network conditions are suboptimal. This mechanism is based on the use of
+[sequence numbers](#3213-sequence-numbers-s) and [heartbeats](#322-heartbeats).
+
+??? question "Doesn't TCP already cover this?"
+
+    While TCP ensures reliable delivery of data during an active connection, it does not retain
+    knowledge of application-layer messages if a disconnect occurs. In such cases, the application
+    must implement its own mechanisms to track which messages were successfully received.
+    
+    Application-layer acknowledgements allow the protocol to recover from interruptions by
+    identifying any messages that were lost during the disconnect and ensuring they are
+    retransmitted, preserving the integrity and completeness of communication between the client
+    and server.
+
+
 
 #### 3.3 Events over REST
 
