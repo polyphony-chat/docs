@@ -1,6 +1,7 @@
 # yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
 site_name: Polyphony
 repo_url: https://github.com/polyphony-chat/docs
+site_url: https://docs.polyphony.chat/
 edit_uri: edit/main/docs/
 extra_css:
   - stylesheets/extra.css
@@ -55,14 +56,11 @@ plugins:
       archive_date_format: MMMM yyyy
   - rss:
       match_path: blog/posts/.*
-
-
       date_from_meta:
         as_creation: date
       categories:
         - categories
         - tags 
-
   - privacy
   - search
   - mkdocs-nav-weight
@@ -98,3 +96,8 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.arithmatex:
+      generic: true
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
