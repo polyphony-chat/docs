@@ -495,7 +495,7 @@ of this event contains the ASCII-PEM encoded ID-Cert of the server.
 ##### 3.2.3.8 Heartbeat and heartbeat ACK events
 
 The heartbeat event is sent by the client to the server to keep the WebSocket connection alive.
-The payload for the heartbeat event is a "minified number list". Minified number lists are a JSON
+The payload for the heartbeat event is a minified number list. Minified number lists are a JSON
 object with the fields `from`, `to`, and `except`. The `from` and `to` fields are strings representing
 a range of numbers. The `except` field is an array of strings representing numbers that are not
 included in the range.
@@ -534,10 +534,16 @@ $$
     {
       "n": "core",
       "op": 0,
-      "d": {},
+      "d": {
+        "from": "213",
+        "to": "219"
+        "except": ["214", "216"]
+      },
       "s": 1
     }
     ```
+
+A heartbeat ACK contains events that the client has re-requested as part of their heartbeat message.
 
 !!! example "Example heartbeat ACK event payload"
 
@@ -545,16 +551,57 @@ $$
     {
       "n": "core",
       "op": 7,
-      "d": {},
+      "d": {
+        [
+          {
+            "n": "core",
+            "op": 6,
+            "d": {
+              "payload data"
+            }
+          },
+          {
+            "n": "core",
+            "op": 9,
+            "d": {
+              ...
+            }
+          },
+          ...
+        ]
+      },
       "s": 1
     }
     ```
+
+As such, the field `d` in a heartbeat ack is optional (`?`) and, if present, contains an array of
+other gateway events. Heartbeat ACK payloads must not be present in this array, making recursion
+impossible.
 
 #### 3.2.4 Establishing a connection
 
 TODO
 
 #### 3.2.5 Closing a connection
+
+At any time during the connection, the server or client may wish to terminate the session in an
+orderly fashion. This is being done by sending a [WebSocket close code](https://www.rfc-editor.org/rfc/rfc6455.html#section-7.1.5)
+to the recipient. In addition to the pre-defined status codes in [IETF RFC #6455](https://www.rfc-editor.org/rfc/rfc6455.html),
+polyproto servers and clients must know of and use the following status codes in their appropriate
+situations:
+
+| Code   | Description                | Explanation                                                                                                                          | Eligible for `RESUME`? | Sent by server? | Sent by client? |
+| ------ | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ---------------------- | --------------- | --------------- |
+| `4000` | Unknown error              | An unknown error has occurred and the connection was terminated.                                                                     | x                      | x               | x               |
+| `4001` | Unknown opcode             | The client has sent a message with an unknown [opcode](#3212-opcodes-op) to the server.                                              | x                      | x               |                 |
+| `4002` | Invalid payload            | The client has sent a message with an invalid payload to the server.                                                                 | x                      | x               |                 |
+| `4003` | Not authenticated          | The server has received a message from the client before the client identified itself, or the clients' session has been invalidated. |                        | x               |                 |
+| `4004` | Invalid authentication     | The authentication token received by the server as part of the identify payload is invalid.                                          |                        | x               |                 |
+| `4005` | Already authenticated      | The client has sent an identify payload even though it has already identified successfully.                                          |                        | x               |                 |
+| `4006` | Reserved                   | 4006 is a reserved value and has no function in polyproto v1.0. The specific meaning may be defined in the future.                   |                        |                 |                 |
+| `4007` | Invalid sequence number(s) | The client has sent a heartbeat containing sequence numbers that were invalid.                                                       | x                      | x               |                 |
+| `4008` | Rate limited               | The client has sent payloads too quickly.                                                                                            |                        | x               |                 |
+| `4009` | Timeout                    | The session has been deemed to be timed out. This can happen if a heartbeat or heartbeat ACK has not been sent in due time.          | x (If sent by server)  | X               | x               |
 
 TODO
 
@@ -584,7 +631,9 @@ in – especially when network conditions are suboptimal. This mechanism is base
     retransmitted, preserving the integrity and completeness of communication between the client
     and server.
 
-
+If `except` was present and contained entries in the heartbeat payload, the server must re-send these
+events in the `d` part of the heartbeat ACK response.
+TODO ^
 
 #### 3.3 Events over REST
 
