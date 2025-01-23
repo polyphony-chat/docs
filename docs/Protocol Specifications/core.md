@@ -246,13 +246,15 @@ on the specific event.
 | `n`   | string     | [Namespace](#82-namespaces) context for this payload.               |
 | `op`  | uint16     | Gateway Opcode indicating the type of payload.                      |
 | `d`   | JSON value | The event data associated with this payload.                        |
-| `s`   | uint64     | Sequence number of the event, used for guaranteed, ordered delivery |
+| `s`¹  | uint64     | Sequence number of the event, used for guaranteed, ordered delivery |
+
+¹: This field is only received by clients and never sent to the server.
 
 ##### 3.2.1.1 Namespaces `n`
 
 The `n` field in a gateway event payload indicates the namespace context for the payload. You can
 read more about namespaces in [section 8.2](#82-namespaces).
-
+messages
 Every namespace may define its own set of opcodes and event names.
 
 The namespace context must be known to the entity receiving the payload, as it is crucial for
@@ -355,8 +357,7 @@ A service channel event payload has the following structure:
       "d": {
         "action": "subscribe",
         "service": "service_name"
-      },
-      "s": 1
+      }
     }
     ```
 
@@ -521,11 +522,11 @@ $$
     }
     ```
 
-| Field    | Type          | Description                                                                                                                |
-| -------- | ------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `from`   | string        | The lowest sequence number received this heartbeat interval                                                                |
-| `to`     | string        | The highest sequence number received this heartbeat interval                                                               |
-| `except` | array[string] | Sequence numbers `x`, where \{$x \in \mathbb{N} \mid from\leq x\leq to\}$, that were not received this heartbeat interval. |
+| Field    | Type           | Description                                                                                                                |
+| -------- | -------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `from`   | string         | The lowest sequence number received this heartbeat interval                                                                |
+| `to`     | string         | The highest sequence number received this heartbeat interval                                                               |
+| `except` | array[string]? | Sequence numbers `x`, where \{$x \in \mathbb{N} \mid from\leq x\leq to\}$, that were not received this heartbeat interval. |
 
 !!! example "Example heartbeat event payload"
   
