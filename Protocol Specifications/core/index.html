@@ -4364,7 +4364,7 @@ of this event contains the ASCII-PEM encoded ID-Cert of the server.</p>
 </table>
 <h5 id="3238-heartbeat-and-heartbeat-ack-events">3.2.3.8 Heartbeat and heartbeat ACK events<a class="headerlink" href="#3238-heartbeat-and-heartbeat-ack-events" title="Permanent link">&para;</a></h5>
 <p>The heartbeat event is sent by the client to the server to keep the WebSocket connection alive.
-The payload for the heartbeat event is a "minified number list". Minified number lists are a JSON
+The payload for the heartbeat event is a minified number list. Minified number lists are a JSON
 object with the fields <code>from</code>, <code>to</code>, and <code>except</code>. The <code>from</code> and <code>to</code> fields are strings representing
 a range of numbers. The <code>except</code> field is an array of strings representing numbers that are not
 included in the range.</p>
@@ -4418,24 +4418,149 @@ included in the range.</p>
 <div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nt">&quot;n&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;core&quot;</span><span class="p">,</span>
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nt">&quot;op&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nt">&quot;d&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="nt">&quot;s&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="p">}</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nt">&quot;d&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="nt">&quot;from&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;213&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="nt">&quot;to&quot;</span><span class="p">:</span><span class="w"> </span><span class="nt">&quot;219&quot;</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="nt">&quot;except&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;214&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;216&quot;</span><span class="p">]</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span><span class="nt">&quot;s&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="p">}</span>
 </code></pre></div>
 </div>
+<p>A heartbeat ACK contains events that the client has re-requested as part of their heartbeat message.</p>
 <div class="admonition example">
 <p class="admonition-title">Example heartbeat ACK event payload</p>
 <div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">&quot;n&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;core&quot;</span><span class="p">,</span>
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">&quot;op&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nt">&quot;d&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="nt">&quot;s&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="p">}</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nt">&quot;d&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="p">[</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">      </span><span class="p">{</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">        </span><span class="nt">&quot;n&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;core&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">        </span><span class="nt">&quot;op&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">        </span><span class="nt">&quot;d&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">          </span><span class="s2">&quot;payload data&quot;</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">      </span><span class="p">},</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">      </span><span class="p">{</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">        </span><span class="nt">&quot;n&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;core&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">        </span><span class="nt">&quot;op&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">        </span><span class="nt">&quot;d&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">          </span><span class="err">...</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">      </span><span class="p">},</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="w">      </span><span class="err">...</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="w">  </span><span class="nt">&quot;s&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="p">}</span>
 </code></pre></div>
 </div>
+<p>As such, the field <code>d</code> in a heartbeat ack is optional (<code>?</code>) and, if present, contains an array of
+other gateway events. Heartbeat ACK payloads must not be present in this array, making recursion
+impossible.</p>
 <h4 id="324-establishing-a-connection">3.2.4 Establishing a connection<a class="headerlink" href="#324-establishing-a-connection" title="Permanent link">&para;</a></h4>
 <p>TODO</p>
 <h4 id="325-closing-a-connection">3.2.5 Closing a connection<a class="headerlink" href="#325-closing-a-connection" title="Permanent link">&para;</a></h4>
+<p>At any time during the connection, the server or client may wish to terminate the session in an
+orderly fashion. This is being done by sending a <a href="https://www.rfc-editor.org/rfc/rfc6455.html#section-7.1.5">WebSocket close code</a>
+to the recipient. In addition to the pre-defined status codes in <a href="https://www.rfc-editor.org/rfc/rfc6455.html">IETF RFC #6455</a>,
+polyproto servers and clients must know of and use the following status codes in their appropriate
+situations:</p>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Description</th>
+<th>Explanation</th>
+<th>Eligible for <code>RESUME</code>?</th>
+<th>Sent by server?</th>
+<th>Sent by client?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>4000</code></td>
+<td>Unknown error</td>
+<td>An unknown error has occurred and the connection was terminated.</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+</tr>
+<tr>
+<td><code>4001</code></td>
+<td>Unknown opcode</td>
+<td>The client has sent a message with an unknown <a href="#3212-opcodes-op">opcode</a> to the server.</td>
+<td>x</td>
+<td>x</td>
+<td></td>
+</tr>
+<tr>
+<td><code>4002</code></td>
+<td>Invalid payload</td>
+<td>The client has sent a message with an invalid payload to the server.</td>
+<td>x</td>
+<td>x</td>
+<td></td>
+</tr>
+<tr>
+<td><code>4003</code></td>
+<td>Not authenticated</td>
+<td>The server has received a message from the client before the client identified itself, or the clients' session has been invalidated.</td>
+<td></td>
+<td>x</td>
+<td></td>
+</tr>
+<tr>
+<td><code>4004</code></td>
+<td>Invalid authentication</td>
+<td>The authentication token received by the server as part of the identify payload is invalid.</td>
+<td></td>
+<td>x</td>
+<td></td>
+</tr>
+<tr>
+<td><code>4005</code></td>
+<td>Already authenticated</td>
+<td>The client has sent an identify payload even though it has already identified successfully.</td>
+<td></td>
+<td>x</td>
+<td></td>
+</tr>
+<tr>
+<td><code>4006</code></td>
+<td>Reserved</td>
+<td>4006 is a reserved value and has no function in polyproto v1.0. The specific meaning may be defined in the future.</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>4007</code></td>
+<td>Invalid sequence number(s)</td>
+<td>The client has sent a heartbeat containing sequence numbers that were invalid.</td>
+<td>x</td>
+<td>x</td>
+<td></td>
+</tr>
+<tr>
+<td><code>4008</code></td>
+<td>Rate limited</td>
+<td>The client has sent payloads too quickly.</td>
+<td></td>
+<td>x</td>
+<td></td>
+</tr>
+<tr>
+<td><code>4009</code></td>
+<td>Timeout</td>
+<td>The session has been deemed to be timed out. This can happen if a heartbeat or heartbeat ACK has not been sent in due time.</td>
+<td>x (If sent by server)</td>
+<td>X</td>
+<td>x</td>
+</tr>
+</tbody>
+</table>
 <p>TODO</p>
 <h4 id="326-guaranteed-delivery-of-gateway-messages-through-package-acknowledgement">3.2.6 Guaranteed delivery of gateway messages through package acknowledgement<a class="headerlink" href="#326-guaranteed-delivery-of-gateway-messages-through-package-acknowledgement" title="Permanent link">&para;</a></h4>
 <p>TODO</p>
@@ -4459,6 +4584,9 @@ identifying any messages that were lost during the disconnect and ensuring they 
 retransmitted, preserving the integrity and completeness of communication between the client
 and server.</p>
 </details>
+<p>If <code>except</code> was present and contained entries in the heartbeat payload, the server must re-send these
+events in the <code>d</code> part of the heartbeat ACK response.
+TODO ^</p>
 <h4 id="33-events-over-rest">3.3 Events over REST<a class="headerlink" href="#33-events-over-rest" title="Permanent link">&para;</a></h4>
 <p>For some implementation contexts, a constant WebSocket connection might not be wanted. A client can
 instead opt to query an API endpoint to receive events, which would normally be sent through the WebSocket
@@ -5998,7 +6126,7 @@ service provider, they must request a <a href="#7-migrations">migration</a>.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-23T15:58:11+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-23</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-23T22:50:49+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-23</span>
   </span>
 
     
