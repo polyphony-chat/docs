@@ -795,7 +795,8 @@ TODO
 
 !!! bug "TODO; Here's a TL;DR:"
 
-    - zstd level 5-13 recommended
+    - zstd level 5-13 recommended for realtime
+    - higher zstd levels recommended for events such as resumed etc.
     - zstd must be offered on gateway server
     - zstd must be offered on http api
     - uncompressed available (but why would you do that)
