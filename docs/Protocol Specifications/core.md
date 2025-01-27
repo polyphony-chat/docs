@@ -40,7 +40,7 @@ weight: 0
       - [3.2.4 Establishing a connection](#324-establishing-a-connection)
       - [3.2.5 Closing a connection](#325-closing-a-connection)
       - [3.2.6 Guaranteed delivery of gateway messages through package acknowledgement](#326-guaranteed-delivery-of-gateway-messages-through-package-acknowledgement)
-      - [3.3 Events over REST](#33-events-over-rest)
+      - [3.3 Events over events](#33-events-over-events)
     - [3.4 HTTP](#34-http)
     - [3.5 Internet Protocol (IP)](#35-internet-protocol-ip)
     - [3.6 Compression](#36-compression)
@@ -607,14 +607,6 @@ TODO
 
 #### 3.2.6 Guaranteed delivery of gateway messages through package acknowledgement
 
-TODO
-
-!!! bug "TODO"
-
-    This section will explain how [heartbeats](#322-heartbeats) and [sequence numbers](#3213-sequence-numbers-s)
-    come together to form an application-layer package acknowledgement mechanism, and how that
-    mechanism works.
-
 polyproto implements an application-level guaranteed delivery mechanism. This ensures that all gateway
 messages sent from a home server to a client are received by the client in the order they were sent
 in – especially when network conditions are suboptimal. This mechanism is based on the use of
@@ -631,11 +623,16 @@ in – especially when network conditions are suboptimal. This mechanism is base
     retransmitted, preserving the integrity and completeness of communication between the client
     and server.
 
-If `except` was present and contained entries in the heartbeat payload, the server must re-send these
-events in the `d` part of the heartbeat ACK response.
-TODO ^
+The [heartbeat payload](#3238-heartbeat-and-heartbeat-ack-events) defines a payload parameter `except`.
 
-#### 3.3 Events over REST
+If `except` was present and contained entries in the heartbeat payload sent by a client, the server
+must re-send these events in the `d` part of the heartbeat ACK response. How this `d` payload is to be
+formatted is also defined in [section 3.2.3.8](#3238-heartbeat-and-heartbeat-ack-events).
+
+The server must prioritize sending these "missed" events over other events. The server should expect
+that a client requests these events yet another time.
+
+#### 3.3 Events over events
 
 For some implementation contexts, a constant WebSocket connection might not be wanted. A client can
 instead opt to query an API endpoint to receive events, which would normally be sent through the WebSocket
