@@ -335,7 +335,25 @@ in milliseconds at which the client should send heartbeat events to the server.
 The "identify" event is sent by the client to the server to let the server know which actor the
 client is.
 
-TODO
+!!! example "Example identify event payload"
+
+    ```json
+    {
+      "n": "core",
+      "op": 2,
+      "d": {
+        "token": "a9144379a161e1fcf6b07801b70db6d6c481..."
+      }
+    }
+    ```
+
+| Field   | Type   | Description                                                                                                           |
+| ------- | ------ | --------------------------------------------------------------------------------------------------------------------- |
+| `token` | string | A [session token](#41-authentication) issued by the server, identifying the session the client wants to connect with. |
+
+!!! info
+
+    This event may be extended in a backwards-compatible manner in future versions of polyproto.
 
 ##### 3.2.3.3 Service channels
 
