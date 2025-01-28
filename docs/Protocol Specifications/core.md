@@ -846,7 +846,7 @@ FIDs consist of the following parts:
 | `@`                            | <a name="def-separator" id="separator"></a>"Separator"                         | Separates local name from domain name                                                                                         |
 | `optionalsubdomain.domain.tld` | <a name="def-domain-name" id="def-domain-name"></a>"Domain Name"               | Includes top-level domain, second-level domain and other subdomains. Address which the actors' home server can be reached at. |
 
-The following regular expression can be used to validate actor IDs: `\b([a-z0-9._%+-]+)@([a-z0-9-]+(\.[a-z0-9-]+)*)`.
+The following regular expression can be used to validate actor IDs: `\b([a-z0-9._%+-]+)@([a-z0-9-]+(\.[a-z0-9-]+)*)$`.
 
 !!! info
 
