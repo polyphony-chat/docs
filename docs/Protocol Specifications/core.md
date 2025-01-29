@@ -399,7 +399,7 @@ the closing of a channel.
         "action": "subscribe",
         "service": "service_name",
         "success": false,
-        "errorMessage": "Service not found"
+        "error": "Service not found"
       },
       "s": 1
     }
@@ -425,7 +425,7 @@ the closing of a channel.
 | `action`  | string  | The action to perform on the service channel. Must be either `subscribe` or `unsubscribe`. |
 | `service` | string  | The polyproto service that was specified in the opcode 8 request                           |
 | `success` | boolean | Whether the action was successful or not.                                                  |
-| `message` | string? | Only present if `success` is `false`. A message indicating why the action failed.          |
+| `error`   | string? | Only present if `success` is `false`. A message indicating why the action failed.          |
 
 If a successful subscription to a service channel is acknowledged, all logic and further event on
 this channel are defined by the service's specification.
