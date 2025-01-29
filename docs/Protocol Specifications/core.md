@@ -676,8 +676,8 @@ A heartbeat ACK contains events that the client has re-requested as part of thei
     }
     ```
 
-As such, the field `d` in a heartbeat ack is optional (`?`) and, if present, contains an array of
-other gateway events. Heartbeat ACK payloads must not be present in this array, making recursion
+As such, the field `d` in a heartbeat ack may be empty, but never not present. The `d` field contains
+an array of other gateway events. Heartbeat ACK payloads must not be present in this array, making recursion
 impossible.
 
 #### 3.2.4 Establishing a connection
