@@ -386,7 +386,8 @@ A service channel event payload has the following structure:
 | `service` | string | The name of a polyproto service.                                                           |
 
 The server must respond with a `Service Channel ACK` event payload, indicating whether the action
-was successful or not.
+was successful or not. Clients should expect that the server sends a `Service Channel` payload indicating
+the closing of a channel.
 
 !!! example "Example service channel ACK event payload - failure"
 
