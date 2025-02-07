@@ -184,6 +184,8 @@ appearing on ID-Certs managed by that server **if all the following conditions a
    the domain components of the *visible domain name*, the server hosted under the *actual domain name*
    must not be treated as a polyproto server for the *visible domain name*.
 
+Every polyproto home server must have a `.well-known` URI, accessible via an HTTP GET request.
+
 Should a client not be able to access the polyproto API endpoints located at `[visible domain name]/.p2/core/`,
 the client must query `[visible domain name]/.well-known/polyproto-core` with an HTTP GET request and
 try to verify the above-mentioned conditions. If all the above-mentioned conditions can be fulfilled,
