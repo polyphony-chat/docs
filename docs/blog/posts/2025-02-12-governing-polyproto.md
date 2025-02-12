@@ -1,6 +1,6 @@
 ---
 date: 2025-02-12
-draft: true
+draft: false
 categories:
   - polyproto
 authors:
@@ -26,3 +26,10 @@ To make a long story short, I believe that establishing a non-profit foundation 
 - **Foster a collaborative environment:** I believe it would really *suck* if there were 12 (exaggeration) different p2-extensions defining what a Discord-like chat application should look like. The polyproto association should make efforts to foster, unify and certify "official" extensions and standards that all developers should use. I am not 100% sure about what this would look like; Imagine, someone develops a p2-extension defining what a Google Photos-like should look like. This person now comes to the polyproto association with a wish to get a "seal of approval" via getting their extension certified. The association members notice, that this extension is pretty awesome. What happens now? Should this extension be "absorbed" into the association somehow? Should only this exact version of the extension receive certification, requiring the developer to contact the association again if an update to the extension is made, to get the updated version certified as well? And if this is the case, say there happens to be a disagreement between the association and the developer on the contents of the extension update – what then? Does the association eventually "hard fork" the extension? This seems very complex, and I think that cases like these should be considered, given that sadly not every human being gets along with each other. In any case, the polyproto association should make the process of getting your extension proposal reviewed and seen by other people easier, so that extensions are not created in a vacuum, but through *collaboration*.
 - **Act as a giant documentation resource:** The association should be a great source of information for interested developers. Documentation and explanations of concepts should be available in various levels of complexity and should always be up-to-date.
 
+## Closing words
+
+The time for something like this has not yet arrived. What this project needs in its infancy is rapid development and the freedom to change a great number of things quickly.
+
+What I need *right now* though is to get healthy again. As I am writing this, the flu is still doing a number on me. Bleh.
+
+Stay healthy and stay safe!
