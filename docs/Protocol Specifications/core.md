@@ -184,6 +184,8 @@ appearing on ID-Certs managed by that server **if all the following conditions a
    the domain components of the *visible domain name*, the server hosted under the *actual domain name*
    must not be treated as a polyproto server for the *visible domain name*.
 
+Every polyproto home server must have a `.well-known` URI, accessible via an HTTP GET request.
+
 Should a client not be able to access the polyproto API endpoints located at `[visible domain name]/.p2/core/`,
 the client must query `[visible domain name]/.well-known/polyproto-core` with an HTTP GET request and
 try to verify the above-mentioned conditions. If all the above-mentioned conditions can be fulfilled,
@@ -386,7 +388,8 @@ A service channel event payload has the following structure:
 | `service` | string | The name of a polyproto service.                                                           |
 
 The server must respond with a `Service Channel ACK` event payload, indicating whether the action
-was successful or not.
+was successful or not. Clients should expect that the server sends a `Service Channel` payload indicating
+the closing of a channel.
 
 !!! example "Example service channel ACK event payload - failure"
 
@@ -398,7 +401,7 @@ was successful or not.
         "action": "subscribe",
         "service": "service_name",
         "success": false,
-        "errorMessage": "Service not found"
+        "error": "Service not found"
       },
       "s": 1
     }
@@ -424,7 +427,7 @@ was successful or not.
 | `action`  | string  | The action to perform on the service channel. Must be either `subscribe` or `unsubscribe`. |
 | `service` | string  | The polyproto service that was specified in the opcode 8 request                           |
 | `success` | boolean | Whether the action was successful or not.                                                  |
-| `message` | string? | Only present if `success` is `false`. A message indicating why the action failed.          |
+| `error`   | string? | Only present if `success` is `false`. A message indicating why the action failed.          |
 
 If a successful subscription to a service channel is acknowledged, all logic and further event on
 this channel are defined by the service's specification.
@@ -675,8 +678,8 @@ A heartbeat ACK contains events that the client has re-requested as part of thei
     }
     ```
 
-As such, the field `d` in a heartbeat ack is optional (`?`) and, if present, contains an array of
-other gateway events. Heartbeat ACK payloads must not be present in this array, making recursion
+As such, the field `d` in a heartbeat ack may be empty, but never not present. The `d` field contains
+an array of other gateway events. Heartbeat ACK payloads must not be present in this array, making recursion
 impossible.
 
 #### 3.2.4 Establishing a connection
@@ -993,7 +996,7 @@ FIDs consist of the following parts:
 | `@`                            | <a name="def-separator" id="separator"></a>"Separator"                         | Separates local name from domain name                                                                                         |
 | `optionalsubdomain.domain.tld` | <a name="def-domain-name" id="def-domain-name"></a>"Domain Name"               | Includes top-level domain, second-level domain and other subdomains. Address which the actors' home server can be reached at. |
 
-The following regular expression can be used to validate actor IDs: `\b([a-z0-9._%+-]+)@([a-z0-9-]+(\.[a-z0-9-]+)*)`.
+The following regular expression can be used to validate actor IDs: `\b([a-z0-9._%+-]+)@([a-z0-9-]+(\.[a-z0-9-]+)*)$`.
 
 !!! info
 
