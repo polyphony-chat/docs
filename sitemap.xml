@@ -2,138 +2,138 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://docs.polyphony.chat/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/APIs/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/APIs/MLS/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/APIs/MLS/Routes%3A%20No%20registration%20needed/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/APIs/MLS/Routes%3A%20Registration%20needed/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/APIs/auth/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/APIs/auth/Routes%3A%20No%20registration%20needed/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/APIs/auth/Routes%3A%20Registration%20needed/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/Overviews/core/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/Protocol%20Specifications/core/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/Protocol%20Specifications/P2%20Extensions/auth/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/Protocol%20Specifications/P2%20Extensions/chat/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/Protocol%20Specifications/P2%20Extensions/mls/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/Type%20Definitions/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/Type%20Definitions/auth/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/Type%20Definitions/core/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/assets/external/unpkg.com/mathjax%403/es5/output/chtml/fonts/woff-v2/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/blog/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/blog/2023/08/17/self-updating-structs-moving-blog-posts-to-github-and-more/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/blog/2023/08/29/chorus-alpha-010/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/blog/2023/09/02/getting-started-with-the-polyphony-client/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/blog/2023/11/23/porting-chorus-to-webassembly--client-update/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/blog/2024/02/07/account-migration-in-polyproto/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/blog/2024/02/19/x509-in-polyproto/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/blog/2024/03/06/work-on-polyproto-and-a-vacation-/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/blog/2024/06/01/polyproto-extensions/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/blog/2024/10/14/nlnet-grant-application/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/blog/archive/2024/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/blog/archive/2023/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/blog/category/polyproto/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/blog/category/updates/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/blog/category/x509/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/blog/category/chorus/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://docs.polyphony.chat/blog/category/polyphony/</loc>
-         <lastmod>2025-02-07</lastmod>
+         <lastmod>2025-02-12</lastmod>
     </url>
 </urlset>
