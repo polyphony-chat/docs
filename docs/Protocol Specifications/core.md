@@ -863,6 +863,15 @@ for information on how this is done.
 
 #### 4.1.2 Sensitive actions
 
+!!! bug
+
+    # Challenge strings will be removed soon.
+
+    Their concept has been thought out further and implemented in different ways. Challenge strings are
+    no longer needed. This section will be removed soon.
+
+    TODO: Better describe "Sensitive-Solution" instead.
+
 !!! warning
 
     Sensitive actions require a second factor of authentication, apart from the actor's
