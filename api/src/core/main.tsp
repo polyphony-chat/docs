@@ -19,18 +19,20 @@ namespace models {
          * field stores the encrypted private key, instead of a public key. Otherwise equal to
          * `SubjectPublicKeyInfo`. Also referred to as `PrivateKeyInfo`.
          */
-        key_data: string,
+        key_data: string;
+
         @doc("The serial number of the ID-Cert this key material is associated with.")
-        serial_number: uint64,
+        serial_number: uint64;
+
         /**
          * Information about the algorithms used to encrypt the data held by the `key_data` field.
          * Order-sensitive; The encryption used for the first encryption operation must be the last
          * item of this array and vice versa. Represents a list of OIDs.
          */
         @minItems(1)
-        encryption_algorithms: Array<Array<uint16>>
+        encryption_algorithms: Array<Array<uint16>>;
     }
-    
+
     /**
      * A resource representing information about a discoverable service for an actor. You can learn more about
      * services and discoverability by reading [section #9](/Protocol Specifications/core#9-services) of
@@ -44,16 +46,18 @@ namespace models {
         @minLength(2)
         @maxLength(64)
         @doc("The name of the service that is being made discoverable. Must be formatted according to [section #8.2: Namespaces](/Protocol Specifications/core#82-namespaces) in the core protocol specification")
-        service: string,
+        service: string;
+
         @doc("The base URL of the service provider, not including `/.p2/<service_name>`. Trailing slashes are allowed. If `(/).p2/<service_name>` is added to the URL specified here, a polyproto client should be able to access the HTTP API routes provided by the service.")
-        url: url,
+        url: url;
+
         @doc("Whether the service provider specified in the url field is the primary service provider for this service and actor.")
-        primary: boolean
+        primary: boolean;
     }
 
     /**
      * A challenge string response, as received from a server when requesting a challenge string.
-     * 
+     *
      * From the polyproto protocol definition: "verify an actor's private identity key possession,
      * without revealing the private key itself. These strings, ranging from 32 to 256 characters,
      * have a UNIX timestamp lifetime. If the current timestamp surpasses this lifetime, the
@@ -63,10 +67,11 @@ namespace models {
     model ChallengeStringResponse {
         @minLength(32)
         @maxLength(256)
-        @doc("The challenge string, which the client should sign with its private identity key.") 
-        challenge: string,
+        @doc("The challenge string, which the client should sign with its private identity key.")
+        challenge: string;
+
         @doc("The UNIX timestamp after which the challenge expires.")
-        expires: uint64
+        expires: uint64;
     }
 
     /**
@@ -75,12 +80,14 @@ namespace models {
     model KeyTrial {
         @minLength(32)
         @maxLength(256)
-        @doc("The key trial, which the client should sign with all of their private identity keys.") 
+        @doc("The key trial, which the client should sign with all of their private identity keys.")
         trial: string;
+
         @minLength(1)
         @maxLength(256)
         @doc("A unique identifying string to differentiate this specific key trial from other key trials that may be open at the same time.")
-        id: string,
+        id: string;
+
         @doc("The UNIX timestamp after which the key trial expires.")
         expires: uint64;
     }
@@ -91,8 +98,10 @@ namespace models {
     model KeyTrialCompleted {
         @doc("The signature produced by signing the key trial string using a private identity key.")
         signature: string;
+
         @doc("The unique identifying string, differentiating this specific key trial from other key trials that may be open at the same time.")
-        id: string,
+        id: string;
+
         @doc("The serial number of the ID-Cert corresponding to the private identity key used to sign the key trial string.")
         serial_number: uint64;
     }
@@ -104,14 +113,16 @@ namespace models {
      * of the polyproto protocol.
      */
     model MessageBatch<T> {
-        @doc("The ID-Cert that the following messages' signatures correspond to.")    
-        idCert: string,
+        @doc("The ID-Cert that the following messages' signatures correspond to.")
+        idCert: string;
+
         @doc("The actual message.")
         messages: {
             @doc("Signature of the whole message")
-            signature: string,
+            signature: string;
+
             @doc("Arbitrary content `T`. This depends on the specific implementation or extension of the protocol.")
-            content: T
+            content: T;
         }[];
     }
 
@@ -171,9 +182,11 @@ namespace models {
     model ResourceAccessProperties {
         @doc("Whether the resource should be private by default. Private resources can only be accessed by the uploader and by instances and actors declared in the `allowlist`.")
         private: boolean = false;
+
         @doc("A list of actors and/or instances allowed to access this resource.")
         @example(#["user_i_like@example.com", "instance.example.com"])
         allowlist?: string[];
+
         @doc("A list of actors and/or instances who cannot have access to this resource.")
         @example(#["user_i_dislike@example.com", "other_instance.example.com"])
         denylist?: string[];
@@ -187,7 +200,7 @@ namespace models {
         SizeAsc,
         SizeDesc,
         NewestFirst,
-        OldestFirst
+        OldestFirst,
     }
 
     /**
@@ -196,20 +209,24 @@ namespace models {
     model CacheableIDCert {
         @doc("The requested ID-Cert in ASCII PEM format.")
         @example("------BEGIN CERTIFICATE------...")
-        idCertPem: string,
+        idCertPem: string;
+
         @doc("UNIX timestamp that specifies when this specific id_cert has been marked as invalidated by the server. An ID-Cert is considered invalidated, if the server or actor choose to revoke the validity of the ID-Cert before the lifetime of the certificate was scheduled to end. If this property does not exist, the ID-Cert has not been invalidated.")
         @example(1736610000)
-        invalidatedAt?: uint64,
+        invalidatedAt?: uint64;
+
         @doc("UNIX timestamp that specifies the time from which this cache entry may be treated as valid.")
         @example(1736606402)
-        cacheNotValidBefore: uint64,
+        cacheNotValidBefore: uint64;
+
         @doc("UNIX timestamp that specifies a time until which this cache entry may be treated as valid.")
         @example(1736613602)
-        cacheNotValidAfter: uint64,
-        @doc("Signature generated by the home server. This signature can be verified using the home servers' public identity key. A server generates the `cacheSignature` by concatenating the serial number of the ID-Cert in question with the `cacheValidNotBefore` timestamp and the `cacheValidNotAfter` timestamp, then generating the signature of the resulting concatenated string using the private identity key of the server. Clients must reject certificates of which the `cacheSignature` can not be verified to be correct.")
+        cacheNotValidAfter: uint64;
+
+        @doc("Signature generated by the home server, encoded in [Hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) (base-16). This signature can be verified using the home servers' public identity key. A server generates the `cacheSignature` by concatenating the serial number of the ID-Cert in question with the `cacheValidNotBefore` timestamp, the `cacheValidNotAfter` timestamp, and the `invalidatedAt` timestamp, if present. Clients must reject certificates of which the `cacheSignature` can not be verified to be correct.")
         @example("7ab2bbde7fe43c7481a3a61031546bab16bc1a8735b2f0cdd519958c7f2f99f8")
         @minLength(32)
         @maxLength(32)
-        cacheSignature: string
+        cacheSignature: string;
     }
 }
