@@ -37,6 +37,7 @@ weight: 0
         - [3.2.3.6 "Resume" event and "resumed" event](#3236-resume-event-and-resumed-event)
         - [3.2.3.7 Server certificate change event](#3237-server-certificate-change-event)
         - [3.2.3.8 Heartbeat and heartbeat ACK events](#3238-heartbeat-and-heartbeat-ack-events)
+        - [3.2.3.9 Heartbeat request](#3239-heartbeat-request)
       - [3.2.4 Establishing a connection](#324-establishing-a-connection)
       - [3.2.5 Closing a connection](#325-closing-a-connection)
       - [3.2.6 Guaranteed delivery of gateway messages through package acknowledgement](#326-guaranteed-delivery-of-gateway-messages-through-package-acknowledgement)
@@ -269,7 +270,7 @@ The following opcodes are defined by the `core` namespace:
 
 | Opcode | Name                           | Action             | Description                                                                                                      |
 | ------ | ------------------------------ | ------------------ | ---------------------------------------------------------------------------------------------------------------- |
-| `0`    | Heartbeat                      | Actor Send/Receive | Keep alive for the WebSocket session.                                                                            |
+| `0`    | Heartbeat                      | Actor Send         | Keep alive for the WebSocket session.                                                                            |
 | `1`    | Hello                          | Actor Receive      | Received upon establishing a connection.                                                                         |
 | `2`    | Identify                       | Actor Send         | Identify to the server.                                                                                          |
 | `3`    | New Session                    | Actor Receive      | Received by all sessions except the new one.                                                                     |
@@ -280,6 +281,7 @@ The following opcodes are defined by the `core` namespace:
 | `8`    | Service Channel                | Actor Send/Receive | Open or close a service channel.                                                                                 |
 | `9`    | Service Channel ACK            | Actor Receive      | Acknowledgement of a service channel event.                                                                      |
 | `10`   | Resumed                        | Actor Receive      | Replayed events.                                                                                                 |
+| `11`   | Heartbeat Request              | Actor Receive      | The server requests a heartbeat from the client ASAP.                                                            |
 
 ##### 3.2.1.3 Sequence numbers `s`
 
@@ -299,10 +301,12 @@ form an application-layer packet acknowledgement mechanism. The client continuou
 event to the server with the interval specified in the ["Hello" event payload](#3231-hello-event).
 The server must acknowledge the heartbeat event by sending a heartbeat ACK event back to the client.
 
-Servers must account for the time it takes for the client to send the heartbeat event. Before closing
-a connection due to a missed heartbeat, the server should request a heartbeat event from the client
-by sending a heartbeat event to the client. If the client is not responding within a reasonable
-time frame, the server should close the gateway connection with an appropriate [close code](#325-closing-a-connection).
+Servers must account for the time it takes for the client to send the heartbeat event.
+
+Before closing a connection due to a missed heartbeat, the server should request a heartbeat event
+from the client by sending a heartbeat request event to the client. If the client is not responding within
+a reasonable time frame, the server should close the gateway connection with an appropriate
+[close code](#325-closing-a-connection).
 
 The structure of the heartbeat and heartbeat ACK events are described in [section 3.2.3.8](#3238-heartbeat-and-heartbeat-ack-events).
 
@@ -682,6 +686,32 @@ A heartbeat ACK contains events that the client has re-requested as part of thei
 As such, the field `d` in a heartbeat ack may be empty, but never not present. The `d` field contains
 an array of other gateway events. Heartbeat ACK payloads must not be present in this array, making recursion
 impossible.
+
+##### 3.2.3.9 Heartbeat request
+
+The server may manually request a heartbeat from a client at any time.
+A heartbeat is usually manually requested, if the server has not received a heartbeat from the client
+in due time. Clients should keep their "heartbeat timer" running as is after sending a heartbeat following
+a heartbeat request.
+
+!!! info
+
+    If the client heartbeat timer states that the next heartbeat in a heartbeat interval of 45 seconds
+    is due in 8 seconds, the timer should still "read" ~8 seconds after a manual heartbeat request
+    has been fulfilled. Of course, the client should not send the same heartbeat twice.
+
+Heartbeat request events do not carry any data in their `d` payload.
+
+!!! example "Example heartbeat request event payload"
+
+    ```json
+    {
+      "n": "core",
+      "op": 7,
+      "d": {},
+      "s": 1
+    }
+    ```
 
 #### 3.2.4 Establishing a connection
 
