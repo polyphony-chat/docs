@@ -494,8 +494,6 @@ When a client re-connects to a polyproto WebSocket gateway server, the client ma
 to the server instead of identifying. The resumed event sent by the server informs the client
 about everything the client has missed since their last active connection to the gateway.
 
-TODO: Must the resume event not contain a token?
-
 !!! example "Example resume event structure"
 
     ```json
@@ -503,14 +501,16 @@ TODO: Must the resume event not contain a token?
       "n": "core",
       "op": 5,
       "d": {
-        "s": 12
+        "s": 12,
+        "token": "aDHsdfghihn2n0c634tnlxibnd2tz09y8m7kbxti7rg""
       }
     }
     ```
 
-| Field | Type   | Description                                                                             |
-| ----- | ------ | --------------------------------------------------------------------------------------- |
-| `s`   | uint64 | Sequence number of the last event received by the client; aka. "Where to receive from". |
+| Field   | Type   | Description                                                                                                           |
+| ------- | ------ | --------------------------------------------------------------------------------------------------------------------- |
+| `s`     | uint64 | Sequence number of the last event received by the client; aka. "Where to receive from".                               |
+| `token` | string | A [session token](#41-authentication) issued by the server, identifying the session the client wants to connect with. |
 
 !!! example "Example "resumed" event"
 
@@ -573,9 +573,13 @@ A set of "relevant events" is a set of events which meet both of the following c
     generated using a revoked certificate. In other words, intermediary values of this event type
     affect the validity or state of other events.
 
-Servers may reject a clients' wish to resume, if the number of events that would need to be replayed
-is too high for the server to process. In this case, the request to resume is met with a close code
-of `4010` by the server and the connection is terminated.
+Servers may reject a clients' wish to resume, if
+
+- The number of events that would need to be replayed is too high for the server to process.
+- The client is not eligible to resume and must start a new session instead.
+
+In this case, the request to resume is met with an appropriate [close code](#325-closing-a-connection)
+(ex.: `4010`) by the server and the connection is terminated.
 
 ##### 3.2.3.7 Server certificate change event
 
@@ -825,7 +829,10 @@ Protocol in polyproto should happen on a best-effort basis.
 
 ### 3.6 Compression
 
-TODO
+!!! info "Unfinished"
+
+    As of beta.1 of the polyproto protocol specification, this section is unfinished. Expect this
+    section to receive content in future beta releases of the protocol spec.
 
 !!! bug "TODO; Here's a TL;DR:"
 
@@ -899,6 +906,9 @@ for information on how this is done.
 
     Their concept has been thought out further and implemented in different ways. Challenge strings are
     no longer needed. This section will be removed soon.
+
+    The API documentation already reflects this change; expect the protocol specification to reflect
+    these changes in upcoming beta versions of polyproto.
 
     TODO: Better describe "Sensitive-Solution" instead.
 
@@ -1305,8 +1315,11 @@ TODO
 
     - Should actors always be able to revoke the ID-Cert they are sending the revocation message with
       without needing to complete a sensitive action?
+        - Currently, I cannot see any reason that would speak against this.
     - How can actors remain in control of their keys? If revocations need to be signed by the server,
       then the server has more authority over keys than the actor does
+        - Revocations should likely never have to be signed by the server. Either that, or it does,
+          but the [trust model assumptions](#2-trust-model) apply.
 
 If the ID-Cert revocation was initiated by an actor, that actor must inform other servers of this
 revocation **before** sending further messages to those servers.
