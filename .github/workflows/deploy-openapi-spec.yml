@@ -1,37 +1,37 @@
 name: Build and Deploy OpenAPI specification
 on:
-    push:
-      branches:
-        - main
-    workflow_dispatch: 
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:
-    build_and_deploy:
-        runs-on: ubuntu-latest
-        steps:
-          - uses: actions/checkout@v4
-            with:
-              fetch-depth: 0
-          - name: Configure git Credentials
-            run: |
-                git config user.name github-actions[bot]
-                git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          - uses: actions/setup-node@v4
-            with:
-              node-version: "lts/*"
-              cache: "npm"
-              cache-dependency-path: "./api/src/core/package-lock.json"
-          - name: Install TypeSpec and compile project
-            run: |
-              cd ./api/src/core/
-              npm install -g @typespec/compiler
-              npm install
-              tsp compile .
-          - name: Commit OpenAPI specification to repository
-            run: |
-              tree -L 2
-              mv ./api/src/core/tsp-output/@typespec/openapi3/openapi.v1.0-alpha.1.yaml ./api/build/core-openapi3.yaml
-              git add ./api/build/*
-              git commit -m "[bot]update openapi3 schema" || true
-              git push || true
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Configure git Credentials
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          cache: "npm"
+          cache-dependency-path: "./api/src/core/package-lock.json"
+      - name: Install TypeSpec and compile project
+        run: |
+          cd ./api/src/core/
+          npm install -g @typespec/compiler
+          npm install
+          tsp compile .
+      - name: Commit OpenAPI specification to repository
+        run: |
+          tree -L 2
+          mv ./api/src/core/tsp-output/@typespec/openapi3/openapi.v1.0-beta.1.yaml ./api/build/core-openapi3.yaml
+          git add ./api/build/*
+          git commit -m "[bot]update openapi3 schema" || true
+          git push || true
