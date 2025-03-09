@@ -4,7 +4,7 @@ info:
   license:
     name: MIT License
     url: https://raw.githubusercontent.com/polyphony-chat/docs/refs/heads/main/LICENSE
-  version: v1.0-alpha.1
+  version: v1.0-beta.1
 tags:
   - name: Federated Identity - Registration required
   - name: Sensitive Actions
@@ -1216,7 +1216,7 @@ paths:
       operationId: Unregistered_getServicesOfActor
       summary: Discover services of actor
       description: |-
-        Fetch a list of all services that the actor has made discoverable. Clients should not expect 
+        Fetch a list of all services that the actor has made discoverable. Clients should not expect
         this list to be ordered in any particular way.
       parameters:
         - name: fid
@@ -1330,8 +1330,8 @@ paths:
       operationId: Registered_setPrimaryProvider
       summary: Set primary service provider
       description: |-
-        Set a primary service provider for a given service namespace. This is used to indicate, which service 
-        provider should be used by default by other actors, when multiple service providers are available 
+        Set a primary service provider for a given service namespace. This is used to indicate, which service
+        provider should be used by default by other actors, when multiple service providers are available
         for a given service namespace. The service specified by the arguments in the body must be a
         valid, already existing service.
       parameters:
@@ -1595,7 +1595,7 @@ components:
     Version:
       type: string
       enum:
-        - v1.0-alpha.1
+        - v1.0-beta.1
     polyproto.core.models.CacheableIDCert:
       type: object
       required:
