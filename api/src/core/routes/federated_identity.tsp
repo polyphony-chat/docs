@@ -23,7 +23,7 @@ namespace FederatedIdentity {
          */
         @route("/idcert")
         @summary("Get a new ID-Cert")
-        @added(Version.`v1.0-alpha.1`)
+        @added(Version.`v1.0-beta.1`)
         @post
         @tag("Sensitive Actions")
         op newIdCert(
@@ -58,7 +58,7 @@ namespace FederatedIdentity {
          */
         @route("/session/keymaterial")
         @summary("Upload encrypted private key material")
-        @added(Version.`v1.0-alpha.1`)
+        @added(Version.`v1.0-beta.1`)
         @post
         op uploadEncryptedPKM(
             @body @minItems(1) pkm: polyproto.core.models.EncryptedPKM[],
@@ -90,7 +90,7 @@ namespace FederatedIdentity {
          */
         @route("/session/keymaterial")
         @summary("Get encrypted private key material")
-        @added(Version.`v1.0-alpha.1`)
+        @added(Version.`v1.0-beta.1`)
         @get
         op getEncryptedPKM(@query serials?: uint64[]): {
             @statusCode statusCode: 200;
@@ -117,7 +117,7 @@ namespace FederatedIdentity {
         @route("/session/keymaterial")
         @tag("Sensitive Actions")
         @summary("Delete encrypted private key material")
-        @added(Version.`v1.0-alpha.1`)
+        @added(Version.`v1.0-beta.1`)
         @delete
         op deleteEncryptedPKM(
             @doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
@@ -129,6 +129,7 @@ namespace FederatedIdentity {
             @query serials: uint64[],
         ): {
             @statusCode statusCode: 204;
+
             @header({
                 name: "Content-Length",
             })
@@ -146,7 +147,7 @@ namespace FederatedIdentity {
          */
         @route("/session/keymaterial/size")
         @summary("Get encrypted private key material upload size limit")
-        @added(Version.`v1.0-alpha.1`)
+        @added(Version.`v1.0-beta.1`)
         @get
         @useAuth(NoAuth)
         op encryptedPKMsizeLimit(): {
@@ -154,6 +155,7 @@ namespace FederatedIdentity {
                 name: "X-MAX-PAYLOAD-SIZE",
             })
             size: uint32;
+
             @statusCode statusCode: 200;
         };
 
@@ -163,7 +165,7 @@ namespace FederatedIdentity {
          */
         @route("/session")
         @delete
-        @added(Version.`v1.0-alpha.1`)
+        @added(Version.`v1.0-beta.1`)
         @summary("Delete/Revoke Session")
         @useAuth(BearerAuth)
         op deleteSession(
@@ -176,6 +178,7 @@ namespace FederatedIdentity {
             @query session_id: string,
         ): {
             @statusCode statusCode: 204;
+
             @header({
                 name: "Content-Length",
             })
@@ -190,7 +193,7 @@ namespace FederatedIdentity {
          */
         @route("/key/server")
         @summary("Rotate Server Identity Key")
-        @added(Version.`v1.0-alpha.1`)
+        @added(Version.`v1.0-beta.1`)
         @post
         @useAuth(BearerAuth)
         @tag("Sensitive Actions")
@@ -214,7 +217,7 @@ namespace FederatedIdentity {
          */
         @route("/idcert/server")
         @get
-        @added(Version.`v1.0-alpha.1`)
+        @added(Version.`v1.0-beta.1`)
         @summary("Get Server ID-Cert")
         op serverIdCert(
             @query timestamp?: uint64,
@@ -230,7 +233,7 @@ namespace FederatedIdentity {
          */
         @route("/idcert/actor")
         @get
-        @added(Version.`v1.0-alpha.1`)
+        @added(Version.`v1.0-beta.1`)
         @summary("Get Actor ID-Cert(s)")
         op actorCerts(
             @path fid: string,
@@ -250,7 +253,7 @@ namespace FederatedIdentity {
          */
         @route("/session/idcert/extern")
         @put
-        @added(Version.`v1.0-alpha.1`)
+        @added(Version.`v1.0-beta.1`)
         @useAuth(BearerAuth)
         @summary("Update session ID-Cert")
         op updateSessionCert(@body id_cert: string): {

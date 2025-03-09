@@ -13,14 +13,19 @@ using TypeSpec.Versioning;
 using TypeSpec.OpenAPI;
 using polyproto;
 @service({
-    title: "polyproto core APIs";
+    title: "polyproto core APIs",
 })
-@info({license: {name: "MIT License", url: "https://raw.githubusercontent.com/polyphony-chat/docs/refs/heads/main/LICENSE"}})
+@info({
+    license: {
+        name: "MIT License",
+        url: "https://raw.githubusercontent.com/polyphony-chat/docs/refs/heads/main/LICENSE",
+    },
+})
 @server("https://example.com", "Example endpoint")
 @route("/.p2/core/v1/")
 @versioned(Version)
 namespace Routes;
 
 enum Version {
-    "v1.0-alpha.1"
+    `v1.0-beta.1`,
 }
