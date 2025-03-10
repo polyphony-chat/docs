@@ -9,7 +9,7 @@ title: polyproto-mls
 - API version: `v0.1.0-alpha.1`
 - API documentation: [apidocs.polyproto.org](https://apidocs.polyproto.org)
 - Dependencies:
-  - [polyproto](https://docs.polyphony.chat/Protocol%20Specifications/core/)@1.0.0-beta.1
+    - [polyproto](https://docs.polyphony.chat/Protocol%20Specifications/core/)@1.0.0-beta.1
 
 !!! warning
 
