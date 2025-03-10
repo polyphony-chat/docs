@@ -2,12 +2,22 @@
 title: polyproto-chat
 ---
 
-# P2 Extension: polyproto-chat
+# p2-Extension: polyproto-chat
 
-!!! bug "TODO"
+- Namespace: `chat`
+- Version: `v0.1.0-alpha.1`
+- API version: `v0.1.0-alpha.1`
+- API documentation: [apidocs.polyproto.org](https://apidocs.polyproto.org)
+- Dependencies:
+  - [polyproto](https://docs.polyphony.chat/Protocol%20Specifications/core/)@1.0.0-beta.1
+  - [mls](https://docs.polyphony.chat/Protocol%20Specifications/P2%20Extensions/mls/)@0.1.0-alpha.1
 
-    TODO: This is a work in progress. Chat-related content is currently being migrated over from the polyproto-core specification.
-    This document is not at all complete.
+!!! warning
+
+    The polyproto-chat specification document is in an **alpha** phase. Please report any inconsistencies,
+    missing or duplicate information and other mistakes at [github.com/polyphony-chat/docs/issues](https://github.com/polyphony-chat/docs/issues).
+
+[Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 
 ## 4. Federating direct/group messages
 
@@ -80,8 +90,8 @@ Alice                                          Server                           
 |                            Bob's KeyPackages |                                  |
 |<---------------------------------------------|                                  |
 |                                              |                                  |
-| Verify Bob's KeyPackages                     |                                  |
-| -----------------------                      |                                  |
+| Verify Bob's KeyPackages |  |
+| ------------------------ ||
 |                       |                      |                                  |
 |<-----------------------                      |                                  |
 |                                              |                                  |
@@ -114,8 +124,8 @@ Alice (gatekeeper)                                 Server                       
 |                                Bob's KeyPackages |                                       |         |
 |<-------------------------------------------------|                                       |         |
 |                                                  |                                       |         |
-| Verify Bob's KeyPackages                         |                                       |         |
-|------------------------                          |                                       |         |
+| Verify Bob's KeyPackages |  |  |
+| ------------------------ ||         |
 |                       |                          |                                       |         |
 |<-----------------------                          |                                       |         |
 |                                                  |                                       |         |
@@ -137,8 +147,8 @@ Alice (gatekeeper)                                 Server                       
 |                            Charlie's KeyPackages |                                       |         |
 |<-------------------------------------------------|                                       |         |
 |                                                  |                                       |         |
-| Verify Charlie's KeyPackages                     |                                       |         |
-|----------------------------                      |                                       |         |
+| Verify Charlie's KeyPackages |  |  |
+| ---------------------------- ||         |
 |                           |                      |                                       |         |
 |<---------------------------                      |                                       |         |
 |                                                  |                                       |         |

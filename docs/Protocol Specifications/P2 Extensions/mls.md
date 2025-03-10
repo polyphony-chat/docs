@@ -2,18 +2,23 @@
 title: polyproto-mls
 ---
 
-# P2 Extension: polyproto-mls
+# p2-Extension: polyproto-mls
 
-!!! bug "TODO"
+- Namespace: `mls`
+- Version: `v0.1.0-alpha.1`
+- API version: `v0.1.0-alpha.1`
+- API documentation: [apidocs.polyproto.org](https://apidocs.polyproto.org)
+- Dependencies:
+  - [polyproto](https://docs.polyphony.chat/Protocol%20Specifications/core/)@1.0.0-beta.1
 
-    This is a work in progress. MLS-related content is currently being migrated over from the polyproto-core specification.
-    This document is not yet complete.
+!!! warning
 
-**v0.1.0-alpha.1** - Treat this as an unfinished draft.
+    The polyproto-mls specification document is in an **alpha** phase. Please report any inconsistencies,
+    missing or duplicate information and other mistakes at [github.com/polyphony-chat/docs/issues](https://github.com/polyphony-chat/docs/issues).
+
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
-The version number specified here also applies to the API documentation.
 
-- [P2 Extension: polyproto-mls](#p2-extension-polyproto-mls)
+- [p2-Extension: polyproto-mls](#p2-extension-polyproto-mls)
   - [1. Encryption](#1-encryption)
     - [1.1. KeyPackages](#11-keypackages)
       - [1.1.1 Last resort KeyPackages](#111-last-resort-keypackages)
@@ -128,7 +133,7 @@ polyproto servers and clients employing encryption must support multi-device use
 assigns each device a unique `LeafNode` and prohibits key sharing across devices. Each device offers
 distinct KeyPackages and an own ID-Cert.
 
---- 
+---
 
 TODO: Integrate this from the core spec
 
