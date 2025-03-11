@@ -19,7 +19,17 @@ title: polyproto-chat
 
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 
-## 1. Federating direct/group messages
+## 1. Federation
+
+This chapter covers the main federation mechanisms used to transfer messages between networks.
+
+<!-->tldr:
+- send message to own server
+- notify other members about update
+- other members pull message from server
+
+either that or we directly take advantage of encryption and do something more efficient that way. idk im tired i need sleepies
+<-->
 
 ### 1.1 Direct messages
 
@@ -58,22 +68,22 @@ requests are verified correctly by the server.
 
 ```mermaid
 sequenceDiagram
-participant Charlie
-participant Server
-participant Alice
-participant Bob
+autonumber
 
-Charlie->>Server: Channel join request + KeyPackage
-Server->>Alice: Notify group of join request
-Alice->>Server:
-Server->>Alice: Channel join request + Charlie's KeyPackage
-Alice->>Bob: Verify Charlie's KeyPackage
-Bob->>Alice: Verified
-Alice->>Server: Notify group of new member: Charlie
-Server->>Alice: Encrypted MLS Welcome
-Server->>Bob: Forward: Notify group of new member: Charlie
-Bob->>Server: Forward: Notify group of new member: Charlie
-Server->>Charlie: Forward: encrypted MLS Welcome
+participant c as Charlie
+participant s as Server
+participant a as Alice
+participant b as Bob
+
+c->>s: Channel join request + KeyPackage
+s->>s: Notify group of join request
+s->>a: Channel join request + c's KeyPackage
+a->>a: Verify c's KeyPackage
+a->>s: Notify group of new member: c
+a->>s: Encrypted MLS Welcome
+s->>b: Forward: Notify group of new member: c
+s->>c: Forward: Notify group of new member: c
+s->>c: Forward: encrypted MLS Welcome
 ```
 
 Fig. 3: Sequence diagram of a successful encrypted channel join in which Alice acts as a gatekeeper.
@@ -89,6 +99,8 @@ Bob and Charlie.
 
 ```mermaid
 sequenceDiagram
+autonumber
+
 participant Alice
 participant Server
 participant Bob
@@ -112,6 +124,8 @@ from the group. The Group owner is determined by the Client-Server API.
 
 ```mermaid
 sequenceDiagram
+autonumber
+
 participant Alice as Alice (gatekeeper)
 participant Server
 participant Bob
