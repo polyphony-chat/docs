@@ -19,25 +19,109 @@ title: polyproto-chat
 
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 
-## 1. Federation
+- [p2-Extension: polyproto-chat](#p2-extension-polyproto-chat)
+  - [1. Federation of Group Messages](#1-federation-of-group-messages)
+  - [2. Encrypted channels and groups](#2-encrypted-channels-and-groups)
+    - [2.1 Encrypted guild channels](#21-encrypted-guild-channels)
+    - [2.2 Encrypted direct messages](#22-encrypted-direct-messages)
+    - [2.3 Encrypted group messages](#23-encrypted-group-messages)
+    - [2.4 Joining new devices from existing users](#24-joining-new-devices-from-existing-users)
+    - [2.5 Best practices](#25-best-practices)
+  - [polyproto-chat specific glossary](#polyproto-chat-specific-glossary)
+  - [General glossary](#general-glossary)
 
-This chapter covers the main federation mechanisms used to transfer messages between networks.
+## 1. Federation of Group Messages
 
-<!-->tldr:
-- send message to own server
-- notify other members about update
-- other members pull message from server
+Every messaging group is also an MLS group. Messaging groups are always encrypted using the MLS
+protocol and shared cipher suites. A direct messaging group between two actors is also treated as
+a group message in this case.
 
-either that or we directly take advantage of encryption and do something more efficient that way. idk im tired i need sleepies
-<-->
+Group messages are decentralized in nature. Each participant of a messaging group stores the messages
+they send on the server which acts as their primary service provider for the polyproto-chat service.
 
-### 1.1 Direct messages
+!!! info
 
-Federating direct messages is straightforward. When Alice sends a message to Bob, their client will
-send the message to Bob's home server via an API request. Bob's home server will then send the
-message to Bob's client via an established WebSocket connection, and vice versa.
+    Read chapter #9 of the polyproto core specification document for more information on services and
+    service providers.
 
-### 1.2 Group messages
+With multiple servers participating in a conversation, a server outage only affects the messages
+stored on that server, not the entire messaging group.
+
+The below sequence diagram showcases how a private messaging channel between two actors with different
+service providers works.
+
+```mermaid
+sequenceDiagram
+autonumber
+
+actor a as Alice
+participant s1 as Server A
+participant s2 as Server B
+actor b as Bob
+
+a->>a: Encrypt message for MLS group
+a->>s1: Send encrypted message<br/>to own server
+s1->s1: Store encrypted message
+s1->>s2: Forward encrypted message<br/>to Bobs home server
+note over s2: Server B does not store<br/>the encrypted message.
+s2->>b: Forward message<br/>to Bob
+opt Bob sends a message
+  b->>b: Encrypt message for MLS group
+  b->>s2: Send encrypted message<br/>to own server
+  s2->s2: Store encrypted message
+  s2->>s1: Forward encrypted message<br/>to Alices home server
+  note over s1: Server A does not store<br/>the encrypted message.
+s1->>a: Forward message<br/>to Alice
+end
+opt Bob wants to fetch the message at a later point
+  note over b,s1: Bob must be authenticated on Server A and<br/>must present a valid session token to fetch messages.
+  b->>s1: Request message with $id
+  s1->s1: Load message
+  s1->>b: Retrieved message
+end
+opt Alice wants to fetch her message at a later point
+  note over a,s1: Of course, Alice must also present a<br/>valid session token to fetch messages.
+  a->>s1: Request message with $id
+  s1->s1: Load message
+  s1->>a: Retrieved message
+end
+```
+
+*Fig. 1: Message sending and message retrieval in a messaging group.*
+
+Below, you can find a condensed sequence diagram showcasing how a messaging group with > 2 actors
+works:
+
+```mermaid
+sequenceDiagram
+autonumber
+
+actor a as Actor 1
+participant s1 as Server 1
+participant s2 as Server 2
+participant s3 as Server n
+actor b as Actor 2
+actor c as Actor m
+
+a->>a: Encrypt message for MLS group
+a->>s1: Send encrypted message<br/>to own server
+s1->s1: Store encrypted message
+note over s1,s3: It is the senders' servers' duty to forward<br/>this message to all other involved servers.
+par
+  s1->>s2: Forward message to Server 2
+and
+  s1->>s3: Forward message to Server n
+end
+note over s2,s3: Neither of these servers store<br/>this message.
+par
+s2->>b: Forward message<br/>to Actor 2
+and
+s3->>c: Forward message<br/>to Actor m
+end
+note over a,c: Fetching messages works the same way as showcased in Fig. 1.
+```
+
+vvv
 
 Group messages work just like guilds, in the sense that data is stored by the home server of the
 group's creator, meaning that all group members will have to communicate with the group creator's
@@ -165,5 +249,14 @@ accepted by default.
   malicious user from joining a channel without the other members noticing.
 
 ---
+
+## polyproto-chat specific glossary
+
+- **Message group** - A "guildless" message channel with 2-15 individual actors.
+- **Guild** - Guilds are fundamental organizational units, representing a community or group of users
+  who share a common interest, purpose or affiliation. Guilds are organized into channel categories,
+  which contain channels. See also: `Channel`, `Channel Category`, `Role`, `Permission`
+
+## General glossary
 
 --8<-- "snippets/glossary.md"
