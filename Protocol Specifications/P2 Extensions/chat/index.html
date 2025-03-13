@@ -1156,35 +1156,11 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-federation" class="md-nav__link">
+  <a href="#1-federation-of-group-messages" class="md-nav__link">
     <span class="md-ellipsis">
-      1. Federation
+      1. Federation of Group Messages
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="1. Federation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#11-direct-messages" class="md-nav__link">
-    <span class="md-ellipsis">
-      1.1 Direct messages
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#12-group-messages" class="md-nav__link">
-    <span class="md-ellipsis">
-      1.2 Group messages
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1245,6 +1221,24 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#polyproto-chat-specific-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      polyproto-chat specific glossary
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      General glossary
+    </span>
+  </a>
   
 </li>
       
@@ -2210,35 +2204,11 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-federation" class="md-nav__link">
+  <a href="#1-federation-of-group-messages" class="md-nav__link">
     <span class="md-ellipsis">
-      1. Federation
+      1. Federation of Group Messages
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="1. Federation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#11-direct-messages" class="md-nav__link">
-    <span class="md-ellipsis">
-      1.1 Direct messages
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#12-group-messages" class="md-nav__link">
-    <span class="md-ellipsis">
-      1.2 Group messages
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2302,6 +2272,24 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#polyproto-chat-specific-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      polyproto-chat specific glossary
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      General glossary
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2339,21 +2327,99 @@
 missing or duplicate information and other mistakes at <a href="https://github.com/polyphony-chat/docs/issues">github.com/polyphony-chat/docs/issues</a>.</p>
 </div>
 <p><a href="https://semver.org/spec/v2.0.0.html">Semantic versioning v2.0.0</a> is used to version this specification.</p>
-<h2 id="1-federation">1. Federation<a class="headerlink" href="#1-federation" title="Permanent link">&para;</a></h2>
-<p>This chapter covers the main federation mechanisms used to transfer messages between networks.</p>
-<!-->tldr:
-- send message to own server
-- notify other members about update
-- other members pull message from server
+<ul>
+<li><a href="#p2-extension-polyproto-chat">p2-Extension: polyproto-chat</a></li>
+<li><a href="#1-federation-of-group-messages">1. Federation of Group Messages</a></li>
+<li><a href="#2-encrypted-channels-and-groups">2. Encrypted channels and groups</a><ul>
+<li><a href="#21-encrypted-guild-channels">2.1 Encrypted guild channels</a></li>
+<li><a href="#22-encrypted-direct-messages">2.2 Encrypted direct messages</a></li>
+<li><a href="#23-encrypted-group-messages">2.3 Encrypted group messages</a></li>
+<li><a href="#24-joining-new-devices-from-existing-users">2.4 Joining new devices from existing users</a></li>
+<li><a href="#25-best-practices">2.5 Best practices</a></li>
+</ul>
+</li>
+<li><a href="#polyproto-chat-specific-glossary">polyproto-chat specific glossary</a></li>
+<li><a href="#general-glossary">General glossary</a></li>
+</ul>
+<h2 id="1-federation-of-group-messages">1. Federation of Group Messages<a class="headerlink" href="#1-federation-of-group-messages" title="Permanent link">&para;</a></h2>
+<p>Every messaging group is also an MLS group. Messaging groups are always encrypted using the MLS
+protocol and shared cipher suites. A direct messaging group between two actors is also treated as
+a group message in this case.</p>
+<p>Group messages are decentralized in nature. Each participant of a messaging group stores the messages
+they send on the server which acts as their primary service provider for the polyproto-chat service.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Read chapter #9 of the polyproto core specification document for more information on services and
+service providers.</p>
+</div>
+<p>With multiple servers participating in a conversation, a server outage only affects the messages
+stored on that server, not the entire messaging group.</p>
+<p>The below sequence diagram showcases how a private messaging channel between two actors with different
+service providers works.</p>
+<pre class="mermaid"><code>sequenceDiagram
+autonumber
 
-either that or we directly take advantage of encryption and do something more efficient that way. idk im tired i need sleepies
-<-->
+actor a as Alice
+participant s1 as Server A
+participant s2 as Server B
+actor b as Bob
 
-<h3 id="11-direct-messages">1.1 Direct messages<a class="headerlink" href="#11-direct-messages" title="Permanent link">&para;</a></h3>
-<p>Federating direct messages is straightforward. When Alice sends a message to Bob, their client will
-send the message to Bob's home server via an API request. Bob's home server will then send the
-message to Bob's client via an established WebSocket connection, and vice versa.</p>
-<h3 id="12-group-messages">1.2 Group messages<a class="headerlink" href="#12-group-messages" title="Permanent link">&para;</a></h3>
+a-&gt;&gt;a: Encrypt message for MLS group
+a-&gt;&gt;s1: Send encrypted message&lt;br/&gt;to own server
+s1-&gt;s1: Store encrypted message
+s1-&gt;&gt;s2: Forward encrypted message&lt;br/&gt;to Bobs home server
+note over s2: Server B does not store&lt;br/&gt;the encrypted message.
+s2-&gt;&gt;b: Forward message&lt;br/&gt;to Bob
+opt Bob sends a message
+  b-&gt;&gt;b: Encrypt message for MLS group
+  b-&gt;&gt;s2: Send encrypted message&lt;br/&gt;to own server
+  s2-&gt;s2: Store encrypted message
+  s2-&gt;&gt;s1: Forward encrypted message&lt;br/&gt;to Alices home server
+  note over s1: Server A does not store&lt;br/&gt;the encrypted message.
+s1-&gt;&gt;a: Forward message&lt;br/&gt;to Alice
+end
+opt Bob wants to fetch the message at a later point
+  note over b,s1: Bob must be authenticated on Server A and&lt;br/&gt;must present a valid session token to fetch messages.
+  b-&gt;&gt;s1: Request message with $id
+  s1-&gt;s1: Load message
+  s1-&gt;&gt;b: Retrieved message
+end
+opt Alice wants to fetch her message at a later point
+  note over a,s1: Of course, Alice must also present a&lt;br/&gt;valid session token to fetch messages.
+  a-&gt;&gt;s1: Request message with $id
+  s1-&gt;s1: Load message
+  s1-&gt;&gt;a: Retrieved message
+end</code></pre>
+<p><em>Fig. 1: Message sending and message retrieval in a messaging group.</em></p>
+<p>Below, you can find a condensed sequence diagram showcasing how a messaging group with &gt; 2 actors
+works:</p>
+<pre class="mermaid"><code>sequenceDiagram
+autonumber
+
+actor a as Actor 1
+participant s1 as Server 1
+participant s2 as Server 2
+participant s3 as Server n
+actor b as Actor 2
+actor c as Actor m
+
+a-&gt;&gt;a: Encrypt message for MLS group
+a-&gt;&gt;s1: Send encrypted message&lt;br/&gt;to own server
+s1-&gt;s1: Store encrypted message
+note over s1,s3: It is the senders' servers' duty to forward&lt;br/&gt;this message to all other involved servers.
+par
+  s1-&gt;&gt;s2: Forward message to Server 2
+and
+  s1-&gt;&gt;s3: Forward message to Server n
+end
+note over s2,s3: Neither of these servers store&lt;br/&gt;this message.
+par
+s2-&gt;&gt;b: Forward message&lt;br/&gt;to Actor 2
+and
+s3-&gt;&gt;c: Forward message&lt;br/&gt;to Actor m
+end
+note over a,c: Fetching messages works the same way as showcased in Fig. 1.</code></pre>
+<p>vvv</p>
 <p>Group messages work just like guilds, in the sense that data is stored by the home server of the
 group's creator, meaning that all group members will have to communicate with the group creator's
 home server. If the group creator leaves the group, the ownership of the group is transferred to
@@ -2456,6 +2522,14 @@ accepted by default.</p>
   malicious user from joining a channel without the other members noticing.</li>
 </ul>
 <hr />
+<h2 id="polyproto-chat-specific-glossary">polyproto-chat specific glossary<a class="headerlink" href="#polyproto-chat-specific-glossary" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Message group</strong> - A "guildless" message channel with 2-15 individual actors.</li>
+<li><strong>Guild</strong> - Guilds are fundamental organizational units, representing a community or group of users
+  who share a common interest, purpose or affiliation. Guilds are organized into channel categories,
+  which contain channels. See also: <code>Channel</code>, <code>Channel Category</code>, <code>Role</code>, <code>Permission</code></li>
+</ul>
+<h2 id="general-glossary">General glossary<a class="headerlink" href="#general-glossary" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Actor</strong> - An entity represented by a federation ID, registered on a home server. Actors can be
   users, bots, or any other entity with a federation ID.</li>
@@ -2536,7 +2610,7 @@ accepted by default.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="March 11, 2025 21:53:30"><span class="timeago" datetime="2025-03-11T21:53:30+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="March 11, 2025 21:53:30">2025-03-11</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="March 13, 2025 17:10:15"><span class="timeago" datetime="2025-03-13T17:10:15+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="March 13, 2025 17:10:15">2025-03-13</span>
   </span>
 
     
