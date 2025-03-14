@@ -119,7 +119,7 @@ The following terminology is used throughout this document:
 polyproto operates under the following trust assumptions:
 
 1. Users entrust their home server and its admins with data security and discretion on actions
-   appearing as actor-performed, as, with most home server-based systems, it is
+   appearing as actor-performed, since as is the case with most home server-based systems, it is
    possible for a home server to impersonate an actor in unencrypted communications.
 2. Impersonation *can* be detected by users, as home servers never have access to private keys of
    actors. To sign messages as an actor, a home server would have to use a different key pair.
