@@ -26,12 +26,6 @@ title: polyproto-chat
     - [2.1.1 Private messages](#211-private-messages)
     - [2.1.2 Group messages](#212-group-messages)
   - [2.2 Guilds and Guild channels](#22-guilds-and-guild-channels)
-  - [3. Encrypted channels and groups](#3-encrypted-channels-and-groups)
-    - [3.1 Encrypted guild channels](#31-encrypted-guild-channels)
-    - [3.2 Encrypted direct messages](#32-encrypted-direct-messages)
-    - [3.3 Encrypted group messages](#33-encrypted-group-messages)
-    - [3.4 Joining new devices from existing users](#34-joining-new-devices-from-existing-users)
-    - [3.5 Best practices](#35-best-practices)
   - [polyproto-chat specific glossary](#polyproto-chat-specific-glossary)
   - [General glossary](#general-glossary)
 
@@ -209,6 +203,12 @@ end
 *Fig. 3: Sequence diagram, showing Alice sending a message to a guild channel accessible to both
 Alice and Bob.*
 
+!!! bug "Legacy"
+
+    The below "fenced" text is considered out-of-date. Useful information will be migrated soon, though
+    most of the information is deprecated.
+
+```txt
 ## 3. Encrypted channels and groups
 
 Note, that in the below sequence diagrams, the MLS Welcome message and the MLS Group notify
@@ -245,7 +245,7 @@ a->>s: Encrypted MLS Welcome
 s->>b: Forward: Notify group of new member: c
 s->>c: Forward: Notify group of new member: c
 s->>c: Forward: encrypted MLS Welcome
-```
+\```
 
 Fig. 3: Sequence diagram of a successful encrypted channel join in which Alice acts as a gatekeeper.
 The sequence diagram assumes that Alice can verify Charlies' public key to indeed belong to
@@ -273,7 +273,7 @@ Alice->>Server: Notify group of new member: Bob
 Server->>Alice: Encrypted MLS Welcome
 Server->>Bob: Forward: New group member: Bob
 Server->>Bob: Forward encrypted MLS Welcome
-```
+\```
 
 Fig. 4: Sequence diagram of a successful encrypted direct message creation.
 
@@ -308,7 +308,7 @@ Server->>Alice: Encrypted MLS Welcome
 Server->>Bob: Forward: New group member: Charlie
 Server->>Charlie: Forward: New group member: Charlie
 Server->>Charlie: Forward encrypted MLS Welcome
-```
+\```
 
 Fig. 5: Sequence diagram of a successful encrypted group creation with 3 members.
 
@@ -324,6 +324,7 @@ accepted by default.
 - Joining an encrypted channel, even from an already established member with a new device,
   should be an event distinctly visible to all members of the channel. This is to prevent a
   malicious user from joining a channel without the other members noticing.
+```
 
 ---
 
