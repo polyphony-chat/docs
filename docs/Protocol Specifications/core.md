@@ -894,6 +894,8 @@ before allowing them to perform any actions. This verification must be done by p
 connection between an actors' home server's public identity key and the actor's ID-Cert through
 ID-Cert signature verification.
 
+TODO Explicitly define how this works! Might we need challenge strings after all?
+
 Before a foreign actor is allowed to send messages on the server, the server must also check with
 the actor's home server to ensure that the ID-Cert has not been revoked. See [section 6.4.1](#641-verifying-that-a-newly-retrieved-id-cert-is-not-out-of-date)
 for information on how this is done.
