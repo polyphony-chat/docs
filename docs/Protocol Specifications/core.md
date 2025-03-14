@@ -49,7 +49,7 @@ weight: 0
     - [4.1 Authentication](#41-authentication)
       - [4.1.1 Authenticating on a foreign server](#411-authenticating-on-a-foreign-server)
       - [4.1.2 Sensitive actions](#412-sensitive-actions)
-    - [4.2 Challenge strings](#42-challenge-strings)
+    - [4.2 Challenge strings and key trials](#42-challenge-strings-and-key-trials)
     - [4.3 Protection against misuse by malicious home servers](#43-protection-against-misuse-by-malicious-home-servers)
   - [5. Federation IDs (FIDs)](#5-federation-ids-fids)
   - [6. Cryptography and ID-Certs](#6-cryptography-and-id-certs)
@@ -889,25 +889,33 @@ can only have one active session token at a time.
 
 #### 4.1.1 Authenticating on a foreign server
 
-Regardless of the authentication method used, the foreign server must verify the actor's identity
-before allowing them to perform any actions. This verification must be done by proving the cryptographic
-connection between an actors' home server's public identity key and the actor's ID-Cert through
-ID-Cert signature verification.
+Regardless of the authentication method used, polyproto deployments meant to interoperate with other
+polyproto deployments must accept [ID-Certs](#6-cryptography-and-id-certs) as a form of authentication
+from foreign actors.
 
-TODO Explicitly define how this works! Might we need challenge strings after all?
+!!! example "Possible real-world example"
 
-Before a foreign actor is allowed to send messages on the server, the server must also check with
-the actor's home server to ensure that the ID-Cert has not been revoked. See [section 6.4.1](#641-verifying-that-a-newly-retrieved-id-cert-is-not-out-of-date)
-for information on how this is done.
+    Using a polyproto-based chat service, you'd like to join a community guild you've been invited to,
+    hosted on another server. To do this, you retrieve a challenge string from that server,
+    complete the challenge string, then exchange that challenge string solution for an
+    authentication token from the server.
+
+    Congratulations! You can now use your invite + token to join the community guild.
+
+Server must verify the identity claims presented by foreign actors before giving out an authentication
+token. This verification must be done by proving the cryptographic connection between an actors'
+home server's public identity key and the actor's ID-Cert through ID-Cert signature verification and
+must include ensuring that the presented ID-Cert has not been revoked.
+See [section 6.4.1](#641-verifying-that-a-newly-retrieved-id-cert-is-not-out-of-date) for information
+on how this is done.
 
 #### 4.1.2 Sensitive actions
 
 !!! bug
 
-    # Challenge strings will be removed soon.
+    # Outdated: Challenge strings are not used for this.
 
-    Their concept has been thought out further and implemented in different ways. Challenge strings are
-    no longer needed. This section will be removed soon.
+    "Sensitive solutions" are set to replace challenge strings as an authenticator for sensitive actions.
 
     The API documentation already reflects this change; expect the protocol specification to reflect
     these changes in upcoming beta versions of polyproto.
@@ -942,7 +950,7 @@ header value represents the second factor of authentication chosen.
     TOTP verification code. If the chosen second factor of authentication is a password, then the
     value of this header is to be that password.
 
-### 4.2 Challenge strings
+### 4.2 Challenge strings and key trials
 
 Servers use challenge strings to verify an actor's private identity key
 possession without revealing the private key itself. These strings, ranging from 32 to 256
@@ -2197,10 +2205,10 @@ JSON file.
 Changing the publicly visible ownership of actor data requires the chain of trust to be maintained.
 If an "old" account wants to change the publicly visible ownership of its data, the "old"
 account must prove that it possesses the private keys that were used to
-sign the messages. This is done by signing a [challenge string](#42-challenge-strings) with the private
-keys. If the server verifies the challenge, it authorizes the new account to re-sign the old
-account's messages signed with the verified key. Instead of overwriting the message, a new message variant
-with the new signature is created, preserving the old message.
+sign the messages. This is done by signing a [challenge string](#42-challenge-strings-and-key-trials)
+with the private keys. If the server verifies the challenge, it authorizes the new account to re-sign
+the old account's messages signed with the verified key. Instead of overwriting the message, a
+new message variant with the new signature is created, preserving the old message.
 
 Implementations and protocol extensions should carefully consider the extent of messages that can be
 re-signed.
