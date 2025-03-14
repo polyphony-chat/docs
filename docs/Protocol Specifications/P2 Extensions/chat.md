@@ -187,6 +187,28 @@ Unlike messaging groups, guild channels are not encrypted by default.
     Encrypted guild channels are available, but without cross-actor encrypted chat history
     distribution, their user experience is not fit for a "default" status.
 
+All messages sent to guild channels are stored on the server that hosts the guild.
+
+```mermaid
+sequenceDiagram
+autoNumber
+
+actor a as Alice
+participant s as Guild Server
+actor b as Bob
+
+a->>s: Send message
+note over s: The server distributes the message to all<br/>recipients.
+par
+  s->>a: MESSAGE_CREATE
+and
+  s->>b: MESSAGE_CREATE
+end
+```
+
+*Fig. 3: Sequence diagram, showing Alice sending a message to a guild channel accessible to both
+Alice and Bob.*
+
 ## 3. Encrypted channels and groups
 
 Note, that in the below sequence diagrams, the MLS Welcome message and the MLS Group notify
