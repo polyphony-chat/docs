@@ -176,7 +176,16 @@ Unlike messaging groups, guild channels are not encrypted by default.
 !!! question "Why are guild channels not encrypted by default?"
 
     In the real world, most guilds are used as spaces for open communities where people join and leave
-    freely.
+    freely. Encrypted communications channels are useful when the communication between actors is potentially
+    sensitive. Additionally, for encryption to be effective, you must at least somewhat trust the
+    parties able to decrypt your messages.
+
+    The potential for anyone to join a chat and receive the entire encrypted history undermines the
+    purpose of encryption. Therefore, we don't offer cross-actor encrypted chat history distribution,
+    even for guild channels.
+
+    Encrypted guild channels are available, but without cross-actor encrypted chat history
+    distribution, their user experience is not fit for a "default" status.
 
 ## 3. Encrypted channels and groups
 
