@@ -27,6 +27,7 @@ title: polyproto-chat
     - [2.1.2 Group messages](#212-group-messages)
   - [2.2 Guilds and Guild channels](#22-guilds-and-guild-channels)
   - [3. General Behaviors](#3-general-behaviors)
+  - [3.1 Joining a foreign guild](#31-joining-a-foreign-guild)
   - [4. Gateway](#4-gateway)
   - [5. Data Structures](#5-data-structures)
   - [6. Permissions](#6-permissions)
@@ -34,6 +35,7 @@ title: polyproto-chat
   - [8. Voice and Video](#8-voice-and-video)
   - [9. Encryption](#9-encryption)
   - [10. Push Notifications](#10-push-notifications)
+  - [11. Moderation and Administration](#11-moderation-and-administration)
   - [polyproto-chat specific glossary](#polyproto-chat-specific-glossary)
   - [General glossary](#general-glossary)
 
@@ -213,6 +215,10 @@ end
 This chapter covers general behaviors, describing how a polyproto-chat server or client is expected to
 behave.
 
+## 3.1 Joining a foreign guild
+
+...
+
 ## 4. Gateway
 
 This chapter covers polyproto-chat specific gateway events, opcodes and more.
@@ -242,6 +248,10 @@ must implement.
 ## 10. Push Notifications
 
 This chapter covers how push notifications work in polyproto-chat.
+
+## 11. Moderation and Administration
+
+This chapter talks about moderation and administration of a p2-chat server.
 
 ---
 
