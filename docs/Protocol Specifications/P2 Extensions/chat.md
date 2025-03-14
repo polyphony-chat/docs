@@ -26,6 +26,14 @@ title: polyproto-chat
     - [2.1.1 Private messages](#211-private-messages)
     - [2.1.2 Group messages](#212-group-messages)
   - [2.2 Guilds and Guild channels](#22-guilds-and-guild-channels)
+  - [3. General Behaviors](#3-general-behaviors)
+  - [4. Gateway](#4-gateway)
+  - [5. Data Structures](#5-data-structures)
+  - [6. Permissions](#6-permissions)
+  - [7. Rate Limits](#7-rate-limits)
+  - [8. Voice and Video](#8-voice-and-video)
+  - [9. Encryption](#9-encryption)
+  - [10. Push Notifications](#10-push-notifications)
   - [polyproto-chat specific glossary](#polyproto-chat-specific-glossary)
   - [General glossary](#general-glossary)
 
@@ -199,6 +207,43 @@ and
   s->>b: MESSAGE_CREATE
 end
 ```
+
+## 3. General Behaviors
+
+This chapter covers general behaviors, describing how a polyproto-chat server or client is expected to
+behave.
+
+## 4. Gateway
+
+This chapter covers polyproto-chat specific gateway events, opcodes and more.
+
+## 5. Data Structures
+
+This chapter defines all data structures found in polyproto-chat.
+
+## 6. Permissions
+
+This chapter describes the permission system of polyproto-chat, defining the actions and resources
+actors can access.
+
+## 7. Rate Limits
+
+This chapter defines the rate limiting system used in polyproto-chat.
+
+## 8. Voice and Video
+
+This section covers voice and video encoding, decoding and transmission.
+
+## 9. Encryption
+
+This chapter defines cryptographic behaviors, routines and defaults which polyproto-chat implementations
+must implement.
+
+## 10. Push Notifications
+
+This chapter covers how push notifications work in polyproto-chat.
+
+---
 
 *Fig. 3: Sequence diagram, showing Alice sending a message to a guild channel accessible to both
 Alice and Bob.*
