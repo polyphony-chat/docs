@@ -20,17 +20,53 @@ title: polyproto-chat
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
 
 - [p2-Extension: polyproto-chat](#p2-extension-polyproto-chat)
-  - [1. Federation of Group Messages](#1-federation-of-group-messages)
-  - [2. Encrypted channels and groups](#2-encrypted-channels-and-groups)
-    - [2.1 Encrypted guild channels](#21-encrypted-guild-channels)
-    - [2.2 Encrypted direct messages](#22-encrypted-direct-messages)
-    - [2.3 Encrypted group messages](#23-encrypted-group-messages)
-    - [2.4 Joining new devices from existing users](#24-joining-new-devices-from-existing-users)
-    - [2.5 Best practices](#25-best-practices)
+  - [1. Trust model](#1-trust-model)
+  - [2. Federation Principles](#2-federation-principles)
+  - [2.1 Messaging Groups](#21-messaging-groups)
+    - [2.1.1 Private messages](#211-private-messages)
+    - [2.1.2 Group messages](#212-group-messages)
+  - [2.2 Guilds and Guild channels](#22-guilds-and-guild-channels)
+  - [3. Encrypted channels and groups](#3-encrypted-channels-and-groups)
+    - [3.1 Encrypted guild channels](#31-encrypted-guild-channels)
+    - [3.2 Encrypted direct messages](#32-encrypted-direct-messages)
+    - [3.3 Encrypted group messages](#33-encrypted-group-messages)
+    - [3.4 Joining new devices from existing users](#34-joining-new-devices-from-existing-users)
+    - [3.5 Best practices](#35-best-practices)
   - [polyproto-chat specific glossary](#polyproto-chat-specific-glossary)
   - [General glossary](#general-glossary)
 
-## 1. Federation of Group Messages
+## 1. Trust model
+
+polyproto-chat inherits its trust model from the core polyproto specification. In addition, the
+following trust assumptions are added:
+
+1. Unencrypted messages can only be read by users with the necessary permissions to access the channel
+   the message was sent to, at the point the message was sent, or in the future. In addition,
+   server moderators, -administrators and other entities who can access the infrastructure the
+   server is hosted on are always able to read unencrypted messages, whether through directly
+   accessing this information or because of a report that was filed by another user.
+2. Unencrypted metadata can be accessed by the same set of people described in 1.
+3. Server moderators, -administrators, other entities who may gain access to the infrastructure the
+   server is hosted on and other polyproto-chat users can not read encrypted messages or -metadata in
+   plain text, if they are not themselves part of the MLS group the message was sent in.
+4. Extending 3., server moderators, -administrators and other entities have **no way** to gain insight
+   into the contents of an encrypted message, if they are not themselves part of the MLS group the
+   message was sent in.
+5. Compromise of an encrypted communications channel will not expose past communications.
+6. After an encrypted communications channel has been compromised, it is possible to re-establish
+   the security/secrecy guarantees (post-compromise security).
+
+!!! danger
+
+    Human error, faulty software or malicious actions can always lead to unauthorized access to
+    information, encrypted or not. This is true for every user-facing application employing encryption
+    *ever*, not just polyproto-chat.
+
+## 2. Federation Principles
+
+This section explains how the federation in different parts of polyproto-chat works.
+
+## 2.1 Messaging Groups
 
 Every messaging group is also an MLS group. Messaging groups are always encrypted using the MLS
 protocol and shared cipher suites. A direct messaging group between two actors is also treated as
@@ -46,6 +82,8 @@ they send on the server which acts as their primary service provider for the pol
 
 With multiple servers participating in a conversation, a server outage only affects the messages
 stored on that server, not the entire messaging group.
+
+### 2.1.1 Private messages
 
 The below sequence diagram showcases how a private messaging channel between two actors with different
 service providers works.
@@ -87,7 +125,12 @@ opt Alice wants to fetch her message at a later point
 end
 ```
 
-*Fig. 1: Message sending and message retrieval in a messaging group.*
+*Fig. 1: Message sending and message retrieval in a private messaging group.*
+
+If the actors use the same primary service provider for the `chat` service, steps (4) and (9) do
+not apply.
+
+### 2.1.2 Group messages
 
 Below, you can find a condensed sequence diagram showcasing how a messaging group with > 2 actors
 works:
@@ -121,23 +164,26 @@ end
 note over a,c: Fetching messages works the same way as showcased in Fig. 1.
 ```
 
-vvv
+*Fig. 2: Message sending and message retrieval in a messaging group.*
 
-Group messages work just like guilds, in the sense that data is stored by the home server of the
-group's creator, meaning that all group members will have to communicate with the group creator's
-home server. If the group creator leaves the group, the ownership of the group is transferred to
-another member. The group chat stays on the group creator's home server.
+If two actors have the same primary service provider for the `chat` service, steps facilitating
+communication across servers do not apply.
 
-<!--Potential work could be done to think of a system which allows group chat members to vote for
-a migration of the conversation to another server. Consent is needed from all involved parties,
-because otherwise, data cannot ethically be transfered from one server to another another.-->
+## 2.2 Guilds and Guild channels
 
-## 2. Encrypted channels and groups
+Unlike messaging groups, guild channels are not encrypted by default.
+
+!!! question "Why are guild channels not encrypted by default?"
+
+    In the real world, most guilds are used as spaces for open communities where people join and leave
+    freely.
+
+## 3. Encrypted channels and groups
 
 Note, that in the below sequence diagrams, the MLS Welcome message and the MLS Group notify
 message are all encrypted using the identity key of the recipient.
 
-### 2.1 Encrypted guild channels
+### 3.1 Encrypted guild channels
 
 Encrypting a guild channel is done by a client with the `MANAGE_CHANNEL` permission. Upon
 successfully requesting enabling encryption of a channel, all future messages in it will be
@@ -174,7 +220,7 @@ Fig. 3: Sequence diagram of a successful encrypted channel join in which Alice a
 The sequence diagram assumes that Alice can verify Charlies' public key to indeed belong to
 Charlie, and that Alice accepts the join request.
 
-### 2.2 Encrypted direct messages
+### 3.2 Encrypted direct messages
 
 Adding another person to a direct message is not possible, and would not make much sense, as the
 new person cannot see any messages that were sent before they joined the group. If Alice wants
@@ -200,7 +246,7 @@ Server->>Bob: Forward encrypted MLS Welcome
 
 Fig. 4: Sequence diagram of a successful encrypted direct message creation.
 
-### 2.3 Encrypted group messages
+### 3.3 Encrypted group messages
 
 Encrypted group messages work by using the traditional MLS protocol, with the additional concept
 of group owners. Only group owners can add new members to the group and forcibly remove others
@@ -235,12 +281,12 @@ Server->>Charlie: Forward encrypted MLS Welcome
 
 Fig. 5: Sequence diagram of a successful encrypted group creation with 3 members.
 
-### 2.4 Joining new devices from existing users
+### 3.4 Joining new devices from existing users
 
 Regardless of channel or group permissions, a user join request from a new device should be
 accepted by default.
 
-### 2.5 Best practices
+### 3.5 Best practices
 
 - In case of encrypted guild channel join requests, it may be a good idea to treat multiple join
   requests from the same user with different clients as a single join request, when it comes to UI/UX.
