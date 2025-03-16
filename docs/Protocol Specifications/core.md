@@ -902,12 +902,16 @@ from foreign actors.
 
     Congratulations! You can now use your invite + token to join the community guild.
 
-Server must verify the identity claims presented by foreign actors before giving out an authentication
-token. This verification must be done by proving the cryptographic connection between an actors'
-home server's public identity key and the actor's ID-Cert through ID-Cert signature verification and
-must include ensuring that the presented ID-Cert has not been revoked.
-See [section 6.4.1](#641-verifying-that-a-newly-retrieved-id-cert-is-not-out-of-date) for information
-on how this is done.
+Servers must verify the identity claims presented by foreign actors before giving out an authentication
+token. This verification must be done by proving the following facts:
+
+- There is a cryptographic connection between an actors' home server's public identity key and the
+  actor's ID-Cert. Must be proven by verifying the signature on the ID-Cert with the help of the
+  corresponding home servers' public key.
+- The presented ID-Cert has not been revoked. See [section 6.4.1](#641-verifying-that-a-newly-retrieved-id-cert-is-not-out-of-date)
+  for information on how this is done.
+- The client is in possession of the private key that corresponds to the presented ID-Certs' subject
+  public key. Must be proven using a [challenge string](#42-challenge-strings-and-key-trials).
 
 #### 4.1.2 Sensitive actions
 
