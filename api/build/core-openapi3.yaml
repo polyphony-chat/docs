@@ -19,7 +19,7 @@ paths:
   /.p2/core/v1/data:
     delete:
       operationId: Unregistered_deleteData
-      summary: Delete own actor data from the sever
+      summary: Delete own actor data from the server
       description: |-
         Delete all data associated with you from the server. Only deletes data associated with the
         keys for which the `KeyTrial` has been passed.
@@ -37,9 +37,12 @@ paths:
         - name: X-P2-core-keytrial
           in: header
           required: true
-          description: A completed `KeyTrial`.
+          description: A list of completed `KeyTrial`s.
           schema:
-            $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
+            type: array
+            items:
+              $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
+          style: simple
       responses:
         '204':
           description: '- `204`: Action executed'
@@ -373,14 +376,19 @@ paths:
     post:
       operationId: Unregistered_requestAllowResigning
       summary: Request message re-signing
-      description: Request allowing message re-signing. To fulfill this action, a key trial must be passed.
+      description: |-
+        Request allowing message re-signing. To fulfill this action, a key trial must be passed.
+        Unlocks message re-signing for messages signed with keys for which a key trial has been passed.
       parameters:
         - name: X-P2-core-keytrial
           in: header
           required: true
-          description: A completed `KeyTrial`.
+          description: A list of completed `KeyTrial`s.
           schema:
-            $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
+            type: array
+            items:
+              $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
+          style: simple
       responses:
         '200':
           description: The request has succeeded.
@@ -654,16 +662,19 @@ paths:
         This specific route is called by the "old" actor, notifying the server about their intent
         to move to another home server. To fulfill this action,
 
-        1. A key trial must be passed
-        // TODO: Must it? If yes, specify for which cert(s) ^
+        1. A key trial must be passed for all keys with which the actor has sent messages with
+        on this server.
         2. The "new" actor named in this request must confirm setting up this redirect.
       parameters:
         - name: X-P2-core-keytrial
           in: header
           required: true
-          description: A completed `KeyTrial`.
+          description: A list of completed `KeyTrial`s.
           schema:
-            $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
+            type: array
+            items:
+              $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
+          style: simple
       responses:
         '200':
           description: |-
@@ -687,9 +698,7 @@ paths:
     delete:
       operationId: Registered_removeRedirect
       summary: Remove a redirect for migrating identities
-      description: |-
-        Stop an in-progress or existing redirection process. Requires a completed key trial.
-        // TODO: Does it? ^ If yes, specify for which cert(s)
+      description: Stop an in-progress or existing redirection process.
       parameters:
         - name: removeActorFid
           in: query
@@ -698,19 +707,16 @@ paths:
           schema:
             type: string
           explode: false
-        - name: X-P2-core-keytrial
-          in: header
-          required: true
-          description: A completed `KeyTrial`.
-          schema:
-            $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
       responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+          headers:
+            Content-Length:
+              required: true
               schema:
-                $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
+                type: number
+                enum:
+                  - 0
         '400':
           description: The server could not understand the request due to invalid syntax.
       tags:
@@ -1691,7 +1697,6 @@ components:
       type: object
       required:
         - trial
-        - id
         - expires
       properties:
         trial:
@@ -1699,11 +1704,6 @@ components:
           minLength: 32
           maxLength: 256
           description: The key trial, which the client should sign with their private identity key.
-        id:
-          type: string
-          minLength: 1
-          maxLength: 256
-          description: A unique identifying string to differentiate this specific key trial from other key trials that may be open at the same time.
         expires:
           type: integer
           format: uint64
@@ -1717,15 +1717,11 @@ components:
       type: object
       required:
         - signature
-        - id
         - serial_number
       properties:
         signature:
           type: string
           description: The signature produced by signing the key trial string using a private identity key.
-        id:
-          type: string
-          description: The unique identifying string, differentiating this specific key trial from other key trials that may be open at the same time.
         serial_number:
           type: integer
           format: uint64
