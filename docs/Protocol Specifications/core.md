@@ -49,7 +49,7 @@ weight: 0
     - [4.1 Authentication](#41-authentication)
       - [4.1.1 Authenticating on a foreign server](#411-authenticating-on-a-foreign-server)
       - [4.1.2 Sensitive actions](#412-sensitive-actions)
-    - [4.2 Challenge strings and key trials](#42-challenge-strings-and-key-trials)
+    - [4.2 Key trials](#42-key-trials)
     - [4.3 Protection against misuse by malicious home servers](#43-protection-against-misuse-by-malicious-home-servers)
   - [5. Federation IDs (FIDs)](#5-federation-ids-fids)
   - [6. Cryptography and ID-Certs](#6-cryptography-and-id-certs)
@@ -954,13 +954,15 @@ header value represents the second factor of authentication chosen.
     TOTP verification code. If the chosen second factor of authentication is a password, then the
     value of this header is to be that password.
 
-### 4.2 Challenge strings and key trials
+### 4.2 Key trials
 
-Servers use challenge strings to verify an actor's private identity key
-possession without revealing the private key itself. These strings, ranging from 32 to 256
-UTF-8 characters, have a UNIX timestamp lifetime. If the current timestamp surpasses this
+Servers use key trials to verify that an actor possesses the private key to their ID-Cert(s),
+without revealing the private key itself. These key trials contain a "trial string", ranging from 32
+to 256 UTF-8 characters, have a UNIX timestamp lifetime. If the current timestamp surpasses this
 lifetime, the challenge fails. The actor signs the string, sending the signature and their
-ID-Cert to the server, which then verifies the signature's authenticity.
+ID-Cert to the server, which then verifies the signature's authenticity. The trial string is to be
+sourced from a (pseudo-)random RNG with a high entropy value. Trial string uniqueness is a key factor
+in preventing replay attacks.
 
 !!! warning
 
@@ -1872,7 +1874,7 @@ actor aa as Alice Old (Redirection source)
 participant sa as "Alice Old" Home Server
 actor ab as Alice New (Redirection target)
 
-Note over aa, ab: These steps may be done in any order<br/>and are not necessarily sequential
+Note over aa, ab: These two steps may be done in any order<br/>and are not necessarily sequential
 par Verifying redirect intent by passing key trial
   aa->>sa: Request redirect to Alice New
   sa-)sa: Confirm "Alice New"<br/>is valid actor by resolving FID 
