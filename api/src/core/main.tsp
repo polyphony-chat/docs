@@ -56,31 +56,15 @@ namespace models {
     }
 
     /**
-     * A challenge string response, as received from a server when requesting a challenge string.
-     *
-     * From the polyproto protocol definition: "verify an actor's private identity key possession,
-     * without revealing the private key itself. These strings, ranging from 32 to 256 characters,
-     * have a UNIX timestamp lifetime. If the current timestamp surpasses this lifetime, the
-     * challenge fails. The actor signs the string, sending the signature and their ID-Cert to the
-     * server, which then verifies the signature's authenticity."
-     */
-    model ChallengeStringResponse {
-        @minLength(32)
-        @maxLength(256)
-        @doc("The challenge string, which the client should sign with its private identity key.")
-        challenge: string;
-
-        @doc("The UNIX timestamp after which the challenge expires.")
-        expires: uint64;
-    }
-
-    /**
      * A key trial as sent from the server to an actor.
+     *
+     * Used to verify an actor's private identity key possession,
+     * without revealing the private key itself
      */
     model KeyTrial {
         @minLength(32)
         @maxLength(256)
-        @doc("The key trial, which the client should sign with all of their private identity keys.")
+        @doc("The key trial, which the client should sign with their private identity key.")
         trial: string;
 
         @minLength(1)

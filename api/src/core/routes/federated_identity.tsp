@@ -261,5 +261,21 @@ namespace FederatedIdentity {
         } | {
             @statusCode statusCode: 400;
         };
+
+        /**
+         * Authenticate on a foreign server, creating a session with an authentication token. Requires
+         * completing a key trial for the ID-Cert the session is supposed to be generated for.
+         */
+        @route("/session/auth")
+        @post
+        @added(Version.`v1.0-beta.1`)
+        @summary("Authenticate on a foreign server")
+        op requestToken(
+            @body
+            completedChallengeString: polyproto.core.models.KeyTrialCompleted,
+        ): {
+            @body _: string;
+            @statusCode statusCode: 200;
+        };
     }
 }
