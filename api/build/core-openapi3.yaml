@@ -20,7 +20,9 @@ paths:
     delete:
       operationId: Unregistered_deleteData
       summary: Delete own actor data from the sever
-      description: Delete all data associated with you from the server.
+      description: |-
+        Delete all data associated with you from the server. Only deletes data associated with the
+        keys for which the `KeyTrial` has been passed.
       parameters:
         - name: breakRedirect
           in: query
@@ -32,19 +34,15 @@ paths:
             type: boolean
             default: false
           explode: false
+        - name: X-P2-core-keytrial
+          in: header
+          required: true
+          description: A completed `KeyTrial`.
+          schema:
+            $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
       responses:
-        '202':
-          description: |-
-            - `202` and a key trial, if one still needs to be passed
-            - `204`: Action executed
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
         '204':
-          description: |-
-            - `202` and a key trial, if one still needs to be passed
-            - `204`: Action executed
+          description: '- `204`: Action executed'
           headers:
             Content-Length:
               required: true
@@ -52,6 +50,10 @@ paths:
                 type: number
                 enum:
                   - 0
+        '401':
+          description: '- `204`: Action executed'
+        '403':
+          description: '- `204`: Action executed'
       tags:
         - Migration - Registration not required
       security:
@@ -59,12 +61,17 @@ paths:
     get:
       operationId: Unregistered_exportData
       summary: Export all data
-      description: Export all of your data for safekeeping or for importing it to another server
-      parameters: []
+      description: Export all of your data for safekeeping or for importing it to another server.
+      parameters:
+        - name: X-P2-core-keytrial
+          in: header
+          required: true
+          description: A completed `KeyTrial`.
+          schema:
+            $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
       responses:
         '200':
           description: |-
-            - `202` and a key trial, if one still needs to be passed
             - `200` and the appropriate data if the key trial has been passed and is not yet expired.
             See the `P2Export` schema for more information.
             - `204` if the server needs time to gather the data. A `Retry-After` header is included in
@@ -76,23 +83,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/polyproto.core.models.P2Export'
-        '202':
-          description: |-
-            - `202` and a key trial, if one still needs to be passed
-            - `200` and the appropriate data if the key trial has been passed and is not yet expired.
-            See the `P2Export` schema for more information.
-            - `204` if the server needs time to gather the data. A `Retry-After` header is included in
-            the response, indicating to the actor the point in time at which they should query this
-            endpoint again. If this point in time is after the expiry timestamp of the completed key trial,
-            another key trial needs to be performed to access the data.
-            Contains all data of the user.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
         '204':
           description: |-
-            - `202` and a key trial, if one still needs to be passed
             - `200` and the appropriate data if the key trial has been passed and is not yet expired.
             See the `P2Export` schema for more information.
             - `204` if the server needs time to gather the data. A `Retry-After` header is included in
@@ -250,54 +242,6 @@ paths:
         - Sensitive Actions
       security:
         - BearerAuth: []
-  /.p2/core/v1/keytrial:
-    post:
-      operationId: Unregistered_completeKeyTrial
-      summary: Complete key trial
-      description: |-
-        Complete a key trial. After the successful completion of the key trial, the action that
-        required this key trial to be performed may be executed until the `expires` UNIX timestamp
-        of the key trial has been reached. After that point, another key trial must be performed
-        before executing the action.
-
-        If only a subset of all trialed keys had a trial completed for them, the server must only
-        allow changes which concern information tied to these exact keys.
-      parameters: []
-      responses:
-        '200':
-          description: |-
-            - `200` if the key trials were processed and deemed to be valid
-            - `202`, if the server needs additional time to process the key trials
-            - `400`, if one or more completed key trials were faulty. Contains faulty key trials in the response body.
-        '202':
-          description: |-
-            - `200` if the key trials were processed and deemed to be valid
-            - `202`, if the server needs additional time to process the key trials
-            - `400`, if one or more completed key trials were faulty. Contains faulty key trials in the response body.
-        '400':
-          description: |-
-            - `200` if the key trials were processed and deemed to be valid
-            - `202`, if the server needs additional time to process the key trials
-            - `400`, if one or more completed key trials were faulty. Contains faulty key trials in the response body.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
-      tags:
-        - Migration - Registration not required
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
-        description: Completed key trials.
-      security:
-        - BearerAuth: []
   /.p2/core/v1/keytrial/{fid}:
     get:
       operationId: Unregistered_getKeyTrials
@@ -430,14 +374,18 @@ paths:
       operationId: Unregistered_requestAllowResigning
       summary: Request message re-signing
       description: Request allowing message re-signing. To fulfill this action, a key trial must be passed.
-      parameters: []
+      parameters:
+        - name: X-P2-core-keytrial
+          in: header
+          required: true
+          description: A completed `KeyTrial`.
+          schema:
+            $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
       responses:
         '200':
-          description: a key trial
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
+          description: The request has succeeded.
+        '403':
+          description: Access is forbidden.
       tags:
         - Migration - Registration not required
       requestBody:
@@ -463,16 +411,18 @@ paths:
       summary: Fetch messages to-be-resigned
       description: |-
         Fetch messages to be re-signed. Must only return messages where the signatures correlate to
-        ID-Certs for which a key trial has been passed.
+        ID-Certs for which a key trial has been passed. If this endpoint is queried again while
+        the previous batch of messages has not yet been re-signed (or only partially so), the
+        returned message batch will contain those uncommitted messages again.
       parameters:
         - name: limit
           in: query
           required: false
-          description: How many messages to request from the server. Defaults to 100.
+          description: How many messages to request from the server. Defaults to 300.
           schema:
             type: integer
             format: uint32
-            default: 100
+            default: 300
           explode: false
       responses:
         '200':
@@ -543,7 +493,10 @@ paths:
       responses:
         '200':
           description: |-
-            - `200` On success
+            - `200` On success. Returns another `MessageBatch`, if there are more messages to re-sign.
+            If this endpoint is queried again while
+            the previous batch of messages has not yet been re-signed (or only partially so), the
+            returned message batch will contain those uncommitted messages again.
             - `400` if re-signed messages are improperly formatted
             - `403` if messages have been modified where the original keys have not passed the key
             trial, if a key trial has not been passed at all or if the messages have been signed
@@ -555,16 +508,61 @@ paths:
               schema:
                 type: integer
                 format: uint16
+            'X-P2-Return-Body-Size-Limit ':
+              required: false
+              description: This header tells the client whether the route to commit re-signed messages has an upload size limit, and what the size of that limit is. A value of `0` means that there is no limit. This header not being present can also be interpreted as no limit existing.
+              schema:
+                type: integer
+                format: uint64
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - idCert
+                    - messages
+                  properties:
+                    idCert:
+                      type: string
+                      description: The ID-Cert that the following messages' signatures correspond to.
+                    messages:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          signature:
+                            type: string
+                            description: Signature of the whole message
+                          content:
+                            type: string
+                            description: Arbitrary content `T`. This depends on the specific implementation or extension of the protocol.
+                        required:
+                          - signature
+                          - content
+                      description: The actual message.
+                  description: |-
+                    A message batch, as received from and sent to the server in the context of re-signing messages.
+                    This type is generic over `T`, where `T` represents the content of the actual message. This
+                    means, that the specific message content depends on the concrete implementation or extension
+                    of the polyproto protocol.
         '400':
           description: |-
-            - `200` On success
+            - `200` On success. Returns another `MessageBatch`, if there are more messages to re-sign.
+            If this endpoint is queried again while
+            the previous batch of messages has not yet been re-signed (or only partially so), the
+            returned message batch will contain those uncommitted messages again.
             - `400` if re-signed messages are improperly formatted
             - `403` if messages have been modified where the original keys have not passed the key
             trial, if a key trial has not been passed at all or if the messages have been signed
             with keys that were not on the `allowedResigningKeys` list.
         '403':
           description: |-
-            - `200` On success
+            - `200` On success. Returns another `MessageBatch`, if there are more messages to re-sign.
+            If this endpoint is queried again while
+            the previous batch of messages has not yet been re-signed (or only partially so), the
+            returned message batch will contain those uncommitted messages again.
             - `400` if re-signed messages are improperly formatted
             - `403` if messages have been modified where the original keys have not passed the key
             trial, if a key trial has not been passed at all or if the messages have been signed
@@ -657,25 +655,24 @@ paths:
         to move to another home server. To fulfill this action,
 
         1. A key trial must be passed
+        // TODO: Must it? If yes, specify for which cert(s) ^
         2. The "new" actor named in this request must confirm setting up this redirect.
-      parameters: []
+      parameters:
+        - name: X-P2-core-keytrial
+          in: header
+          required: true
+          description: A completed `KeyTrial`.
+          schema:
+            $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
       responses:
         '200':
           description: |-
             - `200` if the link has been created
-            - `202` if the other account still needs to accept to establish the link. Contains a key trial
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
+            - `202` if the other account still needs to accept to establish the link.
         '202':
           description: |-
             - `200` if the link has been created
-            - `202` if the other account still needs to accept to establish the link. Contains a key trial
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
+            - `202` if the other account still needs to accept to establish the link.
       tags:
         - Migration - Registration required
       requestBody:
@@ -690,7 +687,9 @@ paths:
     delete:
       operationId: Registered_removeRedirect
       summary: Remove a redirect for migrating identities
-      description: Stop an in-progress or existing redirection process.
+      description: |-
+        Stop an in-progress or existing redirection process. Requires a completed key trial.
+        // TODO: Does it? ^ If yes, specify for which cert(s)
       parameters:
         - name: removeActorFid
           in: query
@@ -699,15 +698,21 @@ paths:
           schema:
             type: string
           explode: false
+        - name: X-P2-core-keytrial
+          in: header
+          required: true
+          description: A completed `KeyTrial`.
+          schema:
+            $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
       responses:
         '200':
-          description: A key trial
+          description: The request has succeeded.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/polyproto.core.models.KeyTrial'
         '400':
-          description: A key trial
+          description: The server could not understand the request due to invalid syntax.
       tags:
         - Migration - Registration required
       security:
@@ -1422,6 +1427,29 @@ paths:
         - Federated Identity - Registration required
       security:
         - BearerAuth: []
+  /.p2/core/v1/session/auth:
+    post:
+      operationId: Unregistered_requestToken
+      summary: Authenticate on a foreign server
+      description: |-
+        Authenticate on a foreign server, creating a session with an authentication token. Requires
+        completing a key trial for the ID-Cert the session is supposed to be generated for.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: string
+      tags:
+        - Federated Identity - Registration not required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
   /.p2/core/v1/session/idcert/extern:
     put:
       operationId: Unregistered_updateSessionCert
@@ -1670,7 +1698,7 @@ components:
           type: string
           minLength: 32
           maxLength: 256
-          description: The key trial, which the client should sign with all of their private identity keys.
+          description: The key trial, which the client should sign with their private identity key.
         id:
           type: string
           minLength: 1
@@ -1680,7 +1708,11 @@ components:
           type: integer
           format: uint64
           description: The UNIX timestamp after which the key trial expires.
-      description: A key trial as sent from the server to an actor.
+      description: |-
+        A key trial as sent from the server to an actor.
+
+        Used to verify an actor's private identity key possession,
+        without revealing the private key itself
     polyproto.core.models.KeyTrialCompleted:
       type: object
       required:
