@@ -23,8 +23,8 @@ namespace Migration {
          * This specific route is called by the "old" actor, notifying the server about their intent
          * to move to another home server. To fulfill this action,
          *
-         * 1. A key trial must be passed
-         * // TODO: Must it? If yes, specify for which cert(s) ^
+         * 1. A key trial must be passed for all keys with which the actor has sent messages with
+         *    on this server.
          * 2. The "new" actor named in this request must confirm setting up this redirect.
          *
          * @returns
@@ -39,36 +39,33 @@ namespace Migration {
         op setupRedirect(
             @body newActorFid: string,
 
-            @doc("A completed `KeyTrial`.")
+            @doc("A list of completed `KeyTrial`s.")
             @header({
                 name: "X-P2-core-keytrial",
+                format: "simple",
             })
-            keyTrial: polyproto.core.models.KeyTrialCompleted,
+            keyTrial: polyproto.core.models.KeyTrialCompleted[],
         ): {
             @statusCode statusCode: 200 | 202;
         };
 
         /**
-         * Stop an in-progress or existing redirection process. Requires a completed key trial.
-         * // TODO: Does it? ^ If yes, specify for which cert(s)
+         * Stop an in-progress or existing redirection process.
          *
          * @param removeActorFid The FID of the actor to which a redirect should no longer exist
          */
         @route("/redirect")
         @delete
+        @useAuth(BearerAuth)
         @added(Version.`v1.0-beta.1`)
         @summary("Remove a redirect for migrating identities")
-        op removeRedirect(
-            @query removeActorFid: string,
+        op removeRedirect(@query removeActorFid: string): {
+            @statusCode statusCode: 204;
 
-            @doc("A completed `KeyTrial`.")
             @header({
-                name: "X-P2-core-keytrial",
+                name: "Content-Length",
             })
-            keyTrial: polyproto.core.models.KeyTrialCompleted,
-        ): {
-            @statusCode statusCode: 200;
-            @body body: polyproto.core.models.KeyTrial;
+            contentLength: 0;
         } | {
             @statusCode statusCode: 400;
         };
@@ -145,6 +142,7 @@ namespace Migration {
 
         /**
          * Request allowing message re-signing. To fulfill this action, a key trial must be passed.
+         * Unlocks message re-signing for messages signed with keys for which a key trial has been passed.
          * @param allowedResigningKeys List of PEM encoded `SubjectPublicKeyInfo`s. Only key pairs mentioned in this list are allowed to re-sign messages after the key trial has been passed.
          */
         @route("/messages")
@@ -157,11 +155,12 @@ namespace Migration {
                 allowedResigningKeys: string[];
             },
 
-            @doc("A completed `KeyTrial`.")
+            @doc("A list of completed `KeyTrial`s.")
             @header({
                 name: "X-P2-core-keytrial",
+                format: "simple",
             })
-            keyTrial: polyproto.core.models.KeyTrialCompleted, // TODO doesnt this have to be an array?
+            keyTrial: polyproto.core.models.KeyTrialCompleted[],
         ): {
             @statusCode statusCode: 200 | 403;
         };
@@ -293,15 +292,16 @@ namespace Migration {
         @route("/data")
         @delete
         @added(Version.`v1.0-beta.1`)
-        @summary("Delete own actor data from the sever")
+        @summary("Delete own actor data from the server")
         op deleteData(
             @query breakRedirect?: boolean = false,
 
-            @doc("A completed `KeyTrial`.")
+            @doc("A list of completed `KeyTrial`s.")
             @header({
                 name: "X-P2-core-keytrial",
+                format: "simple",
             })
-            keyTrial: polyproto.core.models.KeyTrialCompleted, // TODO: Must be array. re-evaluate if keytrial responses should be part of header. i think they are better suited as a body
+            keyTrial: polyproto.core.models.KeyTrialCompleted[],
         ): {
             @statusCode statusCode: 204;
 
