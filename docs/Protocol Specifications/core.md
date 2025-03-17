@@ -319,7 +319,17 @@ the server.
 
 The "Hello" event is sent by the server to the client upon establishing a connection. The `d` payload
 for a "Hello" event is an object containing a `heartbeat_interval` field, which specifies the interval
-in milliseconds at which the client should send heartbeat events to the server.
+in milliseconds at which the client should send heartbeat events to the server. The payload might also
+contain a `resigning_active` key with a `boolean` value, indicating whether there is an unfinished
+message re-signing process which can be resumed.
+
+!!! danger
+
+    User-operated clients must not automatically continue
+    re-signing messages when receiving this property with a `true` value. Instead, the user should be
+    prompted whether they intend to continue re-signing messages. The reason for this is that servers
+    could theoretically send this property even though the user has not previously enabled re-signing
+    in a malicious identity takeover attempt.
 
 !!! example "Example hello event payload"
 
@@ -334,9 +344,11 @@ in milliseconds at which the client should send heartbeat events to the server.
     }
     ```
 
-| Field                | Type   | Description                                                                              |
-| -------------------- | ------ | ---------------------------------------------------------------------------------------- |
-| `heartbeat_interval` | uint32 | Interval in milliseconds at which the client should send heartbeat events to the server. |
+<!-->// TODO maybe resigning_active should be an object containing information about which keys are allowed for re-signing, and which keys still need confirmation<-->
+| Field                | Type     | Description                                                                                                           |
+| -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------- |
+| `heartbeat_interval` | uint32   | Interval in milliseconds at which the client should send heartbeat events to the server.                              |
+| `resigning_active`   | boolean? | If present and `true`, indicates that there is an unfinished message re-signing process active, which can be resumed. |
 
 ##### 3.2.3.2 Identify event
 
