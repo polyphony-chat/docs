@@ -3211,7 +3211,17 @@ the server.</p>
 <h5 id="3231-hello-event">3.2.3.1 "Hello" event<a class="headerlink" href="#3231-hello-event" title="Permanent link">&para;</a></h5>
 <p>The "Hello" event is sent by the server to the client upon establishing a connection. The <code>d</code> payload
 for a "Hello" event is an object containing a <code>heartbeat_interval</code> field, which specifies the interval
-in milliseconds at which the client should send heartbeat events to the server.</p>
+in milliseconds at which the client should send heartbeat events to the server. The payload might also
+contain a <code>resigning_active</code> key with a <code>boolean</code> value, indicating whether there is an unfinished
+message re-signing process which can be resumed.</p>
+<div class="admonition danger">
+<p class="admonition-title">Danger</p>
+<p>User-operated clients must not automatically continue
+re-signing messages when receiving this property with a <code>true</code> value. Instead, the user should be
+prompted whether they intend to continue re-signing messages. The reason for this is that servers
+could theoretically send this property even though the user has not previously enabled re-signing
+in a malicious identity takeover attempt.</p>
+</div>
 <div class="admonition example">
 <p class="admonition-title">Example hello event payload</p>
 <div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
@@ -3224,6 +3234,7 @@ in milliseconds at which the client should send heartbeat events to the server.<
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">}</span>
 </code></pre></div>
 </div>
+<!-->// TODO maybe resigning_active should be an object containing information about which keys are allowed for re-signing, and which keys still need confirmation<-->
 <table>
 <thead>
 <tr>
@@ -3237,6 +3248,11 @@ in milliseconds at which the client should send heartbeat events to the server.<
 <td><code>heartbeat_interval</code></td>
 <td>uint32</td>
 <td>Interval in milliseconds at which the client should send heartbeat events to the server.</td>
+</tr>
+<tr>
+<td><code>resigning_active</code></td>
+<td>boolean?</td>
+<td>If present and <code>true</code>, indicates that there is an unfinished message re-signing process active, which can be resumed.</td>
 </tr>
 </tbody>
 </table>
@@ -5433,7 +5449,7 @@ service provider, they must request a <a href="#7-migrations">migration</a>.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="March 16, 2025 20:41:31"><span class="timeago" datetime="2025-03-16T20:41:31+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="March 16, 2025 20:41:31">2025-03-16</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="March 17, 2025 12:23:47"><span class="timeago" datetime="2025-03-17T12:23:47+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="March 17, 2025 12:23:47">2025-03-17</span>
   </span>
 
     
