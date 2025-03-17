@@ -352,7 +352,7 @@ message re-signing process which can be resumed.
     ```
 
 <!-->
-Serveral issues:
+Several issues:
 
 target or source need to present to give users an idea about who the migration is for. ideally, the
 signatures of these actions are also included for safety. needs to be ux friendly regardless!
