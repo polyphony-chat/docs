@@ -3216,7 +3216,7 @@ contain a <code>resigning_active</code> key with a <code>boolean</code> value, i
 message re-signing process which can be resumed.</p>
 <div class="admonition danger">
 <p class="admonition-title">Danger</p>
-<p>User-operated clients must not automatically continue
+<p>User-operated clients <strong>must not</strong> automatically continue
 re-signing messages when receiving this property with a <code>true</code> value. Instead, the user should be
 prompted whether they intend to continue re-signing messages. The reason for this is that servers
 could theoretically send this property even though the user has not previously enabled re-signing
@@ -3228,13 +3228,32 @@ in a malicious identity takeover attempt.</p>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;n&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;core&quot;</span><span class="p">,</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;op&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&quot;d&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">&quot;heartbeat_interval&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">45000</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="p">},</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nt">&quot;s&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">}</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">&quot;heartbeat_interval&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">45000</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">&quot;active_migration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">      </span><span class="nt">&quot;messages_left&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1413&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">      </span><span class="nt">&quot;confirmed_keys&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;2958364756734892245&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;5167892139244614332&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">],</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">      </span><span class="nt">&quot;unconfirmed_keys&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;192346785523467891&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;52345678924536789&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">],</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">      </span><span class="nt">&quot;target&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;example@example.com&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">      </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;example@example.com&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span><span class="nt">&quot;s&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="p">}</span>
 </code></pre></div>
 </div>
-<!-->// TODO maybe resigning_active should be an object containing information about which keys are allowed for re-signing, and which keys still need confirmation<-->
+<!-->
+Serveral issues:
+
+target or source need to present to give users an idea about who the migration is for. ideally, the
+signatures of these actions are also included for safety. needs to be ux friendly regardless!
+
+if target is present, then present list of confirmed/unconfirmed keys
+
+if source is present, other information needs to be displayed
+
+i am eepy
+<-->
+
 <table>
 <thead>
 <tr>
@@ -3250,9 +3269,29 @@ in a malicious identity takeover attempt.</p>
 <td>Interval in milliseconds at which the client should send heartbeat events to the server.</td>
 </tr>
 <tr>
-<td><code>resigning_active</code></td>
-<td>boolean?</td>
-<td>If present and <code>true</code>, indicates that there is an unfinished message re-signing process active, which can be resumed.</td>
+<td><code>active_migration</code></td>
+<td>object?</td>
+<td>If present indicates that there is an unfinished message re-signing process active, which can be resumed. Contains information about this process.</td>
+</tr>
+<tr>
+<td>|__ <code>messages_left</code></td>
+<td>uint64</td>
+<td>An estimate of how many messages are currently left to be re-signed. Integers are transferred as</td>
+</tr>
+<tr>
+<td>|__ <code>confirmed_keys</code></td>
+<td>array[uint64]</td>
+<td>An array containing the serial numbers of keys, for which a key trial has already been performed successfully.</td>
+</tr>
+<tr>
+<td>|__ <code>unconfirmed_keys</code></td>
+<td>array[uint64]</td>
+<td>An array containing the serial numbers of keys, for which a key trial has not yet been performed successfully.</td>
+</tr>
+<tr>
+<td>|__ <code>target</code></td>
+<td>string?</td>
+<td>Either this field or <code>source</code> is present, never both.</td>
 </tr>
 </tbody>
 </table>
@@ -5449,7 +5488,7 @@ service provider, they must request a <a href="#7-migrations">migration</a>.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="March 17, 2025 12:23:47"><span class="timeago" datetime="2025-03-17T12:23:47+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="March 17, 2025 12:23:47">2025-03-17</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="March 17, 2025 23:13:09"><span class="timeago" datetime="2025-03-17T23:13:09+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="March 17, 2025 23:13:09">2025-03-17</span>
   </span>
 
     
