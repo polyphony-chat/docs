@@ -325,7 +325,7 @@ message re-signing process which can be resumed.
 
 !!! danger
 
-    User-operated clients must not automatically continue
+    User-operated clients **must not** automatically continue
     re-signing messages when receiving this property with a `true` value. Instead, the user should be
     prompted whether they intend to continue re-signing messages. The reason for this is that servers
     could theoretically send this property even though the user has not previously enabled re-signing
@@ -338,17 +338,40 @@ message re-signing process which can be resumed.
       "n": "core",
       "op": 1,
       "d": {
-        "heartbeat_interval": 45000
+        "heartbeat_interval": 45000,
+        "active_migration": {
+          "messages_left": "1413",
+          "confirmed_keys": ["2958364756734892245", "5167892139244614332", "..."],
+          "unconfirmed_keys": ["192346785523467891", "52345678924536789", "..."],
+          "target": "example@example.com",
+          "source": "example@example.com"
+        },
       },
       "s": 0
     }
     ```
 
-<!-->// TODO maybe resigning_active should be an object containing information about which keys are allowed for re-signing, and which keys still need confirmation<-->
-| Field                | Type     | Description                                                                                                           |
-| -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------- |
-| `heartbeat_interval` | uint32   | Interval in milliseconds at which the client should send heartbeat events to the server.                              |
-| `resigning_active`   | boolean? | If present and `true`, indicates that there is an unfinished message re-signing process active, which can be resumed. |
+<!-->
+Serveral issues:
+
+target or source need to present to give users an idea about who the migration is for. ideally, the
+signatures of these actions are also included for safety. needs to be ux friendly regardless!
+
+if target is present, then present list of confirmed/unconfirmed keys
+
+if source is present, other information needs to be displayed
+
+i am eepy
+<-->
+
+| Field                   | Type          | Description                                                                                                                                        |
+| ----------------------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `heartbeat_interval`    | uint32        | Interval in milliseconds at which the client should send heartbeat events to the server.                                                           |
+| `active_migration`      | object?       | If present indicates that there is an unfinished message re-signing process active, which can be resumed. Contains information about this process. |
+| \|__ `messages_left`    | uint64        | An estimate of how many messages are currently left to be re-signed. Integers are transferred as                                                   |
+| \|__ `confirmed_keys`   | array[uint64] | An array containing the serial numbers of keys, for which a key trial has already been performed successfully.                                     |
+| \|__ `unconfirmed_keys` | array[uint64] | An array containing the serial numbers of keys, for which a key trial has not yet been performed successfully.                                     |
+| \|__ `target`           | string?       | Either this field or `source` is present, never both.                                                                                              |
 
 ##### 3.2.3.2 Identify event
 
