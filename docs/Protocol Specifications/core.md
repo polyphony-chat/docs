@@ -320,16 +320,18 @@ the server.
 The "Hello" event is sent by the server to the client upon establishing a connection. The `d` payload
 for a "Hello" event is an object containing a `heartbeat_interval` field, which specifies the interval
 in milliseconds at which the client should send heartbeat events to the server. The payload might also
-contain a `resigning_active` key with a `boolean` value, indicating whether there is an unfinished
-message re-signing process which can be resumed.
+contain an `active_migration` object, indicating that there is an unfinished migration which can be
+resumed. This object should only be sent by a server if both the "old" and the "new" have confirmed
+the setup of the migration.
 
 !!! danger
 
     User-operated clients **must not** automatically continue
-    re-signing messages when receiving this property with a `true` value. Instead, the user should be
-    prompted whether they intend to continue re-signing messages. The reason for this is that servers
+    re-signing messages when receiving this object. Manual confirmation and verification **is necessary**,
+    since this "notice" does not contain any cryptographic properties. If this is not done, servers
     could theoretically send this property even though the user has not previously enabled re-signing
-    in a malicious identity takeover attempt.
+    in a malicious identity takeover attempt, or get the user to sign key trials in order to impersonate
+    them.
 
 !!! example "Example hello event payload"
 
@@ -340,38 +342,20 @@ message re-signing process which can be resumed.
       "d": {
         "heartbeat_interval": 45000,
         "active_migration": {
-          "messages_left": "1413",
-          "confirmed_keys": ["2958364756734892245", "5167892139244614332", "..."],
-          "unconfirmed_keys": ["192346785523467891", "52345678924536789", "..."],
-          "target": "example@example.com",
-          "source": "example@example.com"
+          "from": "xenia@old.example.com",
+          "to": "xenia@new.example.com"
         },
       },
       "s": 0
     }
     ```
 
-<!-->
-Several issues:
-
-target or source need to present to give users an idea about who the migration is for. ideally, the
-signatures of these actions are also included for safety. needs to be ux friendly regardless!
-
-if target is present, then present list of confirmed/unconfirmed keys
-
-if source is present, other information needs to be displayed
-
-i am eepy
-<-->
-
-| Field                   | Type          | Description                                                                                                                                        |
-| ----------------------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `heartbeat_interval`    | uint32        | Interval in milliseconds at which the client should send heartbeat events to the server.                                                           |
-| `active_migration`      | object?       | If present indicates that there is an unfinished message re-signing process active, which can be resumed. Contains information about this process. |
-| \|__ `messages_left`    | uint64        | An estimate of how many messages are currently left to be re-signed. Integers are transferred as                                                   |
-| \|__ `confirmed_keys`   | array[uint64] | An array containing the serial numbers of keys, for which a key trial has already been performed successfully.                                     |
-| \|__ `unconfirmed_keys` | array[uint64] | An array containing the serial numbers of keys, for which a key trial has not yet been performed successfully.                                     |
-| \|__ `target`           | string?       | Either this field or `source` is present, never both.                                                                                              |
+| Field                | Type    | Description                                                                                                        |
+| -------------------- | ------- | ------------------------------------------------------------------------------------------------------------------ |
+| `heartbeat_interval` | uint32  | Interval in milliseconds at which the client should send heartbeat events to the server.                           |
+| `active_migration`   | object? | If present, indicates that there is an unfinished migration from actor `from` to actor `to`, which can be resumed. |
+| \| `from`            | string  | Federation ID of the actor who is the source of the migration.                                                     |
+| \| `to`              | string  | Federation ID of the actor who is the target of the migration.                                                     |
 
 ##### 3.2.3.2 Identify event
 
