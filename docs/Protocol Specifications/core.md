@@ -49,8 +49,9 @@ weight: 0
     - [4.1 Authentication](#41-authentication)
       - [4.1.1 Authenticating on a foreign server](#411-authenticating-on-a-foreign-server)
       - [4.1.2 Sensitive actions](#412-sensitive-actions)
+      - [4.1.1 Sensitive Solutions](#411-sensitive-solutions)
     - [4.2 Key trials](#42-key-trials)
-    - [4.3 Protection against misuse by malicious home servers](#43-protection-against-misuse-by-malicious-home-servers)
+    - [4.4 Protection against misuse by malicious home servers](#44-protection-against-misuse-by-malicious-home-servers)
   - [5. Federation IDs (FIDs)](#5-federation-ids-fids)
   - [6. Cryptography and ID-Certs](#6-cryptography-and-id-certs)
     - [6.1 Home server signed certificates for public client identity keys (ID-Cert)](#61-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
@@ -134,6 +135,8 @@ polyproto operates under the following trust assumptions:
    mostly out of the scope of this specification.
 6. Users rely on their home server for identity key certification, without the home server
    possessing the identity.
+7. Communication with home servers happens through TLS protected communication channels, such as
+   `https` for HTTP and `wss` for WebSockets.
 
 ## 3. APIs and underlying communication protocols
 
@@ -934,17 +937,6 @@ token. This verification must be done by proving the following facts:
 
 #### 4.1.2 Sensitive actions
 
-!!! bug
-
-    # Outdated: Challenge strings are not used for this.
-
-    "Sensitive solutions" are set to replace challenge strings as an authenticator for sensitive actions.
-
-    The API documentation already reflects this change; expect the protocol specification to reflect
-    these changes in upcoming beta versions of polyproto.
-
-    TODO: Better describe "Sensitive-Solution" instead.
-
 !!! warning
 
     Sensitive actions require a second factor of authentication, apart from the actor's
@@ -967,11 +959,25 @@ Sensitive actions include, but are not limited to:
 HTTP API routes marked as sensitive actions require a header `X-P2-Sensitive-Solution`, where the
 header value represents the second factor of authentication chosen.
 
+#### 4.1.1 Sensitive Solutions
+
+Sensitive actions are authorized using so-called "Sensitive solutions". The concrete way to derive a
+sensitive solution depends on the authentication (authn)/authorization (authz) standard used in
+tandem with polyproto. Deriving a valid sensitive solution through the use of an actors private identity
+keys must not be possible, as sensitive solutions act as a second layer of authentication to prevent
+identity takeover if a private identity key were to be leaked.
+
 !!! example
 
-    If the chosen second factor of authentication is TOTP, the value of this header is the current
-    TOTP verification code. If the chosen second factor of authentication is a password, then the
-    value of this header is to be that password.
+    If the chosen second factor of authentication is TOTP, the value of this header is to be the
+    current TOTP verification code, or to be derived from the current TOTP verification code.
+    If the chosen second factor of authentication is a password, then the value of this header is
+    to be that passwords' hash value. Client and server must of course agree on how the sensitive
+    solution is to be generated and validated.
+
+Sensitive solutions are only used in actor ⇄ actor home-server communications, never in actor ⇄
+foreign server communications. It is unsafe to use sensitive solutions as described in this chapter for
+actor ⇄ foreign server communications.
 
 ### 4.2 Key trials
 
@@ -988,7 +994,7 @@ in preventing replay attacks.
     Challenge strings provide a different set of security guarantees than [sensitive actions](#412-sensitive-actions)
     do. They are not to be used interchangeably.
 
-All challenge strings and their responses created must be made
+All key trials and their responses created must be made
 public to ensure that a chain of trust can be maintained. A third party should be able to verify that
 the challenge string, which authorized a specific change in data, was signed by the
 correct private key. The API routes needed to verify challenges as an outsider are documented in the
@@ -1004,32 +1010,10 @@ correct private key. The API routes needed to verify challenges as an outsider a
 Challenge strings can counteract replay attacks. Their uniqueness ensures that even identical requests
 have different signatures, preventing malicious servers from successfully replaying requests.
 
-Accessing a challenge string protected route is done as follows:
+Accessing a key-trial protected route is done by supplying the key trial solution(s) in the `X-P2-core-keytrial`
+HTTP header. The value of this header is a JSON-Array, containing the key-trial solution object or objects.
 
-```mermaid
-sequenceDiagram
-autonumber
-
-actor a as Client A
-participant s as Server
-
-note over a: Clients have to provide session<br/>token to request challenge string
-a->>s: Request challenge string
-s->>s: Note, that Client A requests challenge<br/>string for given session identified by token
-s->>a: Challenge string
-a->>a: Complete challenge by signing<br/>string with private key associated<br/>with pubkey of this session
-a->>s: Call challenge string protected route with<br/>`X-P2-Challenge-String-Solution` header,<br/>where the value is equal to the challenge string solution
-s->>s: Verify challenge
-alt
-  note over s: Challenge string solution is valid
-  s->>s: Let Client A perform the challenge string protected action
-else
-  note over s: Challenge string solution is invalid
-  s->>s: Return 403, indicating that<br/>the challenge string solution is invalid,<br/>with optional RetryAfter header to indicate how<br/>long the client should wait before making a<br/>follow-up request.
-end
-```
-
-### 4.3 Protection against misuse by malicious home servers
+### 4.4 Protection against misuse by malicious home servers
 
 To protect users from misuse by malicious home servers, a mechanism is needed to prevent home
 servers from generating federation tokens for users without their consent and knowledge.
