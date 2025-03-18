@@ -216,9 +216,9 @@ actor c as Client
 participant g as Gateway
 
 c->>g: Establish connection
-g->>c: Receive hello event
+g->>c: Receive hello event which<br/>contains heartbeat interval
 
-loop TODO: interval
+loop Do every heartbeat interval milliseconds:
   c->>g: Send heartbeat event
   g->>c: Send heartbeat ACK event
 end
@@ -232,7 +232,7 @@ else server-defined reason
 end
 
 
-opt Resume connection#59;<br />otherwise, repeat from step 1
+opt Resume connection<br/>, otherwise repeat from step 1
   c->>g: Open new connection
   c->>g: Send resume event
   g->>c: Send missed events
