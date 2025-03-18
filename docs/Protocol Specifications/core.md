@@ -51,7 +51,7 @@ weight: 0
       - [4.1.2 Sensitive actions](#412-sensitive-actions)
       - [4.1.1 Sensitive Solutions](#411-sensitive-solutions)
     - [4.2 Key trials](#42-key-trials)
-    - [4.4 Protection against misuse by malicious home servers](#44-protection-against-misuse-by-malicious-home-servers)
+    - [4.3 Protection against misuse by malicious home servers](#43-protection-against-misuse-by-malicious-home-servers)
   - [5. Federation IDs (FIDs)](#5-federation-ids-fids)
   - [6. Cryptography and ID-Certs](#6-cryptography-and-id-certs)
     - [6.1 Home server signed certificates for public client identity keys (ID-Cert)](#61-home-server-signed-certificates-for-public-client-identity-keys-id-cert)
@@ -1013,7 +1013,7 @@ have different signatures, preventing malicious servers from successfully replay
 Accessing a key-trial protected route is done by supplying the key trial solution(s) in the `X-P2-core-keytrial`
 HTTP header. The value of this header is a JSON-Array, containing the key-trial solution object or objects.
 
-### 4.4 Protection against misuse by malicious home servers
+### 4.3 Protection against misuse by malicious home servers
 
 To protect users from misuse by malicious home servers, a mechanism is needed to prevent home
 servers from generating federation tokens for users without their consent and knowledge.
