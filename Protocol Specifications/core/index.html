@@ -3788,7 +3788,7 @@
 </ul>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>The polyproto specification document is in an <strong>alpha</strong> phase. Please report any inconsistencies,
+<p>The polyproto specification document is in an early <strong>beta</strong> phase. Please report any inconsistencies,
 missing or duplicate information and other mistakes at <a href="https://github.com/polyphony-chat/docs/issues">github.com/polyphony-chat/docs/issues</a>.</p>
 </div>
 <p><a href="https://semver.org/spec/v2.0.0.html">Semantic versioning v2.0.0</a> is used to version this specification.</p>
@@ -4872,7 +4872,7 @@ situations:</p>
 </tr>
 <tr>
 <td><code>4010</code></td>
-<td>Unresumeable</td>
+<td>Unresumable</td>
 <td>The server has determined that this session cannot be resumed. The client should initiate a new, fresh connection to the gateway instead.</td>
 <td></td>
 <td>x</td>
@@ -5023,7 +5023,7 @@ token. This verification must be done by proving the following facts:</p>
 <li>The presented ID-Cert has not been revoked. See <a href="#641-verifying-that-a-newly-retrieved-id-cert-is-not-out-of-date">section 6.4.1</a>
   for information on how this is done.</li>
 <li>The client is in possession of the private key that corresponds to the presented ID-Certs' subject
-  public key. Must be proven using a <a href="#42-challenge-strings-and-key-trials">challenge string</a>.</li>
+  public key. Must be proven using a <a href="#42-key-trials">key trial</a>.</li>
 </ul>
 <h4 id="412-sensitive-actions">4.1.2 Sensitive actions<a class="headerlink" href="#412-sensitive-actions" title="Permanent link">&para;</a></h4>
 <div class="admonition warning">
@@ -5109,7 +5109,7 @@ services/protocols, like ActivityPub, have as well. There is no real solution to
 However, it can be mitigated a bit by making it more difficult for malicious home servers to do
 something like this without the actor noticing.</p>
 </div>
-<p>Polyproto servers need to inform users of new sessions. This visibility hampers malicious home
+<p>polyproto servers need to inform users of new sessions. This visibility hampers malicious home
 servers, but does not solve the issue of them being able to create federation tokens for servers the
 actor does not connect to. This is because, naturally, users cannot receive notifications without a
 connection. Clients re-establishing server connections must be updated on any new sessions
@@ -5387,7 +5387,7 @@ an ID-Cert consists of:</p>
 </ol>
 <p>A client that has this second factor of authentication stored
 should renew the ID-Cert of the authenticated actor without further interaction.</p>
-<p>Server ID-Certs should be rotated way less often (every 1-3 years). Only rotate a server ID-Cert
+<p>Server ID-Certs should be rotated way less often (every 1–3 years). Only rotate a server ID-Cert
 if it is suspected to be compromised, is lost, or has expired.</p>
 <pre class="mermaid"><code>sequenceDiagram
 autonumber
@@ -6444,7 +6444,7 @@ key is the name of the service, and the value is the base URL of the server host
 <p>The API routes for managing discoverability are documented in the
 <a href="https://apidocs.polyproto.org">API documentation</a></p>
 <h3 id="911-changing-a-primary-service-provider">9.1.1 Changing a primary service provider<a class="headerlink" href="#911-changing-a-primary-service-provider" title="Permanent link">&para;</a></h3>
-<p>Keys are unique in the actor-scoped service-&gt;service-provider table. Actors wanting
+<p>Keys are unique in the actor-scoped service → service-provider table. Actors wanting
 to register for two or more different implementations of the same service must select which
 service provider to use as a "primary service provider" for that service.</p>
 <p>If the actor is human, clients must not override the existing
@@ -6477,7 +6477,7 @@ service provider, they must request a <a href="#7-migrations">migration</a>.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="March 19, 2025 20:45:49"><span class="timeago" datetime="2025-03-19T20:45:49+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="March 19, 2025 20:45:49">2025-03-19</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="March 19, 2025 21:20:17"><span class="timeago" datetime="2025-03-19T21:20:17+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="March 19, 2025 21:20:17">2025-03-19</span>
   </span>
 
     
