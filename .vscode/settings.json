@@ -33,5 +33,30 @@
 		"vozeyuiwofxb",
 		"vozeyuiwofxn"
 	],
-	"languageToolLinter.languageTool.ignoredWordsInWorkspace": ["polyproto-chat"]
+	"languageToolLinter.languageTool.ignoredWordsInWorkspace": [
+		"oid",
+		"polyproto-chat",
+		"rawr",
+		"alice",
+		"apidocs",
+		"Axasdiohs",
+		"Diohs",
+		"eafhjhjafdlk",
+		"eppqxncp",
+		"ghjkz",
+		"idcert",
+		"interoperation",
+		"LDIF",
+		"MIIB",
+		"optionalsubdomain",
+		"polyproto",
+		"pubkeys",
+		"QLAS",
+		"rawr",
+		"sjkldfny",
+		"TOTP",
+		"vozeyuiwofxb",
+		"vozeyuiwofxn"
+	],
+	"languageToolLinter.languageTool.disabledRules": "WHITESPACE_RULE"
 }
