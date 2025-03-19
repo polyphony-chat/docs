@@ -343,8 +343,8 @@ the setup of the migration.
       "n": "core",
       "op": 1,
       "d": {
-        "heartbeat_interval": 45000,
-        "active_migration": {
+        "heartbeatInterval": 45000,
+        "activeMigration": {
           "from": "xenia@old.example.com",
           "to": "xenia@new.example.com"
         },
@@ -353,12 +353,12 @@ the setup of the migration.
     }
     ```
 
-| Field                | Type    | Description                                                                                                        |
-| -------------------- | ------- | ------------------------------------------------------------------------------------------------------------------ |
-| `heartbeat_interval` | uint32  | Interval in milliseconds at which the client should send heartbeat events to the server.                           |
-| `active_migration`   | object? | If present, indicates that there is an unfinished migration from actor `from` to actor `to`, which can be resumed. |
-| \| `from`            | string  | Federation ID of the actor who is the source of the migration.                                                     |
-| \| `to`              | string  | Federation ID of the actor who is the target of the migration.                                                     |
+| Field               | Type    | Description                                                                                                        |
+| ------------------- | ------- | ------------------------------------------------------------------------------------------------------------------ |
+| `heartbeatInterval` | uint32  | Interval in milliseconds at which the client should send heartbeat events to the server.                           |
+| `activeMigration`   | object? | If present, indicates that there is an unfinished migration from actor `from` to actor `to`, which can be resumed. |
+| \| `from`           | string  | Federation ID of the actor who is the source of the migration.                                                     |
+| \| `to`             | string  | Federation ID of the actor who is the target of the migration.                                                     |
 
 ##### 3.2.3.2 Identify event
 
@@ -486,8 +486,19 @@ about the new session mechanism in [section 4.3](#43-protection-against-misuse-b
 
 The actor certificate invalidation event is crucial to ensure that the client can detect and respond
 to changes in actor certificates. This prevents clients and servers from accepting outdated ID-Certs.
-This event is only sent by servers if an [early revocation of an actor ID-Cert](#614-early-revocation-of-id-certs)
-occurs.
+
+Clients send this event to servers to notify them of the fact that one of their certificates has been
+invalidated. Servers verify the validity of the [cached certificate payload](#64-caching-of-id-certs),
+then forward this event to all actors that have recently been in contact with this certificate. If
+metadata-lean encryption is used where only sender and recipient are known, the event forwarded to
+all actors that have recently been in contact with the actor who has invalidated their certificate.
+
+!!! tip
+
+    A good timeframe for "recently" can be chosen by considering the cache TTL of certificates from
+    the home server of the actor who has invalidated their certificate. If the cache TTL of certificates
+    from that home server is 6h, then the server should send this event to everyone who has been in
+    contact with this certificate or actor in the past 6h.
 
 !!! example "Example actor certificate invalidation event payload"
 
@@ -496,8 +507,10 @@ occurs.
       "n": "core",
       "op": 4,
       "d": {
-        "serial": "11704583652649",
-        "invalidSince": "1737379403",
+        "idCertPem": "---------BEGIN...",
+        "invalidAt": "1737379403",
+        "cacheNotValidBefore": "29387456",
+        "cacheNotValidAfter": "293689276",
         "signature": "8eacd92192bacc57bb5df3c7922e93bbc8b3f683f5dec9224353b102fa2f2a75"
       },
       "s": 1
