@@ -4247,8 +4247,8 @@ them.</p>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;n&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;core&quot;</span><span class="p">,</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;op&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&quot;d&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">&quot;heartbeat_interval&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">45000</span><span class="p">,</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">&quot;active_migration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">&quot;heartbeatInterval&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">45000</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">&quot;activeMigration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">      </span><span class="nt">&quot;from&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xenia@old.example.com&quot;</span><span class="p">,</span>
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">      </span><span class="nt">&quot;to&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xenia@new.example.com&quot;</span>
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="p">},</span>
@@ -4267,12 +4267,12 @@ them.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>heartbeat_interval</code></td>
+<td><code>heartbeatInterval</code></td>
 <td>uint32</td>
 <td>Interval in milliseconds at which the client should send heartbeat events to the server.</td>
 </tr>
 <tr>
-<td><code>active_migration</code></td>
+<td><code>activeMigration</code></td>
 <td>object?</td>
 <td>If present, indicates that there is an unfinished migration from actor <code>from</code> to actor <code>to</code>, which can be resumed.</td>
 </tr>
@@ -4461,21 +4461,33 @@ about the new session mechanism in <a href="#43-protection-against-misuse-by-mal
 </table>
 <h5 id="3235-actor-certificate-invalidation-event">3.2.3.5 Actor certificate invalidation event<a class="headerlink" href="#3235-actor-certificate-invalidation-event" title="Permanent link">&para;</a></h5>
 <p>The actor certificate invalidation event is crucial to ensure that the client can detect and respond
-to changes in actor certificates. This prevents clients and servers from accepting outdated ID-Certs.
-This event is only sent by servers if an <a href="#614-early-revocation-of-id-certs">early revocation of an actor ID-Cert</a>
-occurs.</p>
+to changes in actor certificates. This prevents clients and servers from accepting outdated ID-Certs.</p>
+<p>Clients send this event to servers to notify them of the fact that one of their certificates has been
+invalidated. Servers verify the validity of the <a href="#64-caching-of-id-certs">cached certificate payload</a>,
+then forward this event to all actors that have recently been in contact with this certificate. If
+metadata-lean encryption is used where only sender and recipient are known, the event forwarded to
+all actors that have recently been in contact with the actor who has invalidated their certificate.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>A good timeframe for "recently" can be chosen by considering the cache TTL of certificates from
+the home server of the actor who has invalidated their certificate. If the cache TTL of certificates
+from that home server is 6h, then the server should send this event to everyone who has been in
+contact with this certificate or actor in the past 6h.</p>
+</div>
 <div class="admonition example">
 <p class="admonition-title">Example actor certificate invalidation event payload</p>
 <div class="language-json highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&quot;n&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;core&quot;</span><span class="p">,</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">&quot;op&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="nt">&quot;d&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="nt">&quot;serial&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;11704583652649&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="nt">&quot;invalidSince&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1737379403&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="nt">&quot;signature&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;8eacd92192bacc57bb5df3c7922e93bbc8b3f683f5dec9224353b102fa2f2a75&quot;</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span><span class="p">},</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span><span class="nt">&quot;s&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="p">}</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="nt">&quot;idCertPem&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;---------BEGIN...&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="nt">&quot;invalidAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1737379403&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="nt">&quot;cacheNotValidBefore&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;29387456&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="nt">&quot;cacheNotValidAfter&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;293689276&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="nt">&quot;signature&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;8eacd92192bacc57bb5df3c7922e93bbc8b3f683f5dec9224353b102fa2f2a75&quot;</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="nt">&quot;s&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="p">}</span>
 </code></pre></div>
 </div>
 <table>
@@ -6465,7 +6477,7 @@ service provider, they must request a <a href="#7-migrations">migration</a>.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="March 18, 2025 19:52:18"><span class="timeago" datetime="2025-03-18T19:52:18+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="March 18, 2025 19:52:18">2025-03-18</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="March 19, 2025 20:45:49"><span class="timeago" datetime="2025-03-19T20:45:49+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="March 19, 2025 20:45:49">2025-03-19</span>
   </span>
 
     
