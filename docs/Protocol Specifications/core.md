@@ -12,7 +12,7 @@ weight: 0
 
 !!! warning
 
-    The polyproto specification document is in an **alpha** phase. Please report any inconsistencies,
+    The polyproto specification document is in an early **beta** phase. Please report any inconsistencies,
     missing or duplicate information and other mistakes at [github.com/polyphony-chat/docs/issues](https://github.com/polyphony-chat/docs/issues).
 
 [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html) is used to version this specification.
@@ -776,7 +776,7 @@ situations:
 | `4007` | Invalid sequence number(s) | The client has sent a heartbeat containing sequence numbers that were invalid.                                                            | x                      | x               |                 |
 | `4008` | Rate limited               | The client has sent payloads too quickly.                                                                                                 |                        | x               |                 |
 | `4009` | Timeout                    | The session has been deemed to be timed out. This can happen if a heartbeat or heartbeat ACK has not been sent in due time.               | x (If sent by server)  | x               | x               |
-| `4010` | Unresumeable               | The server has determined that this session cannot be resumed. The client should initiate a new, fresh connection to the gateway instead. |                        | x               |                 |
+| `4010` | Unresumable                | The server has determined that this session cannot be resumed. The client should initiate a new, fresh connection to the gateway instead. |                        | x               |                 |
 
 #### 3.2.6 Guaranteed delivery of gateway messages through package acknowledgement
 
@@ -946,7 +946,7 @@ token. This verification must be done by proving the following facts:
 - The presented ID-Cert has not been revoked. See [section 6.4.1](#641-verifying-that-a-newly-retrieved-id-cert-is-not-out-of-date)
   for information on how this is done.
 - The client is in possession of the private key that corresponds to the presented ID-Certs' subject
-  public key. Must be proven using a [challenge string](#42-challenge-strings-and-key-trials).
+  public key. Must be proven using a [key trial](#42-key-trials).
 
 #### 4.1.2 Sensitive actions
 
@@ -1045,7 +1045,7 @@ servers from generating federation tokens for users without their consent and kn
     However, it can be mitigated a bit by making it more difficult for malicious home servers to do
     something like this without the actor noticing.
 
-Polyproto servers need to inform users of new sessions. This visibility hampers malicious home
+polyproto servers need to inform users of new sessions. This visibility hampers malicious home
 servers, but does not solve the issue of them being able to create federation tokens for servers the
 actor does not connect to. This is because, naturally, users cannot receive notifications without a
 connection. Clients re-establishing server connections must be updated on any new sessions
@@ -1277,7 +1277,7 @@ an ID-Cert consists of:
 A client that has this second factor of authentication stored
 should renew the ID-Cert of the authenticated actor without further interaction.
 
-Server ID-Certs should be rotated way less often (every 1-3 years). Only rotate a server ID-Cert
+Server ID-Certs should be rotated way less often (every 1–3 years). Only rotate a server ID-Cert
 if it is suspected to be compromised, is lost, or has expired.
 
 ```mermaid
@@ -2444,7 +2444,7 @@ The API routes for managing discoverability are documented in the
 
 ### 9.1.1 Changing a primary service provider
 
-Keys are unique in the actor-scoped service->service-provider table. Actors wanting
+Keys are unique in the actor-scoped service → service-provider table. Actors wanting
 to register for two or more different implementations of the same service must select which
 service provider to use as a "primary service provider" for that service.
 
