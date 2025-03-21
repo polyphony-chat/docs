@@ -892,6 +892,9 @@ paths:
                   - NOT_FOUND
       tags:
         - Resource addressing with relative roots - Registration not required
+      security:
+        - BearerAuth: []
+        - {}
     post:
       operationId: Registered_postResource
       summary: Upload RawR resource
@@ -1087,8 +1090,12 @@ paths:
         - BearerAuth: []
   /.p2/core/v1/resource/{rid}/info/:
     get:
-      operationId: Registered_getResourceInfos
-      summary: Retrieve information about one of your RawR resources
+      operationId: Unregistered_getResourceInfos
+      summary: Retrieve information about a RawR resource
+      description: |-
+        Query the server for information about a RawR resource.
+        This route accepts a Bearer token, but public resources may also be queried without
+        specifying a token.
       parameters:
         - name: rid
           in: path
@@ -1098,7 +1105,12 @@ paths:
             type: string
       responses:
         '200':
-          description: The request has succeeded.
+          description: |-
+            - `200`: Found, contains resource information
+            - `308`: URI root has changed.
+            - `401`: Server or resource requires authentication to access this endpoint.
+            - `403`: Server or resource not accessible for the actor making this request.
+            - `404`: Resource not found.
           content:
             application/json:
               schema:
@@ -1117,8 +1129,58 @@ paths:
                     - resourceId
                     - size
                     - access
+        '308':
+          description: |-
+            - `200`: Found, contains resource information
+            - `308`: URI root has changed.
+            - `401`: Server or resource requires authentication to access this endpoint.
+            - `403`: Server or resource not accessible for the actor making this request.
+            - `404`: Resource not found.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                type: string
+                enum:
+                  - ROOT_CHANGED
+        '401':
+          description: |-
+            - `200`: Found, contains resource information
+            - `308`: URI root has changed.
+            - `401`: Server or resource requires authentication to access this endpoint.
+            - `403`: Server or resource not accessible for the actor making this request.
+            - `404`: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: string
+                enum:
+                  - NEEDS_AUTHENTICATION
+        '403':
+          description: |-
+            - `200`: Found, contains resource information
+            - `308`: URI root has changed.
+            - `401`: Server or resource requires authentication to access this endpoint.
+            - `403`: Server or resource not accessible for the actor making this request.
+            - `404`: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: string
+                enum:
+                  - ACCESS_FORBIDDEN
         '404':
-          description: The server cannot find the requested resource.
+          description: |-
+            - `200`: Found, contains resource information
+            - `308`: URI root has changed.
+            - `401`: Server or resource requires authentication to access this endpoint.
+            - `403`: Server or resource not accessible for the actor making this request.
+            - `404`: Resource not found.
           content:
             application/json:
               schema:
@@ -1126,9 +1188,10 @@ paths:
                 enum:
                   - NOT_FOUND
       tags:
-        - Resource addressing with relative roots - Registration required
+        - Resource addressing with relative roots - Registration not required
       security:
         - BearerAuth: []
+        - {}
   /.p2/core/v1/services:
     post:
       operationId: Registered_registerService
@@ -1809,10 +1872,15 @@ components:
       type: object
       required:
         - private
+        - public
       properties:
         private:
           type: boolean
           description: Whether the resource should be private by default. Private resources can only be accessed by the uploader and by instances and actors declared in the `allowlist`.
+          default: false
+        public:
+          type: boolean
+          description: Whether the resource should be publicly retrievable, i.e. without requiring authentication. If this is `true`, the allow- and denylists are ignored.
           default: false
         allowlist:
           type: array
