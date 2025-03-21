@@ -159,6 +159,9 @@ namespace models {
         @doc("Whether the resource should be private by default. Private resources can only be accessed by the uploader and by instances and actors declared in the `allowlist`.")
         private: boolean = false;
 
+        @doc("Whether the resource should be publicly retrievable, i.e. without requiring authentication. If this is `true`, the allow- and denylists are ignored.")
+        public: boolean = false;
+
         @doc("A list of actors and/or instances allowed to access this resource.")
         @example(#["user_i_like@example.com", "instance.example.com"])
         allowlist?: string[];

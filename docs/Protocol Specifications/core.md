@@ -2147,11 +2147,14 @@ The URI for resource addressing with relative roots is formatted as follows:
 
 `<server_url>/.p2/core/resource/<resource_id>`
 
-Uploaded resources can be made private, and access to them can be controlled via allow- and deny lists,
-specifying access properties for each individual resource. Individual actors and entire instances can
-be part of these allow- and deny lists. Marking a resource as private restricts access to only the
-uploader and the actors and instances that are part of the allow list. APIs and JSON schemas
-associated with access control are part of the [API documentation](https://apidocs.polyproto.org).
+Uploaded resources can be made private or private, and access to them can be controlled via
+allow- and deny lists, specifying access properties for each individual resource. Individual
+actors and entire instances can be part of these allow- and deny lists. Marking a resource as
+private restricts access to only the uploader and the actors and instances that are part of the
+allow list. Marking a resource as public will mean that the allow- and deny lists are ignored, and that
+the resource is accessible to anyone who has the link. Marking a resource as both public and private
+is an illegal state. APIs and JSON schemas associated with access control are part of the
+[API documentation](https://apidocs.polyproto.org).
 
 The API routes for resource addressing with relative roots are documented more thoroughly in the
 [API documentation](https://apidocs.polyproto.org).

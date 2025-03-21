@@ -30,6 +30,7 @@ namespace ResourceAddressingWithRelativeRoots {
          */
         @route("/{rid}")
         @get
+        @useAuth(BearerAuth | NoAuth)
         @added(Version.`v1.0-beta.1`)
         @summary("Get resource by resource ID")
         op getResource(@path rid: string):
@@ -39,10 +40,62 @@ namespace ResourceAddressingWithRelativeRoots {
               }
             | {
                   @statusCode _: 308;
+
                   @header({
                       name: "Location",
                   })
                   location: url;
+
+                  @body reason: "ROOT_CHANGED";
+              }
+            | {
+                  @statusCode _: 403;
+                  @body reason: "ACCESS_FORBIDDEN";
+              }
+            | {
+                  @statusCode _: 401;
+                  @body reason: "NEEDS_AUTHENTICATION";
+              }
+            | {
+                  @statusCode _: 404;
+                  @body reason: "NOT_FOUND";
+              };
+
+        /**
+         * Query the server for information about a RawR resource.
+         * This route accepts a Bearer token, but public resources may also be queried without
+         * specifying a token.
+         * @param rid The resource ID of the resource which you'd like to query information of.
+         *
+         * @returns
+         * - `200`: Found, contains resource information
+         * - `308`: URI root has changed.
+         * - `401`: Server or resource requires authentication to access this endpoint.
+         * - `403`: Server or resource not accessible for the actor making this request.
+         * - `404`: Resource not found.
+         */
+        @route("/{rid}/info/")
+        @get
+        @useAuth(BearerAuth | NoAuth)
+        @added(Version.`v1.0-beta.1`)
+        @summary("Retrieve information about a RawR resource")
+        op getResourceInfos(@path rid: string):
+            | {
+                  @statusCode statusCode: 200;
+                  @body body: {
+                      resourceId: string;
+                      size: uint64;
+                      access: polyproto.core.models.ResourceAccessProperties;
+                  }[];
+              }
+            | {
+                  @statusCode _: 308;
+
+                  @header({
+                      name: "Location",
+                  })
+                  location: url;
+
                   @body reason: "ROOT_CHANGED";
               }
             | {
@@ -83,12 +136,15 @@ namespace ResourceAddressingWithRelativeRoots {
         @summary("Upload RawR resource")
         op postResource(
             @path rid: string,
+
             @header({
                 name: "Content-Length",
             })
             contentLength: uint64,
+
             @query
             resourceAccessProperties: polyproto.core.models.ResourceAccessProperties,
+
             @body file: File,
         ):
             | {
@@ -119,6 +175,7 @@ namespace ResourceAddressingWithRelativeRoots {
               }
             | {
                   @statusCode _: 204;
+
                   @header({
                       name: "Content-Length",
                   })
@@ -145,6 +202,7 @@ namespace ResourceAddressingWithRelativeRoots {
         @summary("Update RawR resource access properties")
         op modifyResource(
             @path rid: string,
+
             @body
             resourceAccessProperties: polyproto.core.models.ResourceAccessProperties,
         ): {
@@ -152,26 +210,8 @@ namespace ResourceAddressingWithRelativeRoots {
                 name: "Content-Length",
             })
             contentLength: 0;
-            @statusCode _: 204;
-        };
 
-        /**
-         * @param rid The resource ID of the resource which you'd like to query information of.
-         */
-        @route("/{rid}/info/")
-        @get
-        @added(Version.`v1.0-beta.1`)
-        @summary("Retrieve information about one of your RawR resources")
-        op getResourceInfos(@path rid: string): {
-            @statusCode statusCode: 200;
-            @body body: {
-                resourceId: string;
-                size: uint64;
-                access: polyproto.core.models.ResourceAccessProperties;
-            }[];
-        } | {
-            @statusCode statusCode: 404;
-            @body reason: "NOT_FOUND";
+            @statusCode _: 204;
         };
 
         /**
@@ -195,6 +235,7 @@ namespace ResourceAddressingWithRelativeRoots {
             }[];
         } | {
             @statusCode _: 204;
+
             @header({
                 name: "Content-Length",
             })
