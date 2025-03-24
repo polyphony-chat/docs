@@ -127,6 +127,7 @@ namespace models {
     {
         "2062a23e2a25b226ca4c546fec5ec06e0df9648281f45da8b5aaabebdf66cf4c.jxl": {
         "private": false,
+        "public": false,
         "allowlist": ["user1@example.com", "instance.example.com"],
         "denylist": ["user2@example.com", "otherinstance@example.com"]
         }
@@ -134,6 +135,7 @@ namespace models {
     {
         "a9144379a161e1fcf6b07801b70db6d6c481933bd634fe2409eb713723ab1a0a": {
         "private": true,
+        "public": false,
         "allowlist": ["user1@example.com"],
         "denylist": []
         }
