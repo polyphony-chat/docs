@@ -315,6 +315,7 @@ namespace Migration {
 
         /**
          * Export all of your data for safekeeping or for importing it to another server.
+         * Only exports data for which a key trial has been passed.
          * @returns
          * - `200` and the appropriate data if the key trial has been passed and is not yet expired.
          *   See the `P2Export` schema for more information.
@@ -329,11 +330,12 @@ namespace Migration {
         @added(Version.`v1.0-beta.1`)
         @summary("Export all data")
         op exportData(
-            @doc("A completed `KeyTrial`.")
+            @doc("A list of completed `KeyTrial`s")
             @header({
                 name: "X-P2-core-keytrial",
+                format: "simple",
             })
-            keyTrial: polyproto.core.models.KeyTrialCompleted,
+            keyTrial: polyproto.core.models.KeyTrialCompleted[],
         ): {
             @statusCode statusCode: 200;
             @body body: polyproto.core.models.P2Export;
