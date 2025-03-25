@@ -64,14 +64,19 @@ paths:
     get:
       operationId: Unregistered_exportData
       summary: Export all data
-      description: Export all of your data for safekeeping or for importing it to another server.
+      description: |-
+        Export all of your data for safekeeping or for importing it to another server.
+        Only exports data for which a key trial has been passed.
       parameters:
         - name: X-P2-core-keytrial
           in: header
           required: true
-          description: A completed `KeyTrial`.
+          description: A list of completed `KeyTrial`s
           schema:
-            $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
+            type: array
+            items:
+              $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
+          style: simple
       responses:
         '200':
           description: |-
