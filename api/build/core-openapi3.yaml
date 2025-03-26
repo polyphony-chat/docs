@@ -755,7 +755,7 @@ paths:
         - BearerAuth: []
     delete:
       operationId: Unregistered_removeRedirectExtern
-      summary: Set up a redirect for migrating identities
+      summary: Remove a redirect for migrating identities
       description: |-
         Tell the homeserver of the "old" actor account that you no longer intend to set up a
         redirect to this actor
