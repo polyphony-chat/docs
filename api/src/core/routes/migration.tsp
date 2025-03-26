@@ -131,7 +131,7 @@ namespace Migration {
         @route("/redirect/extern")
         @delete
         @added(Version.`v1.0-beta.1`)
-        @summary("Set up a redirect for migrating identities")
+        @summary("Remove a redirect for migrating identities")
         op removeRedirectExtern(@query redirectSourceFid: string): {
             @statusCode statusCode: 200;
         };
