@@ -730,7 +730,16 @@ paths:
       description: |-
         Tell the homeserver of the "old" actor account that you intend to set up a redirect to
         this actor
-      parameters: []
+      parameters:
+        - name: redirectSourceFid
+          in: query
+          required: true
+          description: |-
+            : The federation ID of the actor who should be the source of the
+            redirect.
+          schema:
+            type: string
+          explode: false
       responses:
         '200':
           description: |-
@@ -742,12 +751,29 @@ paths:
             - `202` if the other account still needs to accept to establish the link.
       tags:
         - Migration - Registration not required
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: string
+      security:
+        - BearerAuth: []
+    delete:
+      operationId: Unregistered_removeRedirectExtern
+      summary: Set up a redirect for migrating identities
+      description: |-
+        Tell the homeserver of the "old" actor account that you no longer intend to set up a
+        redirect to this actor
+      parameters:
+        - name: redirectSourceFid
+          in: query
+          required: true
+          description: |-
+            : The federation ID of the actor who should no longer be the source of the
+            redirect.
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: '- `200` if the link has been removed'
+      tags:
+        - Migration - Registration not required
       security:
         - BearerAuth: []
   /.p2/core/v1/resource/resources:
