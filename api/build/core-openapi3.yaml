@@ -437,6 +437,14 @@ paths:
             format: uint32
             default: 300
           explode: false
+        - name: serialNumber
+          in: query
+          required: false
+          description: If specified, query for non-re-signed messages corresponding to a specific ID-Cert.
+          schema:
+            type: integer
+            format: uint64
+          explode: false
       responses:
         '200':
           description: Messages. The distinct format of messages is up to the specific p2 extension to define.
@@ -484,17 +492,6 @@ paths:
           description: Messages. The distinct format of messages is up to the specific p2 extension to define.
       tags:
         - Migration - Registration not required
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                serialNumber:
-                  type: integer
-                  format: uint64
-                  description: If specified, query for non-re-signed messages corresponding to a specific ID-Cert.
       security:
         - BearerAuth: []
   /.p2/core/v1/messages/commit:
