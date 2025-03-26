@@ -225,11 +225,11 @@ namespace Migration {
         ): {
             @statusCode statusCode: 200;
 
-            @doc("This header tells the client whether the route to commit re-signed messages has an upload size limit, and what the size of that limit is. A value of `0` means that there is no limit. This header not being present can also be interpreted as no limit existing.")
+            @doc("This header tells the client whether the route to commit re-signed messages has an upload size limit, and what the size of that limit is, in bytes. A value of `\"0\"` means that there is no limit. This header not being present can also be interpreted as no limit existing. The value of this header is a string-formatted, unsigned 64-bit integer.")
             @header({
                 name: "X-P2-Return-Body-Size-Limit ",
             })
-            sizeLimit?: uint64;
+            sizeLimit?: string;
 
             @body message: polyproto.core.models.MessageBatch<string>[];
         } | {
