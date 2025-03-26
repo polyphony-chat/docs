@@ -106,6 +106,8 @@ namespace Migration {
         /**
          * Tell the homeserver of the "old" actor account that you intend to set up a redirect to
          * this actor
+         * @param redirectSourceFid: The federation ID of the actor who should be the source of the
+         * redirect.
          * @returns
          * - `200` if the link has been created
          * - `202` if the other account still needs to accept to establish the link.
@@ -114,8 +116,24 @@ namespace Migration {
         @post
         @added(Version.`v1.0-beta.1`)
         @summary("Set up a redirect for migrating identities")
-        op setupRedirectExtern(@body redirectSourceFid: string): {
+        op setupRedirectExtern(@query redirectSourceFid: string): {
             @statusCode statusCode: 202 | 200;
+        };
+
+        /**
+         * Tell the homeserver of the "old" actor account that you no longer intend to set up a
+         * redirect to this actor
+         * @param redirectSourceFid: The federation ID of the actor who should no longer be the source of the
+         * redirect.
+         * @returns
+         * - `200` if the link has been removed
+         */
+        @route("/redirect/extern")
+        @delete
+        @added(Version.`v1.0-beta.1`)
+        @summary("Set up a redirect for migrating identities")
+        op removeRedirectExtern(@query redirectSourceFid: string): {
+            @statusCode statusCode: 200;
         };
 
         /**
