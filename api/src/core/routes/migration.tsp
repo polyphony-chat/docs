@@ -219,7 +219,10 @@ namespace Migration {
         @get
         @added(Version.`v1.0-beta.1`)
         @summary("Fetch messages to-be-resigned")
-        op getMessages(@query limit?: uint32 = 300, serialNumber?: uint64): {
+        op getMessages(
+            @query limit?: uint32 = 300,
+            @query serialNumber?: uint64,
+        ): {
             @statusCode statusCode: 200;
 
             @doc("This header tells the client whether the route to commit re-signed messages has an upload size limit, and what the size of that limit is. A value of `0` means that there is no limit. This header not being present can also be interpreted as no limit existing.")
