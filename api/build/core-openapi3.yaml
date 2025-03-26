@@ -442,8 +442,7 @@ paths:
           required: false
           description: If specified, query for non-re-signed messages corresponding to a specific ID-Cert.
           schema:
-            type: integer
-            format: uint64
+            type: string
           explode: false
       responses:
         '200':
