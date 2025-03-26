@@ -221,7 +221,7 @@ namespace Migration {
         @summary("Fetch messages to-be-resigned")
         op getMessages(
             @query limit?: uint32 = 300,
-            @query serialNumber?: uint64,
+            @query serialNumber?: string,
         ): {
             @statusCode statusCode: 200;
 
