@@ -1757,8 +1757,8 @@ components:
       type: object
       required:
         - key_data
-        - serial_number
-        - encryption_algorithms
+        - serialNumber
+        - encryptionAlgorithms
       properties:
         key_data:
           type: string
@@ -1766,11 +1766,11 @@ components:
             Custom variant of the X.509 `SubjectPublicKeyInfo`, where the `subject_public_key`
             field stores the encrypted private key, instead of a public key. Otherwise equal to
             `SubjectPublicKeyInfo`. Also referred to as `PrivateKeyInfo`.
-        serial_number:
+        serialNumber:
           type: integer
           format: uint64
           description: The serial number of the ID-Cert this key material is associated with.
-        encryption_algorithms:
+        encryptionAlgorithms:
           type: array
           items:
             type: array
@@ -1806,12 +1806,12 @@ components:
       type: object
       required:
         - signature
-        - serial_number
+        - serialNumber
       properties:
         signature:
           type: string
           description: The signature produced by signing the key trial string using a private identity key.
-        serial_number:
+        serialNumber:
           type: integer
           format: uint64
           description: The serial number of the ID-Cert corresponding to the private identity key used to sign the key trial string.
