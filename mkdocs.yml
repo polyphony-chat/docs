@@ -7,10 +7,10 @@ extra_css:
   - stylesheets/extra.css
 theme:
   name: material
-  logo: assets/lines.png
+  logo: assets/polyproto-bichrome.svg
   icon:
     repo: fontawesome/brands/github
-  favicon: assets/lines.png
+  favicon: assets/polyproto-glow.svg
   features:
     - navigation.instant
     - navigation.instant.progress
