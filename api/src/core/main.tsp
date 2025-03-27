@@ -22,7 +22,7 @@ namespace models {
         key_data: string;
 
         @doc("The serial number of the ID-Cert this key material is associated with.")
-        serial_number: uint64;
+        serialNumber: uint64;
 
         /**
          * Information about the algorithms used to encrypt the data held by the `key_data` field.
@@ -30,7 +30,7 @@ namespace models {
          * item of this array and vice versa. Represents a list of OIDs.
          */
         @minItems(1)
-        encryption_algorithms: Array<Array<uint16>>;
+        encryptionAlgorithms: Array<Array<uint16>>;
     }
 
     /**
@@ -79,7 +79,7 @@ namespace models {
         signature: string;
 
         @doc("The serial number of the ID-Cert corresponding to the private identity key used to sign the key trial string.")
-        serial_number: uint64;
+        serialNumber: uint64;
     }
 
     /**
