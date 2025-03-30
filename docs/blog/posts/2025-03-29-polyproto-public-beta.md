@@ -50,4 +50,49 @@ looking into the topic for a bit, the following became clear:
     really decentralized. But
     [that is its own rabbit hole](https://blog.muni.town/atproto-isnt-what-you-think/) entirely.
 
-During
+During my research into existing protocols which fulfill these criteria, the following are the most promising
+ones I have encountered. I will also explain why I did not end up choosing them.
+
+### XMPP
+
+Much like XMPP, I have decided to make polyproto an extensible protocol.
+
+I am of the opinion that XMPPs biggest downfall is how many extensions there are, and that a server
+aiming to be compatible with other
+implementations of XMPP-based chat services should aim to implement all of the XEPs to be a
+viable choice.
+
+polyproto is actively trying to circumvent this by limiting polyproto extensions (P2 extensions for
+short) to
+
+- either be a **set** of APIs and behaviors, defining a generic(!) version of a service. A "service"
+  is, for example, a chat application, a microblogging application or an image blogging application.
+  Service extensions should be the core functionality that is universally needed to make an
+  application function. In the case of a chat application, that might be:
+  
+  - Defining message group size granularity: Direct messages, Group messages, Guild-based messages
+  - Defining what a room looks like
+  - Defining the APIs and behaviors required to send and receive messages
+  - Defining the APIs and behaviors required to perform commonly sought after things, such as reacting to a message with an emoji
+  - etc.
+  
+  The goal is that all different polyproto-based chat applications should then implement this shared behavior. Of course, developers
+  may absolutely add their own behaviors and functionality which is perhaps exclusive to their specific implementation. Core
+  functionality remains commonly defined however, which should make all polyproto-based chat applications interoperable in these
+  defined, common behaviors.
+  
+- or describe a **major** technological addition, which can be used in the "requires" section of another P2 extension. This "requires"
+  section can be thought of like the dependency list of a software package.
+  
+  Technological additions might be:
+  - Defining APIs and behaviors needed to implement the MLS (Messaging Layer Security) Protocol
+  - Defining APIs and behaviors needed to establish and maintain a WebSocket connection, and how to send/receive messages over this
+    WebSocket connection.
+    
+By using clay-brick-sized building blocks instead of more LEGO-sized building blocks like XMPP does, we hope to mitigate this problem
+that we perceive, while still offering an extensible yet well-defined platform to build on.
+
+Account portability has been implemented in XMPP with
+[XEP-0227: Portable Import/Export Format for XMPP-IM Servers](https://xmpp.org/extensions/xep-0227.html).
+However, while I think that this XEP is really cool (and I might ~~steal~~ be inspired from it), it
+does not protect 
