@@ -58,5 +58,6 @@
 		"vozeyuiwofxb",
 		"vozeyuiwofxn"
 	],
-	"languageToolLinter.languageTool.disabledRules": "WHITESPACE_RULE"
+	"languageToolLinter.languageTool.disabledRules": "WHITESPACE_RULE",
+	"window.autoDetectColorScheme": true
 }
