@@ -1,4 +1,4 @@
-openapi: 3.0.0
+openapi: 3.1.0
 info:
   title: polyproto core APIs
   license:
@@ -42,7 +42,6 @@ paths:
             type: array
             items:
               $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
-          style: simple
       responses:
         '204':
           description: '- `204`: Action executed'
@@ -76,7 +75,6 @@ paths:
             type: array
             items:
               $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
-          style: simple
       responses:
         '200':
           description: |-
@@ -134,8 +132,9 @@ paths:
                 properties:
                   id_cert:
                     type: string
-                    example: ------BEGIN CERTIFICATE------...
                     description: The generated [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) in PEM format.
+                    examples:
+                      - ------BEGIN CERTIFICATE------...
                   token:
                     type: string
                     description: An authorization secret, called a "session token", valid for this `id_cert`/session.
@@ -148,7 +147,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          text/plain:
             schema:
               type: string
       security:
@@ -242,7 +241,7 @@ paths:
         '200':
           description: The servers' new ID-Cert, encoded as PEM
           content:
-            application/json:
+            text/plain:
               schema:
                 type: string
       tags:
@@ -393,7 +392,6 @@ paths:
             type: array
             items:
               $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
-          style: simple
       responses:
         '200':
           description: The request has succeeded.
@@ -674,7 +672,6 @@ paths:
             type: array
             items:
               $ref: '#/components/schemas/polyproto.core.models.KeyTrialCompleted'
-          style: simple
       responses:
         '200':
           description: |-
@@ -689,7 +686,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          text/plain:
             schema:
               type: string
         description: The FID of the actor, that this actor would like to be redirected to.
@@ -855,9 +852,9 @@ paths:
             - `403`: Server or resource not accessible for the actor making this request.
             - `404`: Resource not found.
           content:
-            application/json:
+            '*/*':
               schema:
-                $ref: '#/components/schemas/TypeSpec.Http.File'
+                contentMediaType: '*/*'
         '308':
           description: |-
             - `200`: File found and retrieved.
@@ -872,7 +869,7 @@ paths:
                 type: string
                 format: uri
           content:
-            application/json:
+            text/plain:
               schema:
                 type: string
                 enum:
@@ -885,7 +882,7 @@ paths:
             - `403`: Server or resource not accessible for the actor making this request.
             - `404`: Resource not found.
           content:
-            application/json:
+            text/plain:
               schema:
                 type: string
                 enum:
@@ -898,7 +895,7 @@ paths:
             - `403`: Server or resource not accessible for the actor making this request.
             - `404`: Resource not found.
           content:
-            application/json:
+            text/plain:
               schema:
                 type: string
                 enum:
@@ -911,7 +908,7 @@ paths:
             - `403`: Server or resource not accessible for the actor making this request.
             - `404`: Resource not found.
           content:
-            application/json:
+            text/plain:
               schema:
                 type: string
                 enum:
@@ -973,7 +970,7 @@ paths:
             - `413`: Resource too large.
             - `414`: RID too long.
           content:
-            application/json:
+            text/plain:
               schema:
                 type: string
                 enum:
@@ -987,7 +984,7 @@ paths:
             - `413`: Resource too large.
             - `414`: RID too long.
           content:
-            application/json:
+            text/plain:
               schema:
                 type: string
                 enum:
@@ -1001,7 +998,7 @@ paths:
             - `413`: Resource too large.
             - `414`: RID too long.
           content:
-            application/json:
+            text/plain:
               schema:
                 type: string
                 enum:
@@ -1058,9 +1055,9 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          '*/*':
             schema:
-              $ref: '#/components/schemas/TypeSpec.Http.File'
+              contentMediaType: '*/*'
         description: ': The resource itself'
       security:
         - BearerAuth: []
@@ -1169,7 +1166,7 @@ paths:
                 type: string
                 format: uri
           content:
-            application/json:
+            text/plain:
               schema:
                 type: string
                 enum:
@@ -1182,7 +1179,7 @@ paths:
             - `403`: Server or resource not accessible for the actor making this request.
             - `404`: Resource not found.
           content:
-            application/json:
+            text/plain:
               schema:
                 type: string
                 enum:
@@ -1195,7 +1192,7 @@ paths:
             - `403`: Server or resource not accessible for the actor making this request.
             - `404`: Resource not found.
           content:
-            application/json:
+            text/plain:
               schema:
                 type: string
                 enum:
@@ -1208,7 +1205,7 @@ paths:
             - `403`: Server or resource not accessible for the actor making this request.
             - `404`: Resource not found.
           content:
-            application/json:
+            text/plain:
               schema:
                 type: string
                 enum:
@@ -1534,7 +1531,7 @@ paths:
         '200':
           description: The request has succeeded.
           content:
-            application/json:
+            text/plain:
               schema:
                 type: string
       tags:
@@ -1564,7 +1561,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          text/plain:
             schema:
               type: string
       security:
@@ -1703,18 +1700,6 @@ paths:
         - {}
 components:
   schemas:
-    TypeSpec.Http.File:
-      type: object
-      required:
-        - contents
-      properties:
-        contentType:
-          type: string
-        filename:
-          type: string
-        contents:
-          type: string
-          format: byte
     Version:
       type: string
       enum:
@@ -1729,29 +1714,34 @@ components:
       properties:
         idCertPem:
           type: string
-          example: ------BEGIN CERTIFICATE------...
           description: The requested ID-Cert in ASCII PEM format.
+          examples:
+            - ------BEGIN CERTIFICATE------...
         invalidatedAt:
           type: integer
           format: uint64
-          example: 1736610000
           description: UNIX timestamp that specifies when this specific id_cert has been marked as invalidated by the server. An ID-Cert is considered invalidated, if the server or actor choose to revoke the validity of the ID-Cert before the lifetime of the certificate was scheduled to end. If this property does not exist, the ID-Cert has not been invalidated.
+          examples:
+            - 1736610000
         cacheNotValidBefore:
           type: integer
           format: uint64
-          example: 1736606402
           description: UNIX timestamp that specifies the time from which this cache entry may be treated as valid.
+          examples:
+            - 1736606402
         cacheNotValidAfter:
           type: integer
           format: uint64
-          example: 1736613602
           description: UNIX timestamp that specifies a time until which this cache entry may be treated as valid.
+          examples:
+            - 1736613602
         cacheSignature:
           type: string
-          example: 7ab2bbde7fe43c7481a3a61031546bab16bc1a8735b2f0cdd519958c7f2f99f8
           minLength: 32
           maxLength: 32
           description: Signature generated by the home server, encoded in [Hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) (base-16). This signature can be verified using the home servers' public identity key. A server generates the `cacheSignature` by concatenating the serial number of the ID-Cert in question with the `cacheValidNotBefore` timestamp, the `cacheValidNotAfter` timestamp, and the `invalidatedAt` timestamp, if present. Clients must reject certificates of which the `cacheSignature` can not be verified to be correct.
+          examples:
+            - 7ab2bbde7fe43c7481a3a61031546bab16bc1a8735b2f0cdd519958c7f2f99f8
       description: A cacheable response to an ID-Cert request.
     polyproto.core.models.EncryptedPKM:
       type: object
@@ -1914,18 +1904,18 @@ components:
           type: array
           items:
             type: string
-          example:
-            - user_i_like@example.com
-            - instance.example.com
           description: A list of actors and/or instances allowed to access this resource.
+          examples:
+            - - user_i_like@example.com
+              - instance.example.com
         denylist:
           type: array
           items:
             type: string
-          example:
-            - user_i_dislike@example.com
-            - other_instance.example.com
           description: A list of actors and/or instances who cannot have access to this resource.
+          examples:
+            - - user_i_dislike@example.com
+              - other_instance.example.com
       description: |-
         `ResourceAccessProperties` define which actors may access an uploaded resource. Actors and
         entire instances can have access granted or revoked.
@@ -1969,7 +1959,7 @@ components:
   securitySchemes:
     BearerAuth:
       type: http
-      scheme: bearer
+      scheme: Bearer
 servers:
   - url: https://example.com
     description: Example endpoint
