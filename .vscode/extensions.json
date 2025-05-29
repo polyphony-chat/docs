@@ -1,11 +1,9 @@
 {
-    "recommendations": [
-        "davidanson.vscode-markdownlint",
-        "chrischinchilla.vale-vscode",
-        "valentjn.vscode-ltex",
-        "gruntfuggly.todo-tree",
-        "typespec.typespec-vscode",
-        "bierner.markdown-mermaid",
-        "streetsidesoftware.code-spell-checker"
-    ]
+	"recommendations": [
+		"davidanson.vscode-markdownlint",
+		"gruntfuggly.todo-tree",
+		"typespec.typespec-vscode",
+		"bierner.markdown-mermaid",
+		"streetsidesoftware.code-spell-checker"
+	]
 }
