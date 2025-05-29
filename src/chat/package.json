@@ -1,0 +1,12 @@
+{
+  "name": "polyproto-chat",
+  "version": "0.1.0",
+  "type": "module",
+  "peerDependencies": {
+    "@typespec/compiler": "latest"
+  },
+  "devDependencies": {
+    "@typespec/compiler": "latest"
+  },
+  "private": true
+}

@@ -28,9 +28,7 @@ namespace FederatedIdentity {
         @tag("Sensitive Actions")
         op newIdCert(
             @doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
-            @header({
-                name: "X-P2-Sensitive-Solution",
-            })
+            @header(#{ name: "X-P2-Sensitive-Solution" })
             sensitiveSolution: string,
 
             @body csr: string,
@@ -100,9 +98,7 @@ namespace FederatedIdentity {
             @statusCode
             statusCode: 204;
 
-            @header({
-                name: "Content-Length",
-            })
+            @header(#{ name: "Content-Length" })
             contentLength: 0;
         } | {
             @doc("Returned, if none of the `serial_numbers` match any known ID-Certs from this actor.")
@@ -121,18 +117,14 @@ namespace FederatedIdentity {
         @delete
         op deleteEncryptedPKM(
             @doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
-            @header({
-                name: "X-P2-Sensitive-Solution",
-            })
+            @header(#{ name: "X-P2-Sensitive-Solution" })
             sensitiveSolution: string,
 
             @query serials: uint64[],
         ): {
             @statusCode statusCode: 204;
 
-            @header({
-                name: "Content-Length",
-            })
+            @header(#{ name: "Content-Length" })
             contentLength: 0;
         } | {
             @doc("Returned, if none of the `serial_numbers` match any known ID-Certs from this actor.")
@@ -151,9 +143,7 @@ namespace FederatedIdentity {
         @get
         @useAuth(NoAuth)
         op encryptedPKMsizeLimit(): {
-            @header({
-                name: "X-MAX-PAYLOAD-SIZE",
-            })
+            @header(#{ name: "X-MAX-PAYLOAD-SIZE" })
             size: uint32;
 
             @statusCode statusCode: 200;
@@ -170,18 +160,14 @@ namespace FederatedIdentity {
         @useAuth(BearerAuth)
         op deleteSession(
             @doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
-            @header({
-                name: "X-P2-Sensitive-Solution",
-            })
+            @header(#{ name: "X-P2-Sensitive-Solution" })
             sensitiveSolution: string,
 
             @query session_id: string,
         ): {
             @statusCode statusCode: 204;
 
-            @header({
-                name: "Content-Length",
-            })
+            @header(#{ name: "Content-Length" })
             contentLength: 0;
         } | {
             @statusCode statusCode: 404;
@@ -199,9 +185,7 @@ namespace FederatedIdentity {
         @tag("Sensitive Actions")
         op name(
             @doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
-            @header({
-                name: "X-P2-Sensitive-Solution",
-            })
+            @header(#{ name: "X-P2-Sensitive-Solution" })
             sensitiveSolution: string,
         ): string;
     }

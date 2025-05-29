@@ -12,7 +12,7 @@ API documentation built with [TypeSpec](https://typespec.io).
 
 ## Pre-compiled OpenAPI schema(s)
 
-Find the pre-compiled OpenAPI schema file(s) in the [`/build`](https://github.com/polyphony-chat/docs/tree/main/build) directory. The schema is automatically built and deployed to the `main` branch on every push to the `main` branch.
+Find the pre-compiled OpenAPI v3.1 schema file(s) in the [`/build`](https://github.com/polyphony-chat/docs/tree/main/build) directory. The schema is automatically built and deployed to the `main` branch on every push to the `main` branch.
 
 ## Contributing
 
@@ -25,7 +25,8 @@ You should also read our [Code of Conduct](https://github.com/polyphony-chat/.gi
 You will need the following things installed on your computer:
 
 - `Node.js >= 20`
-- `npm` `pnpm` or `yarn`
+- `npm`. I personally prefer `pnpm`, but have found it to *not work* with TypeSpec. Maybe this is
+  a me-issue, but I recommend `npm` for best compatibility nonetheless.
 - `git`
 - `TypeSpec` - install it globally with `npm install -g @typespec/compiler`
 

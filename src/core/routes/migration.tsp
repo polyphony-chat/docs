@@ -8,7 +8,6 @@ import "./main.tsp";
 using TypeSpec.Http;
 using TypeSpec.Versioning;
 using TypeSpec.OpenAPI;
-using polyproto;
 using Routes;
 
 namespace Routes;
@@ -40,10 +39,7 @@ namespace Migration {
             @body newActorFid: string,
 
             @doc("A list of completed `KeyTrial`s.")
-            @header({
-                name: "X-P2-core-keytrial",
-                format: "simple",
-            })
+            @header(#{ name: "X-P2-core-keytrial" })
             keyTrial: polyproto.core.models.KeyTrialCompleted[],
         ): {
             @statusCode statusCode: 200 | 202;
@@ -62,9 +58,7 @@ namespace Migration {
         op removeRedirect(@query removeActorFid: string): {
             @statusCode statusCode: 204;
 
-            @header({
-                name: "Content-Length",
-            })
+            @header(#{ name: "Content-Length" })
             contentLength: 0;
         } | {
             @statusCode statusCode: 400;
@@ -85,18 +79,14 @@ namespace Migration {
         @tag("Sensitive Actions")
         op importData(
             @doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
-            @header({
-                name: "X-P2-Sensitive-Solution",
-            })
+            @header(#{ name: "X-P2-Sensitive-Solution" })
             sensitiveSolution: string,
 
             @body importData?: polyproto.core.models.P2Export,
         ): {
             @statusCode statusCode: 202;
 
-            @header({
-                name: "Content-Length",
-            })
+            @header(#{ name: "Content-Length" })
             contentLength: 0;
         };
     }
@@ -152,9 +142,7 @@ namespace Migration {
         } | {
             @statusCode statusCode: 204;
 
-            @header({
-                name: "Content-Length",
-            })
+            @header(#{ name: "Content-Length" })
             contentLength: 0;
         };
 
@@ -174,10 +162,7 @@ namespace Migration {
             },
 
             @doc("A list of completed `KeyTrial`s.")
-            @header({
-                name: "X-P2-core-keytrial",
-                format: "simple",
-            })
+            @header(#{ name: "X-P2-core-keytrial" })
             keyTrial: polyproto.core.models.KeyTrialCompleted[],
         ): {
             @statusCode statusCode: 200 | 403;
@@ -206,15 +191,11 @@ namespace Migration {
             @statusCode statusCode: 200;
 
             @doc("This header dictates the time a client should wait for before sending another batch of re-signed messages.")
-            @header({
-                name: "Retry-After",
-            })
+            @header(#{ name: "Retry-After" })
             retryAfter: uint16;
 
             @doc("This header tells the client whether the route to commit re-signed messages has an upload size limit, and what the size of that limit is. A value of `0` means that there is no limit. This header not being present can also be interpreted as no limit existing.")
-            @header({
-                name: "X-P2-Return-Body-Size-Limit ",
-            })
+            @header(#{ name: "X-P2-Return-Body-Size-Limit " })
             sizeLimit?: uint64;
 
             @doc("Another message batch, if there are still messages left to re-sign.")
@@ -244,9 +225,7 @@ namespace Migration {
             @statusCode statusCode: 200;
 
             @doc("This header tells the client whether the route to commit re-signed messages has an upload size limit, and what the size of that limit is, in bytes. A value of `\"0\"` means that there is no limit. This header not being present can also be interpreted as no limit existing. The value of this header is a string-formatted, unsigned 64-bit integer.")
-            @header({
-                name: "X-P2-Return-Body-Size-Limit ",
-            })
+            @header(#{ name: "X-P2-Return-Body-Size-Limit " })
             sizeLimit?: string;
 
             @body message: polyproto.core.models.MessageBatch<string>[];
@@ -285,9 +264,7 @@ namespace Migration {
         ): {
             @statusCode statusCode: 204;
 
-            @header({
-                name: "Content-Length",
-            })
+            @header(#{ name: "Content-Length" })
             contentLength: 0;
         } | {
             @statusCode statusCode: 404;
@@ -318,17 +295,12 @@ namespace Migration {
             @query breakRedirect?: boolean = false,
 
             @doc("A list of completed `KeyTrial`s.")
-            @header({
-                name: "X-P2-core-keytrial",
-                format: "simple",
-            })
+            @header(#{ name: "X-P2-core-keytrial" })
             keyTrial: polyproto.core.models.KeyTrialCompleted[],
         ): {
             @statusCode statusCode: 204;
 
-            @header({
-                name: "Content-Length",
-            })
+            @header(#{ name: "Content-Length" })
             contentLength: 0;
         } | {
             @statusCode statusCode: 403 | 401;
@@ -352,10 +324,7 @@ namespace Migration {
         @summary("Export all data")
         op exportData(
             @doc("A list of completed `KeyTrial`s")
-            @header({
-                name: "X-P2-core-keytrial",
-                format: "simple",
-            })
+            @header(#{ name: "X-P2-core-keytrial" })
             keyTrial: polyproto.core.models.KeyTrialCompleted[],
         ): {
             @statusCode statusCode: 200;
@@ -363,9 +332,7 @@ namespace Migration {
         } | {
             @statusCode statusCode: 204;
 
-            @header({
-                name: "Retry-After",
-            })
+            @header(#{ name: "Retry-After" })
             retryAfter: uint64;
         };
     }

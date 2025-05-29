@@ -2,4 +2,6 @@ emit:
   - "@typespec/openapi3"
 options:
   "@typespec/openapi3":
-    file-type: "yaml"
+    emitter-output-dir: "{output-dir}/schema"
+    openapi-versions:
+      - 3.1.0

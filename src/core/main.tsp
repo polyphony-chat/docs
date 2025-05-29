@@ -13,98 +13,98 @@ using ResourceAddressingWithRelativeRoots;
 namespace polyproto.core;
 
 namespace models {
-    model EncryptedPKM {
-        /**
-         * Custom variant of the X.509 `SubjectPublicKeyInfo`, where the `subject_public_key`
-         * field stores the encrypted private key, instead of a public key. Otherwise equal to
-         * `SubjectPublicKeyInfo`. Also referred to as `PrivateKeyInfo`.
-         */
-        key_data: string;
+  model EncryptedPKM {
+    /**
+     * Custom variant of the X.509 `SubjectPublicKeyInfo`, where the `subject_public_key`
+     * field stores the encrypted private key, instead of a public key. Otherwise equal to
+     * `SubjectPublicKeyInfo`. Also referred to as `PrivateKeyInfo`.
+     */
+    key_data: string;
 
-        @doc("The serial number of the ID-Cert this key material is associated with.")
-        serialNumber: uint64;
-
-        /**
-         * Information about the algorithms used to encrypt the data held by the `key_data` field.
-         * Order-sensitive; The encryption used for the first encryption operation must be the last
-         * item of this array and vice versa. Represents a list of OIDs.
-         */
-        @minItems(1)
-        encryptionAlgorithms: Array<Array<uint16>>;
-    }
+    @doc("The serial number of the ID-Cert this key material is associated with.")
+    serialNumber: uint64;
 
     /**
-     * A resource representing information about a discoverable service for an actor. You can learn more about
-     * services and discoverability by reading [section #9](/Protocol Specifications/core#9-services) of
-     * the core protocol specification.
-     *
-     * This resource contains information about the name of the service that is being made discoverable,
-     * the URL of the service provider, and whether this service provider is the primary service provider
-     * for the actor.
+     * Information about the algorithms used to encrypt the data held by the `key_data` field.
+     * Order-sensitive; The encryption used for the first encryption operation must be the last
+     * item of this array and vice versa. Represents a list of OIDs.
      */
-    model Service {
-        @minLength(2)
-        @maxLength(64)
-        @doc("The name of the service that is being made discoverable. Must be formatted according to [section #8.2: Namespaces](/Protocol Specifications/core#82-namespaces) in the core protocol specification")
-        service: string;
+    @minItems(1)
+    encryptionAlgorithms: Array<Array<uint16>>;
+  }
 
-        @doc("The base URL of the service provider, not including `/.p2/<service_name>`. Trailing slashes are allowed. If `(/).p2/<service_name>` is added to the URL specified here, a polyproto client should be able to access the HTTP API routes provided by the service.")
-        url: url;
+  /**
+   * A resource representing information about a discoverable service for an actor. You can learn more about
+   * services and discoverability by reading [section #9](/Protocol Specifications/core#9-services) of
+   * the core protocol specification.
+   *
+   * This resource contains information about the name of the service that is being made discoverable,
+   * the URL of the service provider, and whether this service provider is the primary service provider
+   * for the actor.
+   */
+  model Service {
+    @minLength(2)
+    @maxLength(64)
+    @doc("The name of the service that is being made discoverable. Must be formatted according to [section #8.2: Namespaces](/Protocol Specifications/core#82-namespaces) in the core protocol specification")
+    service: string;
 
-        @doc("Whether the service provider specified in the url field is the primary service provider for this service and actor.")
-        primary: boolean;
-    }
+    @doc("The base URL of the service provider, not including `/.p2/<service_name>`. Trailing slashes are allowed. If `(/).p2/<service_name>` is added to the URL specified here, a polyproto client should be able to access the HTTP API routes provided by the service.")
+    url: url;
 
-    /**
-     * A key trial as sent from the server to an actor.
-     *
-     * Used to verify an actor's private identity key possession,
-     * without revealing the private key itself
-     */
-    model KeyTrial {
-        @minLength(32)
-        @maxLength(256)
-        @doc("The key trial, which the client should sign with their private identity key.")
-        trial: string;
+    @doc("Whether the service provider specified in the url field is the primary service provider for this service and actor.")
+    primary: boolean;
+  }
 
-        @doc("The UNIX timestamp after which the key trial expires.")
-        expires: uint64;
-    }
+  /**
+   * A key trial as sent from the server to an actor.
+   *
+   * Used to verify an actor's private identity key possession,
+   * without revealing the private key itself
+   */
+  model KeyTrial {
+    @minLength(32)
+    @maxLength(256)
+    @doc("The key trial, which the client should sign with their private identity key.")
+    trial: string;
 
-    /**
-     * A completed key trial, as an actor would send to the server.
-     */
-    model KeyTrialCompleted {
-        @doc("The signature produced by signing the key trial string using a private identity key.")
-        signature: string;
+    @doc("The UNIX timestamp after which the key trial expires.")
+    expires: uint64;
+  }
 
-        @doc("The serial number of the ID-Cert corresponding to the private identity key used to sign the key trial string.")
-        serialNumber: uint64;
-    }
+  /**
+   * A completed key trial, as an actor would send to the server.
+   */
+  model KeyTrialCompleted {
+    @doc("The signature produced by signing the key trial string using a private identity key.")
+    signature: string;
 
-    /**
-     * A message batch, as received from and sent to the server in the context of re-signing messages.
-     * This type is generic over `T`, where `T` represents the content of the actual message. This
-     * means, that the specific message content depends on the concrete implementation or extension
-     * of the polyproto protocol.
-     */
-    model MessageBatch<T> {
-        @doc("The ID-Cert that the following messages' signatures correspond to.")
-        idCert: string;
+    @doc("The serial number of the ID-Cert corresponding to the private identity key used to sign the key trial string.")
+    serialNumber: uint64;
+  }
 
-        @doc("The actual message.")
-        messages: {
-            @doc("Signature of the whole message")
-            signature: string;
+  /**
+   * A message batch, as received from and sent to the server in the context of re-signing messages.
+   * This type is generic over `T`, where `T` represents the content of the actual message. This
+   * means, that the specific message content depends on the concrete implementation or extension
+   * of the polyproto protocol.
+   */
+  model MessageBatch<T> {
+    @doc("The ID-Cert that the following messages' signatures correspond to.")
+    idCert: string;
 
-            @doc("Arbitrary content `T`. This depends on the specific implementation or extension of the protocol.")
-            content: T;
-        }[];
-    }
+    @doc("The actual message.")
+    messages: {
+      @doc("Signature of the whole message")
+      signature: string;
 
-    model MessageBatchExample extends MessageBatch<string> {}
+      @doc("Arbitrary content `T`. This depends on the specific implementation or extension of the protocol.")
+      content: T;
+    }[];
+  }
 
-    /** The data is a gzipped tarball (.tar.gz) named `export1234567890-user@subdomain.example.com`, where
+  model MessageBatchExample extends MessageBatch<string> {}
+
+  /** The data is a gzipped tarball (.tar.gz) named `export1234567890-user@subdomain.example.com`, where
      *   - `export[numbers]` is the word `export` with 20 random digits appended to it
      *   - `user` is the actors' name
      *   - `subdomain.example.com` is the FQDN of the server the actor is registered on.
@@ -151,63 +151,63 @@ namespace models {
      *   that the actor has uploaded to the server. Just like `messages.p2mb`, `crypt_certs.p2epk` is a standard
      *   JSON file.
      */
-    model P2Export {}
+  model P2Export {}
 
-    /**
-     * `ResourceAccessProperties` define which actors may access an uploaded resource. Actors and
-     * entire instances can have access granted or revoked.
-     */
-    model ResourceAccessProperties {
-        @doc("Whether the resource should be private by default. Private resources can only be accessed by the uploader and by instances and actors declared in the `allowlist`.")
-        private: boolean = false;
+  /**
+   * `ResourceAccessProperties` define which actors may access an uploaded resource. Actors and
+   * entire instances can have access granted or revoked.
+   */
+  model ResourceAccessProperties {
+    @doc("Whether the resource should be private by default. Private resources can only be accessed by the uploader and by instances and actors declared in the `allowlist`.")
+    private: boolean = false;
 
-        @doc("Whether the resource should be publicly retrievable, i.e. without requiring authentication. If this is `true`, the allow- and denylists are ignored.")
-        public: boolean = false;
+    @doc("Whether the resource should be publicly retrievable, i.e. without requiring authentication. If this is `true`, the allow- and denylists are ignored.")
+    public: boolean = false;
 
-        @doc("A list of actors and/or instances allowed to access this resource.")
-        @example(#["user_i_like@example.com", "instance.example.com"])
-        allowlist?: string[];
+    @doc("A list of actors and/or instances allowed to access this resource.")
+    @example(#["user_i_like@example.com", "instance.example.com"])
+    allowlist?: string[];
 
-        @doc("A list of actors and/or instances who cannot have access to this resource.")
-        @example(#["user_i_dislike@example.com", "other_instance.example.com"])
-        denylist?: string[];
-    }
+    @doc("A list of actors and/or instances who cannot have access to this resource.")
+    @example(#["user_i_dislike@example.com", "other_instance.example.com"])
+    denylist?: string[];
+  }
 
-    /**
-     * When querying the server for a list of resources uploaded by you, you can optionally request
-     * the resulting list to be sorted in a specific way. These are the four options you have.
-     */
-    enum ResourceListSorting {
-        SizeAsc,
-        SizeDesc,
-        NewestFirst,
-        OldestFirst,
-    }
+  /**
+   * When querying the server for a list of resources uploaded by you, you can optionally request
+   * the resulting list to be sorted in a specific way. These are the four options you have.
+   */
+  enum ResourceListSorting {
+    SizeAsc,
+    SizeDesc,
+    NewestFirst,
+    OldestFirst,
+  }
 
-    /**
-     * A cacheable response to an ID-Cert request.
-     */
-    model CacheableIDCert {
-        @doc("The requested ID-Cert in ASCII PEM format.")
-        @example("------BEGIN CERTIFICATE------...")
-        idCertPem: string;
+  /**
+   * A cacheable response to an ID-Cert request.
+   */
+  model CacheableIDCert {
+    @doc("The requested ID-Cert in ASCII PEM format.")
+    @example("------BEGIN CERTIFICATE------...")
+    idCertPem: string;
 
-        @doc("UNIX timestamp that specifies when this specific id_cert has been marked as invalidated by the server. An ID-Cert is considered invalidated, if the server or actor choose to revoke the validity of the ID-Cert before the lifetime of the certificate was scheduled to end. If this property does not exist, the ID-Cert has not been invalidated.")
-        @example(1736610000)
-        invalidatedAt?: uint64;
+    @doc("UNIX timestamp that specifies when this specific id_cert has been marked as invalidated by the server. An ID-Cert is considered invalidated, if the server or actor choose to revoke the validity of the ID-Cert before the lifetime of the certificate was scheduled to end. If this property does not exist, the ID-Cert has not been invalidated.")
+    @example(1736610000)
+    invalidatedAt?: uint64;
 
-        @doc("UNIX timestamp that specifies the time from which this cache entry may be treated as valid.")
-        @example(1736606402)
-        cacheNotValidBefore: uint64;
+    @doc("UNIX timestamp that specifies the time from which this cache entry may be treated as valid.")
+    @example(1736606402)
+    cacheNotValidBefore: uint64;
 
-        @doc("UNIX timestamp that specifies a time until which this cache entry may be treated as valid.")
-        @example(1736613602)
-        cacheNotValidAfter: uint64;
+    @doc("UNIX timestamp that specifies a time until which this cache entry may be treated as valid.")
+    @example(1736613602)
+    cacheNotValidAfter: uint64;
 
-        @doc("Signature generated by the home server, encoded in [Hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) (base-16). This signature can be verified using the home servers' public identity key. A server generates the `cacheSignature` by concatenating the serial number of the ID-Cert in question with the `cacheValidNotBefore` timestamp, the `cacheValidNotAfter` timestamp, and the `invalidatedAt` timestamp, if present. Clients must reject certificates of which the `cacheSignature` can not be verified to be correct.")
-        @example("7ab2bbde7fe43c7481a3a61031546bab16bc1a8735b2f0cdd519958c7f2f99f8")
-        @minLength(32)
-        @maxLength(32)
-        cacheSignature: string;
-    }
+    @doc("Signature generated by the home server, encoded in [Hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) (base-16). This signature can be verified using the home servers' public identity key. A server generates the `cacheSignature` by concatenating the serial number of the ID-Cert in question with the `cacheValidNotBefore` timestamp, the `cacheValidNotAfter` timestamp, and the `invalidatedAt` timestamp, if present. Clients must reject certificates of which the `cacheSignature` can not be verified to be correct.")
+    @example("7ab2bbde7fe43c7481a3a61031546bab16bc1a8735b2f0cdd519958c7f2f99f8")
+    @minLength(32)
+    @maxLength(32)
+    cacheSignature: string;
+  }
 }

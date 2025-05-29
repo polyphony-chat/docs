@@ -49,9 +49,7 @@ namespace Services {
         @tag("Sensitive Actions")
         op unregisterService(
             @doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
-            @header({
-                name: "X-P2-Sensitive-Solution",
-            })
+            @header(#{ name: "X-P2-Sensitive-Solution" })
             sensitiveSolution?: string,
 
             @query url: url[],
@@ -83,9 +81,7 @@ namespace Services {
         @added(Version.`v1.0-beta.1`)
         op setPrimaryProvider(
             @doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
-            @header({
-                name: "X-P2-Sensitive-Solution",
-            })
+            @header(#{ name: "X-P2-Sensitive-Solution" })
             sensitiveSolution: string,
 
             @body body: {
@@ -126,9 +122,8 @@ namespace Services {
             | polyproto.core.models.Service[]
             | {
                   @statusCode statusCode: 204;
-                  @header({
-                      name: "Content-Length",
-                  })
+
+                  @header(#{ name: "Content-Length" })
                   contentLength: 0;
               }
             | {
@@ -160,9 +155,8 @@ namespace Services {
             | polyproto.core.models.Service[]
             | {
                   @statusCode statusCode: 204;
-                  @header({
-                      name: "Content-Length",
-                  })
+
+                  @header(#{ name: "Content-Length" })
                   contentLength: 0;
               }
             | {

@@ -41,9 +41,7 @@ namespace ResourceAddressingWithRelativeRoots {
             | {
                   @statusCode _: 308;
 
-                  @header({
-                      name: "Location",
-                  })
+                  @header(#{ name: "Location" })
                   location: url;
 
                   @body reason: "ROOT_CHANGED";
@@ -91,9 +89,7 @@ namespace ResourceAddressingWithRelativeRoots {
             | {
                   @statusCode _: 308;
 
-                  @header({
-                      name: "Location",
-                  })
+                  @header(#{ name: "Location" })
                   location: url;
 
                   @body reason: "ROOT_CHANGED";
@@ -137,9 +133,7 @@ namespace ResourceAddressingWithRelativeRoots {
         op postResource(
             @path rid: string,
 
-            @header({
-                name: "Content-Length",
-            })
+            @header(#{ name: "Content-Length" })
             contentLength: uint64,
 
             @query
@@ -176,9 +170,7 @@ namespace ResourceAddressingWithRelativeRoots {
             | {
                   @statusCode _: 204;
 
-                  @header({
-                      name: "Content-Length",
-                  })
+                  @header(#{ name: "Content-Length" })
                   contentLength: 0;
               };
 
@@ -206,9 +198,7 @@ namespace ResourceAddressingWithRelativeRoots {
             @body
             resourceAccessProperties: polyproto.core.models.ResourceAccessProperties,
         ): {
-            @header({
-                name: "Content-Length",
-            })
+            @header(#{ name: "Content-Length" })
             contentLength: 0;
 
             @statusCode _: 204;
@@ -236,9 +226,7 @@ namespace ResourceAddressingWithRelativeRoots {
         } | {
             @statusCode _: 204;
 
-            @header({
-                name: "Content-Length",
-            })
+            @header(#{ name: "Content-Length" })
             contentLength: 0;
         };
     }
