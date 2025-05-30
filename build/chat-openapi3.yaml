@@ -1,0 +1,19 @@
+openapi: 3.1.0
+info:
+  title: polyproto chat APIs
+  license:
+    name: MIT License
+    url: https://raw.githubusercontent.com/polyphony-chat/docs/refs/heads/main/LICENSE
+  version: v1.0-beta.1
+tags: []
+paths: {}
+components:
+  schemas:
+    Version:
+      type: string
+      enum:
+        - v1.0-beta.1
+servers:
+  - url: https://example.com
+    description: Example endpoint
+    variables: {}
