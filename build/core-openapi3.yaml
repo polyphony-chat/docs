@@ -41,7 +41,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/polyproto.core.Models.KeyTrialCompleted'
+              $ref: '#/components/schemas/Models.KeyTrialCompleted'
       responses:
         '204':
           description: '- `204`: Action executed'
@@ -74,7 +74,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/polyproto.core.Models.KeyTrialCompleted'
+              $ref: '#/components/schemas/Models.KeyTrialCompleted'
       responses:
         '200':
           description: |-
@@ -88,7 +88,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/polyproto.core.Models.P2Export'
+                $ref: '#/components/schemas/Models.P2Export'
         '204':
           description: |-
             - `200` and the appropriate data if the key trial has been passed and is not yet expired.
@@ -195,7 +195,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/polyproto.core.Models.CacheableIDCert'
+                  $ref: '#/components/schemas/Models.CacheableIDCert'
       tags:
         - Federated Identity - Registration not required
   /.p2/core/v1/idcert/server:
@@ -222,7 +222,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/polyproto.core.Models.CacheableIDCert'
+                $ref: '#/components/schemas/Models.CacheableIDCert'
       tags:
         - Federated Identity - Registration not required
   /.p2/core/v1/key/server:
@@ -314,11 +314,11 @@ paths:
                   type: object
                   properties:
                     keyTrial:
-                      $ref: '#/components/schemas/polyproto.core.Models.KeyTrial'
+                      $ref: '#/components/schemas/Models.KeyTrial'
                     keyTrialCompletion:
                       type: array
                       items:
-                        $ref: '#/components/schemas/polyproto.core.Models.KeyTrialCompleted'
+                        $ref: '#/components/schemas/Models.KeyTrialCompleted'
                       minItems: 1
                   required:
                     - keyTrial
@@ -391,7 +391,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/polyproto.core.Models.KeyTrialCompleted'
+              $ref: '#/components/schemas/Models.KeyTrialCompleted'
       responses:
         '200':
           description: The request has succeeded.
@@ -648,7 +648,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/polyproto.core.Models.P2Export'
+              $ref: '#/components/schemas/Models.P2Export'
       security:
         - BearerAuth: []
   /.p2/core/v1/migration/redirect:
@@ -671,7 +671,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/polyproto.core.Models.KeyTrialCompleted'
+              $ref: '#/components/schemas/Models.KeyTrialCompleted'
       responses:
         '200':
           description: |-
@@ -793,7 +793,7 @@ paths:
           required: false
           description: Whether the list should be sorted in a specific way. Available options are `SizeAsc`, `SizeDesc`, `NewestFirst` and `OldestFirst`.
           schema:
-            $ref: '#/components/schemas/polyproto.core.Models.ResourceListSorting'
+            $ref: '#/components/schemas/Models.ResourceListSorting'
           explode: false
       responses:
         '200':
@@ -811,7 +811,7 @@ paths:
                       type: integer
                       format: uint64
                     access:
-                      $ref: '#/components/schemas/polyproto.core.Models.ResourceAccessProperties'
+                      $ref: '#/components/schemas/Models.ResourceAccessProperties'
                   required:
                     - resourceId
                     - size
@@ -943,7 +943,7 @@ paths:
           required: true
           description: ResourceAccessProperties. See the corresponding schema definition for more information.
           schema:
-            $ref: '#/components/schemas/polyproto.core.Models.ResourceAccessProperties'
+            $ref: '#/components/schemas/Models.ResourceAccessProperties'
           explode: false
       responses:
         '204':
@@ -1107,7 +1107,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/polyproto.core.Models.ResourceAccessProperties'
+              $ref: '#/components/schemas/Models.ResourceAccessProperties'
         description: ResourceAccessProperties. See the corresponding schema definition for more information.
       security:
         - BearerAuth: []
@@ -1147,7 +1147,7 @@ paths:
                       type: integer
                       format: uint64
                     access:
-                      $ref: '#/components/schemas/polyproto.core.Models.ResourceAccessProperties'
+                      $ref: '#/components/schemas/Models.ResourceAccessProperties'
                   required:
                     - resourceId
                     - size
@@ -1227,7 +1227,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/polyproto.core.Models.Service'
+                $ref: '#/components/schemas/Models.Service'
         '409':
           description: A singular service object, representing the service that was added.
       tags:
@@ -1240,7 +1240,7 @@ paths:
               type: object
               properties:
                 service:
-                  $ref: '#/components/schemas/polyproto.core.Models.Service'
+                  $ref: '#/components/schemas/Models.Service'
               required:
                 - service
       security:
@@ -1344,10 +1344,10 @@ paths:
                 anyOf:
                   - type: array
                     items:
-                      $ref: '#/components/schemas/polyproto.core.Models.Service'
+                      $ref: '#/components/schemas/Models.Service'
                   - type: array
                     items:
-                      $ref: '#/components/schemas/polyproto.core.Models.Service'
+                      $ref: '#/components/schemas/Models.Service'
         '204':
           description: |-
             JSON array of [service objects](./Types/service.md). A list of all services which the actor has
@@ -1405,10 +1405,10 @@ paths:
                 anyOf:
                   - type: array
                     items:
-                      $ref: '#/components/schemas/polyproto.core.Models.Service'
+                      $ref: '#/components/schemas/Models.Service'
                   - type: array
                     items:
-                      $ref: '#/components/schemas/polyproto.core.Models.Service'
+                      $ref: '#/components/schemas/Models.Service'
         '204':
           description: JSON array of [service objects](./Types/service.md), filtered by the specified service.
           headers:
@@ -1449,7 +1449,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/polyproto.core.Models.Service'
+                  $ref: '#/components/schemas/Models.Service'
         '400':
           description: |-
             An array of at minimum one, and at maximum 2 [service](./Types/service.md) objects.
@@ -1541,7 +1541,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/polyproto.core.Models.KeyTrialCompleted'
+              $ref: '#/components/schemas/Models.KeyTrialCompleted'
   /.p2/core/v1/session/idcert/extern:
     put:
       operationId: Unregistered_updateSessionCert
@@ -1594,7 +1594,7 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/polyproto.core.Models.EncryptedPKM'
+                $ref: '#/components/schemas/Models.EncryptedPKM'
         description: Array of encrypted private key material objects.
       security:
         - BearerAuth: []
@@ -1624,7 +1624,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/polyproto.core.Models.EncryptedPKM'
+                  $ref: '#/components/schemas/Models.EncryptedPKM'
         '204':
           description: 'There is no content to send for this request, but the headers may be useful. '
           headers:
@@ -1700,11 +1700,7 @@ paths:
         - {}
 components:
   schemas:
-    Version:
-      type: string
-      enum:
-        - v1.0-beta.1
-    polyproto.core.Models.CacheableIDCert:
+    Models.CacheableIDCert:
       type: object
       required:
         - idCertPem
@@ -1743,7 +1739,7 @@ components:
           examples:
             - 7ab2bbde7fe43c7481a3a61031546bab16bc1a8735b2f0cdd519958c7f2f99f8
       description: A cacheable response to an ID-Cert request.
-    polyproto.core.Models.EncryptedPKM:
+    Models.EncryptedPKM:
       type: object
       required:
         - key_data
@@ -1772,7 +1768,7 @@ components:
             Information about the algorithms used to encrypt the data held by the `key_data` field.
             Order-sensitive; The encryption used for the first encryption operation must be the last
             item of this array and vice versa. Represents a list of OIDs.
-    polyproto.core.Models.KeyTrial:
+    Models.KeyTrial:
       type: object
       required:
         - trial
@@ -1792,7 +1788,7 @@ components:
 
         Used to verify an actor's private identity key possession,
         without revealing the private key itself
-    polyproto.core.Models.KeyTrialCompleted:
+    Models.KeyTrialCompleted:
       type: object
       required:
         - signature
@@ -1806,7 +1802,7 @@ components:
           format: uint64
           description: The serial number of the ID-Cert corresponding to the private identity key used to sign the key trial string.
       description: A completed key trial, as an actor would send to the server.
-    polyproto.core.Models.MessageBatchExample:
+    Models.MessageBatchExample:
       type: object
       allOf:
         - type: object
@@ -1837,7 +1833,7 @@ components:
             This type is generic over `T`, where `T` represents the content of the actual message. This
             means, that the specific message content depends on the concrete implementation or extension
             of the polyproto protocol.
-    polyproto.core.Models.P2Export:
+    Models.P2Export:
       type: object
       description: |-
         The data is a gzipped tarball (.tar.gz) named `export1234567890-user@subdomain.example.com`, where
@@ -1886,7 +1882,7 @@ components:
         The file `crypt_certs.p2epk` contains all [encrypted private key material](https://docs.polyphony.chat/Protocol%20Specifications/core/#63-private-key-loss-prevention-and-private-key-recovery)
         that the actor has uploaded to the server. Just like `messages.p2mb`, `crypt_certs.p2epk` is a standard
         JSON file.
-    polyproto.core.Models.ResourceAccessProperties:
+    Models.ResourceAccessProperties:
       type: object
       required:
         - private
@@ -1919,7 +1915,7 @@ components:
       description: |-
         `ResourceAccessProperties` define which actors may access an uploaded resource. Actors and
         entire instances can have access granted or revoked.
-    polyproto.core.Models.ResourceListSorting:
+    Models.ResourceListSorting:
       type: string
       enum:
         - SizeAsc
@@ -1929,7 +1925,7 @@ components:
       description: |-
         When querying the server for a list of resources uploaded by you, you can optionally request
         the resulting list to be sorted in a specific way. These are the four options you have.
-    polyproto.core.Models.Service:
+    Models.Service:
       type: object
       required:
         - service
@@ -1956,6 +1952,10 @@ components:
         This resource contains information about the name of the service that is being made discoverable,
         the URL of the service provider, and whether this service provider is the primary service provider
         for the actor.
+    Version:
+      type: string
+      enum:
+        - v1.0-beta.1
   securitySchemes:
     BearerAuth:
       type: http
