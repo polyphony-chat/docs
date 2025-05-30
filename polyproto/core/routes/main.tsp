@@ -22,7 +22,7 @@ using TypeSpec.OpenAPI;
 @server("https://example.com", "Example endpoint")
 @route("/.p2/core/v1/")
 @versioned(Version)
-namespace polyproto.core.Routes;
+namespace polyproto.core;
 
 enum Version {
     `v1.0-beta.1`,
