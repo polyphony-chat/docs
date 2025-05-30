@@ -1,0 +1,18 @@
+{
+  "name": "polyproto",
+  "version": "0.1.0",
+  "type": "module",
+  "peerDependencies": {
+    "@typespec/compiler": "^1.0.0"
+  },
+  "devDependencies": {
+    "@typespec/compiler": "^1.0.0"
+  },
+  "private": true,
+  "dependencies": {
+    "@typespec/http": "^1.0.1",
+    "@typespec/openapi3": "^1.0.0",
+    "@typespec/rest": "^0.70.0",
+    "@typespec/versioning": "^0.70.0"
+  }
+}
