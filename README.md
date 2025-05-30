@@ -30,7 +30,7 @@ You will need the following things installed on your computer:
 - `git`
 - `TypeSpec` - install it globally with `npm install -g @typespec/compiler`
 
-1. Navigate to the `/src` directory.
+1. Navigate to the `/polyproto` directory.
 2. Select the project you want to compile. In this example, we are compiling the `core` project.
    Navigate to that directory.
 3. Run `tsp install` to install the dependencies.

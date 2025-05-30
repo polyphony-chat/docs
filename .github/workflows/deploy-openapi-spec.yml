@@ -21,17 +21,17 @@ jobs:
         with:
           node-version: "lts/*"
           cache: "npm"
-          cache-dependency-path: "./src/core/package-lock.json"
+          cache-dependency-path: "./polyproto/core/package-lock.json"
       - name: Install TypeSpec and compile project
         run: |
-          cd ./src/core/
+          cd ./polyproto/core/
           npm install -g @typespec/compiler
           npm install
           tsp compile .
       - name: Commit OpenAPI specification to repository
         run: |
           tree -L 2
-          mv ./src/core/tsp-output/schema/openapi.v1.0-beta.1.yaml ./build/core-openapi3.yaml
+          mv ./polyproto/core/tsp-output/schema/openapi.v1.0-beta.1.yaml ./build/core-openapi3.yaml
           git add ./build/*
           git commit -m "[bot]update openapi3 schema" || true
           git push || true
