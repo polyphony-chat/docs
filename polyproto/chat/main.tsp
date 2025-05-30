@@ -1,4 +1,5 @@
 import "../main.tsp";
+import "./models";
 
 using Http;
 using Versioning;
