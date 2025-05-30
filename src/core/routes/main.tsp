@@ -11,7 +11,6 @@ import "./rawr.tsp";
 using TypeSpec.Http;
 using TypeSpec.Versioning;
 using TypeSpec.OpenAPI;
-using polyproto;
 
 @service(#{ title: "polyproto core APIs" })
 @info(#{
@@ -23,7 +22,7 @@ using polyproto;
 @server("https://example.com", "Example endpoint")
 @route("/.p2/core/v1/")
 @versioned(Version)
-namespace Routes;
+namespace polyproto.core.Routes;
 
 enum Version {
     `v1.0-beta.1`,

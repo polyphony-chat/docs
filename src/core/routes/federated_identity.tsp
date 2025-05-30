@@ -7,13 +7,9 @@ import "./main.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Versioning;
-using TypeSpec.OpenAPI;
-using polyproto;
-using Routes;
+using polyproto.core;
 
-namespace Routes;
-
-namespace FederatedIdentity {
+namespace polyproto.core.Routes.FederatedIdentity {
     @tag("Federated Identity - Registration required")
     @useAuth(BearerAuth)
     namespace Registered {
@@ -59,7 +55,7 @@ namespace FederatedIdentity {
         @added(Version.`v1.0-beta.1`)
         @post
         op uploadEncryptedPKM(
-            @body @minItems(1) pkm: polyproto.core.models.EncryptedPKM[],
+            @body @minItems(1) pkm: polyproto.core.Models.EncryptedPKM[],
         ):
             | {
                   @statusCode statusCode: 201;
@@ -92,7 +88,7 @@ namespace FederatedIdentity {
         @get
         op getEncryptedPKM(@query serials?: uint64[]): {
             @statusCode statusCode: 200;
-            @body encryptedPKMs: polyproto.core.models.EncryptedPKM[];
+            @body encryptedPKMs: polyproto.core.Models.EncryptedPKM[];
         } | {
             @doc("Returned, if no `serial_numbers` are provided and the client has not uploaded any key material.")
             @statusCode
@@ -205,7 +201,7 @@ namespace FederatedIdentity {
         @summary("Get Server ID-Cert")
         op serverIdCert(
             @query timestamp?: uint64,
-        ): polyproto.core.models.CacheableIDCert;
+        ): polyproto.core.Models.CacheableIDCert;
 
         /**
          * Request the ID-Certs of a specific actor. The specified actor must be registered on this server.
@@ -226,7 +222,7 @@ namespace FederatedIdentity {
             @query session_id?: string,
         ): {
             @statusCode statusCode: 200;
-            @body response: polyproto.core.models.CacheableIDCert[];
+            @body response: polyproto.core.Models.CacheableIDCert[];
         };
 
         /**
@@ -256,7 +252,7 @@ namespace FederatedIdentity {
         @summary("Authenticate on a foreign server")
         op requestToken(
             @body
-            completedChallengeString: polyproto.core.models.KeyTrialCompleted,
+            completedChallengeString: polyproto.core.Models.KeyTrialCompleted,
         ): {
             @body _: string;
             @statusCode statusCode: 200;

@@ -7,14 +7,9 @@ import "./main.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Versioning;
-using TypeSpec.OpenAPI;
-using polyproto;
-using Routes;
-
-namespace Routes;
 
 @route("/resource/")
-namespace ResourceAddressingWithRelativeRoots {
+namespace polyproto.core.Routes.ResourceAddressingWithRelativeRoots {
     @tag("Resource addressing with relative roots - Registration not required")
     namespace Unregistered {
         /**
@@ -83,7 +78,7 @@ namespace ResourceAddressingWithRelativeRoots {
                   @body body: {
                       resourceId: string;
                       size: uint64;
-                      access: polyproto.core.models.ResourceAccessProperties;
+                      access: polyproto.core.Models.ResourceAccessProperties;
                   }[];
               }
             | {
@@ -137,7 +132,7 @@ namespace ResourceAddressingWithRelativeRoots {
             contentLength: uint64,
 
             @query
-            resourceAccessProperties: polyproto.core.models.ResourceAccessProperties,
+            resourceAccessProperties: polyproto.core.Models.ResourceAccessProperties,
 
             @body file: File,
         ):
@@ -196,7 +191,7 @@ namespace ResourceAddressingWithRelativeRoots {
             @path rid: string,
 
             @body
-            resourceAccessProperties: polyproto.core.models.ResourceAccessProperties,
+            resourceAccessProperties: polyproto.core.Models.ResourceAccessProperties,
         ): {
             @header(#{ name: "Content-Length" })
             contentLength: 0;
@@ -215,13 +210,13 @@ namespace ResourceAddressingWithRelativeRoots {
         @summary("List your uploaded resources")
         op getResourceList(
             @query limit?: uint32 = 50,
-            @query sort?: polyproto.core.models.ResourceListSorting,
+            @query sort?: polyproto.core.Models.ResourceListSorting,
         ): {
             @statusCode statusCode: 200;
             @body body: {
                 resourceId: string;
                 size: uint64;
-                access: polyproto.core.models.ResourceAccessProperties;
+                access: polyproto.core.Models.ResourceAccessProperties;
             }[];
         } | {
             @statusCode _: 204;

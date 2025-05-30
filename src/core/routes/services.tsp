@@ -7,13 +7,8 @@ import "./main.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Versioning;
-using TypeSpec.OpenAPI;
-using polyproto;
-using Routes;
 
-namespace Routes;
-
-namespace Services {
+namespace polyproto.core.Routes.Services {
     @tag("Services - Registration required")
     @useAuth(BearerAuth)
     namespace Registered {
@@ -26,9 +21,9 @@ namespace Services {
         @added(Version.`v1.0-beta.1`)
         @returnsDoc("A singular service object, representing the service that was added.")
         @errorsDoc("Returned, if the service and URL combination already exists in the list of discoverable services.")
-        op registerService(service: polyproto.core.models.Service): {
+        op registerService(service: polyproto.core.Models.Service): {
             @statusCode statusCode: 201;
-            @body body: polyproto.core.models.Service;
+            @body body: polyproto.core.Models.Service;
         } | {
             @statusCode statusCode: 409;
         };
@@ -94,7 +89,7 @@ namespace Services {
             @maxItems(2)
             @minItems(1)
             @body
-            body: polyproto.core.models.Service[];
+            body: polyproto.core.Models.Service[];
         } | {
             @statusCode statusCode: 400 | 403;
         };
@@ -119,7 +114,7 @@ namespace Services {
             @path fid: string,
             @query @minValue(1) limit?: uint64,
         ):
-            | polyproto.core.models.Service[]
+            | polyproto.core.Models.Service[]
             | {
                   @statusCode statusCode: 204;
 
@@ -131,7 +126,7 @@ namespace Services {
               }
             | {
                   @statusCode statusCode: 200;
-                  @body body: polyproto.core.models.Service[];
+                  @body body: polyproto.core.Models.Service[];
               };
 
         /**
@@ -152,7 +147,7 @@ namespace Services {
             @path service: string,
             @query @minValue(1) limit?: uint64,
         ):
-            | polyproto.core.models.Service[]
+            | polyproto.core.Models.Service[]
             | {
                   @statusCode statusCode: 204;
 
@@ -164,7 +159,7 @@ namespace Services {
               }
             | {
                   @statusCode statusCode: 200;
-                  @body body: polyproto.core.models.Service[];
+                  @body body: polyproto.core.Models.Service[];
               };
     }
 }

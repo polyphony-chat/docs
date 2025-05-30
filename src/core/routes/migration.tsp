@@ -7,13 +7,10 @@ import "./main.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Versioning;
-using TypeSpec.OpenAPI;
-using Routes;
-
-namespace Routes;
+using polyproto.core;
 
 @useAuth(BearerAuth)
-namespace Migration {
+namespace polyproto.core.Routes.Migration {
     @tag("Migration - Registration required")
     @route("/migration/")
     namespace Registered {
@@ -40,7 +37,7 @@ namespace Migration {
 
             @doc("A list of completed `KeyTrial`s.")
             @header(#{ name: "X-P2-core-keytrial" })
-            keyTrial: polyproto.core.models.KeyTrialCompleted[],
+            keyTrial: polyproto.core.Models.KeyTrialCompleted[],
         ): {
             @statusCode statusCode: 200 | 202;
         };
@@ -82,7 +79,7 @@ namespace Migration {
             @header(#{ name: "X-P2-Sensitive-Solution" })
             sensitiveSolution: string,
 
-            @body importData?: polyproto.core.models.P2Export,
+            @body importData?: polyproto.core.Models.P2Export,
         ): {
             @statusCode statusCode: 202;
 
@@ -163,7 +160,7 @@ namespace Migration {
 
             @doc("A list of completed `KeyTrial`s.")
             @header(#{ name: "X-P2-core-keytrial" })
-            keyTrial: polyproto.core.models.KeyTrialCompleted[],
+            keyTrial: polyproto.core.Models.KeyTrialCompleted[],
         ): {
             @statusCode statusCode: 200 | 403;
         };
@@ -186,7 +183,7 @@ namespace Migration {
         @added(Version.`v1.0-beta.1`)
         @summary("Commit re-signed messages")
         op commitMessages(
-            @body messages: polyproto.core.models.MessageBatch<string>[],
+            @body messages: polyproto.core.Models.MessageBatch<string>[],
         ): {
             @statusCode statusCode: 200;
 
@@ -200,7 +197,7 @@ namespace Migration {
 
             @doc("Another message batch, if there are still messages left to re-sign.")
             @body
-            message?: polyproto.core.models.MessageBatch<string>[];
+            message?: polyproto.core.Models.MessageBatch<string>[];
         } | {
             @statusCode _: 400 | 403;
         };
@@ -228,7 +225,7 @@ namespace Migration {
             @header(#{ name: "X-P2-Return-Body-Size-Limit " })
             sizeLimit?: string;
 
-            @body message: polyproto.core.models.MessageBatch<string>[];
+            @body message: polyproto.core.Models.MessageBatch<string>[];
         } | {
             @statusCode statusCode: 403;
         };
@@ -271,10 +268,10 @@ namespace Migration {
         } | {
             @statusCode statusCode: 200;
             @body response?: {
-                keyTrial: polyproto.core.models.KeyTrial;
+                keyTrial: polyproto.core.Models.KeyTrial;
 
                 @minItems(1)
-                keyTrialCompletion: polyproto.core.models.KeyTrialCompleted[];
+                keyTrialCompletion: polyproto.core.Models.KeyTrialCompleted[];
             }[];
         };
 
@@ -296,7 +293,7 @@ namespace Migration {
 
             @doc("A list of completed `KeyTrial`s.")
             @header(#{ name: "X-P2-core-keytrial" })
-            keyTrial: polyproto.core.models.KeyTrialCompleted[],
+            keyTrial: polyproto.core.Models.KeyTrialCompleted[],
         ): {
             @statusCode statusCode: 204;
 
@@ -325,10 +322,10 @@ namespace Migration {
         op exportData(
             @doc("A list of completed `KeyTrial`s")
             @header(#{ name: "X-P2-core-keytrial" })
-            keyTrial: polyproto.core.models.KeyTrialCompleted[],
+            keyTrial: polyproto.core.Models.KeyTrialCompleted[],
         ): {
             @statusCode statusCode: 200;
-            @body body: polyproto.core.models.P2Export;
+            @body body: polyproto.core.Models.P2Export;
         } | {
             @statusCode statusCode: 204;
 
