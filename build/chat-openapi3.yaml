@@ -9,6 +9,178 @@ tags: []
 paths: {}
 components:
   schemas:
+    Models.Actor:
+      type: object
+      required:
+        - fid
+        - availability
+      properties:
+        fid:
+          type: string
+        display_name:
+          type: string
+        pronouns:
+          type: string
+        about:
+          type: string
+        avatar:
+          type: string
+          format: uri
+        availability:
+          $ref: '#/components/schemas/Models.Availability'
+        status:
+          type: string
+        timezone:
+          type: string
+    Models.Availability:
+      type: number
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+    Models.Channel:
+      type: object
+      required:
+        - id
+        - data
+      properties:
+        id:
+          type: string
+        data:
+          anyOf:
+            - $ref: '#/components/schemas/Models.ChannelData'
+            - type: object
+              required:
+                - data
+                - mls_epoch_number
+                - mls_group_id
+              properties:
+                data:
+                  $ref: '#/components/schemas/Models.ChannelData'
+                mls_epoch_number:
+                  type: integer
+                  format: uint64
+                mls_group_id:
+                  type: string
+                _padding:
+                  type: string
+    Models.ChannelData:
+      type: object
+      required:
+        - parent_id
+        - type
+        - position
+        - name
+        - description
+        - permissions
+      properties:
+        parent_id:
+          type: string
+        type:
+          type: integer
+          format: uint8
+        position:
+          type: integer
+          format: uint32
+        name:
+          type: string
+        description:
+          type: string
+        permissions:
+          type: string
+    Models.ChannelType:
+      type: number
+      enum:
+        - 1
+    Models.Embed:
+      type: object
+      required:
+        - title
+        - content
+      properties:
+        title:
+          type: string
+        subtitle:
+          type: string
+        color:
+          type: string
+        content:
+          type: string
+        attachments:
+          type: array
+          items:
+            type: string
+            format: uri
+    Models.Guild:
+      type: object
+      required:
+        - id
+        - display_name
+        - owner_id
+        - created_at
+      properties:
+        id:
+          type: string
+        display_name:
+          type: string
+        description:
+          type: string
+        icon:
+          type: string
+          format: uri
+        owner_id:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    Models.Message:
+      type: object
+      required:
+        - version
+        - uid
+        - author
+        - content
+        - timestamp
+        - signature
+      properties:
+        version:
+          type: integer
+          format: uint64
+        uid:
+          type: string
+        author:
+          type: string
+        content:
+          type: string
+        timestamp:
+          type: integer
+          format: uint64
+        attachments:
+          type: array
+          items:
+            type: string
+            format: uri
+        embeds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Models.Embed'
+        reactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Models.Reaction'
+        signature:
+          type: string
+    Models.Reaction:
+      type: object
+      required:
+        - emoji
+        - fid
+      properties:
+        emoji:
+          type: string
+        fid:
+          type: string
     Version:
       type: string
       enum:
