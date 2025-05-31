@@ -4,7 +4,7 @@ info:
   license:
     name: MIT License
     url: https://raw.githubusercontent.com/polyphony-chat/docs/refs/heads/main/LICENSE
-  version: v1.0-beta.1
+  version: v0.1.0-alpha.0
 tags:
   - name: Guild
 paths:
@@ -21,7 +21,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/models.guild.Guild'
         '400':
-          description: The server could not understand the request due to invalid syntax.
+          description: |-
+            Invalid request submitted. Root causes may be:
+
+            - not including required body fields
+            - a name or description that is too long or too short
+            - inclusion of unexpected parameters.
+
+            A human readable reason will be returned as a response body.
           content:
             text/plain:
               schema:
@@ -68,7 +75,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/models.guild.Guild'
         '404':
-          description: The server cannot find the requested resource.
+          description: Guild is private or does not exist.
       tags:
         - Guild
       security:
@@ -79,7 +86,8 @@ components:
       type: string
       enum:
         - v0.1.0-alpha.0
-        - v1.0-beta.1
+        - v1.0.0-beta.1
+        - v1.0.0
     models.actor.Actor:
       type: object
       required:
