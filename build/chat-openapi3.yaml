@@ -5,11 +5,82 @@ info:
     name: MIT License
     url: https://raw.githubusercontent.com/polyphony-chat/docs/refs/heads/main/LICENSE
   version: v1.0-beta.1
-tags: []
-paths: {}
+tags:
+  - name: Guild
+paths:
+  /.p2/chat/v1/guilds:
+    post:
+      operationId: guilds_createGuild
+      summary: Create new Guild
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/models.guild.Guild'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+      tags:
+        - Guild
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                private:
+                  type: boolean
+              required:
+                - name
+                - private
+      security:
+        - BearerAuth: []
+    get:
+      operationId: guilds_getGuildInformation
+      summary: Get Guild Information
+      parameters:
+        - name: guild_id
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/models.guild.Guild'
+        '404':
+          description: The server cannot find the requested resource.
+      tags:
+        - Guild
+      security:
+        - BearerAuth: []
 components:
   schemas:
-    Models.Actor:
+    Version:
+      type: string
+      enum:
+        - v0.1.0-alpha.0
+        - v1.0-beta.1
+    models.actor.Actor:
       type: object
       required:
         - fid
@@ -27,19 +98,19 @@ components:
           type: string
           format: uri
         availability:
-          $ref: '#/components/schemas/Models.Availability'
+          $ref: '#/components/schemas/models.actor.Availability'
         status:
           type: string
         timezone:
           type: string
-    Models.Availability:
+    models.actor.Availability:
       type: number
       enum:
         - 0
         - 1
         - 2
         - 3
-    Models.Channel:
+    models.channel.Channel:
       type: object
       required:
         - id
@@ -49,7 +120,7 @@ components:
           type: string
         data:
           anyOf:
-            - $ref: '#/components/schemas/Models.ChannelData'
+            - $ref: '#/components/schemas/models.channel.ChannelData'
             - type: object
               required:
                 - data
@@ -57,7 +128,7 @@ components:
                 - mls_group_id
               properties:
                 data:
-                  $ref: '#/components/schemas/Models.ChannelData'
+                  $ref: '#/components/schemas/models.channel.ChannelData'
                 mls_epoch_number:
                   type: integer
                   format: uint64
@@ -65,7 +136,7 @@ components:
                   type: string
                 _padding:
                   type: string
-    Models.ChannelData:
+    models.channel.ChannelData:
       type: object
       required:
         - parent_id
@@ -89,30 +160,13 @@ components:
           type: string
         permissions:
           type: string
-    Models.ChannelType:
+    models.channel.ChannelType:
       type: number
       enum:
         - 1
-    Models.Embed:
-      type: object
-      required:
-        - title
-        - content
-      properties:
-        title:
-          type: string
-        subtitle:
-          type: string
-        color:
-          type: string
-        content:
-          type: string
-        attachments:
-          type: array
-          items:
-            type: string
-            format: uri
-    Models.Guild:
+        - 2
+        - 3
+    models.guild.Guild:
       type: object
       required:
         - id
@@ -134,7 +188,26 @@ components:
         created_at:
           type: string
           format: date-time
-    Models.Message:
+    models.message.Embed:
+      type: object
+      required:
+        - title
+        - content
+      properties:
+        title:
+          type: string
+        subtitle:
+          type: string
+        color:
+          type: string
+        content:
+          type: string
+        attachments:
+          type: array
+          items:
+            type: string
+            format: uri
+    models.message.Message:
       type: object
       required:
         - version
@@ -164,14 +237,14 @@ components:
         embeds:
           type: array
           items:
-            $ref: '#/components/schemas/Models.Embed'
+            $ref: '#/components/schemas/models.message.Embed'
         reactions:
           type: array
           items:
-            $ref: '#/components/schemas/Models.Reaction'
+            $ref: '#/components/schemas/models.message.Reaction'
         signature:
           type: string
-    Models.Reaction:
+    models.message.Reaction:
       type: object
       required:
         - emoji
@@ -181,10 +254,10 @@ components:
           type: string
         fid:
           type: string
-    Version:
-      type: string
-      enum:
-        - v1.0-beta.1
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: Bearer
 servers:
   - url: https://example.com
     description: Example endpoint
