@@ -208,6 +208,7 @@ namespace polyproto.core.Routes.ResourceAddressingWithRelativeRoots {
         @get
         @added(Version.`v1.0-beta.1`)
         @summary("List your uploaded resources")
+        // TODO: Maybe you could query resources with previews enabled?
         op getResourceList(
             @query limit?: uint32 = 50,
             @query sort?: polyproto.core.Models.ResourceListSorting,
@@ -224,6 +225,9 @@ namespace polyproto.core.Routes.ResourceAddressingWithRelativeRoots {
             @header(#{ name: "Content-Length" })
             contentLength: 0;
         };
+
+        // TODO: Information about how much storage space you have still
+        // remaining is likely a good idea for a route.
     }
 }
 
