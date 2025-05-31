@@ -20,5 +20,6 @@ namespace polyproto.chat;
 
 enum Version {
     `v0.1.0-alpha.0`,
-    `v1.0-beta.1`,
+    `v1.0.0-beta.1`,
+    `v1.0.0`,
 }
