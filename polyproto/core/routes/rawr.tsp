@@ -229,6 +229,25 @@ namespace polyproto.core.Routes.ResourceAddressingWithRelativeRoots {
         // TODO: Information about how much storage space you have still
         // remaining is likely a good idea for a route.
     }
+
+    /**
+     * Get information about how much storage you are allowed to use, and see how much storage you
+     * are currently using.
+     */
+    @route("/usage")
+    @get
+    @added(Version.`v1.0-beta.1`)
+    @summary("Retrieve information about your storage usage")
+    op getStorageLimitInfo(): {
+        @statusCode _s: 200;
+        @body _b: {
+            @doc("How many bytes of storage you are allowed to upload in total")
+            limit: uint64;
+
+            @doc("How many bytes of storage you are currently using")
+            used: uint64;
+        };
+    };
 }
 
 // rawr x3
