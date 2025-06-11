@@ -88,6 +88,24 @@ components:
         - v0.1.0-alpha.0
         - v1.0.0-beta.1
         - v1.0.0
+    models.EncryptedMessageData:
+      type: object
+      required:
+        - data
+        - dest_id
+      properties:
+        data:
+          type: string
+        dest_id:
+          type: string
+      description: |-
+        "EncryptedMessageData" is encrypted message data with unencrypted metadata. The amount of
+        metadata that is not encrypted is kept to an absolute minimum but is required, so that the
+        server can know who to attempt to deliver the message to.
+
+        Namely, this unencrypted metadata is the `dest_id`, short for "destination identifer".
+        This is the identifier of the channel, group or user to which the message should be
+        delivered.
     models.actor.Actor:
       type: object
       required:
@@ -129,21 +147,7 @@ components:
         data:
           anyOf:
             - $ref: '#/components/schemas/models.channel.ChannelData'
-            - type: object
-              required:
-                - data
-                - mls_epoch_number
-                - mls_group_id
-              properties:
-                data:
-                  $ref: '#/components/schemas/models.channel.ChannelData'
-                mls_epoch_number:
-                  type: integer
-                  format: uint64
-                mls_group_id:
-                  type: string
-                _padding:
-                  type: string
+            - $ref: '#/components/schemas/models.EncryptedMessageData'
     models.channel.ChannelData:
       type: object
       required:
