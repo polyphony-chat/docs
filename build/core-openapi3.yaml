@@ -829,6 +829,33 @@ paths:
         - Resource addressing with relative roots - Registration required
       security:
         - BearerAuth: []
+  /.p2/core/v1/resource/usage:
+    get:
+      operationId: ResourceAddressingWithRelativeRoots_getStorageLimitInfo
+      summary: Retrieve information about your storage usage
+      description: |-
+        Get information about how much storage you are allowed to use, and see how much storage you
+        are currently using.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limit:
+                    type: integer
+                    format: uint64
+                    description: How many bytes of storage you are allowed to upload in total
+                  used:
+                    type: integer
+                    format: uint64
+                    description: How many bytes of storage you are currently using
+                required:
+                  - limit
+                  - used
   /.p2/core/v1/resource/{rid}:
     get:
       operationId: Unregistered_getResource
