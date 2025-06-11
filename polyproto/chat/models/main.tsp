@@ -8,7 +8,7 @@ namespace polyproto.chat.models {
         @added(Version.`v0.1.0-alpha.0`)
         model Channel {
             id: string;
-            data: ChannelData | EncryptedRoutedData;
+            data: ChannelData | EncryptedMessageData;
         }
         @added(Version.`v0.1.0-alpha.0`)
         model ChannelData {
@@ -93,12 +93,17 @@ namespace polyproto.chat.models {
     }
 
     @added(Version.`v0.1.0-alpha.0`)
-    // TODO: This is likely wrong? Encrypted data can only be parsed
-    // when... it is unencrypted, so data: T likely makes no sense...
-    model EncryptedRoutedData {
+    @doc("""
+        "EncryptedMessageData" is encrypted message data with unencrypted metadata. The amount of
+        metadata that is not encrypted is kept to an absolute minimum but is required, so that the
+        server can know who to attempt to deliver the message to.
+        
+        Namely, this unencrypted metadata is the `dest_id`, short for "destination identifer".
+        This is the identifier of the channel, group or user to which the message should be
+        delivered.
+        """)
+    model EncryptedMessageData {
         data: string;
-        mls_epoch_number: uint64;
-        mls_group_id: string;
-        _padding?: string;
+        dest_id: string;
     }
 }
