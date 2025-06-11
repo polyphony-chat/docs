@@ -1,24 +1,5 @@
 {
   "name": "polyproto-core",
   "version": "0.1.0",
-  "type": "module",
-  "peerDependencies": {
-    "@typespec/compiler": "^1.1.0",
-    "@typespec/http": "^1.1.0",
-    "@typespec/openapi": "^1.1.0",
-    "@typespec/openapi3": "^1.1.0",
-    "@typespec/rest": "^0.71.0"
-  },
-  "devDependencies": {
-    "@typespec/compiler": "latest",
-    "@typespec/http": "latest",
-    "@typespec/openapi": "latest",
-    "@typespec/openapi3": "latest",
-    "@typespec/rest": "latest"
-  },
-  "private": true,
-  "packageManager": "npm@11.4.1+sha512.fcee43884166b6f9c5d04535fb95650e9708b6948a1f797eddf40e9778646778a518dfa32651b1c62ff36f4ac42becf177ca46ca27d53f24b539190c8d91802b",
-  "dependencies": {
-    "@typespec/versioning": "^0.71.0"
-  }
+  "type": "module"
 }
