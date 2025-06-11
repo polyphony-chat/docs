@@ -8,7 +8,7 @@ namespace polyproto.chat.models {
         @added(Version.`v0.1.0-alpha.0`)
         model Channel {
             id: string;
-            data: ChannelData | Encrypted<ChannelData>;
+            data: ChannelData | EncryptedRoutedData;
         }
         @added(Version.`v0.1.0-alpha.0`)
         model ChannelData {
@@ -95,8 +95,8 @@ namespace polyproto.chat.models {
     @added(Version.`v0.1.0-alpha.0`)
     // TODO: This is likely wrong? Encrypted data can only be parsed
     // when... it is unencrypted, so data: T likely makes no sense...
-    model Encrypted<T> {
-        data: T;
+    model EncryptedRoutedData {
+        data: string;
         mls_epoch_number: uint64;
         mls_group_id: string;
         _padding?: string;
