@@ -795,6 +795,14 @@ paths:
           schema:
             $ref: '#/components/schemas/Models.ResourceListSorting'
           explode: false
+        - name: previews
+          in: query
+          required: false
+          description: Whether to request content previews for supported file formats
+          schema:
+            type: boolean
+            default: false
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
@@ -812,6 +820,47 @@ paths:
                       format: uint64
                     access:
                       $ref: '#/components/schemas/Models.ResourceAccessProperties'
+                    preview:
+                      type: object
+                      required:
+                        - contents
+                      properties:
+                        contentType:
+                          type: string
+                          description: |-
+                            The allowed media (MIME) types of the file contents.
+
+                            In file bodies, this value comes from the `Content-Type` header of the request or response. In JSON bodies,
+                            this value is serialized as a field in the response.
+
+                            NOTE: this is not _necessarily_ the same as the `Content-Type` header of the request or response, but
+                            it will be for file bodies. It may be different if the file is serialized as a JSON object. It always refers to the
+                            _contents_ of the file, and not necessarily the way the file itself is transmitted or serialized.
+                          title: The allowed media (MIME) types of the file contents.
+                        filename:
+                          type: string
+                          description: |-
+                            The name of the file, if any.
+
+                            In file bodies, this value comes from the `filename` parameter of the `Content-Disposition` header of the response
+                            or multipart payload. In JSON bodies, this value is serialized as a field in the response.
+
+                            NOTE: By default, `filename` cannot be sent in request payloads and can only be sent in responses and multipart
+                            payloads, as the `Content-Disposition` header is not valid in requests. If you want to send the `filename` in a request,
+                            you must extend the `File` model and override the `filename` property with a different location defined by HTTP metadata
+                            decorators.
+                          title: The name of the file, if any.
+                        contents:
+                          type: string
+                          contentEncoding: base64
+                          description: |-
+                            The contents of the file.
+
+                            In file bodies, this value comes from the body of the request, response, or multipart payload. In JSON bodies,
+                            this value is serialized as a field in the response.
+                          title: The contents of the file.
+                      description: Only present, if `previews` was set to `true` in the request, and if the response contains preview-supported file types.
+                      title: A file in an HTTP request, response, or multipart payload.
                   required:
                     - resourceId
                     - size
