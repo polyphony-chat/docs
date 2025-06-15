@@ -208,16 +208,22 @@ namespace polyproto.core.Routes.ResourceAddressingWithRelativeRoots {
         @get
         @added(Version.`v1.0-beta.1`)
         @summary("List your uploaded resources")
-        // TODO: Maybe you could query resources with previews enabled?
         op getResourceList(
             @query limit?: uint32 = 50,
             @query sort?: polyproto.core.Models.ResourceListSorting,
+
+            @doc("Whether to request content previews for supported file formats")
+            @query
+            previews?: boolean = false,
         ): {
             @statusCode statusCode: 200;
             @body body: {
                 resourceId: string;
                 size: uint64;
                 access: polyproto.core.Models.ResourceAccessProperties;
+
+                @doc("Only present, if `previews` was set to `true` in the request, and if the response contains preview-supported file types.")
+                preview?: File;
             }[];
         } | {
             @statusCode _: 204;
@@ -225,9 +231,6 @@ namespace polyproto.core.Routes.ResourceAddressingWithRelativeRoots {
             @header(#{ name: "Content-Length" })
             contentLength: 0;
         };
-
-        // TODO: Information about how much storage space you have still
-        // remaining is likely a good idea for a route.
     }
 
     /**
