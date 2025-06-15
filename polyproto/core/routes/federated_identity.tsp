@@ -7,7 +7,6 @@ import "./main.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Versioning;
-using polyproto.core;
 
 namespace polyproto.core.Routes.FederatedIdentity {
     @tag("Federated Identity - Registration required")
