@@ -6,7 +6,7 @@
 [![Build/Deploy OpenAPI specification](https://github.com/polyphony-chat/docs/actions/workflows/deploy-openapi-spec.yml/badge.svg)](https://github.com/polyphony-chat/docs/actions/workflows/deploy-openapi-spec.yml)
 [![Discord]][Discord-invite]
 
-Specification documents and API documentation for polyproto.
+Specification documents and API documentation for `polyproto`, `polyproto-chat` and `polyproto-mls`.
 
 API documentation built with [TypeSpec](https://typespec.io).
 
