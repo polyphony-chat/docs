@@ -1,0 +1,274 @@
+openapi: 3.1.0
+info:
+  title: polyproto chat APIs
+  license:
+    name: MIT License
+    url: https://raw.githubusercontent.com/polyphony-chat/docs/refs/heads/main/LICENSE
+  version: v0.1.0-alpha.0
+tags:
+  - name: Guild
+paths:
+  /.p2/chat/v1/guilds:
+    post:
+      operationId: guilds_createGuild
+      summary: Create new Guild
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/models.guild.Guild'
+        '400':
+          description: |-
+            Invalid request submitted. Root causes may be:
+
+            - not including required body fields
+            - a name or description that is too long or too short
+            - inclusion of unexpected parameters.
+
+            A human readable reason will be returned as a response body.
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+      tags:
+        - Guild
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                private:
+                  type: boolean
+              required:
+                - name
+                - private
+      security:
+        - BearerAuth: []
+    get:
+      operationId: guilds_getGuildInformation
+      summary: Get Guild Information
+      parameters:
+        - name: guild_id
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/models.guild.Guild'
+        '404':
+          description: Guild is private or does not exist.
+      tags:
+        - Guild
+      security:
+        - BearerAuth: []
+components:
+  schemas:
+    Version:
+      type: string
+      enum:
+        - v0.1.0-alpha.0
+    models.EncryptedMessageData:
+      type: object
+      required:
+        - data
+        - dest_id
+      properties:
+        data:
+          type: string
+        dest_id:
+          type: string
+      description: |-
+        "EncryptedMessageData" is encrypted message data with unencrypted metadata. The amount of
+        metadata that is not encrypted is kept to an absolute minimum but is required, so that the
+        server can know who to attempt to deliver the message to.
+
+        Namely, this unencrypted metadata is the `dest_id`, short for "destination identifer".
+        This is the identifier of the channel, group or user to which the message should be
+        delivered.
+    models.actor.Actor:
+      type: object
+      required:
+        - fid
+        - availability
+      properties:
+        fid:
+          type: string
+        display_name:
+          type: string
+        pronouns:
+          type: string
+        about:
+          type: string
+        avatar:
+          type: string
+          format: uri
+        availability:
+          $ref: '#/components/schemas/models.actor.Availability'
+        status:
+          type: string
+        timezone:
+          type: string
+    models.actor.Availability:
+      type: number
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+    models.channel.Channel:
+      type: object
+      required:
+        - id
+        - data
+      properties:
+        id:
+          type: string
+        data:
+          anyOf:
+            - $ref: '#/components/schemas/models.channel.ChannelData'
+            - $ref: '#/components/schemas/models.EncryptedMessageData'
+    models.channel.ChannelData:
+      type: object
+      required:
+        - parent_id
+        - type
+        - position
+        - name
+        - description
+        - permissions
+      properties:
+        parent_id:
+          type: string
+        type:
+          type: integer
+          format: uint8
+        position:
+          type: integer
+          format: uint32
+        name:
+          type: string
+        description:
+          type: string
+        permissions:
+          type: string
+    models.channel.ChannelType:
+      type: number
+      enum:
+        - 1
+        - 2
+        - 3
+    models.guild.Guild:
+      type: object
+      required:
+        - id
+        - display_name
+        - owner_id
+        - created_at
+      properties:
+        id:
+          type: string
+        display_name:
+          type: string
+        description:
+          type: string
+        icon:
+          type: string
+          format: uri
+        owner_id:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    models.message.Embed:
+      type: object
+      required:
+        - title
+        - content
+      properties:
+        title:
+          type: string
+        subtitle:
+          type: string
+        color:
+          type: string
+        content:
+          type: string
+        attachments:
+          type: array
+          items:
+            type: string
+            format: uri
+    models.message.Message:
+      type: object
+      required:
+        - version
+        - uid
+        - author
+        - content
+        - timestamp
+        - signature
+      properties:
+        version:
+          type: integer
+          format: uint64
+        uid:
+          type: string
+        author:
+          type: string
+        content:
+          type: string
+        timestamp:
+          type: integer
+          format: uint64
+        attachments:
+          type: array
+          items:
+            type: string
+            format: uri
+        embeds:
+          type: array
+          items:
+            $ref: '#/components/schemas/models.message.Embed'
+        reactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/models.message.Reaction'
+        signature:
+          type: string
+    models.message.Reaction:
+      type: object
+      required:
+        - emoji
+        - fid
+      properties:
+        emoji:
+          type: string
+        fid:
+          type: string
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: Bearer
+servers:
+  - url: https://example.com
+    description: Example endpoint
+    variables: {}
