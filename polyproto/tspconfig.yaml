@@ -3,5 +3,7 @@ emit:
 options:
   "@typespec/openapi3":
     emitter-output-dir: "{output-dir}/schema"
+    output-file: "{service-name}-{version}.yaml"
     openapi-versions:
-      - 3.1.0
+      - "3.1.0"
+      - "3.0.0"
