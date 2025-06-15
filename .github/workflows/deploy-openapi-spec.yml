@@ -31,8 +31,8 @@ jobs:
       - name: Commit OpenAPI specification to repository
         run: |
           tree -L 2
-          mv ./polyproto/tsp-output/schema/openapi.polyproto.core.v1.0-beta.1.yaml ./build/core-openapi3.yaml
-          mv ./polyproto/tsp-output/schema/openapi.polyproto.chat.v0.1.0-alpha.0.yaml ./build/chat-openapi3.yaml
+          mv -f ./polyproto/tsp-output/schema/3.0.0/* ./build/3.0.0/
+          mv -f ./polyproto/tsp-output/schema/3.1.0/* ./build/3.1.0/
           git add ./build/*
           git commit -m "[bot]update openapi3 schema" || true
           git push || true
