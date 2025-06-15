@@ -6,7 +6,7 @@ using Http;
 using Versioning;
 using OpenAPI;
 
-@service(#{ title: "polyproto chat APIs" })
+@service(#{ title: "polyproto mls APIs" })
 @info(#{
     license: #{
         name: "MIT License",
@@ -14,7 +14,7 @@ using OpenAPI;
     },
 })
 @server("https://example.com", "Example endpoint")
-@route("/.p2/chat/v1/")
+@route("/.p2/mls/v1/")
 @versioned(Version)
 namespace polyproto.mls;
 
