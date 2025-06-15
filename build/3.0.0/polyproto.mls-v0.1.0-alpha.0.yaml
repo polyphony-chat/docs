@@ -1,0 +1,377 @@
+openapi: 3.0.0
+info:
+  title: polyproto mls APIs
+  license:
+    name: MIT License
+    url: https://raw.githubusercontent.com/polyphony-chat/docs/refs/heads/main/LICENSE
+  version: v0.1.0-alpha.0
+tags: []
+paths:
+  /.p2/mls/v1/groups:
+    post:
+      operationId: routes_createGroup
+      description: Create a new MLS group
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeyPackage'
+  /.p2/mls/v1/groups/{groupId}:
+    get:
+      operationId: routes_getGroup
+      description: Get information about an MLS group
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+  /.p2/mls/v1/groups/{groupId}/commits:
+    post:
+      operationId: routes_submitCommit
+      description: Submit a commit to apply pending proposals
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Welcome'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Commit'
+  /.p2/mls/v1/groups/{groupId}/commits/latest:
+    get:
+      operationId: routes_getLatestCommit
+      description: Get the latest commit for a group
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Commit'
+  /.p2/mls/v1/groups/{groupId}/members/{memberId}:
+    get:
+      operationId: routes_getMember
+      description: Get the current state of a group member
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: memberId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupMember'
+    put:
+      operationId: routes_updateMember
+      description: Update a member's key package
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: memberId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeyPackage'
+    delete:
+      operationId: routes_removeMember
+      description: Remove a member from the group
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: memberId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+  /.p2/mls/v1/groups/{groupId}/proposals:
+    post:
+      operationId: routes_submitProposal
+      description: Submit a proposal to modify the group
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Proposal'
+    get:
+      operationId: routes_getProposals
+      description: Get all pending proposals for a group
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Proposal'
+components:
+  schemas:
+    ClientCapabilities:
+      type: object
+      required:
+        - versions
+        - ciphersuites
+        - extensions
+      properties:
+        versions:
+          type: array
+          items:
+            type: string
+          description: Supported MLS protocol versions
+        ciphersuites:
+          type: array
+          items:
+            type: string
+          description: Supported ciphersuites
+        extensions:
+          type: array
+          items:
+            type: string
+          description: Supported extensions
+      description: Client capabilities and supported features
+    Commit:
+      type: object
+      required:
+        - id
+        - groupId
+        - epoch
+        - proposals
+        - signature
+      properties:
+        id:
+          type: string
+          description: Unique identifier for this commit
+        groupId:
+          type: string
+          description: The group ID this commit applies to
+        epoch:
+          type: integer
+          format: int32
+          description: The epoch number this commit creates
+        proposals:
+          type: array
+          items:
+            $ref: '#/components/schemas/Proposal'
+          description: The proposals being committed
+        signature:
+          type: string
+          format: byte
+          description: The commit sender's signature
+      description: Represents a commit message that initiates a new epoch
+    Group:
+      type: object
+      required:
+        - id
+        - epoch
+        - members
+        - publicKey
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the group
+        epoch:
+          type: integer
+          format: int32
+          description: Current epoch number
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupMember'
+          description: List of current group members
+        publicKey:
+          type: string
+          format: byte
+          description: Group's public key
+      description: Represents a group in MLS
+    GroupMember:
+      type: object
+      required:
+        - id
+        - keyPackage
+        - role
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the member
+        keyPackage:
+          allOf:
+            - $ref: '#/components/schemas/KeyPackage'
+          description: The member's key package
+        role:
+          allOf:
+            - $ref: '#/components/schemas/MemberRole'
+          description: The member's role in the group
+      description: Represents a member in an MLS group
+    KeyPackage:
+      type: object
+      required:
+        - id
+        - publicKey
+        - capabilities
+        - signature
+      properties:
+        id:
+          type: string
+          description: Unique identifier for this key package
+        publicKey:
+          type: string
+          format: byte
+          description: The client's public key
+        capabilities:
+          allOf:
+            - $ref: '#/components/schemas/ClientCapabilities'
+          description: The client's capabilities and supported ciphersuites
+        signature:
+          type: string
+          format: byte
+          description: The client's signature over the key package
+      description: Represents a client's capabilities and provides keys for group operations
+    MemberRole:
+      type: string
+      enum:
+        - Admin
+        - Member
+      description: Possible roles for group members
+    Proposal:
+      type: object
+      required:
+        - id
+        - type
+        - signature
+      properties:
+        id:
+          type: string
+          description: Unique identifier for this proposal
+        type:
+          allOf:
+            - $ref: '#/components/schemas/ProposalType'
+          description: The type of proposal
+        target:
+          type: string
+          description: The target of the proposal (e.g., member to remove)
+        keyPackage:
+          allOf:
+            - $ref: '#/components/schemas/KeyPackage'
+          description: The key package for add proposals
+        signature:
+          type: string
+          format: byte
+          description: The proposal sender's signature
+      description: Represents a proposed change to the group state
+    ProposalType:
+      type: string
+      enum:
+        - Add
+        - Remove
+        - Update
+        - ReInit
+      description: Types of proposals that can be made
+    Version:
+      type: string
+      enum:
+        - v0.1.0-alpha.0
+    Welcome:
+      type: object
+      required:
+        - groupId
+        - epoch
+        - keyPackage
+        - encryptedGroupState
+      properties:
+        groupId:
+          type: string
+          description: The group ID the new member is being added to
+        epoch:
+          type: integer
+          format: int32
+          description: The epoch number the new member is being added to
+        keyPackage:
+          allOf:
+            - $ref: '#/components/schemas/KeyPackage'
+          description: The key package of the new member
+        encryptedGroupState:
+          type: string
+          format: byte
+          description: Encrypted group state for the new member
+      description: Welcome message for new group members
+servers:
+  - url: https://example.com
+    description: Example endpoint
+    variables: {}

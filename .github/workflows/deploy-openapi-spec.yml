@@ -6,6 +6,10 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+# Have no job running uselessly.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
@@ -34,5 +38,5 @@ jobs:
           mv -f ./polyproto/tsp-output/schema/3.0.0/* ./build/3.0.0/
           mv -f ./polyproto/tsp-output/schema/3.1.0/* ./build/3.1.0/
           git add ./build/*
-          git commit -m "[bot]update openapi3 schema" || true
+          git commit -m "chore(bot): update openapi3 schema" || true
           git push || true
