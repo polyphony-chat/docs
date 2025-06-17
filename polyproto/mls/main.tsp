@@ -19,5 +19,5 @@ using OpenAPI;
 namespace polyproto.mls;
 
 enum Version {
-    `v0.1.0-alpha.0`,
+    `v0.1.0-alpha.2`,
 }
