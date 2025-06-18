@@ -5,6 +5,10 @@
 [![Code-of-conduct-shield]][Code-of-conduct]
 [![Build/Deploy OpenAPI specification](https://github.com/polyphony-chat/docs/actions/workflows/deploy-openapi-spec.yml/badge.svg)](https://github.com/polyphony-chat/docs/actions/workflows/deploy-openapi-spec.yml)
 [![Discord]][Discord-invite]
+[![FAQ-shield]][FAQ]
+
+[FAQ-shield]: https://img.shields.io/badge/Frequently_Asked_Questions_(FAQ)-ff62bd
+[FAQ]: https://github.com/polyphony-chat/.github/blob/main/FAQ.md
 
 Specification documents and API documentation for `polyproto`, `polyproto-chat` and `polyproto-mls`.
 
