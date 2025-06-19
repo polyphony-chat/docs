@@ -49,13 +49,29 @@ namespace polyproto.mls.routes {
       @path groupId: string,
       @body commit: Commit,
     ): Welcome | NotFoundOrForbidden;
+
+    /**
+     * Get the latest commit for a group
+     */
+    @get
+    @route("/groups/{groupId}/commits/latest")
+    op getLatestCommit(@path groupId: string): Commit | NotFoundOrForbidden;
   }
 
   namespace members {
     /**
+     * Get all group members
+     */
+    @get
+    @summary("Get all group members")
+    @route("/groups/{groupId}/members")
+    op getMembers(@path groupId: string): GroupMember[] | NotFoundOrForbidden;
+
+    /**
      * Get the current state of a group member
      */
     @get
+    @summary("Get a singular group member")
     @route("/groups/{groupId}/members/{memberId}")
     op getMember(
       @path groupId: string,
@@ -63,41 +79,12 @@ namespace polyproto.mls.routes {
     ): GroupMember | NotFoundOrForbidden;
 
     /**
-     * Update a member's key package
+     * Get all pending proposals for a group
      */
-    @put
-    @route("/groups/{groupId}/members/{memberId}")
-    op updateMember(
-      @path groupId: string,
-      @path memberId: string,
-      @body keyPackage: KeyPackage,
-    ): void | NotFoundOrForbidden;
-
-    /**
-     * Remove a member from the group
-     */
-    @delete
-    @route("/groups/{groupId}/members/{memberId}")
-    op removeMember(
-      @path groupId: string,
-      @path memberId: string,
-    ): void | NotFoundOrForbidden;
+    @get
+    @route("/groups/{groupId}/proposals")
+    op getProposals(@path groupId: string): Proposal[] | NotFoundOrForbidden;
   }
-
-  /**
-   * Get all pending proposals for a group
-   */
-  @get
-  @route("/groups/{groupId}/proposals")
-  op getProposals(@path groupId: string): Proposal[] | NotFoundOrForbidden;
-
-  /**
-   * Get the latest commit for a group
-   */
-  @get
-  @route("/groups/{groupId}/commits/latest")
-  op getLatestCommit(@path groupId: string): Commit | NotFoundOrForbidden;
-
   namespace keypackages {
     /**
      * Upload KeyPackages to the server, enabling other actors to encrypt messages for you and form
