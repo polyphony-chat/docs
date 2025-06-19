@@ -6,7 +6,7 @@ using Http;
 using Versioning;
 using OpenAPI;
 
-@service(#{ title: "polyproto mls APIs" })
+@service(#{ title: "polyproto MLS APIs" })
 @info(#{
     license: #{
         name: "MIT License",
@@ -19,5 +19,5 @@ using OpenAPI;
 namespace polyproto.mls;
 
 enum Version {
-    `v0.1.0-alpha.3`,
+    `v0.1.0-alpha.4`,
 }
