@@ -8,6 +8,8 @@ namespace polyproto.mls;
  */
 model KeyPackage {
   @doc("Unique identifier for this key package")
+  @minLength(8)
+  @maxLength(128)
   id: string;
 
   @doc("The client's public key")
@@ -18,6 +20,9 @@ model KeyPackage {
 
   @doc("The client's signature over the key package")
   signature: bytes;
+
+  @doc("Whether this KeyPackage is to act as a \"last resort\" KeyPackage, for when all other KeyPackages have been exhausted.")
+  lastResort: boolean = false;
 }
 
 /**
