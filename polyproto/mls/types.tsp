@@ -67,6 +67,9 @@ enum ProposalType {
   Remove,
   Update,
   ReInit,
+  PreSharedKey,
+  ExternalInit,
+  GroupContextExtensions,
 }
 
 /**
