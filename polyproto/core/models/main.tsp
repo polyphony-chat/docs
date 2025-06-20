@@ -160,6 +160,20 @@ namespace polyproto.core.Models {
     }
 
     /**
+     * Information about a RawR resource.
+     */
+    model ResourceInformation {
+        @doc("A unique ID of a resource")
+        resourceId: string;
+
+        @doc("Size of the resource, in bytes")
+        size: uint64;
+
+        @doc("Access information for this resource")
+        access: ResourceAccessProperties;
+    }
+
+    /**
      * When querying the server for a list of resources uploaded by you, you can optionally request
      * the resulting list to be sorted in a specific way. These are the four options you have.
      */

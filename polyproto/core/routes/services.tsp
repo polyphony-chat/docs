@@ -18,7 +18,7 @@ namespace polyproto.core.Routes.Services {
         @route("/services")
         @post
         @summary("Add service to be discovered")
-        @added(Version.`v1.0-beta.1`)
+        @added(Version.`v1.0-beta.2`)
         @returnsDoc("A singular service object, representing the service that was added.")
         @errorsDoc("Returned, if the service and URL combination already exists in the list of discoverable services.")
         op registerService(service: polyproto.core.Models.Service): {
@@ -40,7 +40,7 @@ namespace polyproto.core.Routes.Services {
         @route("/services")
         @delete
         @summary("Delete discoverable service")
-        @added(Version.`v1.0-beta.1`)
+        @added(Version.`v1.0-beta.2`)
         @tag("Sensitive Actions")
         op unregisterService(
             @doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
@@ -73,7 +73,7 @@ namespace polyproto.core.Routes.Services {
         @put
         @tag("Sensitive Actions")
         @summary("Set primary service provider")
-        @added(Version.`v1.0-beta.1`)
+        @added(Version.`v1.0-beta.2`)
         op setPrimaryProvider(
             @doc("Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.")
             @header(#{ name: "X-P2-Sensitive-Solution" })
@@ -109,7 +109,7 @@ namespace polyproto.core.Routes.Services {
         @route("/services/discover/")
         @get
         @summary("Discover services of actor")
-        @added(Version.`v1.0-beta.1`)
+        @added(Version.`v1.0-beta.2`)
         op getServicesOfActor(
             @path fid: string,
             @query @minValue(1) limit?: uint64,
@@ -141,7 +141,7 @@ namespace polyproto.core.Routes.Services {
         @route("/services/discover/{fid}/{service}")
         @get
         @summary("Discover single service of actor")
-        @added(Version.`v1.0-beta.1`)
+        @added(Version.`v1.0-beta.2`)
         op getSingleServiceOfActor(
             @path fid: string,
             @path service: string,

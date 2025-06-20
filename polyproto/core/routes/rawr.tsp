@@ -20,39 +20,22 @@ namespace polyproto.core.Routes.ResourceAddressingWithRelativeRoots {
          * - `200`: File found and retrieved.
          * - `308`: URI root has changed.
          * - `401`: Server or resource requires authentication to access this endpoint.
-         * - `403`: Server or resource not accessible for the actor making this request.
-         * - `404`: Resource not found.
+         * - `404`: Separately documented.
          */
         @route("/{rid}")
         @get
         @useAuth(BearerAuth | NoAuth)
-        @added(Version.`v1.0-beta.1`)
+        @added(Version.`v1.0-beta.2`)
         @summary("Get resource by resource ID")
-        op getResource(@path rid: string):
-            | {
-                  @statusCode _: 200;
-                  @body body: File;
-              }
-            | {
-                  @statusCode _: 308;
+        op getResource(@path rid: string): {
+            @statusCode _: 200;
+            @body body: File;
+        } | {
+            @statusCode _: 308;
 
-                  @header(#{ name: "Location" })
-                  location: url;
-
-                  @body reason: "ROOT_CHANGED";
-              }
-            | {
-                  @statusCode _: 403;
-                  @body reason: "ACCESS_FORBIDDEN";
-              }
-            | {
-                  @statusCode _: 401;
-                  @body reason: "NEEDS_AUTHENTICATION";
-              }
-            | {
-                  @statusCode _: 404;
-                  @body reason: "NOT_FOUND";
-              };
+            @header(#{ name: "Location" })
+            location: url;
+        } | polyproto.models.errors.NotFoundOrForbidden;
 
         /**
          * Query the server for information about a RawR resource.
@@ -63,44 +46,22 @@ namespace polyproto.core.Routes.ResourceAddressingWithRelativeRoots {
          * @returns
          * - `200`: Found, contains resource information
          * - `308`: URI root has changed.
-         * - `401`: Server or resource requires authentication to access this endpoint.
-         * - `403`: Server or resource not accessible for the actor making this request.
-         * - `404`: Resource not found.
+         * - `404`: Separately documented.
          */
         @route("/{rid}/info/")
         @get
         @useAuth(BearerAuth | NoAuth)
-        @added(Version.`v1.0-beta.1`)
+        @added(Version.`v1.0-beta.2`)
         @summary("Retrieve information about a RawR resource")
-        op getResourceInfos(@path rid: string):
-            | {
-                  @statusCode statusCode: 200;
-                  @body body: {
-                      resourceId: string;
-                      size: uint64;
-                      access: polyproto.core.Models.ResourceAccessProperties;
-                  }[];
-              }
-            | {
-                  @statusCode _: 308;
+        op getResourceInfos(@path rid: string): {
+            @statusCode statusCode: 200;
+            @body body: polyproto.core.Models.ResourceInformation[];
+        } | {
+            @statusCode _: 308;
 
-                  @header(#{ name: "Location" })
-                  location: url;
-
-                  @body reason: "ROOT_CHANGED";
-              }
-            | {
-                  @statusCode _: 403;
-                  @body reason: "ACCESS_FORBIDDEN";
-              }
-            | {
-                  @statusCode _: 401;
-                  @body reason: "NEEDS_AUTHENTICATION";
-              }
-            | {
-                  @statusCode _: 404;
-                  @body reason: "NOT_FOUND";
-              };
+            @header(#{ name: "Location" })
+            location: url;
+        } | polyproto.models.errors.NotFoundOrForbidden;
     }
 
     @tag("Resource addressing with relative roots - Registration required")
@@ -123,7 +84,7 @@ namespace polyproto.core.Routes.ResourceAddressingWithRelativeRoots {
          */
         @route("/{rid}")
         @post
-        @added(Version.`v1.0-beta.1`)
+        @added(Version.`v1.0-beta.2`)
         @summary("Upload RawR resource")
         op postResource(
             @path rid: string,
@@ -171,7 +132,7 @@ namespace polyproto.core.Routes.ResourceAddressingWithRelativeRoots {
 
         @route("/{rid}")
         @delete
-        @added(Version.`v1.0-beta.1`)
+        @added(Version.`v1.0-beta.2`)
         @summary("Delete RawR resource")
         op deleteResource(@path rid: string): {
             @statusCode _: 204;
@@ -185,7 +146,7 @@ namespace polyproto.core.Routes.ResourceAddressingWithRelativeRoots {
          */
         @route("/{rid}")
         @put
-        @added(Version.`v1.0-beta.1`)
+        @added(Version.`v1.0-beta.2`)
         @summary("Update RawR resource access properties")
         op modifyResource(
             @path rid: string,
@@ -206,7 +167,7 @@ namespace polyproto.core.Routes.ResourceAddressingWithRelativeRoots {
          */
         @route("/resources")
         @get
-        @added(Version.`v1.0-beta.1`)
+        @added(Version.`v1.0-beta.2`)
         @summary("List your uploaded resources")
         op getResourceList(
             @query limit?: uint32 = 50,
@@ -218,9 +179,7 @@ namespace polyproto.core.Routes.ResourceAddressingWithRelativeRoots {
         ): {
             @statusCode statusCode: 200;
             @body body: {
-                resourceId: string;
-                size: uint64;
-                access: polyproto.core.Models.ResourceAccessProperties;
+                resourceInformation: polyproto.core.Models.ResourceInformation;
 
                 @doc("Only present, if `previews` was set to `true` in the request, and if the response contains preview-supported file types.")
                 preview?: File;
@@ -239,7 +198,7 @@ namespace polyproto.core.Routes.ResourceAddressingWithRelativeRoots {
      */
     @route("/usage")
     @get
-    @added(Version.`v1.0-beta.1`)
+    @added(Version.`v1.0-beta.2`)
     @summary("Retrieve information about your storage usage")
     op getStorageLimitInfo(): {
         @statusCode _s: 200;
