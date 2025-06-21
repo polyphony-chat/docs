@@ -16,7 +16,7 @@ namespace polyproto.core.Models {
          * item of this array and vice versa. Represents a list of OIDs.
          */
         @minItems(1)
-        encryptionAlgorithms: Array<Array<uint16>>;
+        encryptionAlgorithms: string[];
     }
 
     /**
