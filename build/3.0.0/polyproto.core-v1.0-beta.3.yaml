@@ -1,0 +1,1949 @@
+openapi: 3.0.0
+info:
+  title: polyproto core APIs
+  license:
+    name: MIT License
+    url: https://raw.githubusercontent.com/polyphony-chat/docs/refs/heads/main/LICENSE
+  version: v1.0-beta.3
+tags:
+  - name: Federated Identity - Registration required
+  - name: Sensitive Actions
+  - name: Federated Identity - Registration not required
+  - name: Migration - Registration required
+  - name: Migration - Registration not required
+  - name: Services - Registration required
+  - name: Services - Registration not required
+  - name: Resource addressing with relative roots - Registration not required
+  - name: Resource addressing with relative roots - Registration required
+paths:
+  /.p2/core/v1/data:
+    delete:
+      operationId: Unregistered_deleteData
+      summary: Delete own actor data from the server
+      description: |-
+        Delete all data associated with you from the server. Only deletes data associated with the
+        keys for which the `KeyTrial` has been passed.
+      parameters:
+        - name: breakRedirect
+          in: query
+          required: false
+          description: |-
+            If a redirect has been set up previously: Whether to break that redirect
+            with this action. Defaults to false.
+          schema:
+            type: boolean
+            default: false
+          explode: false
+        - name: X-P2-core-keytrial
+          in: header
+          required: true
+          description: A list of completed `KeyTrial`s.
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Models.KeyTrialCompleted'
+      responses:
+        '204':
+          description: '- `204`: Action executed'
+          headers:
+            Content-Length:
+              required: true
+              schema:
+                type: number
+                enum:
+                  - 0
+        '401':
+          description: '- `204`: Action executed'
+        '403':
+          description: '- `204`: Action executed'
+      tags:
+        - Migration - Registration not required
+      security:
+        - BearerAuth: []
+    get:
+      operationId: Unregistered_exportData
+      summary: Export all data
+      description: |-
+        Export all of your data for safekeeping or for importing it to another server.
+        Only exports data for which a key trial has been passed.
+      parameters:
+        - name: X-P2-core-keytrial
+          in: header
+          required: true
+          description: A list of completed `KeyTrial`s
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Models.KeyTrialCompleted'
+      responses:
+        '200':
+          description: |-
+            - `200` and the appropriate data if the key trial has been passed and is not yet expired.
+            See the `P2Export` schema for more information.
+            - `204` if the server needs time to gather the data. A `Retry-After` header is included in
+            the response, indicating to the actor the point in time at which they should query this
+            endpoint again. If this point in time is after the expiry timestamp of the completed key trial,
+            another key trial needs to be performed to access the data.
+            Contains all data of the user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.P2Export'
+        '204':
+          description: |-
+            - `200` and the appropriate data if the key trial has been passed and is not yet expired.
+            See the `P2Export` schema for more information.
+            - `204` if the server needs time to gather the data. A `Retry-After` header is included in
+            the response, indicating to the actor the point in time at which they should query this
+            endpoint again. If this point in time is after the expiry timestamp of the completed key trial,
+            another key trial needs to be performed to access the data.
+            Contains all data of the user.
+          headers:
+            Retry-After:
+              required: true
+              schema:
+                type: integer
+                format: uint64
+      tags:
+        - Migration - Registration not required
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/idcert:
+    post:
+      operationId: Registered_newIdCert
+      summary: Get a new ID-Cert
+      description: |-
+        Request a new ID-Cert, usually done when wanting to authenticate a new session, or after
+        an ID-Cert has been revoked, to re-authenticate a session.
+      parameters:
+        - name: X-P2-Sensitive-Solution
+          in: header
+          required: true
+          description: Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.
+          schema:
+            type: string
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id_cert:
+                    type: string
+                    description: The generated [ID-Cert](/Protocol%20Specifications/core/#71-home-server-signed-certificates-for-public-client-identity-keys-id-cert) in PEM format.
+                    example: ------BEGIN CERTIFICATE------...
+                  token:
+                    type: string
+                    description: An authorization secret, called a "session token", valid for this `id_cert`/session.
+                required:
+                  - id_cert
+                  - token
+      tags:
+        - Federated Identity - Registration required
+        - Sensitive Actions
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/idcert/actor/{fid}:
+    get:
+      operationId: Unregistered_actorCerts
+      summary: Get Actor ID-Cert(s)
+      description: Request the ID-Certs of a specific actor. The specified actor must be registered on this server.
+      parameters:
+        - name: fid
+          in: path
+          required: true
+          description: The ID of the actor whose ID-Cert(s) should be returned.
+          schema:
+            type: string
+        - name: notBefore
+          in: query
+          required: false
+          description: ': Return only ID-Certs from at or after a specific point in time. UNIX 64 bit timestamp.'
+          schema:
+            type: integer
+            format: uint64
+          explode: false
+        - name: notAfter
+          in: query
+          required: false
+          description: ': Return only ID-Certs from at or before a specific point in time. UNIX 64 bit timestamp.'
+          schema:
+            type: integer
+            format: uint64
+          explode: false
+        - name: session_id
+          in: query
+          required: false
+          description: Optionally, return only the ID-Certs matching a specific `session_id`.
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: JSON-Array of Object(s).
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Models.CacheableIDCert'
+      tags:
+        - Federated Identity - Registration not required
+  /.p2/core/v1/idcert/server:
+    get:
+      operationId: Unregistered_serverIdCert
+      summary: Get Server ID-Cert
+      description: Request the server's public identity certificate.
+      parameters:
+        - name: timestamp
+          in: query
+          required: false
+          description: |-
+            An optional UNIX timestamp to retrieve the ID-Cert the server had at that
+            point in time, instead of the current one.
+          schema:
+            type: integer
+            format: uint64
+          explode: false
+      responses:
+        '200':
+          description: |-
+            The current ID-Cert of the server, or, if specified, the ID-Cert the server had
+            at the specified time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.CacheableIDCert'
+      tags:
+        - Federated Identity - Registration not required
+  /.p2/core/v1/key/server:
+    post:
+      operationId: Registered_name
+      summary: Rotate Server Identity Key
+      description: Rotate the server's identity key. Requires server administrator permissions.
+      parameters:
+        - name: X-P2-Sensitive-Solution
+          in: header
+          required: true
+          description: Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The servers' new ID-Cert, encoded as PEM
+          content:
+            text/plain:
+              schema:
+                type: string
+      tags:
+        - Federated Identity - Registration required
+        - Sensitive Actions
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/keytrial/{fid}:
+    get:
+      operationId: Unregistered_getKeyTrials
+      summary: Fetch key trials and key trial responses from actor
+      description: |-
+        Fetch key trials and their responses from other actors.
+        This route exists for transparency reasons, and allows actors in contact with the actor
+        mentioned in `fid` to verify, that it was the actor who initiated setting up a redirect or
+        the re-signing of messages and not a malicious home server.
+
+        Only key trials which have at least one completion, and - more importantly - where the
+        `expiration` UNIX time stamp has passed, can be fetched.
+      parameters:
+        - name: fid
+          in: path
+          required: true
+          description: ': The FID of the actor to query key trials for.'
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          description: ': How many response objects to query for at maximum. A value of `0` or not specifying this value at all means no maximum is defined.'
+          schema:
+            type: integer
+            format: uint16
+            default: 0
+          explode: false
+        - name: id
+          in: query
+          required: false
+          description: ': Query for a specific key trial performed by an actor by the ID of the key trial.'
+          schema:
+            type: string
+          explode: false
+        - name: notBefore
+          in: query
+          required: false
+          description: ': Return only key trials and their results performed at or after a specific point in time. UNIX 64 bit timestamp.'
+          schema:
+            type: integer
+            format: uint64
+          explode: false
+        - name: notAfter
+          in: query
+          required: false
+          description: ': Return only key trials and their results performed at or before a specific point in time. UNIX 64 bit timestamp.'
+          schema:
+            type: integer
+            format: uint64
+          explode: false
+      responses:
+        '200':
+          description: |-
+            - `204`: No keytrials found for specified actor
+            - `404`: Specified actor not known
+            - `200`: Completed key trials of requested actor
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    keyTrial:
+                      $ref: '#/components/schemas/Models.KeyTrial'
+                    keyTrialCompletion:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Models.KeyTrialCompleted'
+                      minItems: 1
+                  required:
+                    - keyTrial
+                    - keyTrialCompletion
+        '204':
+          description: |-
+            - `204`: No keytrials found for specified actor
+            - `404`: Specified actor not known
+            - `200`: Completed key trials of requested actor
+          headers:
+            Content-Length:
+              required: true
+              schema:
+                type: number
+                enum:
+                  - 0
+        '404':
+          description: |-
+            - `204`: No keytrials found for specified actor
+            - `404`: Specified actor not known
+            - `200`: Completed key trials of requested actor
+      tags:
+        - Migration - Registration not required
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/messages:
+    delete:
+      operationId: Unregistered_removeResigningExtern
+      summary: Abort message re-signing
+      description: Stop an in-progress or existing re-signing process.
+      parameters:
+        - name: removeActorFid
+          in: query
+          required: true
+          description: The FID of the actor to whom messages should no longer be re-signable for
+          schema:
+            type: string
+          explode: false
+      responses:
+        '204':
+          description: |-
+            - `204` Action executed
+            - `404` No re-signing request found for mentioned actor
+          headers:
+            Content-Length:
+              required: true
+              schema:
+                type: number
+                enum:
+                  - 0
+        '404':
+          description: |-
+            - `204` Action executed
+            - `404` No re-signing request found for mentioned actor
+      tags:
+        - Migration - Registration not required
+      security:
+        - BearerAuth: []
+    post:
+      operationId: Unregistered_requestAllowResigning
+      summary: Request message re-signing
+      description: |-
+        Request allowing message re-signing. To fulfill this action, a key trial must be passed.
+        Unlocks message re-signing for messages signed with keys for which a key trial has been passed.
+      parameters:
+        - name: X-P2-core-keytrial
+          in: header
+          required: true
+          description: A list of completed `KeyTrial`s.
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Models.KeyTrialCompleted'
+      responses:
+        '200':
+          description: The request has succeeded.
+        '403':
+          description: Access is forbidden.
+      tags:
+        - Migration - Registration not required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newActorFid:
+                  type: string
+                allowedResigningKeys:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - newActorFid
+                - allowedResigningKeys
+      security:
+        - BearerAuth: []
+    get:
+      operationId: Unregistered_getMessages
+      summary: Fetch messages to-be-resigned
+      description: |-
+        Fetch messages to be re-signed. Must only return messages where the signatures correlate to
+        ID-Certs for which a key trial has been passed. If this endpoint is queried again while
+        the previous batch of messages has not yet been re-signed (or only partially so), the
+        returned message batch will contain those uncommitted messages again.
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description: How many messages to request from the server. Defaults to 300.
+          schema:
+            type: integer
+            format: uint32
+            default: 300
+          explode: false
+        - name: serialNumber
+          in: query
+          required: false
+          description: If specified, query for non-re-signed messages corresponding to a specific ID-Cert.
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: Messages. The distinct format of messages is up to the specific p2 extension to define.
+          headers:
+            'X-P2-Return-Body-Size-Limit ':
+              required: false
+              description: This header tells the client whether the route to commit re-signed messages has an upload size limit, and what the size of that limit is, in bytes. A value of `"0"` means that there is no limit. This header not being present can also be interpreted as no limit existing. The value of this header is a string-formatted, unsigned 64-bit integer.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - idCert
+                    - messages
+                  properties:
+                    idCert:
+                      type: string
+                      description: The ID-Cert that the following messages' signatures correspond to.
+                    messages:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          signature:
+                            type: string
+                            description: Signature of the whole message
+                          content:
+                            type: string
+                            description: Arbitrary content `T`. This depends on the specific implementation or extension of the protocol.
+                        required:
+                          - signature
+                          - content
+                      description: The actual message.
+                  description: |-
+                    A message batch, as received from and sent to the server in the context of re-signing messages.
+                    This type is generic over `T`, where `T` represents the content of the actual message. This
+                    means, that the specific message content depends on the concrete implementation or extension
+                    of the polyproto protocol.
+        '403':
+          description: Messages. The distinct format of messages is up to the specific p2 extension to define.
+      tags:
+        - Migration - Registration not required
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/messages/commit:
+    post:
+      operationId: Unregistered_commitMessages
+      summary: Commit re-signed messages
+      description: Commit messages that have been re-signed to the server.
+      parameters: []
+      responses:
+        '200':
+          description: |-
+            - `200` On success. Returns another `MessageBatch`, if there are more messages to re-sign.
+            If this endpoint is queried again while
+            the previous batch of messages has not yet been re-signed (or only partially so), the
+            returned message batch will contain those uncommitted messages again.
+            - `400` if re-signed messages are improperly formatted
+            - `403` if messages have been modified where the original keys have not passed the key
+            trial, if a key trial has not been passed at all or if the messages have been signed
+            with keys that were not on the `allowedResigningKeys` list.
+          headers:
+            Retry-After:
+              required: true
+              description: This header dictates the time a client should wait for before sending another batch of re-signed messages.
+              schema:
+                type: integer
+                format: uint16
+            'X-P2-Return-Body-Size-Limit ':
+              required: false
+              description: This header tells the client whether the route to commit re-signed messages has an upload size limit, and what the size of that limit is. A value of `0` means that there is no limit. This header not being present can also be interpreted as no limit existing.
+              schema:
+                type: integer
+                format: uint64
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - idCert
+                    - messages
+                  properties:
+                    idCert:
+                      type: string
+                      description: The ID-Cert that the following messages' signatures correspond to.
+                    messages:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          signature:
+                            type: string
+                            description: Signature of the whole message
+                          content:
+                            type: string
+                            description: Arbitrary content `T`. This depends on the specific implementation or extension of the protocol.
+                        required:
+                          - signature
+                          - content
+                      description: The actual message.
+                  description: |-
+                    A message batch, as received from and sent to the server in the context of re-signing messages.
+                    This type is generic over `T`, where `T` represents the content of the actual message. This
+                    means, that the specific message content depends on the concrete implementation or extension
+                    of the polyproto protocol.
+        '400':
+          description: |-
+            - `200` On success. Returns another `MessageBatch`, if there are more messages to re-sign.
+            If this endpoint is queried again while
+            the previous batch of messages has not yet been re-signed (or only partially so), the
+            returned message batch will contain those uncommitted messages again.
+            - `400` if re-signed messages are improperly formatted
+            - `403` if messages have been modified where the original keys have not passed the key
+            trial, if a key trial has not been passed at all or if the messages have been signed
+            with keys that were not on the `allowedResigningKeys` list.
+        '403':
+          description: |-
+            - `200` On success. Returns another `MessageBatch`, if there are more messages to re-sign.
+            If this endpoint is queried again while
+            the previous batch of messages has not yet been re-signed (or only partially so), the
+            returned message batch will contain those uncommitted messages again.
+            - `400` if re-signed messages are improperly formatted
+            - `403` if messages have been modified where the original keys have not passed the key
+            trial, if a key trial has not been passed at all or if the messages have been signed
+            with keys that were not on the `allowedResigningKeys` list.
+      tags:
+        - Migration - Registration not required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                required:
+                  - idCert
+                  - messages
+                properties:
+                  idCert:
+                    type: string
+                    description: The ID-Cert that the following messages' signatures correspond to.
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        signature:
+                          type: string
+                          description: Signature of the whole message
+                        content:
+                          type: string
+                          description: Arbitrary content `T`. This depends on the specific implementation or extension of the protocol.
+                      required:
+                        - signature
+                        - content
+                    description: The actual message.
+                description: |-
+                  A message batch, as received from and sent to the server in the context of re-signing messages.
+                  This type is generic over `T`, where `T` represents the content of the actual message. This
+                  means, that the specific message content depends on the concrete implementation or extension
+                  of the polyproto protocol.
+        description: Messages. The distinct format of messages is up to the specific p2 extension to define.
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/migration/data:
+    post:
+      operationId: Registered_importData
+      summary: Import data to server
+      description: |-
+        Import a `P2Export` file. `messages` in this file must have been re-signed to the current
+        actor. Only messages classified as ["Information not tied to a specific context"](https://docs.polyphony.chat/Protocol%20Specifications/core/#:~:text=Example%3A%20Information%20not,without%0Aany%20issues.)
+        can be imported.
+      parameters:
+        - name: X-P2-Sensitive-Solution
+          in: header
+          required: true
+          description: Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.
+          schema:
+            type: string
+      responses:
+        '202':
+          description: |-
+            - `202`: The content has been accepted for processing, but processing has not been
+            completed or may not have started.
+          headers:
+            Content-Length:
+              required: true
+              schema:
+                type: number
+                enum:
+                  - 0
+      tags:
+        - Migration - Registration required
+        - Sensitive Actions
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.P2Export'
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/migration/redirect:
+    post:
+      operationId: Registered_setupRedirect
+      summary: Set up a redirect for migrating identities
+      description: |-
+        This route is used by actors who would like to move their identity to another home server.
+        This specific route is called by the "old" actor, notifying the server about their intent
+        to move to another home server. To fulfill this action,
+
+        1. A key trial must be passed for all keys with which the actor has sent messages with
+        on this server.
+        2. The "new" actor named in this request must confirm setting up this redirect.
+      parameters:
+        - name: X-P2-core-keytrial
+          in: header
+          required: true
+          description: A list of completed `KeyTrial`s.
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Models.KeyTrialCompleted'
+      responses:
+        '200':
+          description: |-
+            - `200` if the link has been created
+            - `202` if the other account still needs to accept to establish the link.
+        '202':
+          description: |-
+            - `200` if the link has been created
+            - `202` if the other account still needs to accept to establish the link.
+      tags:
+        - Migration - Registration required
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
+        description: The FID of the actor, that this actor would like to be redirected to.
+      security:
+        - BearerAuth: []
+    delete:
+      operationId: Registered_removeRedirect
+      summary: Remove a redirect for migrating identities
+      description: Stop an in-progress or existing redirection process.
+      parameters:
+        - name: removeActorFid
+          in: query
+          required: true
+          description: The FID of the actor to which a redirect should no longer exist
+          schema:
+            type: string
+          explode: false
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+          headers:
+            Content-Length:
+              required: true
+              schema:
+                type: number
+                enum:
+                  - 0
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+      tags:
+        - Migration - Registration required
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/redirect/extern:
+    post:
+      operationId: Unregistered_setupRedirectExtern
+      summary: Set up a redirect for migrating identities
+      description: |-
+        Tell the homeserver of the "old" actor account that you intend to set up a redirect to
+        this actor
+      parameters:
+        - name: redirectSourceFid
+          in: query
+          required: true
+          description: |-
+            : The federation ID of the actor who should be the source of the
+            redirect.
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: |-
+            - `200` if the link has been created
+            - `202` if the other account still needs to accept to establish the link.
+        '202':
+          description: |-
+            - `200` if the link has been created
+            - `202` if the other account still needs to accept to establish the link.
+      tags:
+        - Migration - Registration not required
+      security:
+        - BearerAuth: []
+    delete:
+      operationId: Unregistered_removeRedirectExtern
+      summary: Remove a redirect for migrating identities
+      description: |-
+        Tell the homeserver of the "old" actor account that you no longer intend to set up a
+        redirect to this actor
+      parameters:
+        - name: redirectSourceFid
+          in: query
+          required: true
+          description: |-
+            : The federation ID of the actor who should no longer be the source of the
+            redirect.
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: '- `200` if the link has been removed'
+      tags:
+        - Migration - Registration not required
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/resource/resources:
+    get:
+      operationId: Registered_getResourceList
+      summary: List your uploaded resources
+      description: Query the server for a list of resources you've uploaded.
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description: Optional; How many results you'd like to retrieve at maximum. Defaults to `50`.
+          schema:
+            type: integer
+            format: uint32
+            default: 50
+          explode: false
+        - name: sort
+          in: query
+          required: false
+          description: Whether the list should be sorted in a specific way. Available options are `SizeAsc`, `SizeDesc`, `NewestFirst` and `OldestFirst`.
+          schema:
+            $ref: '#/components/schemas/Models.ResourceListSorting'
+          explode: false
+        - name: previews
+          in: query
+          required: false
+          description: Whether to request content previews for supported file formats
+          schema:
+            type: boolean
+            default: false
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    resourceInformation:
+                      $ref: '#/components/schemas/Models.ResourceInformation'
+                    preview:
+                      type: object
+                      required:
+                        - contents
+                      properties:
+                        contentType:
+                          type: string
+                          description: |-
+                            The allowed media (MIME) types of the file contents.
+
+                            In file bodies, this value comes from the `Content-Type` header of the request or response. In JSON bodies,
+                            this value is serialized as a field in the response.
+
+                            NOTE: this is not _necessarily_ the same as the `Content-Type` header of the request or response, but
+                            it will be for file bodies. It may be different if the file is serialized as a JSON object. It always refers to the
+                            _contents_ of the file, and not necessarily the way the file itself is transmitted or serialized.
+                          title: The allowed media (MIME) types of the file contents.
+                        filename:
+                          type: string
+                          description: |-
+                            The name of the file, if any.
+
+                            In file bodies, this value comes from the `filename` parameter of the `Content-Disposition` header of the response
+                            or multipart payload. In JSON bodies, this value is serialized as a field in the response.
+
+                            NOTE: By default, `filename` cannot be sent in request payloads and can only be sent in responses and multipart
+                            payloads, as the `Content-Disposition` header is not valid in requests. If you want to send the `filename` in a request,
+                            you must extend the `File` model and override the `filename` property with a different location defined by HTTP metadata
+                            decorators.
+                          title: The name of the file, if any.
+                        contents:
+                          type: string
+                          format: byte
+                          description: |-
+                            The contents of the file.
+
+                            In file bodies, this value comes from the body of the request, response, or multipart payload. In JSON bodies,
+                            this value is serialized as a field in the response.
+                          title: The contents of the file.
+                      description: Only present, if `previews` was set to `true` in the request, and if the response contains preview-supported file types.
+                      title: A file in an HTTP request, response, or multipart payload.
+                  required:
+                    - resourceInformation
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+          headers:
+            Content-Length:
+              required: true
+              schema:
+                type: number
+                enum:
+                  - 0
+      tags:
+        - Resource addressing with relative roots - Registration required
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/resource/usage:
+    get:
+      operationId: ResourceAddressingWithRelativeRoots_getStorageLimitInfo
+      summary: Retrieve information about your storage usage
+      description: |-
+        Get information about how much storage you are allowed to use, and see how much storage you
+        are currently using.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limit:
+                    type: integer
+                    format: uint64
+                    description: How many bytes of storage you are allowed to upload in total
+                  used:
+                    type: integer
+                    format: uint64
+                    description: How many bytes of storage you are currently using
+                required:
+                  - limit
+                  - used
+  /.p2/core/v1/resource/{rid}:
+    get:
+      operationId: Unregistered_getResource
+      summary: Get resource by resource ID
+      description: |-
+        Retrieve a [RawR](https://docs.polyphony.chat/Protocol%20Specifications/core/#731-resource-addressing-with-relative-roots)
+        resource by specifying the ID of the resource.
+      parameters:
+        - name: rid
+          in: path
+          required: true
+          description: ': Resource Identifier - unique identifier for a resource.'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: |-
+            - `200`: File found and retrieved.
+            - `308`: URI root has changed.
+            - `401`: Server or resource requires authentication to access this endpoint.
+            - `404`: Separately documented.
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: binary
+        '308':
+          description: |-
+            - `200`: File found and retrieved.
+            - `308`: URI root has changed.
+            - `401`: Server or resource requires authentication to access this endpoint.
+            - `404`: Separately documented.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+                format: uri
+        '404':
+          description: |-
+            The client either does not have the access rights to access this resource, or this resource
+            does not exist. The ambiguity about the actual error has the purpose of protecting the targeted
+            resource from information leaks.
+      tags:
+        - Resource addressing with relative roots - Registration not required
+      security:
+        - BearerAuth: []
+        - {}
+    post:
+      operationId: Registered_postResource
+      summary: Upload RawR resource
+      description: |-
+        Upload a [RawR](https://docs.polyphony.chat/Protocol%20Specifications/core/#731-resource-addressing-with-relative-roots)
+        resource to your home server.
+      parameters:
+        - name: rid
+          in: path
+          required: true
+          description: ': The resource ID of the resource you would like to upload.'
+          schema:
+            type: string
+        - name: Content-Length
+          in: header
+          required: true
+          description: ': The size of the resource in bytes.'
+          schema:
+            type: integer
+            format: uint64
+        - name: resourceAccessProperties
+          in: query
+          required: true
+          description: ResourceAccessProperties. See the corresponding schema definition for more information.
+          schema:
+            $ref: '#/components/schemas/Models.ResourceAccessProperties'
+          explode: false
+      responses:
+        '204':
+          description: |-
+            - `204`: Upload successful.
+            - `403`: Uploading forbidden.
+            - `409`: RID already exists on this server. Choose a different RID.
+            - `411`: `Content-Length` header not specified.
+            - `413`: Resource too large.
+            - `414`: RID too long.
+          headers:
+            Content-Length:
+              required: true
+              schema:
+                type: number
+                enum:
+                  - 0
+        '403':
+          description: |-
+            - `204`: Upload successful.
+            - `403`: Uploading forbidden.
+            - `409`: RID already exists on this server. Choose a different RID.
+            - `411`: `Content-Length` header not specified.
+            - `413`: Resource too large.
+            - `414`: RID too long.
+          content:
+            text/plain:
+              schema:
+                type: string
+                enum:
+                  - UPLOAD_FORBIDDEN
+        '409':
+          description: |-
+            - `204`: Upload successful.
+            - `403`: Uploading forbidden.
+            - `409`: RID already exists on this server. Choose a different RID.
+            - `411`: `Content-Length` header not specified.
+            - `413`: Resource too large.
+            - `414`: RID too long.
+          content:
+            text/plain:
+              schema:
+                type: string
+                enum:
+                  - DUPLICATE_RID
+        '411':
+          description: |-
+            - `204`: Upload successful.
+            - `403`: Uploading forbidden.
+            - `409`: RID already exists on this server. Choose a different RID.
+            - `411`: `Content-Length` header not specified.
+            - `413`: Resource too large.
+            - `414`: RID too long.
+          content:
+            text/plain:
+              schema:
+                type: string
+                enum:
+                  - LENGTH_REQUIRED
+        '413':
+          description: |-
+            - `204`: Upload successful.
+            - `403`: Uploading forbidden.
+            - `409`: RID already exists on this server. Choose a different RID.
+            - `411`: `Content-Length` header not specified.
+            - `413`: Resource too large.
+            - `414`: RID too long.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+                    enum:
+                      - TOO_LARGE
+                  remainingStorageBytes:
+                    type: integer
+                    format: uint64
+                    description: The server may tell the client how much more content they are allowed to store, in bytes.
+                required:
+                  - reason
+        '414':
+          description: |-
+            - `204`: Upload successful.
+            - `403`: Uploading forbidden.
+            - `409`: RID already exists on this server. Choose a different RID.
+            - `411`: `Content-Length` header not specified.
+            - `413`: Resource too large.
+            - `414`: RID too long.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+                    enum:
+                      - RID_TOO_LONG
+                  charLimit:
+                    type: integer
+                    format: uint8
+                    default: 64
+                required:
+                  - reason
+                  - charLimit
+      tags:
+        - Resource addressing with relative roots - Registration required
+      requestBody:
+        required: true
+        content:
+          '*/*':
+            schema:
+              type: string
+              format: binary
+        description: ': The resource itself'
+      security:
+        - BearerAuth: []
+    delete:
+      operationId: Registered_deleteResource
+      summary: Delete RawR resource
+      parameters:
+        - name: rid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+      tags:
+        - Resource addressing with relative roots - Registration required
+      security:
+        - BearerAuth: []
+    put:
+      operationId: Registered_modifyResource
+      summary: Update RawR resource access properties
+      description: |-
+        Replace the access properties of a [RawR](https://docs.polyphony.chat/Protocol%20Specifications/core/#731-resource-addressing-with-relative-roots)
+        resource with updated access properties.
+      parameters:
+        - name: rid
+          in: path
+          required: true
+          description: The resource ID of the resource which the access properties should be modified of.
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+          headers:
+            Content-Length:
+              required: true
+              schema:
+                type: number
+                enum:
+                  - 0
+      tags:
+        - Resource addressing with relative roots - Registration required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.ResourceAccessProperties'
+        description: ResourceAccessProperties. See the corresponding schema definition for more information.
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/resource/{rid}/info/:
+    get:
+      operationId: Unregistered_getResourceInfos
+      summary: Retrieve information about a RawR resource
+      description: |-
+        Query the server for information about a RawR resource.
+        This route accepts a Bearer token, but public resources may also be queried without
+        specifying a token.
+      parameters:
+        - name: rid
+          in: path
+          required: true
+          description: The resource ID of the resource which you'd like to query information of.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: |-
+            - `200`: Found, contains resource information
+            - `308`: URI root has changed.
+            - `404`: Separately documented.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Models.ResourceInformation'
+        '308':
+          description: |-
+            - `200`: Found, contains resource information
+            - `308`: URI root has changed.
+            - `404`: Separately documented.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+                format: uri
+        '404':
+          description: |-
+            The client either does not have the access rights to access this resource, or this resource
+            does not exist. The ambiguity about the actual error has the purpose of protecting the targeted
+            resource from information leaks.
+      tags:
+        - Resource addressing with relative roots - Registration not required
+      security:
+        - BearerAuth: []
+        - {}
+  /.p2/core/v1/services:
+    post:
+      operationId: Registered_registerService
+      summary: Add service to be discovered
+      description: Add a service to the list of services discoverable by other actors.
+      parameters: []
+      responses:
+        '201':
+          description: A singular service object, representing the service that was added.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Service'
+        '409':
+          description: A singular service object, representing the service that was added.
+      tags:
+        - Services - Registration required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                service:
+                  $ref: '#/components/schemas/Models.Service'
+              required:
+                - service
+      security:
+        - BearerAuth: []
+    delete:
+      operationId: Registered_unregisterService
+      summary: Delete discoverable service
+      description: |-
+        Remove a service from the list of services discoverable by other actors.
+        If a primary service is removed and there are still other providers available for the same service,
+        the server will select a new primary service provider from the list of available providers.
+        This new provider will be returned in the response body.
+      parameters:
+        - name: X-P2-Sensitive-Solution
+          in: header
+          required: false
+          description: Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.
+          schema:
+            type: string
+        - name: url
+          in: query
+          required: true
+          description: List of urls of the service providers to remove. The indices of the urls list must match the indices of the service name list.
+          schema:
+            type: array
+            items:
+              type: string
+              format: uri
+          explode: false
+        - name: name
+          in: query
+          required: true
+          description: List of urls of the service providers to remove. The indices of the service name list must match the indices of the urls list.
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    service:
+                      type: string
+                    new_primary:
+                      type: string
+                      format: uri
+                  required:
+                    - service
+                    - new_primary
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+        '403':
+          description: Access is forbidden.
+        '404':
+          description: The server cannot find the requested resource.
+      tags:
+        - Services - Registration required
+        - Sensitive Actions
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/services/discover/{fid}:
+    get:
+      operationId: Unregistered_getServicesOfActor
+      summary: Discover services of actor
+      description: |-
+        Fetch a list of all services that the actor has made discoverable. Clients should not expect
+        this list to be ordered in any particular way.
+      parameters:
+        - name: fid
+          in: path
+          required: true
+          description: The ID of the actor whose services should be returned.
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          description: |-
+            The maximum number of services to return. Not specifying a limit will return all
+            services. Specifying a limit of `1` will return only the primary service provider for each service.
+          schema:
+            type: integer
+            format: uint64
+            minimum: 1
+          explode: false
+      responses:
+        '200':
+          description: |-
+            JSON array of [service objects](./Types/service.md). A list of all services which the actor has
+            made discoverable.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/Models.Service'
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/Models.Service'
+        '204':
+          description: |-
+            JSON array of [service objects](./Types/service.md). A list of all services which the actor has
+            made discoverable.
+          headers:
+            Content-Length:
+              required: true
+              schema:
+                type: number
+                enum:
+                  - 0
+        '404':
+          description: |-
+            JSON array of [service objects](./Types/service.md). A list of all services which the actor has
+            made discoverable.
+      tags:
+        - Services - Registration not required
+  /.p2/core/v1/services/discover/{fid}/{service}:
+    get:
+      operationId: Unregistered_getSingleServiceOfActor
+      summary: Discover single service of actor
+      description: |-
+        Get all service providers an actor is registered with, limited to a specific service.
+        Clients should not expect this list to be ordered in any particular way.
+      parameters:
+        - name: fid
+          in: path
+          required: true
+          description: The ID of the actor whose services should be returned.
+          schema:
+            type: string
+        - name: service
+          in: path
+          required: true
+          description: The name of the service to discover providers of.
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          description: |-
+            The maximum number of services to return. Not specifying a limit will return all
+            services. Specifying a limit of `1` will return only the primary service provider for the specified service.
+          schema:
+            type: integer
+            format: uint64
+            minimum: 1
+          explode: false
+      responses:
+        '200':
+          description: JSON array of [service objects](./Types/service.md), filtered by the specified service.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/Models.Service'
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/Models.Service'
+        '204':
+          description: JSON array of [service objects](./Types/service.md), filtered by the specified service.
+          headers:
+            Content-Length:
+              required: true
+              schema:
+                type: number
+                enum:
+                  - 0
+        '404':
+          description: JSON array of [service objects](./Types/service.md), filtered by the specified service.
+      tags:
+        - Services - Registration not required
+  /.p2/core/v1/services/primary:
+    put:
+      operationId: Registered_setPrimaryProvider
+      summary: Set primary service provider
+      description: |-
+        Set a primary service provider for a given service namespace. This is used to indicate, which service
+        provider should be used by default by other actors, when multiple service providers are available
+        for a given service namespace. The service specified by the arguments in the body must be a
+        valid, already existing service.
+      parameters:
+        - name: X-P2-Sensitive-Solution
+          in: header
+          required: true
+          description: Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: |-
+            An array of at minimum one, and at maximum 2 [service](./Types/service.md) objects.
+            The response will contain the updated previous primary service provider, if there was one, along
+            with the new primary service provider.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Models.Service'
+        '400':
+          description: |-
+            An array of at minimum one, and at maximum 2 [service](./Types/service.md) objects.
+            The response will contain the updated previous primary service provider, if there was one, along
+            with the new primary service provider.
+        '403':
+          description: |-
+            An array of at minimum one, and at maximum 2 [service](./Types/service.md) objects.
+            The response will contain the updated previous primary service provider, if there was one, along
+            with the new primary service provider.
+      tags:
+        - Services - Registration required
+        - Sensitive Actions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  format: uri
+                name:
+                  type: string
+                  minLength: 2
+                  maxLength: 64
+              required:
+                - url
+                - name
+        description: URL of a service provider and name of a service.
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/session:
+    delete:
+      operationId: Registered_deleteSession
+      summary: Delete/Revoke Session
+      description: |-
+        Invalidate a session and its' associated ID-Cert by providing the session ID associated
+        with it.
+      parameters:
+        - name: X-P2-Sensitive-Solution
+          in: header
+          required: true
+          description: Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.
+          schema:
+            type: string
+        - name: session_id
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+          headers:
+            Content-Length:
+              required: true
+              schema:
+                type: number
+                enum:
+                  - 0
+        '404':
+          description: The server cannot find the requested resource.
+      tags:
+        - Federated Identity - Registration required
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/session/auth:
+    post:
+      operationId: Unregistered_requestToken
+      summary: Authenticate on a foreign server
+      description: |-
+        Authenticate on a foreign server, creating a session with an authentication token. Requires
+        completing a key trial for the ID-Cert the session is supposed to be generated for.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            text/plain:
+              schema:
+                type: string
+      tags:
+        - Federated Identity - Registration not required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.KeyTrialCompleted'
+  /.p2/core/v1/session/idcert/extern:
+    put:
+      operationId: Unregistered_updateSessionCert
+      summary: Update session ID-Cert
+      description: |-
+        Lets a foreign server know that the ID-Cert of a session has changed. This route is also
+        used to inform foreign servers about the revocation of an ID-Cert. The ID-Cert passed as
+        body in this route must belong to the actor making the request.
+      parameters: []
+      responses:
+        '201':
+          description: 201 on success, 400 if the body is somehow invalid.
+        '400':
+          description: 201 on success, 400 if the body is somehow invalid.
+      tags:
+        - Federated Identity - Registration not required
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/session/keymaterial:
+    post:
+      operationId: Registered_uploadEncryptedPKM
+      summary: Upload encrypted private key material
+      description: |-
+        Upload encrypted private key material to the server for later retrieval. The size of
+        the individual array elements must not exceed
+        the server's maximum upload size for this route. This is usually not more than 10kb and can be as
+        low as 800 bytes, depending on the server configuration.
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+        '404':
+          description: The server cannot find the requested resource.
+        '409':
+          description: The request conflicts with the current state of the server.
+        '413':
+          description: Client error
+      tags:
+        - Federated Identity - Registration required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Models.EncryptedPKM'
+        description: Array of encrypted private key material objects.
+      security:
+        - BearerAuth: []
+    get:
+      operationId: Registered_getEncryptedPKM
+      summary: Get encrypted private key material
+      description: |-
+        Retrieve encrypted private key material from the server. The `serial_numbers`, if
+        provided, must match the serial numbers of ID-Certs that the client has uploaded key
+        material for. If no `serial_numbers` are provided, the server will return all key
+        material that the client has uploaded.
+      parameters:
+        - name: serials
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+              format: uint64
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Models.EncryptedPKM'
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+          headers:
+            Content-Length:
+              required: true
+              schema:
+                type: number
+                enum:
+                  - 0
+        '404':
+          description: The server cannot find the requested resource.
+      tags:
+        - Federated Identity - Registration required
+      security:
+        - BearerAuth: []
+    delete:
+      operationId: Registered_deleteEncryptedPKM
+      summary: Delete encrypted private key material
+      description: |-
+        Delete encrypted private key material from the server. The `serial_number(s)`, must match
+        the serial numbers of ID-Certs that the client has uploaded key material for.
+      parameters:
+        - name: X-P2-Sensitive-Solution
+          in: header
+          required: true
+          description: Sensitive actions require a second factor of authentication to be executed. Read [section 4.1.2 of the protocol definition](https://docs.polyphony.chat/Protocol%20Specifications/core/#412-sensitive-actions) for more information.
+          schema:
+            type: string
+        - name: serials
+          in: query
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: uint64
+          explode: false
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+          headers:
+            Content-Length:
+              required: true
+              schema:
+                type: number
+                enum:
+                  - 0
+        '404':
+          description: The server cannot find the requested resource.
+      tags:
+        - Federated Identity - Registration required
+        - Sensitive Actions
+      security:
+        - BearerAuth: []
+  /.p2/core/v1/session/keymaterial/size:
+    get:
+      operationId: Registered_encryptedPKMsizeLimit
+      summary: Get encrypted private key material upload size limit
+      description: Retrieve the maximum upload size for encrypted private key material, in bytes.
+      parameters: []
+      responses:
+        '200':
+          description: The upload size limit, in bytes.
+          headers:
+            X-MAX-PAYLOAD-SIZE:
+              required: true
+              schema:
+                type: integer
+                format: uint32
+      tags:
+        - Federated Identity - Registration required
+      security:
+        - {}
+components:
+  schemas:
+    Models.CacheableIDCert:
+      type: object
+      required:
+        - idCertPem
+        - cacheNotValidBefore
+        - cacheNotValidAfter
+        - cacheSignature
+      properties:
+        idCertPem:
+          type: string
+          description: The requested ID-Cert in ASCII PEM format.
+          example: ------BEGIN CERTIFICATE------...
+        invalidatedAt:
+          type: integer
+          format: uint64
+          description: UNIX timestamp that specifies when this specific id_cert has been marked as invalidated by the server. An ID-Cert is considered invalidated, if the server or actor choose to revoke the validity of the ID-Cert before the lifetime of the certificate was scheduled to end. If this property does not exist, the ID-Cert has not been invalidated.
+          example: 1736610000
+        cacheNotValidBefore:
+          type: integer
+          format: uint64
+          description: UNIX timestamp that specifies the time from which this cache entry may be treated as valid.
+          example: 1736606402
+        cacheNotValidAfter:
+          type: integer
+          format: uint64
+          description: UNIX timestamp that specifies a time until which this cache entry may be treated as valid.
+          example: 1736613602
+        cacheSignature:
+          type: string
+          minLength: 32
+          maxLength: 32
+          description: Signature generated by the home server, encoded in [Hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) (base-16). This signature can be verified using the home servers' public identity key. A server generates the `cacheSignature` by concatenating the serial number of the ID-Cert in question with the `cacheValidNotBefore` timestamp, the `cacheValidNotAfter` timestamp, and the `invalidatedAt` timestamp, if present. Clients must reject certificates of which the `cacheSignature` can not be verified to be correct.
+          example: 7ab2bbde7fe43c7481a3a61031546bab16bc1a8735b2f0cdd519958c7f2f99f8
+      description: A cacheable response to an ID-Cert request.
+    Models.EncryptedPKM:
+      type: object
+      required:
+        - key_data
+        - serialNumber
+        - encryptionAlgorithms
+      properties:
+        key_data:
+          type: string
+          description: |-
+            Custom variant of the X.509 `SubjectPublicKeyInfo`, where the `subject_public_key`
+            field stores the encrypted private key, instead of a public key. Otherwise equal to
+            `SubjectPublicKeyInfo`. Also referred to as `PrivateKeyInfo`.
+        serialNumber:
+          type: integer
+          format: uint64
+          description: The serial number of the ID-Cert this key material is associated with.
+        encryptionAlgorithms:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          description: |-
+            Information about the algorithms used to encrypt the data held by the `key_data` field.
+            Order-sensitive; The encryption used for the first encryption operation must be the last
+            item of this array and vice versa. Represents a list of OIDs.
+    Models.KeyTrial:
+      type: object
+      required:
+        - trial
+        - expires
+      properties:
+        trial:
+          type: string
+          minLength: 32
+          maxLength: 256
+          description: The key trial, which the client should sign with their private identity key.
+        expires:
+          type: integer
+          format: uint64
+          description: The UNIX timestamp after which the key trial expires.
+      description: |-
+        A key trial as sent from the server to an actor.
+
+        Used to verify an actor's private identity key possession,
+        without revealing the private key itself
+    Models.KeyTrialCompleted:
+      type: object
+      required:
+        - signature
+        - serialNumber
+      properties:
+        signature:
+          type: string
+          description: The signature produced by signing the key trial string using a private identity key.
+        serialNumber:
+          type: integer
+          format: uint64
+          description: The serial number of the ID-Cert corresponding to the private identity key used to sign the key trial string.
+      description: A completed key trial, as an actor would send to the server.
+    Models.MessageBatchExample:
+      type: object
+      allOf:
+        - type: object
+          required:
+            - idCert
+            - messages
+          properties:
+            idCert:
+              type: string
+              description: The ID-Cert that the following messages' signatures correspond to.
+            messages:
+              type: array
+              items:
+                type: object
+                properties:
+                  signature:
+                    type: string
+                    description: Signature of the whole message
+                  content:
+                    type: string
+                    description: Arbitrary content `T`. This depends on the specific implementation or extension of the protocol.
+                required:
+                  - signature
+                  - content
+              description: The actual message.
+          description: |-
+            A message batch, as received from and sent to the server in the context of re-signing messages.
+            This type is generic over `T`, where `T` represents the content of the actual message. This
+            means, that the specific message content depends on the concrete implementation or extension
+            of the polyproto protocol.
+    Models.P2Export:
+      type: object
+      description: |-
+        The data is a gzipped tarball (.tar.gz) named `export1234567890-user@subdomain.example.com`, where
+        - `export[numbers]` is the word `export` with 20 random digits appended to it
+        - `user` is the actors' name
+        - `subdomain.example.com` is the FQDN of the server the actor is registered on.
+        This file archive contains a file `messages.p2mb` which is a JSON file containing [message batches](https://docs.polyphony.chat/Protocol%20Specifications/core/#721-message-batches)
+        of all messages sent by the user. If the server where the data export was requested from has
+        [RawR](https://docs.polyphony.chat/Protocol%20Specifications/core/#731-resource-addressing-with-relative-roots) enabled, the file archive will contain a
+        folder named `rawr`. This folder contains all RawR content uploaded by the actor to that server.
+        The files in this folder are named after the resource ID given to the resource. File extensions are only
+        added if they were known to the server. An example file name might be
+        `2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl`, referencing the file
+        which was hosted at `<server_url>/.p2/core/resource/2c851bfb6daffa944fa1723c7bd4d362ffbc9defe292f2daaf05e895989d179b.jxl`.
+        In addition, the folder `rawr` contains a file named `access_properties.p2al`. This JSON
+        file contains a data structure mapping each resource ID to an access properties object.
+        In particular, the file is structured as an array containing objects. Each object has a key which is equal
+        to the resource ID of a resource in the `rawr` directory and a value which is an object
+        representing the access properties. An example of the contents of this file is given below:
+
+        ```json
+        [
+            {
+                "2062a23e2a25b226ca4c546fec5ec06e0df9648281f45da8b5aaabebdf66cf4c.jxl": {
+                "private": false,
+                "public": false,
+                "allowlist": ["user1@example.com", "instance.example.com"],
+                "denylist": ["user2@example.com", "otherinstance@example.com"]
+                }
+            },
+            {
+                "a9144379a161e1fcf6b07801b70db6d6c481933bd634fe2409eb713723ab1a0a": {
+                "private": true,
+                "public": false,
+                "allowlist": ["user1@example.com"],
+                "denylist": []
+                }
+            }
+        ]
+        ```
+
+        If the server where the data export was requested from is the actors' home server, the
+        archive will contain a folder `certs` and a file `crypt_certs.p2epk`. `certs` will contain all ID-Certs
+        the server has stored of the actor. The ID-Certs will be stored in
+        [ASCII PEM format](https://web.archive.org/web/20250107131731/https://learn.microsoft.com/en-us/azure/iot-hub/reference-x509-certificates#:~:text=ASN.1%20encoding.-,ascii%20pem%20format,-A%20PEM%20certificate).
+        The file `crypt_certs.p2epk` contains all [encrypted private key material](https://docs.polyphony.chat/Protocol%20Specifications/core/#63-private-key-loss-prevention-and-private-key-recovery)
+        that the actor has uploaded to the server. Just like `messages.p2mb`, `crypt_certs.p2epk` is a standard
+        JSON file.
+    Models.ResourceAccessProperties:
+      type: object
+      required:
+        - private
+        - public
+      properties:
+        private:
+          type: boolean
+          description: Whether the resource should be private by default. Private resources can only be accessed by the uploader and by instances and actors declared in the `allowlist`.
+          default: false
+        public:
+          type: boolean
+          description: Whether the resource should be publicly retrievable, i.e. without requiring authentication. If this is `true`, the allow- and denylists are ignored.
+          default: false
+        allowlist:
+          type: array
+          items:
+            type: string
+          description: A list of actors and/or instances allowed to access this resource.
+          example:
+            - user_i_like@example.com
+            - instance.example.com
+        denylist:
+          type: array
+          items:
+            type: string
+          description: A list of actors and/or instances who cannot have access to this resource.
+          example:
+            - user_i_dislike@example.com
+            - other_instance.example.com
+      description: |-
+        `ResourceAccessProperties` define which actors may access an uploaded resource. Actors and
+        entire instances can have access granted or revoked.
+    Models.ResourceInformation:
+      type: object
+      required:
+        - resourceId
+        - size
+        - access
+      properties:
+        resourceId:
+          type: string
+          description: A unique ID of a resource
+        size:
+          type: integer
+          format: uint64
+          description: Size of the resource, in bytes
+        access:
+          allOf:
+            - $ref: '#/components/schemas/Models.ResourceAccessProperties'
+          description: Access information for this resource
+      description: Information about a RawR resource.
+    Models.ResourceListSorting:
+      type: string
+      enum:
+        - SizeAsc
+        - SizeDesc
+        - NewestFirst
+        - OldestFirst
+      description: |-
+        When querying the server for a list of resources uploaded by you, you can optionally request
+        the resulting list to be sorted in a specific way. These are the four options you have.
+    Models.Service:
+      type: object
+      required:
+        - service
+        - url
+        - primary
+      properties:
+        service:
+          type: string
+          minLength: 2
+          maxLength: 64
+          description: 'The name of the service that is being made discoverable. Must be formatted according to [section #8.2: Namespaces](/Protocol Specifications/core#82-namespaces) in the core protocol specification'
+        url:
+          type: string
+          format: uri
+          description: The base URL of the service provider, not including `/.p2/<service_name>`. Trailing slashes are allowed. If `(/).p2/<service_name>` is added to the URL specified here, a polyproto client should be able to access the HTTP API routes provided by the service.
+        primary:
+          type: boolean
+          description: Whether the service provider specified in the url field is the primary service provider for this service and actor.
+      description: |-
+        A resource representing information about a discoverable service for an actor. You can learn more about
+        services and discoverability by reading [section #9](/Protocol Specifications/core#9-services) of
+        the core protocol specification.
+
+        This resource contains information about the name of the service that is being made discoverable,
+        the URL of the service provider, and whether this service provider is the primary service provider
+        for the actor.
+    Version:
+      type: string
+      enum:
+        - v1.0-beta.3
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: Bearer
+servers:
+  - url: https://example.com
+    description: Example endpoint
+    variables: {}
