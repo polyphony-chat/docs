@@ -30,7 +30,7 @@ namespace polyproto.core.Routes.Migration {
          */
         @route("/redirect")
         @post
-        @added(Version.`v1.0-beta.2`)
+        @added(Version.`v1.0-beta.3`)
         @summary("Set up a redirect for migrating identities")
         op setupRedirect(
             @body newActorFid: string,
@@ -50,7 +50,7 @@ namespace polyproto.core.Routes.Migration {
         @route("/redirect")
         @delete
         @useAuth(BearerAuth)
-        @added(Version.`v1.0-beta.2`)
+        @added(Version.`v1.0-beta.3`)
         @summary("Remove a redirect for migrating identities")
         op removeRedirect(@query removeActorFid: string): {
             @statusCode statusCode: 204;
@@ -71,7 +71,7 @@ namespace polyproto.core.Routes.Migration {
          */
         @route("/data")
         @post
-        @added(Version.`v1.0-beta.2`)
+        @added(Version.`v1.0-beta.3`)
         @summary("Import data to server")
         @tag("Sensitive Actions")
         op importData(
@@ -101,7 +101,7 @@ namespace polyproto.core.Routes.Migration {
          */
         @route("/redirect/extern")
         @post
-        @added(Version.`v1.0-beta.2`)
+        @added(Version.`v1.0-beta.3`)
         @summary("Set up a redirect for migrating identities")
         op setupRedirectExtern(@query redirectSourceFid: string): {
             @statusCode statusCode: 202 | 200;
@@ -117,7 +117,7 @@ namespace polyproto.core.Routes.Migration {
          */
         @route("/redirect/extern")
         @delete
-        @added(Version.`v1.0-beta.2`)
+        @added(Version.`v1.0-beta.3`)
         @summary("Remove a redirect for migrating identities")
         op removeRedirectExtern(@query redirectSourceFid: string): {
             @statusCode statusCode: 200;
@@ -132,7 +132,7 @@ namespace polyproto.core.Routes.Migration {
          */
         @route("/messages")
         @delete
-        @added(Version.`v1.0-beta.2`)
+        @added(Version.`v1.0-beta.3`)
         @summary("Abort message re-signing")
         op removeResigningExtern(@query removeActorFid: string): {
             @statusCode statusCode: 404;
@@ -150,7 +150,7 @@ namespace polyproto.core.Routes.Migration {
          */
         @route("/messages")
         @post
-        @added(Version.`v1.0-beta.2`)
+        @added(Version.`v1.0-beta.3`)
         @summary("Request message re-signing")
         op requestAllowResigning(
             @body body: {
@@ -180,7 +180,7 @@ namespace polyproto.core.Routes.Migration {
          */
         @route("/messages/commit")
         @post
-        @added(Version.`v1.0-beta.2`)
+        @added(Version.`v1.0-beta.3`)
         @summary("Commit re-signed messages")
         op commitMessages(
             @body messages: polyproto.core.Models.MessageBatch<string>[],
@@ -213,7 +213,7 @@ namespace polyproto.core.Routes.Migration {
          */
         @route("/messages")
         @get
-        @added(Version.`v1.0-beta.2`)
+        @added(Version.`v1.0-beta.3`)
         @summary("Fetch messages to-be-resigned")
         op getMessages(
             @query limit?: uint32 = 300,
@@ -250,7 +250,7 @@ namespace polyproto.core.Routes.Migration {
          */
         @route("/keytrial/{fid}")
         @get
-        @added(Version.`v1.0-beta.2`)
+        @added(Version.`v1.0-beta.3`)
         @summary("Fetch key trials and key trial responses from actor")
         op getKeyTrials(
             @path fid: string,
@@ -286,7 +286,7 @@ namespace polyproto.core.Routes.Migration {
          */
         @route("/data")
         @delete
-        @added(Version.`v1.0-beta.2`)
+        @added(Version.`v1.0-beta.3`)
         @summary("Delete own actor data from the server")
         op deleteData(
             @query breakRedirect?: boolean = false,
@@ -317,7 +317,7 @@ namespace polyproto.core.Routes.Migration {
          */
         @route("/data")
         @get
-        @added(Version.`v1.0-beta.2`)
+        @added(Version.`v1.0-beta.3`)
         @summary("Export all data")
         op exportData(
             @doc("A list of completed `KeyTrial`s")

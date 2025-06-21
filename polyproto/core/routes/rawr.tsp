@@ -25,7 +25,7 @@ namespace polyproto.core.Routes.ResourceAddressingWithRelativeRoots {
         @route("/{rid}")
         @get
         @useAuth(BearerAuth | NoAuth)
-        @added(Version.`v1.0-beta.2`)
+        @added(Version.`v1.0-beta.3`)
         @summary("Get resource by resource ID")
         op getResource(@path rid: string): {
             @statusCode _: 200;
@@ -51,7 +51,7 @@ namespace polyproto.core.Routes.ResourceAddressingWithRelativeRoots {
         @route("/{rid}/info/")
         @get
         @useAuth(BearerAuth | NoAuth)
-        @added(Version.`v1.0-beta.2`)
+        @added(Version.`v1.0-beta.3`)
         @summary("Retrieve information about a RawR resource")
         op getResourceInfos(@path rid: string): {
             @statusCode statusCode: 200;
@@ -84,7 +84,7 @@ namespace polyproto.core.Routes.ResourceAddressingWithRelativeRoots {
          */
         @route("/{rid}")
         @post
-        @added(Version.`v1.0-beta.2`)
+        @added(Version.`v1.0-beta.3`)
         @summary("Upload RawR resource")
         op postResource(
             @path rid: string,
@@ -132,7 +132,7 @@ namespace polyproto.core.Routes.ResourceAddressingWithRelativeRoots {
 
         @route("/{rid}")
         @delete
-        @added(Version.`v1.0-beta.2`)
+        @added(Version.`v1.0-beta.3`)
         @summary("Delete RawR resource")
         op deleteResource(@path rid: string): {
             @statusCode _: 204;
@@ -146,7 +146,7 @@ namespace polyproto.core.Routes.ResourceAddressingWithRelativeRoots {
          */
         @route("/{rid}")
         @put
-        @added(Version.`v1.0-beta.2`)
+        @added(Version.`v1.0-beta.3`)
         @summary("Update RawR resource access properties")
         op modifyResource(
             @path rid: string,
@@ -167,7 +167,7 @@ namespace polyproto.core.Routes.ResourceAddressingWithRelativeRoots {
          */
         @route("/resources")
         @get
-        @added(Version.`v1.0-beta.2`)
+        @added(Version.`v1.0-beta.3`)
         @summary("List your uploaded resources")
         op getResourceList(
             @query limit?: uint32 = 50,
@@ -198,7 +198,7 @@ namespace polyproto.core.Routes.ResourceAddressingWithRelativeRoots {
      */
     @route("/usage")
     @get
-    @added(Version.`v1.0-beta.2`)
+    @added(Version.`v1.0-beta.3`)
     @summary("Retrieve information about your storage usage")
     op getStorageLimitInfo(): {
         @statusCode _s: 200;

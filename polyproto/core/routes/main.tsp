@@ -25,5 +25,5 @@ using TypeSpec.OpenAPI;
 namespace polyproto.core;
 
 enum Version {
-    `v1.0-beta.2`,
+    `v1.0-beta.3`,
 }
